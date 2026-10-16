@@ -1,0 +1,17 @@
+**/target/
+__pycache__/
+.venv/
+.env
+.env.*
+!.env.example
+*.log
+!evidence/**/*.log
+.playwright-cli/
+output/playwright/
+.DS_Store
+__MACOSX/
+report/*.aux
+report/*.toc
+report/*.out
+report/*.synctex.gz
+bai-nop/
