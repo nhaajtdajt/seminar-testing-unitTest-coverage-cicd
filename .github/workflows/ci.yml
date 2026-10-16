@@ -1,0 +1,72 @@
+name: Seminar CI
+# TẠM TẮT TỰ ĐỘNG: đang trong giai đoạn sửa nhiều, workflow chỉ chạy tay
+# (tab Actions -> Seminar CI -> Run workflow).
+# TRƯỚC KHI LÀM DEMO CI-1/2/3: bỏ dấu '#' ở hai trigger dưới để bật lại tự động.
+on:
+  # push:
+  # pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    name: test (JDK ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Chỉ JDK 25 (theo quyết định của nhóm). Muốn thêm JDK 21: java: ['21', '25']
+        java: ['25']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+          cache-dependency-path: case-study/pom.xml
+      - run: case-study/mvnw -B -ntp -f case-study/pom.xml -Djava.version=${{ matrix.java }} clean test
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: tests-jdk-${{ matrix.java }}
+          path: case-study/target/surefire-reports
+  coverage-gate:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: case-study/pom.xml
+      - run: case-study/mvnw -B -ntp -f case-study/pom.xml clean verify
+      - name: Summary
+        if: always()
+        run: |
+          echo '## Coverage gate' >> "$GITHUB_STEP_SUMMARY"
+          echo 'FineCalculator: branch coverage >= 90%. See JaCoCo artifact and Maven log.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage
+          path: case-study/target/site/jacoco
+  package:
+    needs: coverage-gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: case-study/pom.xml
+      # Test/gate have passed in earlier jobs; this job only packages the same revision.
+      - run: case-study/mvnw -B -ntp -f case-study/pom.xml -DskipTests package
+      - uses: actions/upload-artifact@v7
+        with:
+          name: library-app
+          path: case-study/target/*.jar
