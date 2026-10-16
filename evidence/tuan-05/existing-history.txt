@@ -1,0 +1,4 @@
+c7622d0 2026-10-01T23:46:20+07:00 23120231 Delete Seminar Unit Test Coverage CICD documentation, add CLAUDE settings, and create seminar requirements document.
+24bb874 2026-10-01T23:45:48+07:00 23120231 docs: goi nop lan 1 - noi dung chuan bi seminar truoc kickoff meeting
+f16c807 2026-10-01T23:35:51+07:00 23120231 docs: de xuat noi dung seminar cho buoi gap mat Tuan 2-3, kem spec va ke hoach
+52ec671 2026-10-01T22:38:07+07:00 23120231 docs: Add seminar materials on Unit Test, Code Coverage, CI/CD and video storyboard

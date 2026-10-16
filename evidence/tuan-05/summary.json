@@ -1,0 +1,673 @@
+{
+  "generated_at_utc": "2026-10-16T15:25:19.527153+00:00",
+  "runs": {
+    "baseline": {
+      "started_at_utc": "2026-10-16T10:16:20.302033+00:00",
+      "finished_at_utc": "2026-10-16T10:16:24.859800+00:00",
+      "elapsed_seconds": 4.558,
+      "command": [
+        "case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "case-study/pom.xml",
+        "-Pbaseline",
+        "clean",
+        "verify"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "environment": "local; not a GitHub Actions or Jenkins execution",
+      "tests": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fine_calculator": {
+        "INSTRUCTION": {
+          "covered": 33,
+          "missed": 16
+        },
+        "BRANCH": {
+          "covered": 5,
+          "missed": 5
+        },
+        "LINE": {
+          "covered": 8,
+          "missed": 3
+        },
+        "COMPLEXITY": {
+          "covered": 2,
+          "missed": 5
+        },
+        "METHOD": {
+          "covered": 2,
+          "missed": 0
+        },
+        "CLASS": {
+          "covered": 1,
+          "missed": 0
+        }
+      }
+    },
+    "gate-fail": {
+      "started_at_utc": "2026-10-16T10:16:24.896255+00:00",
+      "finished_at_utc": "2026-10-16T10:16:29.290567+00:00",
+      "elapsed_seconds": 4.394,
+      "command": [
+        "case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "case-study/pom.xml",
+        "-Pbaseline",
+        "-Dcoverage.gate.skip=false",
+        "clean",
+        "verify"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "environment": "local; not a GitHub Actions or Jenkins execution",
+      "tests": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fine_calculator": {
+        "INSTRUCTION": {
+          "covered": 33,
+          "missed": 16
+        },
+        "BRANCH": {
+          "covered": 5,
+          "missed": 5
+        },
+        "LINE": {
+          "covered": 8,
+          "missed": 3
+        },
+        "COMPLEXITY": {
+          "covered": 2,
+          "missed": 5
+        },
+        "METHOD": {
+          "covered": 2,
+          "missed": 0
+        },
+        "CLASS": {
+          "covered": 1,
+          "missed": 0
+        }
+      }
+    },
+    "jdk21": {
+      "started_at_utc": "2026-10-16T10:16:56.354984+00:00",
+      "finished_at_utc": "2026-10-16T10:17:08.262896+00:00",
+      "elapsed_seconds": 11.908,
+      "command": [
+        "case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "case-study/pom.xml",
+        "-Djava.version=21",
+        "clean",
+        "verify"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "environment": "local; not a GitHub Actions or Jenkins execution",
+      "tests": {
+        "tests": 33,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fine_calculator": {
+        "INSTRUCTION": {
+          "covered": 49,
+          "missed": 0
+        },
+        "BRANCH": {
+          "covered": 10,
+          "missed": 0
+        },
+        "LINE": {
+          "covered": 11,
+          "missed": 0
+        },
+        "COMPLEXITY": {
+          "covered": 7,
+          "missed": 0
+        },
+        "METHOD": {
+          "covered": 2,
+          "missed": 0
+        },
+        "CLASS": {
+          "covered": 1,
+          "missed": 0
+        }
+      }
+    },
+    "coverage-trap": {
+      "started_at_utc": "2026-10-16T10:16:29.322688+00:00",
+      "finished_at_utc": "2026-10-16T10:16:33.578266+00:00",
+      "elapsed_seconds": 4.256,
+      "command": [
+        "case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "case-study/pom.xml",
+        "-Pcoverage-trap",
+        "clean",
+        "verify"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "environment": "local; not a GitHub Actions or Jenkins execution",
+      "tests": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fine_calculator": {
+        "INSTRUCTION": {
+          "covered": 49,
+          "missed": 0
+        },
+        "BRANCH": {
+          "covered": 10,
+          "missed": 0
+        },
+        "LINE": {
+          "covered": 11,
+          "missed": 0
+        },
+        "COMPLEXITY": {
+          "covered": 7,
+          "missed": 0
+        },
+        "METHOD": {
+          "covered": 2,
+          "missed": 0
+        },
+        "CLASS": {
+          "covered": 1,
+          "missed": 0
+        }
+      }
+    },
+    "ai-draft-recheck": {
+      "started_at_utc": "2026-10-16T10:16:43.310283+00:00",
+      "finished_at_utc": "2026-10-16T10:16:47.606300+00:00",
+      "elapsed_seconds": 4.296,
+      "command": [
+        "case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "case-study/pom.xml",
+        "-Pai-draft",
+        "clean",
+        "verify"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "environment": "local; not a GitHub Actions or Jenkins execution",
+      "tests": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fine_calculator": {
+        "INSTRUCTION": {
+          "covered": 37,
+          "missed": 12
+        },
+        "BRANCH": {
+          "covered": 7,
+          "missed": 3
+        },
+        "LINE": {
+          "covered": 9,
+          "missed": 2
+        },
+        "COMPLEXITY": {
+          "covered": 4,
+          "missed": 3
+        },
+        "METHOD": {
+          "covered": 2,
+          "missed": 0
+        },
+        "CLASS": {
+          "covered": 1,
+          "missed": 0
+        }
+      }
+    },
+    "ai-improved": {
+      "started_at_utc": "2026-10-16T10:16:47.640029+00:00",
+      "finished_at_utc": "2026-10-16T10:16:51.950940+00:00",
+      "elapsed_seconds": 4.311,
+      "command": [
+        "case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "case-study/pom.xml",
+        "-Pai-improved",
+        "clean",
+        "verify"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "environment": "local; not a GitHub Actions or Jenkins execution",
+      "tests": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fine_calculator": {
+        "INSTRUCTION": {
+          "covered": 49,
+          "missed": 0
+        },
+        "BRANCH": {
+          "covered": 10,
+          "missed": 0
+        },
+        "LINE": {
+          "covered": 11,
+          "missed": 0
+        },
+        "COMPLEXITY": {
+          "covered": 7,
+          "missed": 0
+        },
+        "METHOD": {
+          "covered": 2,
+          "missed": 0
+        },
+        "CLASS": {
+          "covered": 1,
+          "missed": 0
+        }
+      }
+    },
+    "ai-data": {
+      "started_at_utc": "2026-10-16T10:16:51.983172+00:00",
+      "finished_at_utc": "2026-10-16T10:16:56.323109+00:00",
+      "elapsed_seconds": 4.34,
+      "command": [
+        "case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "case-study/pom.xml",
+        "-Pai-data",
+        "clean",
+        "verify"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "environment": "local; not a GitHub Actions or Jenkins execution",
+      "tests": {
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fine_calculator": {
+        "INSTRUCTION": {
+          "covered": 39,
+          "missed": 10
+        },
+        "BRANCH": {
+          "covered": 8,
+          "missed": 2
+        },
+        "LINE": {
+          "covered": 9,
+          "missed": 2
+        },
+        "COMPLEXITY": {
+          "covered": 5,
+          "missed": 2
+        },
+        "METHOD": {
+          "covered": 2,
+          "missed": 0
+        },
+        "CLASS": {
+          "covered": 1,
+          "missed": 0
+        }
+      }
+    },
+    "final": {
+      "started_at_utc": "2026-10-16T10:16:08.492427+00:00",
+      "finished_at_utc": "2026-10-16T10:16:20.267123+00:00",
+      "elapsed_seconds": 11.775,
+      "command": [
+        "case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "case-study/pom.xml",
+        "clean",
+        "verify"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "environment": "local; not a GitHub Actions or Jenkins execution",
+      "tests": {
+        "tests": 33,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fine_calculator": {
+        "INSTRUCTION": {
+          "covered": 49,
+          "missed": 0
+        },
+        "BRANCH": {
+          "covered": 10,
+          "missed": 0
+        },
+        "LINE": {
+          "covered": 11,
+          "missed": 0
+        },
+        "COMPLEXITY": {
+          "covered": 7,
+          "missed": 0
+        },
+        "METHOD": {
+          "covered": 2,
+          "missed": 0
+        },
+        "CLASS": {
+          "covered": 1,
+          "missed": 0
+        }
+      }
+    }
+  },
+  "mutations": {
+    "pit-weak": {
+      "KILLED": 3,
+      "SURVIVED": 8
+    },
+    "pit-strong": {
+      "KILLED": 10,
+      "SURVIVED": 1
+    }
+  },
+  "ai_data": {
+    "reference_count": 15,
+    "generated_count": 13,
+    "overlap": 13,
+    "reference_only": [
+      [
+        "0",
+        "VIP",
+        "0"
+      ],
+      [
+        "3",
+        "NORMAL",
+        "6000"
+      ]
+    ],
+    "generated_only": [],
+    "independent_human_reference": false
+  },
+  "benchmarks": {
+    "cache": {
+      "environment": "Local JVM; not GitHub cache, Actions timing or Jenkins execution",
+      "complete": true,
+      "planned_pairs": 3,
+      "completed_pairs": 3,
+      "medians_seconds": {
+        "cold": 48.412,
+        "warm": 12.539
+      },
+      "measurements": [
+        {
+          "trial": 1,
+          "mode": "cold",
+          "started_at_utc": "2026-10-16T10:25:03.829614+00:00",
+          "seconds": 48.412,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+            "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-1",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "trial": 1,
+          "mode": "warm",
+          "started_at_utc": "2026-10-16T10:25:52.242082+00:00",
+          "seconds": 12.539,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+            "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-1",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "trial": 2,
+          "mode": "cold",
+          "started_at_utc": "2026-10-16T10:26:04.781521+00:00",
+          "seconds": 46.713,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+            "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-2",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "trial": 2,
+          "mode": "warm",
+          "started_at_utc": "2026-10-16T10:26:51.494960+00:00",
+          "seconds": 13.229,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+            "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-2",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "started_at_utc": "2026-10-16T15:00:15.325556+00:00",
+          "finished_at_utc": "2026-10-16T15:08:14.848382+00:00",
+          "seconds": 479.523,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-8yt6ssag/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-8yt6ssag/case-study/pom.xml",
+            "-Daether.connector.connectTimeout=15000",
+            "-Daether.connector.requestTimeout=120000",
+            "-Dmaven.repo.local=/tmp/seminar-benchmark-8yt6ssag/repo-3",
+            "clean",
+            "verify"
+          ],
+          "timed_out": false,
+          "time_limit_seconds": 1800,
+          "trial": 3,
+          "mode": "cold",
+          "java_home": "/home/pham-quang-vinh/.local/jdks/ubuntu-openjdk25/usr/lib/jvm/java-25-openjdk-amd64",
+          "ipv4_preferred": true
+        },
+        {
+          "started_at_utc": "2026-10-16T15:08:14.848521+00:00",
+          "finished_at_utc": "2026-10-16T15:08:26.788922+00:00",
+          "seconds": 11.94,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-8yt6ssag/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-8yt6ssag/case-study/pom.xml",
+            "-Daether.connector.connectTimeout=15000",
+            "-Daether.connector.requestTimeout=120000",
+            "-Dmaven.repo.local=/tmp/seminar-benchmark-8yt6ssag/repo-3",
+            "clean",
+            "verify"
+          ],
+          "timed_out": false,
+          "time_limit_seconds": 1800,
+          "trial": 3,
+          "mode": "warm",
+          "java_home": "/home/pham-quang-vinh/.local/jdks/ubuntu-openjdk25/usr/lib/jvm/java-25-openjdk-amd64",
+          "ipv4_preferred": true
+        }
+      ],
+      "note": "Completed pairs only. Previous failed/interrupted attempts are retained in failed-attempts/. Resumed pairs can be executed later; see per-run timestamps and commands."
+    },
+    "jacoco": {
+      "environment": "Local JVM; not GitHub cache, Actions timing or Jenkins execution",
+      "medians_seconds": {
+        "off": 9.727,
+        "on": 12.754
+      },
+      "measurements": [
+        {
+          "trial": 1,
+          "mode": "off",
+          "started_at_utc": "2026-10-16T10:23:55.759454+00:00",
+          "seconds": 10.007,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+            "-Djacoco.skip=true",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "trial": 1,
+          "mode": "on",
+          "started_at_utc": "2026-10-16T10:24:05.766410+00:00",
+          "seconds": 12.754,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "trial": 2,
+          "mode": "on",
+          "started_at_utc": "2026-10-16T10:24:18.521010+00:00",
+          "seconds": 13.322,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "trial": 2,
+          "mode": "off",
+          "started_at_utc": "2026-10-16T10:24:31.842890+00:00",
+          "seconds": 9.727,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+            "-Djacoco.skip=true",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "trial": 3,
+          "mode": "off",
+          "started_at_utc": "2026-10-16T10:24:41.570224+00:00",
+          "seconds": 9.659,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+            "-Djacoco.skip=true",
+            "clean",
+            "verify"
+          ]
+        },
+        {
+          "trial": 3,
+          "mode": "on",
+          "started_at_utc": "2026-10-16T10:24:51.229865+00:00",
+          "seconds": 12.56,
+          "exit_code": 0,
+          "command": [
+            "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+            "-B",
+            "-ntp",
+            "-f",
+            "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+            "clean",
+            "verify"
+          ]
+        }
+      ]
+    }
+  }
+}

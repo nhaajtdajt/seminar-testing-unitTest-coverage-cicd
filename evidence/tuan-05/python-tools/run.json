@@ -1,0 +1,18 @@
+{
+  "started_at_utc": "2026-10-16T10:23:51.577190+00:00",
+  "finished_at_utc": "2026-10-16T10:23:51.655338+00:00",
+  "elapsed_seconds": 0.078,
+  "command": [
+    "python3",
+    "-I",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/tests",
+    "-v"
+  ],
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local; not a GitHub Actions or Jenkins execution"
+}

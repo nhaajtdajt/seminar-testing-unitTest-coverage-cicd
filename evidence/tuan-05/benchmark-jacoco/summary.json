@@ -1,0 +1,108 @@
+{
+  "environment": "Local JVM; not GitHub cache, Actions timing or Jenkins execution",
+  "medians_seconds": {
+    "off": 9.727,
+    "on": 12.754
+  },
+  "measurements": [
+    {
+      "trial": 1,
+      "mode": "off",
+      "started_at_utc": "2026-10-16T10:23:55.759454+00:00",
+      "seconds": 10.007,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+        "-Djacoco.skip=true",
+        "clean",
+        "verify"
+      ]
+    },
+    {
+      "trial": 1,
+      "mode": "on",
+      "started_at_utc": "2026-10-16T10:24:05.766410+00:00",
+      "seconds": 12.754,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+        "clean",
+        "verify"
+      ]
+    },
+    {
+      "trial": 2,
+      "mode": "on",
+      "started_at_utc": "2026-10-16T10:24:18.521010+00:00",
+      "seconds": 13.322,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+        "clean",
+        "verify"
+      ]
+    },
+    {
+      "trial": 2,
+      "mode": "off",
+      "started_at_utc": "2026-10-16T10:24:31.842890+00:00",
+      "seconds": 9.727,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+        "-Djacoco.skip=true",
+        "clean",
+        "verify"
+      ]
+    },
+    {
+      "trial": 3,
+      "mode": "off",
+      "started_at_utc": "2026-10-16T10:24:41.570224+00:00",
+      "seconds": 9.659,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+        "-Djacoco.skip=true",
+        "clean",
+        "verify"
+      ]
+    },
+    {
+      "trial": 3,
+      "mode": "on",
+      "started_at_utc": "2026-10-16T10:24:51.229865+00:00",
+      "seconds": 12.56,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-ormofw4w/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-ormofw4w/case-study/pom.xml",
+        "clean",
+        "verify"
+      ]
+    }
+  ]
+}

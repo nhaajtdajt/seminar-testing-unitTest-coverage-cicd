@@ -1,0 +1,18 @@
+{
+  "started_at_utc": "2026-10-16T10:16:43.310283+00:00",
+  "finished_at_utc": "2026-10-16T10:16:47.606300+00:00",
+  "elapsed_seconds": 4.296,
+  "command": [
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Pai-draft",
+    "clean",
+    "verify"
+  ],
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local; not a GitHub Actions or Jenkins execution"
+}

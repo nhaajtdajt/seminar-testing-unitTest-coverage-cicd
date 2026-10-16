@@ -1,0 +1,70 @@
+[
+  {
+    "trial": 1,
+    "mode": "cold",
+    "started_at_utc": "2026-10-16T10:25:03.829614+00:00",
+    "seconds": 48.412,
+    "exit_code": 0,
+    "command": [
+      "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+      "-B",
+      "-ntp",
+      "-f",
+      "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+      "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-1",
+      "clean",
+      "verify"
+    ]
+  },
+  {
+    "trial": 1,
+    "mode": "warm",
+    "started_at_utc": "2026-10-16T10:25:52.242082+00:00",
+    "seconds": 12.539,
+    "exit_code": 0,
+    "command": [
+      "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+      "-B",
+      "-ntp",
+      "-f",
+      "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+      "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-1",
+      "clean",
+      "verify"
+    ]
+  },
+  {
+    "trial": 2,
+    "mode": "cold",
+    "started_at_utc": "2026-10-16T10:26:04.781521+00:00",
+    "seconds": 46.713,
+    "exit_code": 0,
+    "command": [
+      "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+      "-B",
+      "-ntp",
+      "-f",
+      "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+      "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-2",
+      "clean",
+      "verify"
+    ]
+  },
+  {
+    "trial": 2,
+    "mode": "warm",
+    "started_at_utc": "2026-10-16T10:26:51.494960+00:00",
+    "seconds": 13.229,
+    "exit_code": 0,
+    "command": [
+      "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+      "-B",
+      "-ntp",
+      "-f",
+      "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+      "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-2",
+      "clean",
+      "verify"
+    ]
+  }
+]

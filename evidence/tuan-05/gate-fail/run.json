@@ -1,0 +1,19 @@
+{
+  "started_at_utc": "2026-10-16T10:16:24.896255+00:00",
+  "finished_at_utc": "2026-10-16T10:16:29.290567+00:00",
+  "elapsed_seconds": 4.394,
+  "command": [
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Pbaseline",
+    "-Dcoverage.gate.skip=false",
+    "clean",
+    "verify"
+  ],
+  "exit_code": 1,
+  "expected_exit_code": 1,
+  "environment": "local; not a GitHub Actions or Jenkins execution"
+}

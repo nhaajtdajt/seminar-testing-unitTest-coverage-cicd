@@ -1,0 +1,71 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< vn.edu.seminar:library-case-study >------------------
+[INFO] Building library-case-study 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ library-case-study ---
+[INFO] Deleting /tmp/seminar-tdd-qupj1vdu/case-study/target
+[INFO] 
+[INFO] --- jacoco:0.8.15:prepare-agent (default) @ library-case-study ---
+[INFO] argLine set to -javaagent:/home/pham-quang-vinh/.m2/repository/org/jacoco/org.jacoco.agent/0.8.15/org.jacoco.agent-0.8.15-runtime.jar=destfile=/tmp/seminar-tdd-qupj1vdu/case-study/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ library-case-study ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ library-case-study ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 21 source files with javac [debug parameters release 25] to target/classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ library-case-study ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] skip non existing resourceDirectory /tmp/seminar-tdd-qupj1vdu/ai/data
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ library-case-study ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 11 source files with javac [debug parameters release 25] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ library-case-study ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.seminar.fine.TddRoundTest
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.228 s <<< FAILURE! -- in vn.edu.seminar.fine.TddRoundTest
+[ERROR] vn.edu.seminar.fine.TddRoundTest.case1 -- Time elapsed: 0.023 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: 6000
+ but was: 0
+	at vn.edu.seminar.fine.TddRoundTest.case1(TddRoundTest.java:6)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   TddRoundTest.case1:6 
+expected: 6000
+ but was: 0
+[INFO] 
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.250 s
+[INFO] Finished at: 2026-10-16T17:23:18+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project library-case-study: There are test failures.
+[ERROR] 
+[ERROR] See /tmp/seminar-tdd-qupj1vdu/case-study/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -1,0 +1,149 @@
+{
+  "provenance": "Educational replay executed now, not historical team work or commit history",
+  "rounds": [
+    {
+      "round": 1,
+      "state": "red",
+      "started_at_utc": "2026-10-16T10:23:05.751743+00:00",
+      "exit_code": 1,
+      "seconds": 4.455,
+      "command": [
+        "/tmp/seminar-tdd-qupj1vdu/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-tdd-qupj1vdu/case-study/pom.xml",
+        "-Dtest=TddRoundTest",
+        "-Dtest.excludedTags=",
+        "clean",
+        "test"
+      ]
+    },
+    {
+      "round": 1,
+      "state": "green",
+      "started_at_utc": "2026-10-16T10:23:10.207153+00:00",
+      "exit_code": 0,
+      "seconds": 4.152,
+      "command": [
+        "/tmp/seminar-tdd-qupj1vdu/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-tdd-qupj1vdu/case-study/pom.xml",
+        "-Dtest=TddRoundTest",
+        "-Dtest.excludedTags=",
+        "clean",
+        "test"
+      ]
+    },
+    {
+      "round": 2,
+      "state": "red",
+      "started_at_utc": "2026-10-16T10:23:14.359596+00:00",
+      "exit_code": 1,
+      "seconds": 4.1,
+      "command": [
+        "/tmp/seminar-tdd-qupj1vdu/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-tdd-qupj1vdu/case-study/pom.xml",
+        "-Dtest=TddRoundTest",
+        "-Dtest.excludedTags=",
+        "clean",
+        "test"
+      ]
+    },
+    {
+      "round": 2,
+      "state": "green",
+      "started_at_utc": "2026-10-16T10:23:18.460359+00:00",
+      "exit_code": 0,
+      "seconds": 4.554,
+      "command": [
+        "/tmp/seminar-tdd-qupj1vdu/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-tdd-qupj1vdu/case-study/pom.xml",
+        "-Dtest=TddRoundTest",
+        "-Dtest.excludedTags=",
+        "clean",
+        "test"
+      ]
+    },
+    {
+      "round": 3,
+      "state": "red",
+      "started_at_utc": "2026-10-16T10:23:23.014746+00:00",
+      "exit_code": 1,
+      "seconds": 4.619,
+      "command": [
+        "/tmp/seminar-tdd-qupj1vdu/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-tdd-qupj1vdu/case-study/pom.xml",
+        "-Dtest=TddRoundTest",
+        "-Dtest.excludedTags=",
+        "clean",
+        "test"
+      ]
+    },
+    {
+      "round": 3,
+      "state": "green",
+      "started_at_utc": "2026-10-16T10:23:27.634711+00:00",
+      "exit_code": 0,
+      "seconds": 4.281,
+      "command": [
+        "/tmp/seminar-tdd-qupj1vdu/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-tdd-qupj1vdu/case-study/pom.xml",
+        "-Dtest=TddRoundTest",
+        "-Dtest.excludedTags=",
+        "clean",
+        "test"
+      ]
+    },
+    {
+      "round": 4,
+      "state": "red",
+      "started_at_utc": "2026-10-16T10:23:31.916314+00:00",
+      "exit_code": 1,
+      "seconds": 4.167,
+      "command": [
+        "/tmp/seminar-tdd-qupj1vdu/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-tdd-qupj1vdu/case-study/pom.xml",
+        "-Dtest=TddRoundTest",
+        "-Dtest.excludedTags=",
+        "clean",
+        "test"
+      ]
+    },
+    {
+      "round": 4,
+      "state": "green",
+      "started_at_utc": "2026-10-16T10:23:36.084034+00:00",
+      "exit_code": 0,
+      "seconds": 4.271,
+      "command": [
+        "/tmp/seminar-tdd-qupj1vdu/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-tdd-qupj1vdu/case-study/pom.xml",
+        "-Dtest=TddRoundTest",
+        "-Dtest.excludedTags=",
+        "clean",
+        "test"
+      ]
+    }
+  ]
+}

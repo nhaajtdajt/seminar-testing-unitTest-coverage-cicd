@@ -1,0 +1,22 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< vn.edu.seminar:library-case-study >------------------
+[INFO] Building library-case-study 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:09 min
+[INFO] Finished at: 2026-10-16T21:57:29+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal on project library-case-study: Could not resolve dependencies for project vn.edu.seminar:library-case-study:jar:0.1.0
+[ERROR] dependency: org.hibernate.orm:hibernate-core:jar:7.4.5.Final (compile)
+[ERROR] 	Could not transfer artifact org.hibernate.orm:hibernate-core:jar:7.4.5.Final from/to central (https://repo.maven.apache.org/maven2): Premature end of Content-Length delimited message body (expected: 15,279,748; received: 2,439,680)
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException

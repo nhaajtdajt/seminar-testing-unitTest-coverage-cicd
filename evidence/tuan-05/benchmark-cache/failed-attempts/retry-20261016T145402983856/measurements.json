@@ -1,0 +1,24 @@
+[
+  {
+    "started_at_utc": "2026-10-16T14:51:02.619015+00:00",
+    "finished_at_utc": "2026-10-16T14:54:02.983773+00:00",
+    "seconds": 180.365,
+    "exit_code": 124,
+    "command": [
+      "/tmp/seminar-benchmark-dfuib1er/case-study/mvnw",
+      "-B",
+      "-ntp",
+      "-f",
+      "/tmp/seminar-benchmark-dfuib1er/case-study/pom.xml",
+      "-Daether.transport.http.connectTimeout=15000",
+      "-Daether.transport.http.requestTimeout=30000",
+      "-Dmaven.repo.local=/tmp/seminar-benchmark-dfuib1er/repo-3",
+      "clean",
+      "verify"
+    ],
+    "timed_out": true,
+    "time_limit_seconds": 180,
+    "trial": 3,
+    "mode": "cold"
+  }
+]

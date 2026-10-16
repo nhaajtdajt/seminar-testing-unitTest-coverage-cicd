@@ -1,0 +1,12 @@
+{
+  "started_at_utc": "2026-10-16T10:23:00.996416+00:00",
+  "finished_at_utc": "2026-10-16T10:23:05.693359+00:00",
+  "elapsed_seconds": 4.697,
+  "command": [
+    "python3",
+    "scripts/smoke_api.py"
+  ],
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local; not a GitHub Actions or Jenkins execution"
+}

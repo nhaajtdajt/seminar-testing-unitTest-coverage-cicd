@@ -1,0 +1,83 @@
+{
+  "command": [
+    "java",
+    "-jar",
+    "/home/pham-quang-vinh/School/HK1_NAM4/TESTING/SEMINAR/seminar-testing-unitTest-coverage-cicd/case-study/target/library-case-study-0.1.0.jar",
+    "--server.address=127.0.0.1",
+    "--server.port=0"
+  ],
+  "port": 40155,
+  "cases": [
+    {
+      "time_utc": "2026-10-16T10:23:05.561540+00:00",
+      "request": {
+        "bookId": 1,
+        "memberId": 1
+      },
+      "expected_status": 201,
+      "actual_status": 201,
+      "response": {
+        "id": "c0ecc463-f55a-468c-a6b3-31197c985a06",
+        "bookId": 1,
+        "memberId": 1,
+        "borrowedAt": "2026-10-16T10:23:05.513808030Z"
+      },
+      "pass": true
+    },
+    {
+      "time_utc": "2026-10-16T10:23:05.570552+00:00",
+      "request": {
+        "bookId": 1,
+        "memberId": 1
+      },
+      "expected_status": 409,
+      "actual_status": 409,
+      "response": {
+        "code": "BOOK_UNAVAILABLE"
+      },
+      "pass": true
+    },
+    {
+      "time_utc": "2026-10-16T10:23:05.575221+00:00",
+      "request": {
+        "bookId": 99,
+        "memberId": 1
+      },
+      "expected_status": 404,
+      "actual_status": 404,
+      "response": {
+        "code": "BOOK_NOT_FOUND"
+      },
+      "pass": true
+    },
+    {
+      "time_utc": "2026-10-16T10:23:05.616130+00:00",
+      "request": {
+        "bookId": -1,
+        "memberId": 1
+      },
+      "expected_status": 400,
+      "actual_status": 400,
+      "response": {
+        "timestamp": "2026-10-16T10:23:05.613Z",
+        "status": 400,
+        "error": "Bad Request",
+        "path": "/api/loans"
+      },
+      "pass": true
+    },
+    {
+      "time_utc": "2026-10-16T10:23:05.622242+00:00",
+      "request": {
+        "bookId": 3,
+        "memberId": 2
+      },
+      "expected_status": 409,
+      "actual_status": 409,
+      "response": {
+        "code": "UNPAID_FINE"
+      },
+      "pass": true
+    }
+  ]
+}

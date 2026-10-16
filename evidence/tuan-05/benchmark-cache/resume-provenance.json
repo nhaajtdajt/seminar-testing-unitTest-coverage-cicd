@@ -1,0 +1,80 @@
+{
+  "description": "Fingerprints of the completed pairs retained while adding pair 3",
+  "original_completed_pairs": 2,
+  "original_measurements": [
+    {
+      "trial": 1,
+      "mode": "cold",
+      "started_at_utc": "2026-10-16T10:25:03.829614+00:00",
+      "seconds": 48.412,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+        "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-1",
+        "clean",
+        "verify"
+      ]
+    },
+    {
+      "trial": 1,
+      "mode": "warm",
+      "started_at_utc": "2026-10-16T10:25:52.242082+00:00",
+      "seconds": 12.539,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+        "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-1",
+        "clean",
+        "verify"
+      ]
+    },
+    {
+      "trial": 2,
+      "mode": "cold",
+      "started_at_utc": "2026-10-16T10:26:04.781521+00:00",
+      "seconds": 46.713,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+        "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-2",
+        "clean",
+        "verify"
+      ]
+    },
+    {
+      "trial": 2,
+      "mode": "warm",
+      "started_at_utc": "2026-10-16T10:26:51.494960+00:00",
+      "seconds": 13.229,
+      "exit_code": 0,
+      "command": [
+        "/tmp/seminar-benchmark-1gwd6bwc/case-study/mvnw",
+        "-B",
+        "-ntp",
+        "-f",
+        "/tmp/seminar-benchmark-1gwd6bwc/case-study/pom.xml",
+        "-Dmaven.repo.local=/tmp/seminar-benchmark-1gwd6bwc/repo-2",
+        "clean",
+        "verify"
+      ]
+    }
+  ],
+  "sha256": {
+    "1-cold.log": "b6a7a6027abf711c8478437d35a07ee83b17374e49f86447154be053a1f2d5f8",
+    "1-warm.log": "9b8c760e5051f5ac05a113eec630bda3c253f5bd7020cb44b0d72a0eb896736b",
+    "2-cold.log": "3bfcac6d0ebe31676d71ae772ad8302502ccf7d093fb9abf264a34eeab309d10",
+    "2-warm.log": "6ec6eb2957e65bb0f21ea0bb1c405815a5a4c7dacd6b5dbf45c7ddd7c7324344"
+  }
+}
