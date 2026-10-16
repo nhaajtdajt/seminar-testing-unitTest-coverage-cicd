@@ -1,0 +1,99 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{fontspec}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=black,linkcolor=black}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\title{Báo cáo tuần thực hành 04\\Seminar Unit Test -- Code Coverage -- CI/CD}
+\author{Nhóm: [Điền mã nhóm]\\[6pt]
+TV1: Phạm Quang Vinh -- 23120202\\TV2: Nguyễn Bảo An -- 23120207\\TV3: Trương Nhật Đạt -- 23120231\\TV4: Nguyễn Lê Thế Vinh -- 23120190\\TV5: Ngô Gia An -- 23120205}
+\date{Ngày thực hành: 16/10/2026}
+\begin{document}
+\maketitle
+
+\textbf{Tình trạng bản thảo:} Nhóm em chuẩn bị tài liệu và sản phẩm có Codex hỗ trợ. Danh tính và phân công đã được điền theo thông tin nhóm cung cấp. Các thành viên cần tự rà soát, xác nhận đóng góp và lịch tuần học trước khi nộp. Kết quả chạy trong đợt hiện tại không được ghi thành lịch sử thực hiện ở các tuần trước.
+
+\textbf{Tuần báo cáo:} Tuần thực hành 04 theo xác nhận của nhóm (12/10/2026 -- 16/10/2026). Một phần công việc dự kiến cho Tuần 05 đã được thực hiện sớm và được ghi nhận trong báo cáo này. Tên gói nộp dùng WeekID 04: \texttt{Group09-04.zip} (Nhóm 09).
+
+\tableofcontents
+\newpage
+
+\section{Mục tiêu và phạm vi}
+Nhóm em tìm hiểu chuỗi Unit Test $\rightarrow$ Code Coverage $\rightarrow$ CI/CD trên case study quản lý thư viện. Mục tiêu là viết test kiểm đúng nghiệp vụ, đọc báo cáo độ phủ và tự động kiểm tra trước khi tích hợp mã. Bản hiện tại dùng Java 25, Spring Boot 4.1.1 và H2 in-memory qua Spring Data JPA, có API mượn sách. Pipeline dừng ở kiểm thử và đóng gói JAR.
+
+\section{Phân công rà soát và nhận bàn giao}
+\begin{longtable}{p{1cm}p{12.5cm}}
+\toprule
+Vai & Nội dung phụ trách \\
+\midrule
+TV1 & Kế hoạch, bảng công việc, GitHub Actions, Jenkinsfile và báo cáo tổng hợp. \\
+TV2 & Unit Test với JUnit/Mockito, dữ liệu CSV, các kịch bản UT-1/2/3. \\
+TV3 & JaCoCo, coverage gate, PIT, số liệu và các kịch bản CC-1/2/3. \\
+TV4 & Mã nguồn case study, REST API, integration test và hướng dẫn chạy. \\
+TV5 & Các demo AI, bản nháp slide và báo cáo, chuẩn bị video. \\
+\bottomrule
+\end{longtable}
+TV1--TV5 là vai trò theo kế hoạch; bảng này chưa xác nhận tác giả thực tế của từng phần. Danh tính: TV1 Phạm Quang Vinh (23120202), TV2 Nguyễn Bảo An (23120207), TV3 Trương Nhật Đạt (23120231), TV4 Nguyễn Lê Thế Vinh (23120190), TV5 Ngô Gia An (23120205). Nhóm bổ sung minh chứng đóng góp bằng tài khoản/commit thật.
+
+\section{Kết quả thực hành}
+\subsection{Case study}
+NORMAL tính phí 2.000 VND/ngày, VIP được gia hạn 2 ngày rồi tính 1.000 VND/ngày; mức trần 50.000 VND. Ngày âm hoặc hạng null bị từ chối. Nghiệp vụ mượn sách kiểm tra sách, thành viên, hạn mức 3 sách và phí còn nợ trước khi lưu phiếu. Thời gian đi qua Clock để test dùng giờ cố định.
+
+\subsection{Unit Test}
+Bộ chuẩn chạy 33 lượt: 17 tính phí, 6 nghiệp vụ mượn, 5 tầng web, 2 integration và 3 kiểm thử persistence với H2. Kết quả tại máy: 0 failure, 0 error trên Java 25 (Spring Boot 4.1.1, JUnit Jupiter 6.0.3); bộ chuẩn cũng chạy pass trên Java 21. Số lượt parameterized không đồng nghĩa số file test. Bốn vòng TDD đỏ--xanh được tái hiện trong bản sao riêng và lưu log/source, không phải commit lịch sử của các tuần trước.
+
+\subsection{Coverage và mutation}
+Riêng FineCalculator, baseline phủ 5/10 nhánh (50\%); bộ đầy đủ phủ 10/10 (100\%). Gate yêu cầu ít nhất 90\% branch cho lớp này: baseline fail, bộ đầy đủ pass. Không suy rộng thành độ phủ 100\% toàn ứng dụng.
+
+Test bẫy không assert tiền ở ca hợp lệ vẫn phủ 100\% nhánh. PIT tạo 11 mutation: bộ yếu diệt 3, bộ đầy đủ diệt 10. Mutant còn sống đổi điều kiện tại đúng ngưỡng gia hạn nhưng vẫn trả tiền bằng 0, tương đương theo đặc tả hiện tại. Coverage cần được đọc cùng chất lượng assertion và dữ liệu biên.
+
+\subsection{CI/CD}
+Có workflow test (Java 25) $\rightarrow$ coverage-gate $\rightarrow$ package, cache Maven và artifact báo cáo/JAR. Jenkinsfile mô tả thứ tự tương ứng. Workflow qua actionlint, lệnh Maven đã chạy tại máy. Tài khoản GitHub hiện có quyền READ nên chưa có run/PR đỏ--xanh hay xác nhận quy tắc chặn merge. Jenkinsfile chưa được chạy trên Jenkins.
+
+\subsection{AI}
+AI-1 có bản nháp 3 test pass, phủ 70\% nhánh. AI-2 đối chiếu báo cáo với source, thêm 3 test null, ngày âm và phí VIP; bộ 6 test đạt 100\% nhánh. AI-4 có 13 dòng CSV được chạy pass, trùng 13/15 ca tham chiếu. Hai bộ dữ liệu đều có AI hỗ trợ nên chưa có so sánh con người--AI độc lập.
+
+AI-3 có prompt, client API và workflow. Chưa có API key nên mới kiểm chế độ chuẩn bị và xử lý phản hồi bằng test cục bộ; chưa gọi dịch vụ AI thật. Review fixture trong phiên Codex là minh họa, không phải benchmark độc lập hoặc comment thực tế trên PR.
+
+\section{Số đo thời gian tại máy}
+\begin{longtable}{p{8cm}p{4cm}}
+\toprule
+Thí nghiệm & Trung vị (giây) \\
+\midrule
+Maven repo dependency lạnh (3 lượt) & 48,412 \\
+Maven repo dependency ấm (3 lượt) & 12,539 \\
+Verify không JaCoCo (3 lượt) & 9,727 \\
+Verify có JaCoCo/report/gate (3 lượt) & 12,754 \\
+\bottomrule
+\end{longtable}
+Đây là phép đo tại máy, chịu ảnh hưởng mạng và tải máy; không coi là thời gian restore cache hoặc runner GitHub Actions.
+
+Phép đo JaCoCo đã đủ 3 lượt tắt và 3 lượt bật. Phép đo cache đã đủ 3/3 cặp lạnh--ấm hợp lệ. Cặp 3 bổ sung sau hai cặp đầu, mất 479,523/11,940 giây với IPv4 và thời gian chờ HTTP 120 giây; kho lạnh ban đầu trống, kho ấm dùng lại đúng kho vừa tải. Điều kiện mạng khác nhau cần được đọc cùng số đo từng lượt, không suy ra mức tăng tốc cố định từ trung vị. Các lượt lỗi hoặc bị ngắt được giữ riêng và không tính là hoàn thành.
+
+\section{Hướng dẫn tái hiện}
+Chạy từ thư mục gốc, với JDK 25 (Maven 3.9.16 do Maven Wrapper tự tải):
+\begin{verbatim}
+case-study/mvnw -B -ntp -f case-study/pom.xml clean verify
+java -jar case-study/target/library-case-study-0.1.0.jar
+\end{verbatim}
+Kịch bản từng demo có trong \texttt{docs/thuc-hanh/HuongDan\_Demo.md}. Báo cáo HTML/XML, PIT, log và metadata tại \texttt{evidence/tuan-05/}. Mở \texttt{slides/index.html} để trình chiếu, không cần CDN. Bản thảo chi tiết nằm ở \texttt{docs/thuc-hanh/BaoCao\_ChiTiet.md}.
+
+\section{Kế hoạch tuần thực hành 05}
+Nhóm em sẽ review và xác nhận sản phẩm đã làm trước, dùng tài khoản có quyền ghi để commit và chạy workflow/PR đỏ--xanh, cấu hình required checks, chạy AI-3 nếu có cấu hình, đối chiếu số liệu benchmark đã đủ số lượt và hoàn thiện bản nháp tài liệu. Việc quay video và chốt bản nộp chính thức tiếp tục theo mốc kế hoạch đã thống nhất.
+
+\section{Nguồn tham khảo}
+\begin{itemize}
+\item \url{https://docs.junit.org/6.0.3/user-guide/}
+\item \url{https://github.com/mockito/mockito}
+\item \url{https://www.jacoco.org/jacoco/trunk/doc/}
+\item \url{https://pitest.org/quickstart/maven/}
+\item \url{https://docs.spring.io/spring-boot/4.1/system-requirements.html}
+\item \url{https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven}
+\item \url{https://ai.google.dev/api/generate-content}
+\end{itemize}
+\end{document}

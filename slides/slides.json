@@ -1,0 +1,230 @@
+[
+  {
+    "stage": "Tổng quan",
+    "title": "Một lần mượn sách, ba lớp kiểm chứng",
+    "bullets": [
+      "Unit Test → Code Coverage → CI/CD",
+      "Seminar Kiểm thử phần mềm · Nhóm [mã nhóm]",
+      "Tuần thực hành 04 · Có phần làm trước kế hoạch Tuần 05"
+    ]
+  },
+  {
+    "stage": "Nhóm thực hiện",
+    "title": "Thành viên và phân công",
+    "bullets": [
+      "Nguyễn Bảo An · 23120207: Trưởng nhóm, Unit Test, JUnit/Mockito và tổng hợp báo cáo.",
+      "Phạm Quang Vinh · 23120202: CI/CD, Build Java 25 & Benchmark.",
+      "Trương Nhật Đạt · 23120231: Code Coverage, JaCoCo, coverage gate và mutation testing.",
+      "Nguyễn Lê Thế Vinh · 23120190: Case study, REST API, persistence và demo tích hợp.",
+      "Ngô Gia An · 23120205: AI, slide, báo cáo chi tiết và điều phối video."
+    ]
+  },
+  {
+    "stage": "Tổng quan",
+    "title": "Người học sẽ thực hành gì?",
+    "bullets": [
+      "Viết test kiểm đúng hành vi và dữ liệu biên.",
+      "Đọc báo cáo để tìm mã chưa được chạy qua.",
+      "Dùng gate để làm fail build khi không đạt yêu cầu.",
+      "Review test do AI sinh bằng kết quả chạy thật."
+    ]
+  },
+  {
+    "stage": "Case study",
+    "title": "Tính phí và mượn sách",
+    "bullets": [
+      "NORMAL: 2.000 VND/ngày; VIP: gia hạn 2 ngày, sau đó 1.000 VND/ngày.",
+      "Mức trần 50.000 VND; ngày âm và hạng null bị từ chối.",
+      "Mượn sách: kiểm sách, thành viên, hạn mức 3 sách và phí chưa trả.",
+      "Dữ liệu trong H2 in-memory (Spring Data JPA); restart để đặt lại trạng thái."
+    ]
+  },
+  {
+    "stage": "Unit Test",
+    "title": "Arrange → Act → Assert",
+    "code": "// Đầu vào: VIP trễ 3 ngày\nvar calculator = new FineCalculator();\nvar amount = calculator.calculate(3, MemberTier.VIP);\nassertThat(amount).isEqualByComparingTo(\"1000\");",
+    "bullets": [
+      "Kiểm giá trị cụ thể; so tiền không phụ thuộc scale.",
+      "Logic thuần dùng đối tượng thật."
+    ]
+  },
+  {
+    "stage": "Unit Test",
+    "title": "Test nhanh, độc lập, lặp lại được",
+    "bullets": [
+      "FIRST: Fast, Independent, Repeatable, Self-validating, Timely.",
+      "Clock.fixed giữ thời gian test ổn định.",
+      "Một test không có assertion vẫn có thể pass.",
+      "Test mock quá mức có thể xác nhận lại điều đã stub."
+    ]
+  },
+  {
+    "stage": "Unit Test",
+    "title": "UT-1: chạy và đọc kết quả",
+    "code": "case-study/mvnw -B -ntp -f case-study/pom.xml clean test",
+    "bullets": [
+      "33 lượt trong bộ chuẩn: 17 tính phí, 6 nghiệp vụ, 5 web, 2 integration, 3 persistence.",
+      "Đọc Tests / Failures / Errors / Skipped trong Surefire.",
+      "Đã chạy bộ chuẩn trên Java 25 và Java 21 tại máy."
+    ]
+  },
+  {
+    "stage": "Unit Test",
+    "title": "UT-2: một test, nhiều bộ dữ liệu",
+    "code": "daysLate,tier,expected\n24,NORMAL,48000\n25,NORMAL,50000\n26,NORMAL,50000",
+    "bullets": [
+      "@CsvFileSource đọc dữ liệu từ CSV ngoài mã test.",
+      "Kiểm trước / đúng / sau ngưỡng.",
+      "Bốn vòng TDD đỏ–xanh được tái hiện; có source và log từng vòng."
+    ]
+  },
+  {
+    "stage": "Unit Test",
+    "title": "UT-3: sáu tình huống mượn sách",
+    "bullets": [
+      "Sách không tồn tại; sách đang được mượn.",
+      "Thành viên không tồn tại; đạt hạn mức 3 sách.",
+      "Còn phí chưa trả; mượn thành công.",
+      "verify(never()) kiểm nhánh lỗi không lưu phiếu.",
+      "ArgumentCaptor kiểm phiếu đã lưu, không chỉ kiểm giá trị trả về."
+    ]
+  },
+  {
+    "stage": "Unit Test",
+    "title": "Mock kiểm được đến đâu?",
+    "bullets": [
+      "Unit test tách phụ thuộc để kiểm quyết định nghiệp vụ.",
+      "Web slice kiểm HTTP và validation với service được mock.",
+      "Integration test nối controller → service → repository thật trên H2 in-memory.",
+      "HTTP smoke khởi động JAR và kiểm 5 tình huống thật."
+    ]
+  },
+  {
+    "stage": "Code Coverage",
+    "title": "Dòng được chạy và nhánh được chạy",
+    "bullets": [
+      "Line coverage đếm dòng thực thi.",
+      "Branch coverage đếm hướng rẽ trong mã.",
+      "Một dòng có thể chứa nhiều nhánh.",
+      "JaCoCo cung cấp HTML để đọc, XML để phân tích tự động."
+    ]
+  },
+  {
+    "stage": "Code Coverage",
+    "title": "CC-1/2: đo trước, bổ sung, đo lại",
+    "code": "case-study/mvnw -f case-study/pom.xml -Pbaseline clean verify\n# Lưu báo cáo trước khi chạy tiếp\ncase-study/mvnw -f case-study/pom.xml clean verify",
+    "bullets": [
+      "Riêng FineCalculator: baseline 50% nhánh → bộ đầy đủ 100%.",
+      "Lưu cả hai báo cáo HTML/XML để đối chiếu."
+    ]
+  },
+  {
+    "stage": "Code Coverage",
+    "title": "CC-3: gate phải chặn được bản thiếu test",
+    "code": "case-study/mvnw -f case-study/pom.xml -Pbaseline \\\n  -Dcoverage.gate.skip=false clean verify\n# Kỳ vọng: exit 1, vì 50% < 90%",
+    "bullets": [
+      "Giữ gate 90% branch cho FineCalculator.",
+      "Khôi phục bộ test đầy đủ: build pass.",
+      "Mới chứng minh gate tại máy; required checks trên GitHub còn cần cấu hình."
+    ]
+  },
+  {
+    "stage": "Code Coverage",
+    "title": "100% branch vẫn có thể kiểm sai rất ít",
+    "bullets": [
+      "Test bẫy đi đủ nhánh nhưng bỏ assertion tiền ở ca hợp lệ.",
+      "JaCoCo: cả bộ yếu và bộ đầy đủ đều phủ 100% branch.",
+      "PIT: bộ yếu diệt 3/11 mutation; bộ đầy đủ diệt 10/11.",
+      "Mutant còn sống ở bộ đầy đủ tương đương theo đặc tả ngưỡng trả 0."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "Từ lệnh tại máy đến pipeline",
+    "code": "test [JDK 25]\n        ↓\ncoverage-gate [branch >= 90%]\n        ↓\npackage [JAR + artifact]",
+    "bullets": [
+      "CI kiểm thay đổi được tích hợp thường xuyên.",
+      "Bản hiện tại dừng ở kiểm thử/đóng gói; chưa tự deploy ứng dụng."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "CI-1/2/3: workflow và minh chứng",
+    "bullets": [
+      "CI-1: checkout, setup Java, chạy Maven.",
+      "CI-2: cache dependency, upload báo cáo và summary.",
+      "CI-3: các job phụ thuộc nhau, matrix, PR đỏ rồi xanh.",
+      "Có cấu hình và actionlint pass; chưa có run/PR vì tài khoản repo hiện chỉ có READ."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "GitHub Actions và Jenkins",
+    "bullets": [
+      "GitHub Actions dùng YAML và hosted runner.",
+      "Jenkinsfile mô tả cùng thứ tự test → gate → package.",
+      "Mỗi hệ có cú pháp và cách cấp môi trường riêng.",
+      "Jenkinsfile chưa chạy trên Jenkins; chưa kết luận về tốc độ hoặc độ dễ vận hành."
+    ]
+  },
+  {
+    "stage": "Thực nghiệm",
+    "title": "Thời gian đo tại máy",
+    "bullets": [
+      "Kho Maven lạnh/ấm (Java 25): đủ 3 cặp; trung vị 48,412s / 12,539s.",
+      "Ba lượt verify không/có JaCoCo: trung vị 9,727s / 12,754s.",
+      "Cặp 3 chạy bổ sung: 479,523s / 11,940s; điều kiện mạng thay đổi giữa các cặp.",
+      "Không coi là thời gian cache trên GitHub Actions."
+    ]
+  },
+  {
+    "stage": "AI",
+    "title": "AI-1/2: sinh test, đọc gap, kiểm lại",
+    "bullets": [
+      "Bản nháp Codex: 3 test đúng, chỉ phủ 70% nhánh.",
+      "Đọc gap và source: thiếu null, ngày âm, tính phí VIP sau gia hạn.",
+      "Thêm 3 test: bộ 6 test phủ 100% nhánh.",
+      "Prompt và test có thể tái sử dụng; thành viên nhóm cần review lại."
+    ]
+  },
+  {
+    "stage": "AI",
+    "title": "AI-3/4: review và dữ liệu biên",
+    "bullets": [
+      "AI-3 có client/workflow; chưa gọi API vì chưa có key.",
+      "Review fixture tương tác có 4 nhận xét; chưa là benchmark độc lập.",
+      "AI-4 có 13 ca CSV chạy pass, trùng 13/15 ca tham chiếu.",
+      "Chưa có bộ dữ liệu do con người viết độc lập để so sánh công bằng."
+    ]
+  },
+  {
+    "stage": "Thực hành",
+    "title": "Bài tập cho người nghe",
+    "bullets": [
+      "Thêm hạng STUDENT: viết quy tắc, dữ liệu biên và test.",
+      "Bỏ một assertion tiền: so JaCoCo và PIT trước/sau.",
+      "Đưa Maven vào workflow, tạo PR thiếu nhánh và kiểm gate.",
+      "Gợi ý: giữ nguyên gate; sửa test/logic theo đặc tả."
+    ]
+  },
+  {
+    "stage": "Tuần 6",
+    "title": "Phần nhóm cần chốt",
+    "bullets": [
+      "Review sản phẩm theo phân công và xác nhận đóng góp thực tế.",
+      "Chạy workflow trên repo có quyền, bật required status checks.",
+      "Chạy API AI nếu nhóm cấu hình; ghi đúng mức tự động thực tế.",
+      "Quay video có thuyết minh, hoàn thiện bài tập và báo cáo."
+    ]
+  },
+  {
+    "stage": "Tài liệu",
+    "title": "Nguồn và cách tái hiện",
+    "bullets": [
+      "README.md: điểm vào cho gói thực hành.",
+      "docs/thuc-hanh/HuongDan_Demo.md: lệnh cho từng demo.",
+      "evidence/tuan-05/: log, XML/HTML và số liệu gốc.",
+      "Tài liệu chính thức: JUnit, Mockito, JaCoCo, PIT, Spring Boot, GitHub Actions, Gemini API (link trong báo cáo)."
+    ]
+  }
+]
