@@ -1,0 +1,41 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< vn.edu.seminar:library-case-study >------------------
+[INFO] Building library-case-study 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.15:prepare-agent (default) @ library-case-study ---
+[INFO] argLine set to -javaagent:/home/pham-quang-vinh/.m2/repository/org/jacoco/org.jacoco.agent/0.8.15/org.jacoco.agent-0.8.15-runtime.jar=destfile=/tmp/seminar-live-demo-u0hnfm9_/case-study/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ library-case-study ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ library-case-study ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 21 source files with javac [debug parameters release 25] to target/classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ library-case-study ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] skip non existing resourceDirectory /tmp/seminar-live-demo-u0hnfm9_/ai/data
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ library-case-study ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 10 source files with javac [debug parameters release 25] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ library-case-study ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ library-case-study ---
+[INFO] Building jar: /tmp/seminar-live-demo-u0hnfm9_/case-study/target/library-case-study-0.1.0.jar
+[INFO] 
+[INFO] --- spring-boot:4.1.1:repackage (repackage) @ library-case-study ---
+[INFO] Replacing main artifact /tmp/seminar-live-demo-u0hnfm9_/case-study/target/library-case-study-0.1.0.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /tmp/seminar-live-demo-u0hnfm9_/case-study/target/library-case-study-0.1.0.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.649 s
+[INFO] Finished at: 2026-10-16T22:15:57+07:00
+[INFO] ------------------------------------------------------------------------
