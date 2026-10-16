@@ -1,0 +1,42 @@
+{
+  "week_id": "04",
+  "group_id": "Group09",
+  "assignment_basis": "Phân công theo nhiệm vụ của nhóm ngày 16/10/2026; phân định vai trò và đối chiếu git username tương ứng của 5 thành viên.",
+  "members": [
+    {
+      "role": "TV1",
+      "student_id": "23120207",
+      "full_name": "Nguyễn Bảo An",
+      "responsibility": "Trưởng nhóm, Unit Test, JUnit/Mockito và tổng hợp báo cáo",
+      "git_author": "NgBaoAn"
+    },
+    {
+      "role": "TV2",
+      "student_id": "23120202",
+      "full_name": "Phạm Quang Vinh",
+      "responsibility": "CI/CD, Build Java 25 và Performance Benchmark",
+      "git_author": "vinh-code"
+    },
+    {
+      "role": "TV3",
+      "student_id": "23120231",
+      "full_name": "Trương Nhật Đạt",
+      "responsibility": "Code Coverage, JaCoCo, coverage gate và mutation testing",
+      "git_author": "nhaajtdajt"
+    },
+    {
+      "role": "TV4",
+      "student_id": "23120190",
+      "full_name": "Nguyễn Lê Thế Vinh",
+      "responsibility": "Case study, REST API, persistence và demo tích hợp",
+      "git_author": "zin1401"
+    },
+    {
+      "role": "TV5",
+      "student_id": "23120205",
+      "full_name": "Ngô Gia An",
+      "responsibility": "AI, slide, báo cáo chi tiết và điều phối video",
+      "git_author": "bingsu1103"
+    }
+  ]
+}
