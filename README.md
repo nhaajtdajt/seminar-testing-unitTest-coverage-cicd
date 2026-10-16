@@ -2,7 +2,12 @@
 
 Case study quản lý thư viện (nghiệp vụ cho mượn sách) dùng chung cho cả ba phần: unit test, code coverage và pipeline CI.
 
-Nhánh `master` chỉ chứa **mã nguồn, test, cấu hình build/CI và công cụ chạy**. Báo cáo, slide, bằng chứng chạy và tài liệu theo tuần nằm ở các nhánh riêng, ví dụ `reportweek04`.
+Nhánh `master` chỉ chứa **mã nguồn, test, cấu hình build/CI và công cụ chạy**. Tài liệu nằm ở các nhánh riêng:
+
+| Nhánh | Nội dung |
+|---|---|
+| [`reportweek04`](../../tree/reportweek04) | Báo cáo, slide, bằng chứng chạy và công cụ dựng tài liệu của Tuần thực hành 04 |
+| [`noplan01`](../../tree/noplan01) | Gói đề xuất nộp lần 1 (`nop-lan-1/`), đặc tả thiết kế gốc, kế hoạch và đề bài (`require.md`) |
 
 ## Yêu cầu
 
