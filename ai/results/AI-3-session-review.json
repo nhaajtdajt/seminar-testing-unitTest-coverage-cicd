@@ -1,0 +1,9 @@
+{
+  "provenance": "Review written by Codex in the current interactive session; not a Gemini API call or a GitHub PR review. Fixture and review share an author; evaluation is a demonstration, not an independent accuracy benchmark.",
+  "findings": [
+    {"rule":"NO_ASSERTION","file":"case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java","line":8,"message":"Test chỉ gọi calculate; tính tiền sai vẫn có thể pass. Cần assert giá trị 6000 theo đặc tả."},
+    {"rule":"MOCK_SELF","file":"case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java","line":11,"message":"Đang mock chính FineCalculator, rồi xác nhận giá trị đã stub. Dùng đối tượng thật để kiểm logic. Mockito 5 có thể mock final bằng inline mock maker mặc định."},
+    {"rule":"BIGDECIMAL_EQUALS","file":"case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java","line":16,"message":"BigDecimal.equals so cả scale nên 6000.00 khác 6000. Dùng AssertJ isEqualByComparingTo hoặc compareTo để kiểm giá trị tiền."},
+    {"rule":"MISSING_BRANCH","file":"case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java","line":8,"message":"Diff thêm nhánh >365 trả 60000, vượt mức trần 50000 của đặc tả; không thấy test cho 365/366 trong diff. Cần kiểm toàn repo trước khi kết luận thiếu test."}
+  ]
+}

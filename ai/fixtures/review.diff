@@ -1,0 +1,30 @@
+diff --git a/case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java b/case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java
+new file mode 100644
+--- /dev/null
++++ b/case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java
+@@ -0,0 +1,18 @@
++package vn.edu.seminar.fine;
++import java.math.BigDecimal;
++import org.junit.jupiter.api.Test;
++import static org.mockito.Mockito.*;
++import static org.junit.jupiter.api.Assertions.*;
++class ExampleTest {
++    @Test void noAssertion() {
++        new FineCalculator().calculate(3, MemberTier.NORMAL);
++    }
++    @Test void mockSelf() {
++        FineCalculator calculator = mock(FineCalculator.class);
++        when(calculator.calculate(3, MemberTier.NORMAL)).thenReturn(new BigDecimal("6000"));
++        assertEquals(new BigDecimal("6000"), calculator.calculate(3, MemberTier.NORMAL));
++    }
++    @Test void scaleSensitiveMoney() {
++        assertTrue(new BigDecimal("6000.00").equals(new FineCalculator().calculate(3, MemberTier.NORMAL)));
++    }
++}
+diff --git a/case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java b/case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java
+--- a/case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java
++++ b/case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java
+@@ -7,0 +8,3 @@
++        if (daysLate > 365) {
++            return BigDecimal.valueOf(60000);
++        }

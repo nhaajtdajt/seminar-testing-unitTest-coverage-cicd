@@ -1,0 +1,6 @@
+{"findings":[
+  {"rule":"NO_ASSERTION","file":"case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java","line":8},
+  {"rule":"MOCK_SELF","file":"case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java","line":11},
+  {"rule":"BIGDECIMAL_EQUALS","file":"case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java","line":16},
+  {"rule":"MISSING_BRANCH","file":"case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java","line":8}
+]}
