@@ -1,0 +1,45 @@
+name: AI test review
+# TẠM TẮT TỰ ĐỘNG: đang trong giai đoạn sửa nhiều, workflow chỉ chạy tay
+# (tab Actions -> AI test review -> Run workflow).
+# TRƯỚC KHI LÀM DEMO AI-3: bỏ dấu '#' ở trigger pull_request dưới để bật lại tự động.
+on:
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review:
+    # Secrets are never exposed to fork PR code. No pull_request_target is used.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Prepare diff
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ -n "$BASE_SHA" ] && [ -n "$HEAD_SHA" ]; then
+            git diff "$BASE_SHA...$HEAD_SHA" -- case-study/src > /tmp/review.diff
+          else
+            cp ai/fixtures/review.diff /tmp/review.diff
+          fi
+      - name: Live review when configured; prepare only otherwise
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AI_MODEL: ${{ vars.AI_MODEL }}
+        run: |
+          if [ -n "$GEMINI_API_KEY" ] && [ -n "$AI_MODEL" ]; then
+            python3 scripts/ai_review.py --diff /tmp/review.diff --output ai-output --live
+          else
+            python3 scripts/ai_review.py --diff /tmp/review.diff --output ai-output
+            echo 'AI API not called: configure GEMINI_API_KEY and AI_MODEL.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ai-review
+          path: ai-output
