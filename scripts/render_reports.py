@@ -57,11 +57,11 @@ def render_markdown(markdown):
         if line.startswith('|') and i + 1 < len(lines) and re.match(r'^\|?\s*[-:| ]+\|?$', lines[i+1]):
             rows = []
             while i < len(lines) and lines[i].startswith('|'):
-                rows.append([cell.strip() for cell in lines[i].strip().strip('|').split('|')])
+                rows.append(split_table_row(lines[i]))
                 i += 1
             headers = rows[0]
             body = rows[2:]
-            blocks.append('<table><thead><tr>' + ''.join('<th>' + inline(c) + '</th>' for c in headers) + '</tr></thead><tbody>' + ''.join('<tr>' + ''.join('<td>' + inline(c) + '</td>' for c in row) + '</tr>' for row in body) + '</tbody></table>')
+            blocks.append('<div class="table-wrap"><table><thead><tr>' + ''.join('<th>' + inline(c) + '</th>' for c in headers) + '</tr></thead><tbody>' + ''.join('<tr>' + ''.join('<td>' + inline(c) + '</td>' for c in row) + '</tr>' for row in body) + '</tbody></table></div>')
             continue
         if re.match(r'^\s*[-*]\s+', line):
             items = []
@@ -103,19 +103,44 @@ def render_markdown(markdown):
         blocks.append('<p>' + '<br>'.join(inline(part) for part in paragraph) + '</p>')
     return '\n'.join(blocks)
 
+
+def split_table_row(line):
+    """Split a Markdown table row without treating escaped or code-span pipes as separators."""
+    value = line.strip()
+    if value.startswith('|'):
+        value = value[1:]
+    if value.endswith('|') and not value.endswith('\\|'):
+        value = value[:-1]
+    cells, current = [], []
+    in_code = False
+    escaped = False
+    for char in value:
+        if char == '`' and not escaped:
+            in_code = not in_code
+        if char == '|' and not in_code and not escaped:
+            cells.append(''.join(current).strip())
+            current = []
+        else:
+            current.append(char)
+        escaped = char == '\\' and not escaped
+        if char != '\\':
+            escaped = False
+    cells.append(''.join(current).strip())
+    return cells
+
 STYLE = '''
 :root{font-family:"Segoe UI",Arial,sans-serif;color:#17212b;background:#fff;line-height:1.65}
 body{max-width:1200px;margin:36px auto;padding:0 26px 60px}
 header{border-bottom:2px solid #17212b;padding-bottom:14px;margin-bottom:28px;color:#52606d}
 h1{font-size:2rem;line-height:1.3}h2{margin-top:2.4rem;border-bottom:1px solid #dce1e6;padding-bottom:8px}
-a{color:#164c88}table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;margin:20px 0;font-size:.94rem}
-th,td{border:1px solid #ccd2d8;padding:10px 12px;vertical-align:top;text-align:left}th{background:#edf2f7}
+a{color:#164c88}.table-wrap{width:100%;overflow-x:auto;margin:20px 0}table{border-collapse:collapse;width:100%;min-width:680px;margin:0;font-size:.94rem}
+th,td{border:1px solid #ccd2d8;padding:10px 12px;vertical-align:top;text-align:left;overflow-wrap:anywhere}th{background:#edf2f7}
 tbody tr:nth-child(even){background:#f7f9fb}pre{background:#f3f5f7;padding:16px;white-space:pre-wrap;overflow-wrap:anywhere}
 code{font-family:Consolas,"DejaVu Sans Mono",monospace;font-size:.9em}p,li,td{overflow-wrap:anywhere}
 blockquote{margin:20px 0;padding:10px 20px;border-left:4px solid #52606d;background:#f5f7f9}
 img{max-width:100%;height:auto;border:1px solid #dce1e6}
 @media print{@page{size:A4;margin:16mm}body{margin:0;padding:0;font-size:10pt;max-width:none}header{display:none}
-h1{font-size:19pt}h2{font-size:14pt;break-after:avoid}table{display:table;table-layout:fixed;font-size:8pt}
+h1{font-size:19pt}h2{font-size:14pt;break-after:avoid}.table-wrap{overflow:visible}table{display:table;width:100%;min-width:0;table-layout:fixed;font-size:8pt}
 th,td{padding:5px}thead{display:table-header-group}tr,figure{break-inside:avoid}a{color:#17212b}}
 '''
 
