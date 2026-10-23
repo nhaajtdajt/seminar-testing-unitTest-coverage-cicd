@@ -22,7 +22,7 @@ def main():
         command = command[1:]
     if not command or Path(args.name).name != args.name:
         parser.error("Provide a plain run name and a command after --")
-    destination = ROOT / "evidence/tuan-05" / args.name
+    destination = ROOT / "evidence/tuan-06" / args.name
     if destination.exists():
         parser.error(f"Run already exists: {destination}; use a new name to preserve evidence")
     destination.mkdir(parents=True)
