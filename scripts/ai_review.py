@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 
@@ -22,6 +23,27 @@ def validate_review(review):
         if type(item.get("line")) is not int or item["line"] < 1:
             raise ValueError("Each finding requires a positive line number")
     return review
+
+def request_with_retry(request, attempts=3, timeout=150):
+    retryable_statuses = {408, 429, 500, 502, 503, 504}
+    for attempt in range(attempts):
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return json.load(response)
+        except urllib.error.HTTPError as error:
+            if error.code not in retryable_statuses or attempt == attempts - 1:
+                raise
+            delay = 2 ** attempt
+            print(f"Gemini API HTTP {error.code}; retrying in {delay}s ({attempt + 2}/{attempts}).", file=sys.stderr)
+            time.sleep(delay)
+        except (TimeoutError, urllib.error.URLError) as error:
+            if attempt == attempts - 1:
+                if isinstance(error, TimeoutError):
+                    raise TimeoutError("Gemini API response timed out after retries") from error
+                raise
+            delay = 2 ** attempt
+            print(f"Gemini API request timed out or had a network error; retrying in {delay}s ({attempt + 2}/{attempts}).", file=sys.stderr)
+            time.sleep(delay)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -52,8 +74,7 @@ def main():
     request = urllib.request.Request(f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
         data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "x-goog-api-key": key})
     try:
-        with urllib.request.urlopen(request, timeout=90) as response:
-            raw = json.load(response)
+        raw = request_with_retry(request)
         candidate = raw["candidates"][0]
         if candidate.get("finishReason") != "STOP":
             raise ValueError("API output was blocked or incomplete")
@@ -61,6 +82,9 @@ def main():
         review = validate_review(json.loads(text))
     except urllib.error.HTTPError as error:
         print(f"AI API HTTP {error.code}; response body omitted to avoid logging credentials.", file=sys.stderr)
+        return 1
+    except TimeoutError:
+        print("AI API timed out after 3 attempts; no result was saved. Retry later or choose another available model.", file=sys.stderr)
         return 1
     except (urllib.error.URLError, KeyError, IndexError, ValueError) as error:
         print(f"AI call or response validation failed ({type(error).__name__}).", file=sys.stderr)
