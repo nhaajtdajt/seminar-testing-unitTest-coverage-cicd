@@ -5,7 +5,7 @@
     "bullets": [
       "Unit Test → Code Coverage → CI/CD",
       "Seminar Kiểm thử phần mềm · Nhóm [mã nhóm]",
-      "Tuần thực hành 04 · Có phần làm trước kế hoạch Tuần 05"
+      "Tuần 06 · cập nhật 23/10/2026"
     ]
   },
   {
@@ -153,8 +153,8 @@
     "bullets": [
       "CI-1: checkout, setup Java, chạy Maven.",
       "CI-2: cache dependency, upload báo cáo và summary.",
-      "CI-3: các job phụ thuộc nhau, matrix, PR đỏ rồi xanh.",
-      "Có cấu hình và actionlint pass; chưa có run/PR vì tài khoản repo hiện chỉ có READ."
+      "CI-3: các job phụ thuộc nhau; workflow bật push master, pull request vào master và chạy tay.",
+      "Local test → coverage gate → package đã pass; GitHub run/PR thật và required checks chưa có (CLI chưa đăng nhập, repo chưa có quyền ghi được xác nhận)."
     ]
   },
   {
@@ -191,10 +191,10 @@
     "stage": "AI",
     "title": "AI-3/4: review và dữ liệu biên",
     "bullets": [
-      "AI-3 có client/workflow; chưa gọi API vì chưa có key.",
-      "Review fixture tương tác có 4 nhận xét; chưa là benchmark độc lập.",
+      "AI-3 đã gọi live Gemini 3.6 Flash trên diff fixture; kết quả đối chiếu: 4 đúng, 0 thừa, 0 bỏ sót.",
+      "Đây là kiểm tra fixture có lỗi seed, không phải benchmark độc lập hay review toàn bộ repository.",
       "AI-4 có 13 ca CSV chạy pass, trùng 13/15 ca tham chiếu.",
-      "Chưa có bộ dữ liệu do con người viết độc lập để so sánh công bằng."
+      "Chưa có bộ test do người viết độc lập để so sánh công bằng."
     ]
   },
   {
@@ -209,12 +209,11 @@
   },
   {
     "stage": "Tuần 6",
-    "title": "Phần nhóm cần chốt",
+    "title": "Gói tuần 6: các đầu ra cần chốt",
     "bullets": [
-      "Review sản phẩm theo phân công và xác nhận đóng góp thực tế.",
-      "Chạy workflow trên repo có quyền, bật required status checks.",
-      "Chạy API AI nếu nhóm cấu hình; ghi đúng mức tự động thực tế.",
-      "Quay video có thuyết minh, hoàn thiện bài tập và báo cáo."
+      "Gói tuần 6 gồm source, test, báo cáo, AI/Git, HTML và slide; video/kịch bản/ảnh trình diễn đã được loại khỏi checklist.",
+      "Đối chiếu tác giả commit và minh chứng trước khi kết luận đóng góp thành viên.",
+      "Chạy GitHub Actions/Jenkins là trạng thái scope toàn dự án, không phải mục checklist nộp tuần 6."
     ]
   },
   {
