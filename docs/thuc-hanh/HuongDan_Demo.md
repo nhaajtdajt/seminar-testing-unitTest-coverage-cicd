@@ -1,4 +1,4 @@
-# Hướng dẫn chạy và kịch bản demo đến Tuần 5
+# Hướng dẫn chạy và kịch bản demo — gói tuần 06
 
 ## 1. Môi trường và đặc tả
 
@@ -97,11 +97,14 @@ Tùy chọn IPv4 chỉ áp dụng cho lệnh này. Các lượt mới ghi thời
 - AI-1: prompt `ai/prompts/AI-1-generate-tests.md`; bản nháp `FineCalculatorAiDraftTest` → bản bổ sung `FineCalculatorTest`/CSV. Chạy `-Pai-draft clean verify` để đối chiếu. Bản nháp do Codex sinh trong phiên này; review tại `ai/results/AI-1-review.md` cần nhóm kiểm lại.
 - AI-2: `python3 scripts/coverage_gaps.py evidence/tuan-05/ai-draft-recheck/site/jacoco/jacoco.xml --source-root case-study/src/main/java --output /tmp/coverage-gaps.json`; ghép JSON/source vào prompt AI-2. Output chỉ mô tả vị trí/số nhánh bỏ sót, không tự biết chính xác điều kiện true/false. Chạy `case-study/mvnw -f case-study/pom.xml -Pai-improved clean verify` để kiểm riêng bộ 3 test ban đầu + 3 test bổ sung; kết quả thực tế là 70% → 100% branch.
 - AI-3: `python3 scripts/ai_review.py --diff ai/fixtures/review.diff --output /tmp/seminar-ai-review` chỉ chuẩn bị prompt. Có `GEMINI_API_KEY` và `AI_MODEL` thì thêm `--live` để gọi API. `.github/workflows/ai-review.yml` có bước tương ứng, lưu kết quả dạng artifact; chưa tự đăng comment lên PR.
+- Khi gọi live, client retry tối đa hai lần sau request đầu cho timeout và lỗi HTTP tạm thời (`408`, `429`, `5xx`), với chờ 1 rồi 2 giây. Nếu vẫn lỗi, chưa có `review.json`; chờ API ổn định rồi chạy lại.
 - AI-4: CSV do AI sinh tại `ai/data/AI-4-boundaries.csv`; chạy `case-study/mvnw -f case-study/pom.xml -Pai-data clean verify` để nạp 13 ca qua JUnit và calculator thật; đối chiếu với bộ tham chiếu `fine-cases.csv`. Cả hai bộ được chuẩn bị có AI hỗ trợ trong phiên này, nên chưa có số liệu so với bộ do con người viết độc lập.
 
-Không có API key trong phiên thực hiện; script live và workflow AI chưa được kiểm chứng bằng lần gọi dịch vụ thật. Review fixture lưu ở `ai/results/AI-3-session-review.json` là output của Codex trong phiên tương tác, không giả làm phản hồi Gemini. `evaluate_review.py` đối chiếu rule/file/dòng với fixture; phép đo này không đánh giá độc lập độ chính xác của mô hình.
+Script live đã được gọi trong Tuần 06 bằng `gemini-3.6-flash` trên `ai/fixtures/review.diff`; metadata, prompt và response thật nằm ở `evidence/tuan-06/ai-review/`. `evaluation.json` đối chiếu rule/file/dòng với expected fixture và đạt 4 đúng, 0 thừa, 0 bỏ sót; đây không phải benchmark độc lập. Review fixture cũ ở `ai/results/AI-3-session-review.json` là output Codex trong phiên tương tác, không phải phản hồi Gemini. Workflow GitHub AI chưa được xác minh bằng run dịch vụ thật.
 
 ## 10. Lỗi thường gặp
+
+Bộ bài tập đi kèm: [BaiTap_Tuan_06.md](BaiTap_Tuan_06.md). Kịch bản quay các phần Unit Test, Coverage và HTTP: [KichBan_QuayVideo_Tuan_06.md](KichBan_QuayVideo_Tuan_06.md). Kịch bản không thay cho video đã quay.
 
 | Hiện tượng | Kiểm tra/cách xử lý |
 |---|---|
