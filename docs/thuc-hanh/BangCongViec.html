@@ -1,5 +1,4 @@
-<!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Bảng công việc đến hết Tuần 5</title><style>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BangCongViec</title><style>
 :root{font-family:"Segoe UI",Arial,sans-serif;color:#17212b;background:#fff;line-height:1.65}
 body{max-width:1200px;margin:36px auto;padding:0 26px 60px}
 header{border-bottom:2px solid #17212b;padding-bottom:14px;margin-bottom:28px;color:#52606d}
@@ -13,177 +12,16 @@ img{max-width:100%;height:auto;border:1px solid #dce1e6}
 @media print{@page{size:A4;margin:16mm}body{margin:0;padding:0;font-size:10pt;max-width:none}header{display:none}
 h1{font-size:19pt}h2{font-size:14pt;break-after:avoid}table{display:table;table-layout:fixed;font-size:8pt}
 th,td{padding:5px}thead{display:table-header-group}tr,figure{break-inside:avoid}a{color:#17212b}}
-</style></head><body><header>Weekly Report · Tuần thực hành 04 · <a href="BangCongViec.md">Bản Markdown để đọc/scan</a></header><main><h1>Bảng công việc đến hết Tuần 5</h1>
-<p>Đây là bảng theo dõi trong repository, chưa đồng bộ thành GitHub Issues/Projects. TV1–TV5 đã được gán thành viên theo yêu cầu của nhóm; phần xác nhận kết quả do các thành viên rà soát trước khi nộp. Các sản phẩm mới được triển khai với Codex trong phiên hiện tại, không dùng bảng này để suy ra tác giả commit hay công lao của từng người trong các tuần trước.</p>
-<p>Mốc báo cáo hiện tại là Tuần thực hành 04. Các mã W05 và tiêu đề đến Tuần 5 mô tả phạm vi công việc theo kế hoạch, bao gồm phần đã làm trước; kết quả thực tế được ghi trong báo cáo Tuần 04.</p>
+</style></head><body><header>Weekly Report · BangCongViec · <a href="BangCongViec.md">Bản Markdown để đọc/scan</a></header><main><h1>Bảng công việc đến hết Tuần 6</h1>
+<p>Đây là bảng theo dõi trong repository, chưa đồng bộ thành GitHub Issues/Projects. Các dòng W05 giữ vai trò/mốc công việc được ghi trong lịch sử; theo xác nhận của người dùng, tiến độ Tuần 05 kỳ trước do Phạm Quang Vinh đảm nhận. Các hạng mục W06 hiện tại do Ngô Gia An đảm nhận; không dùng bảng này để sửa tác giả commit lịch sử hoặc khẳng định thành viên khác đã review.</p>
+<p>Theo xác nhận của người dùng, Tuần 05 là tiến độ kỳ trước do Phạm Quang Vinh đảm nhận; các dòng W05 bên dưới là phần lịch sử của kỳ trước. Phần đang thực hiện trong workspace là Tuần 06, do Ngô Gia An đảm nhận toàn bộ năm vai trò. Không sửa tác giả các commit lịch sử.</p>
 <h2>Thành viên phụ trách</h2>
-<table>
-<thead>
-<tr>
-<th>Vai trò</th>
-<th>MSSV</th>
-<th>Họ tên</th>
-<th>Phụ trách</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TV1</td>
-<td>23120207</td>
-<td>Nguyễn Bảo An</td>
-<td>Trưởng nhóm, Unit Test, JUnit/Mockito và tổng hợp báo cáo</td>
-</tr>
-<tr>
-<td>TV2</td>
-<td>23120202</td>
-<td>Phạm Quang Vinh</td>
-<td>CI/CD, Build Java 25 &amp; Benchmark</td>
-</tr>
-<tr>
-<td>TV3</td>
-<td>23120231</td>
-<td>Trương Nhật Đạt</td>
-<td>Code Coverage, JaCoCo, coverage gate và mutation testing</td>
-</tr>
-<tr>
-<td>TV4</td>
-<td>23120190</td>
-<td>Nguyễn Lê Thế Vinh</td>
-<td>Case study, REST API, persistence và demo tích hợp</td>
-</tr>
-<tr>
-<td>TV5</td>
-<td>23120205</td>
-<td>Ngô Gia An</td>
-<td>AI, slide, báo cáo chi tiết và điều phối video</td>
-</tr>
-</tbody>
-</table>
-<h2>Tiến độ công việc</h2>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Vai trò</th>
-<th>Công việc</th>
-<th>Trạng thái sản phẩm</th>
-<th>Minh chứng/vị trí</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>W05-01</td>
-<td>TV1</td>
-<td>Tổng hợp đề xuất, kế hoạch tuần</td>
-<td>Có tài liệu</td>
-<td><code>nop-lan-1/</code>, <code>KeHoach_BaoCao_HangTuan.md</code></td>
-</tr>
-<tr>
-<td>W05-02</td>
-<td>TV1</td>
-<td>Workflow 3 job, JDK 25, cache/artifact</td>
-<td>Viết xong, kiểm tra tĩnh; chưa chạy GitHub</td>
-<td><code>.github/workflows/ci.yml</code>, <code>evidence/tuan-05/workflow-lint/</code></td>
-</tr>
-<tr>
-<td>W05-03</td>
-<td>TV1</td>
-<td>Jenkins đối chiếu</td>
-<td>Có cấu hình; chưa chạy Jenkins</td>
-<td><code>Jenkinsfile</code></td>
-</tr>
-<tr>
-<td>W05-04</td>
-<td>TV1</td>
-<td>PR đỏ/xanh, required checks, GitHub board</td>
-<td>Chưa làm trên dịch vụ: quyền hiện tại READ</td>
-<td><code>evidence/tuan-05/github-access.json</code></td>
-</tr>
-<tr>
-<td>W05-05</td>
-<td>TV2</td>
-<td>UT-1, UT-2, UT-3</td>
-<td>Đã chạy tại máy</td>
-<td><code>FineCalculatorTest</code>, <code>LoanServiceTest</code>, log <code>final/</code></td>
-</tr>
-<tr>
-<td>W05-06</td>
-<td>TV2</td>
-<td>4 vòng TDD</td>
-<td>Có replay chạy thật; chưa có lịch sử commit nhóm</td>
-<td><code>evidence/tuan-05/tdd-replay/</code></td>
-</tr>
-<tr>
-<td>W05-07</td>
-<td>TV2</td>
-<td>Tài liệu test, dữ liệu biên, giới hạn mock</td>
-<td>Có bản thực hành</td>
-<td><code>docs/thuc-hanh/</code>, <code>fine-cases.csv</code></td>
-</tr>
-<tr>
-<td>W05-08</td>
-<td>TV3</td>
-<td>CC-1/2/3, coverage gate</td>
-<td>Đã chạy tại máy</td>
-<td><code>baseline/</code>, <code>gate-fail/</code>, <code>final/</code> trong evidence</td>
-</tr>
-<tr>
-<td>W05-09</td>
-<td>TV3</td>
-<td>Mutation đối chiếu bộ mạnh/yếu</td>
-<td>Đã chạy tại máy</td>
-<td><code>pit-strong/</code>, <code>pit-weak/</code></td>
-</tr>
-<tr>
-<td>W05-10</td>
-<td>TV3; TV1 hỗ trợ cache</td>
-<td>Đo thời gian JaCoCo, cache</td>
-<td>JaCoCo đã đo 3 lượt/cấu hình; cache Java 25 đã đủ 3/3 cặp thành công, giữ riêng các lượt tải lỗi</td>
-<td><code>benchmark-jacoco/</code>, <code>benchmark-cache/</code></td>
-</tr>
-<tr>
-<td>W05-11</td>
-<td>TV4</td>
-<td>Case study tính phí, mượn sách, endpoint</td>
-<td>Build/chạy được, H2 in-memory qua Spring Data JPA</td>
-<td><code>case-study/src/main/</code></td>
-</tr>
-<tr>
-<td>W05-12</td>
-<td>TV4</td>
-<td>Test luồng thật và HTTP smoke</td>
-<td>Đã chạy tại máy</td>
-<td><code>LoanFlowTest</code>, <code>http-smoke/results.json</code></td>
-</tr>
-<tr>
-<td>W05-13</td>
-<td>TV5</td>
-<td>AI-1, AI-2, AI-4</td>
-<td>Có output Codex tương tác, đã chạy test; chờ nhóm review</td>
-<td><code>ai/</code>, <code>ai-draft-recheck/</code>, <code>ai-improved/</code>, <code>ai-data/</code></td>
-</tr>
-<tr>
-<td>W05-14</td>
-<td>TV5</td>
-<td>AI-3 chuẩn bị prompt/workflow/live client</td>
-<td>Có code và kiểm tra cục bộ; chưa gọi API thật</td>
-<td><code>scripts/ai_review.py</code>, <code>ai-review-prepared/</code></td>
-</tr>
-<tr>
-<td>W05-15</td>
-<td>TV5</td>
-<td>Bản nháp slide và báo cáo</td>
-<td>Có nguồn, chờ nhóm duyệt nội dung và trình bày</td>
-<td><code>slides/index.html</code>, <code>report/main.tex</code>, <code>BaoCao_ChiTiet.md</code></td>
-</tr>
-<tr>
-<td>W05-16</td>
-<td>Cả nhóm</td>
-<td>Review AI, xác nhận đóng góp và góp ý giảng viên</td>
-<td>Đã điền danh tính; chờ xác nhận thực tế</td>
-<td>Báo cáo Tuần thực hành 04</td>
-</tr>
-</tbody>
-</table>
+<table><thead><tr><th>Vai trò</th><th>MSSV</th><th>Họ tên</th><th>Phụ trách</th></tr></thead><tbody><tr><td>TV1</td><td>23120207</td><td>Nguyễn Bảo An</td><td>Trưởng nhóm, Unit Test, JUnit/Mockito và tổng hợp báo cáo</td></tr><tr><td>TV2</td><td>23120202</td><td>Phạm Quang Vinh</td><td>CI/CD, Build Java 25 &amp; Benchmark</td></tr><tr><td>TV3</td><td>23120231</td><td>Trương Nhật Đạt</td><td>Code Coverage, JaCoCo, coverage gate và mutation testing</td></tr><tr><td>TV4</td><td>23120190</td><td>Nguyễn Lê Thế Vinh</td><td>Case study, REST API, persistence và demo tích hợp</td></tr><tr><td>TV5</td><td>23120205</td><td>Ngô Gia An</td><td>AI, slide, báo cáo chi tiết và điều phối video</td></tr></tbody></table>
+<h2>Tiến độ Tuần 05 — kỳ trước</h2>
+<p>Các dòng W05 ghi trạng thái và minh chứng của kỳ trước; không gán các thay đổi hiện tại cho Phạm Quang Vinh.</p>
+<table><thead><tr><th>ID</th><th>Vai trò</th><th>Công việc</th><th>Trạng thái sản phẩm</th><th>Minh chứng/vị trí</th></tr></thead><tbody><tr><td>W05-01</td><td>TV1</td><td>Tổng hợp đề xuất, kế hoạch tuần</td><td>Có tài liệu</td><td><code>nop-lan-1/</code>, <code>KeHoach_BaoCao_HangTuan.md</code></td></tr><tr><td>W05-02</td><td>TV1</td><td>Workflow 3 job, JDK 25, cache/artifact</td><td>Viết xong, kiểm tra tĩnh; chưa chạy GitHub</td><td><code>.github/workflows/ci.yml</code>, <code>evidence/tuan-05/workflow-lint/</code></td></tr><tr><td>W05-03</td><td>TV1</td><td>Jenkins đối chiếu</td><td>Có cấu hình; chưa chạy Jenkins</td><td><code>Jenkinsfile</code></td></tr><tr><td>W05-04</td><td>TV1</td><td>PR đỏ/xanh, required checks, GitHub board</td><td>Chưa làm trên dịch vụ: quyền hiện tại READ</td><td><code>evidence/tuan-05/github-access.json</code></td></tr><tr><td>W05-05</td><td>TV2</td><td>UT-1, UT-2, UT-3</td><td>Đã chạy tại máy</td><td><code>FineCalculatorTest</code>, <code>LoanServiceTest</code>, log <code>final/</code></td></tr><tr><td>W05-06</td><td>TV2</td><td>4 vòng TDD</td><td>Có replay chạy thật; chưa có lịch sử commit nhóm</td><td><code>evidence/tuan-05/tdd-replay/</code></td></tr><tr><td>W05-07</td><td>TV2</td><td>Tài liệu test, dữ liệu biên, giới hạn mock</td><td>Có bản thực hành</td><td><code>docs/thuc-hanh/</code>, <code>fine-cases.csv</code></td></tr><tr><td>W05-08</td><td>TV3</td><td>CC-1/2/3, coverage gate</td><td>Đã chạy tại máy</td><td><code>baseline/</code>, <code>gate-fail/</code>, <code>final/</code> trong evidence</td></tr><tr><td>W05-09</td><td>TV3</td><td>Mutation đối chiếu bộ mạnh/yếu</td><td>Đã chạy tại máy</td><td><code>pit-strong/</code>, <code>pit-weak/</code></td></tr><tr><td>W05-10</td><td>TV3; TV1 hỗ trợ cache</td><td>Đo thời gian JaCoCo, cache</td><td>JaCoCo đã đo 3 lượt/cấu hình; cache Java 25 đã đủ 3/3 cặp thành công, giữ riêng các lượt tải lỗi</td><td><code>benchmark-jacoco/</code>, <code>benchmark-cache/</code></td></tr><tr><td>W05-11</td><td>TV4</td><td>Case study tính phí, mượn sách, endpoint</td><td>Build/chạy được, H2 in-memory qua Spring Data JPA</td><td><code>case-study/src/main/</code></td></tr><tr><td>W05-12</td><td>TV4</td><td>Test luồng thật và HTTP smoke</td><td>Đã chạy tại máy</td><td><code>LoanFlowTest</code>, <code>http-smoke/results.json</code></td></tr><tr><td>W05-13</td><td>TV5</td><td>AI-1, AI-2, AI-4</td><td>Có output Codex tương tác, đã chạy test; chờ nhóm review</td><td><code>ai/</code>, <code>ai-draft-recheck/</code>, <code>ai-improved/</code>, <code>ai-data/</code></td></tr><tr><td>W05-14</td><td>TV5</td><td>AI-3 chuẩn bị prompt/workflow/live client</td><td>Có code và kiểm tra cục bộ; chưa gọi API thật</td><td><code>scripts/ai_review.py</code>, <code>ai-review-prepared/</code></td></tr><tr><td>W05-15</td><td>TV5</td><td>Bản nháp slide và báo cáo</td><td>Có nguồn, chờ nhóm duyệt nội dung và trình bày</td><td><code>slides/index.html</code>, <code>report/main.tex</code>, <code>BaoCao_ChiTiet.md</code></td></tr><tr><td>W05-16</td><td>Cả nhóm</td><td>Review AI, xác nhận đóng góp và góp ý giảng viên</td><td>Đã điền danh tính; chờ xác nhận thực tế</td><td>Báo cáo Tuần thực hành 04</td></tr></tbody></table>
 <p>Luồng công việc: Dự kiến → Đang thực hiện → Chờ thành viên review → Hoàn thành có xác nhận. Mỗi thành viên tạo issue/nhánh/PR bằng tài khoản thật khi nhóm có quyền ghi; không tạo commit giả danh hoặc ghi lùi thời gian để bổ sung minh chứng quá khứ.</p>
-</main></body></html>
+<h2>Theo dõi tiến độ Tuần 06</h2>
+<p>Theo chỉ đạo hiện tại của Ngô Gia An (23120205), các hạng mục của cả năm vai trò trong tuần này do Ngô Gia An đảm nhận. AI hỗ trợ biên tập/tái hiện; dòng này không sửa lại tác giả lịch sử trong Git và không khẳng định các thành viên khác đã review. Theo chỉ đạo mới nhất, video/kịch bản/ảnh demo tạm thời được loại khỏi checklist nộp tuần 6; source, test, báo cáo, AI/Git và visualization văn bản vẫn thuộc phạm vi bắt buộc.</p>
+<table><thead><tr><th>ID</th><th>Phạm vi kế hoạch Tuần 6</th><th>Người đảm nhận tuần này</th><th>Tiến độ thực tế</th><th>Bằng chứng/ghi chú</th></tr></thead><tbody><tr><td>W06-01</td><td>TV1: kiểm kê source, phân công và minh chứng</td><td>Ngô Gia An (23120205)</td><td>Đã tách evidence Tuần 06, cập nhật chỉ mục và thêm ảnh JaCoCo; ZIP chuẩn bị tại <code>bai-nop/Group09-06.zip</code></td><td>Bảng này, README, <code>evidence/tuan-06/README.md</code>; xác nhận nhóm/nộp chính thức còn phải do nhóm thực hiện</td></tr><tr><td>W06-02</td><td>TV2: chốt Unit Test và bài tập</td><td>Ngô Gia An (23120205)</td><td>Tài liệu/bài tập có; lượt verify thành công gần nhất 33/33; demo ngoài checklist nộp tuần 6</td><td><code>docs/thuc-hanh/HuongDan_Demo.md</code>, <code>BaiTap_Tuan_06.md</code>, <code>evidence/tuan-06/source-verify/surefire-reports/</code></td></tr><tr><td>W06-03</td><td>TV3: chốt Coverage, CC-1/2/3, bài đọc báo cáo</td><td>Ngô Gia An (23120205)</td><td>Tài liệu có; full coverage verify pass; demo ngoài checklist nộp tuần 6</td><td><code>BaiTap_Tuan_06.md</code>, <code>evidence/tuan-06/source-verify/site/jacoco/</code>; PIT comparisons and gate examples remain in prior-week evidence</td></tr><tr><td>W06-04</td><td>TV4: đóng gói source và hướng dẫn chạy lại</td><td>Ngô Gia An (23120205)</td><td>Source và hướng dẫn có; HTTP smoke 5/5 trên JAR Java 25; ảnh request 201/409 được giữ tùy chọn ngoài checklist</td><td><code>case-study/</code>, <code>README.md</code>, <code>evidence/tuan-06/http-smoke-java25/</code>; dữ liệu H2 mẫu xem <code>case-study/src/main/resources/data.sql</code></td></tr><tr><td>W06-05</td><td>TV5: slide, báo cáo chi tiết, AI, bài tập, link</td><td>Ngô Gia An (23120205)</td><td>Slide/báo cáo/AI declaration/bài tập có; Gemini API live và evaluation fixture đạt 4/4; demo ngoài checklist nộp tuần 6</td><td><code>slides/</code>, <code>docs/thuc-hanh/BaoCao_ChiTiet.md</code>, <code>BaiTap_Tuan_06.md</code>, <code>evidence/tuan-06/ai-review/</code></td></tr></tbody></table>
+<p><strong>Giới hạn ghi nhận:</strong> lượt kiểm tra đầy đủ và smoke API là chạy local, không phải GitHub Actions/Jenkins hoặc triển khai production. Gemini API đã được gọi live trên diff fixture; evaluation 4/4 chỉ xác nhận phát hiện được lỗi seed trong fixture, không đánh giá độc lập/toàn diện source. Video/kịch bản/ảnh demo nằm ngoài checklist nộp tuần 6 theo chỉ đạo mới nhất; các ảnh đã có được giữ làm minh chứng phụ.</p></main></body></html>

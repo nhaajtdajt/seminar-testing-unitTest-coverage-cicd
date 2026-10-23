@@ -1,5 +1,4 @@
-<!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Bản thảo báo cáo seminar — Tuần thực hành 04, có phần làm trước Tuần 05</title><style>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BaoCao_ChiTiet</title><style>
 :root{font-family:"Segoe UI",Arial,sans-serif;color:#17212b;background:#fff;line-height:1.65}
 body{max-width:1200px;margin:36px auto;padding:0 26px 60px}
 header{border-bottom:2px solid #17212b;padding-bottom:14px;margin-bottom:28px;color:#52606d}
@@ -13,8 +12,8 @@ img{max-width:100%;height:auto;border:1px solid #dce1e6}
 @media print{@page{size:A4;margin:16mm}body{margin:0;padding:0;font-size:10pt;max-width:none}header{display:none}
 h1{font-size:19pt}h2{font-size:14pt;break-after:avoid}table{display:table;table-layout:fixed;font-size:8pt}
 th,td{padding:5px}thead{display:table-header-group}tr,figure{break-inside:avoid}a{color:#17212b}}
-</style></head><body><header>Weekly Report · Tuần thực hành 04 · <a href="BaoCao_ChiTiet.md">Bản Markdown để đọc/scan</a></header><main><h1>Bản thảo báo cáo seminar — Tuần thực hành 04, có phần làm trước Tuần 05</h1>
-<p><strong>Nhóm:</strong> [Chờ mã nhóm]. <strong>Tuần hiện tại:</strong> Tuần thực hành 04, theo xác nhận của nhóm; một phần kế hoạch Tuần 05 đã được thực hiện sớm. <strong>Ngày thực hành được ghi trong log:</strong> 16/10/2026. Bản này được chuẩn bị với Codex hỗ trợ và cần các thành viên review trước khi nộp.</p>
+</style></head><body><header>Weekly Report · BaoCao_ChiTiet · <a href="BaoCao_ChiTiet.md">Bản Markdown để đọc/scan</a></header><main><h1>Báo cáo chi tiết seminar — cập nhật đến Tuần 06</h1>
+<p><strong>Nhóm:</strong> Group09. <strong>Phạm vi:</strong> tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần được lưu riêng trong <code>bao-cao-tuan/</code>. <strong>Cập nhật tài liệu:</strong> 23/10/2026. Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.</p>
 <p><strong>Thành viên:</strong> TV1: Phạm Quang Vinh (23120202); TV2: Nguyễn Bảo An (23120207); TV3: Trương Nhật Đạt (23120231); TV4: Nguyễn Lê Thế Vinh (23120190); TV5: Ngô Gia An (23120205)</p>
 <h2>1. Mục tiêu và phạm vi</h2>
 <p>Nhóm em tìm hiểu chuỗi Unit Test → Code Coverage → CI/CD trên một ứng dụng quản lý thư viện. Người học cần viết được test cho logic có điều kiện, đọc được phần mã chưa được phủ và hiểu cách đưa test/coverage vào pipeline kiểm tra trước khi tích hợp mã.</p>
@@ -35,57 +34,16 @@ th,td{padding:5px}thead{display:table-header-group}tr,figure{break-inside:avoid}
 <p>Workflow đã qua actionlint, các lệnh Maven đã chạy tại máy. Tài khoản GitHub đang dùng chỉ có quyền READ trên repo nhóm. Do đó chưa có lần chạy Actions, PR đỏ/xanh hay xác nhận required checks chặn merge. Jenkinsfile chưa được chạy trên Jenkins. Việc upload cấu hình không tự bật quy tắc bảo vệ nhánh; người quản trị cần cấu hình required status checks.</p>
 <p>Phép đo JaCoCo trên bản Java 25 có ba lượt/cấu hình: trung vị không bật JaCoCo là 9,727 giây; có JaCoCo/report/gate là 12,754 giây. Phép đo repo Maven lạnh/ấm đã đủ ba cặp hợp lệ trên Java 25, trung vị 48,412/12,539 giây. Cặp bổ sung chạy sau hai cặp đầu, mất 479,523/11,940 giây; dùng kho trống cho lượt lạnh và dùng lại kho đó cho lượt ấm, ưu tiên IPv4 và tăng thời gian chờ tải. Điều kiện mạng thay đổi nên không suy ra mức tăng tốc cố định từ trung vị. Log tải lỗi được giữ riêng và không tính vào số liệu hoàn thành. Phép đo cache dependency tại máy không đồng nhất với thời gian restore cache trên GitHub hoặc Jenkins.</p>
 <h2>5. Khảo sát và lựa chọn công cụ</h2>
-<table>
-<thead>
-<tr>
-<th>Mục tiêu</th>
-<th>Công cụ thực hành</th>
-<th>Công cụ đối chiếu</th>
-<th>Cơ sở nhận xét</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Viết/chạy test Java</td>
-<td>JUnit Jupiter, Mockito, AssertJ</td>
-<td>TestNG, Spock, JUnit 4</td>
-<td>Chọn bộ do Spring Boot quản lý; đã chạy test trong case study. Chưa benchmark các bộ đối chiếu.</td>
-</tr>
-<tr>
-<td>Đo độ phủ</td>
-<td>JaCoCo</td>
-<td>Cobertura, OpenClover, coverage IDE</td>
-<td>Đã chạy HTML/XML và gate; các công cụ đối chiếu chưa cài/chạy trong đợt này.</td>
-</tr>
-<tr>
-<td>Kiểm chất lượng assertion</td>
-<td>PIT</td>
-<td>Đọc test thủ công</td>
-<td>Đã chạy cùng lớp với test mạnh/yếu; phải phân tích mutant tương đương.</td>
-</tr>
-<tr>
-<td>Tự động kiểm tra</td>
-<td>GitHub Actions</td>
-<td>Jenkins, GitLab CI, CircleCI</td>
-<td>Có workflow và Jenkinsfile; mới kiểm tra tĩnh/lệnh tại máy, chưa đo trên dịch vụ.</td>
-</tr>
-</tbody>
-</table>
+<table><thead><tr><th>Mục tiêu</th><th>Công cụ thực hành</th><th>Công cụ đối chiếu</th><th>Cơ sở nhận xét</th></tr></thead><tbody><tr><td>Viết/chạy test Java</td><td>JUnit Jupiter, Mockito, AssertJ</td><td>TestNG, Spock, JUnit 4</td><td>Chọn bộ do Spring Boot quản lý; đã chạy test trong case study. Chưa benchmark các bộ đối chiếu.</td></tr><tr><td>Đo độ phủ</td><td>JaCoCo</td><td>Cobertura, OpenClover, coverage IDE</td><td>Đã chạy HTML/XML và gate; các công cụ đối chiếu chưa cài/chạy trong đợt này.</td></tr><tr><td>Kiểm chất lượng assertion</td><td>PIT</td><td>Đọc test thủ công</td><td>Đã chạy cùng lớp với test mạnh/yếu; phải phân tích mutant tương đương.</td></tr><tr><td>Tự động kiểm tra</td><td>GitHub Actions</td><td>Jenkins, GitLab CI, CircleCI</td><td>Có workflow và Jenkinsfile; mới kiểm tra tĩnh/lệnh tại máy, chưa đo trên dịch vụ.</td></tr></tbody></table>
 <p>Các bảng khảo sát ở gói đề xuất là dữ liệu tham khảo ban đầu, không thay cho kết quả trải nghiệm. Cần kiểm lại tình trạng phát triển, giấy phép, hạn mức và giá tại thời điểm nộp nếu đưa các thông tin đó vào bản chính thức. Mockito 5 đã dùng inline mock maker mặc định; không giữ kết luận cũ rằng mock final/static luôn cần thêm module.</p>
 <h2>6. Áp dụng AI</h2>
 <p>AI-1 sinh bản nháp 3 test; các test chạy đúng nhưng chỉ phủ 70% nhánh. AI-2 đọc JSON trích từ JaCoCo và source, nhận ra thiếu null, ngày âm, nhánh tính phí VIP; sinh 3 test bổ sung. Profile riêng cho phép đo đúng bộ 3 → 6 test mà không đưa bộ tham chiếu vào kết quả.</p>
-<p>AI-3 có prompt và client gọi Gemini qua biến môi trường, cùng workflow lưu artifact. Chế độ chuẩn bị không gọi dịch vụ và ghi <code>api_called=false</code>. Không có API key nên chưa đo độ chính xác của lời gọi dịch vụ thật. Output review của Codex trong phiên tương tác nhận xét 4 vấn đề cài sẵn; fixture và output có chung nguồn sinh nên không phải benchmark độc lập.</p>
+<p>AI-3 có prompt và client gọi Gemini qua biến môi trường, cùng workflow lưu artifact. Chế độ chuẩn bị không gọi dịch vụ và ghi <code>api_called=false</code>. Trong Tuần 06 đã có một lần gọi live bằng <code>gemini-3.6-flash</code> trên diff fixture; sau HTTP 503, retry thành công và lưu 4 findings. Đối chiếu với expected fixture đạt 4 đúng, 0 thừa, 0 bỏ sót. Fixture có lỗi seed nên đây là kiểm tra luồng gọi API, không phải benchmark độc lập hay review toàn diện repository.</p>
 <p>AI-4 có 13 dòng dữ liệu hợp lệ, được chạy với calculator thật bằng profile riêng. Bộ tham chiếu có 15 dòng; hai bộ trùng 13 ca, bộ AI không có NORMAL 3 ngày và VIP 0 ngày. Dữ liệu sai null/ngày âm được kiểm riêng bằng JUnit. Hai bộ đều có AI hỗ trợ chuẩn bị, nên cần thành viên nhóm tự viết/rà soát bộ chuẩn để có so sánh con người–AI hợp lệ.</p>
 <p>Tất cả nội dung AI cần được review theo checklist: đúng nghiệp vụ, assertion cụ thể, không bịa API, không mock logic thuần, đọc số đo thực tế. Nhóm sẽ bổ sung người xác nhận; chưa quy đóng góp thực tế cho TV1–TV5 từ sản phẩm do trợ lý chuẩn bị.</p>
-<h2>7. Bài tập áp dụng dự kiến</h2>
-<ol>
-<li>Thêm hạng STUDENT được gia hạn 1 ngày và giảm đơn giá; viết đặc tả trước, bổ sung CSV/test, kiểm báo cáo branch.</li>
-<li>Xóa một assertion tiền trong test và so sánh JaCoCo/PIT trước/sau; giải thích vì sao độ phủ có thể không đổi.</li>
-<li>Viết workflow Maven tối thiểu, thêm gate rồi chứng minh một PR bị chặn khi không đạt gate. Bài này cần quyền cấu hình repository.</li>
-</ol>
-<p>Đáp án gợi ý: liệt kê biên trước/đúng/sau ngưỡng; assert tiền bằng so giá trị; đọc mutant theo source; giữ ngưỡng gate và sửa test/logic đúng đặc tả thay vì hạ ngưỡng.</p>
-<h2>8. Sản phẩm và phần cần hoàn thiện</h2>
-<p>Đã có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, bản thảo báo cáo và slide. Nhóm cần tự review, bổ sung danh tính/đóng góp, xác nhận góp ý giảng viên, chạy workflow bằng tài khoản có quyền, cấu hình API AI, quay video thuyết minh và chốt gói nộp Tuần 6.</p>
+<h2>7. Bài tập áp dụng</h2>
+<p>Bộ bài tập và đáp án gợi ý được chuẩn hóa tại <a href="BaiTap_Tuan_06.md">BaiTap_Tuan_06.md</a>: mở rộng data-driven Unit Test, phân biệt coverage với sức assertion qua PIT, đọc coverage gate trong pipeline, và chọn mức integration phù hợp. Ví dụ <code>STUDENT</code> là chính sách giả định riêng của bài tập; không sửa hợp đồng <code>NORMAL</code>/<code>VIP</code> trong source seminar.</p>
+<h2>8. Gói seminar và trạng thái hoàn thiện</h2>
+<p>Gói có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, báo cáo chi tiết, slide, bài tập và hướng dẫn tái hiện. Ba video theo từng chủ đề có kịch bản trong <code>KichBan_QuayVideo_Tuan_06.md</code>; chưa có video đã quay. Bảng <code>BangCongViec.md</code> ghi giới hạn còn lại của GitHub/Jenkins, video và xác nhận của thành viên.</p>
 <p>Số đo và đường dẫn: xem <a href="../../evidence/tuan-05/README.md">minh chứng</a> và <a href="../../bao-cao-tuan/BaoCao_Tuan_04.md">báo cáo Tuần thực hành 04</a>. Hướng dẫn tái hiện: <a href="HuongDan_Demo.md">HuongDan_Demo.md</a>.</p>
-<p>Nguồn chính thức dùng đối chiếu: <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit guide</a>, <a href="https://github.com/mockito/mockito">Mockito</a>, <a href="https://www.jacoco.org/jacoco/trunk/doc/">JaCoCo</a>, <a href="https://pitest.org/quickstart/maven/">PIT Maven</a>, <a href="https://docs.spring.io/spring-boot/4.1/system-requirements.html">Spring Boot requirements</a>, <a href="https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven">GitHub Maven CI</a>, <a href="https://ai.google.dev/api/generate-content">Gemini API</a>.</p>
-</main></body></html>
+<p>Nguồn chính thức dùng đối chiếu: <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit guide</a>, <a href="https://github.com/mockito/mockito">Mockito</a>, <a href="https://www.jacoco.org/jacoco/trunk/doc/">JaCoCo</a>, <a href="https://pitest.org/quickstart/maven/">PIT Maven</a>, <a href="https://docs.spring.io/spring-boot/4.1/system-requirements.html">Spring Boot requirements</a>, <a href="https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven">GitHub Maven CI</a>, <a href="https://ai.google.dev/api/generate-content">Gemini API</a>.</p></main></body></html>

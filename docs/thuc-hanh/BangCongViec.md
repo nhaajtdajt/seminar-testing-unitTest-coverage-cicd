@@ -1,8 +1,8 @@
-# Bảng công việc đến hết Tuần 5
+# Bảng công việc đến hết Tuần 6
 
-Đây là bảng theo dõi trong repository, chưa đồng bộ thành GitHub Issues/Projects. TV1–TV5 đã được gán thành viên theo yêu cầu của nhóm; phần xác nhận kết quả do các thành viên rà soát trước khi nộp. Các sản phẩm mới được triển khai với Codex trong phiên hiện tại, không dùng bảng này để suy ra tác giả commit hay công lao của từng người trong các tuần trước.
+Đây là bảng theo dõi trong repository, chưa đồng bộ thành GitHub Issues/Projects. Các dòng W05 giữ vai trò/mốc công việc được ghi trong lịch sử; theo xác nhận của người dùng, tiến độ Tuần 05 kỳ trước do Phạm Quang Vinh đảm nhận. Các hạng mục W06 hiện tại do Ngô Gia An đảm nhận; không dùng bảng này để sửa tác giả commit lịch sử hoặc khẳng định thành viên khác đã review.
 
-Mốc báo cáo hiện tại là Tuần thực hành 04. Các mã W05 và tiêu đề đến Tuần 5 mô tả phạm vi công việc theo kế hoạch, bao gồm phần đã làm trước; kết quả thực tế được ghi trong báo cáo Tuần 04.
+Theo xác nhận của người dùng, Tuần 05 là tiến độ kỳ trước do Phạm Quang Vinh đảm nhận; các dòng W05 bên dưới là phần lịch sử của kỳ trước. Phần đang thực hiện trong workspace là Tuần 06, do Ngô Gia An đảm nhận toàn bộ năm vai trò. Không sửa tác giả các commit lịch sử.
 
 ## Thành viên phụ trách
 
@@ -14,7 +14,9 @@ Mốc báo cáo hiện tại là Tuần thực hành 04. Các mã W05 và tiêu 
 | TV4 | 23120190 | Nguyễn Lê Thế Vinh | Case study, REST API, persistence và demo tích hợp |
 | TV5 | 23120205 | Ngô Gia An | AI, slide, báo cáo chi tiết và điều phối video |
 
-## Tiến độ công việc
+## Tiến độ Tuần 05 — kỳ trước
+
+Các dòng W05 ghi trạng thái và minh chứng của kỳ trước; không gán các thay đổi hiện tại cho Phạm Quang Vinh.
 
 | ID | Vai trò | Công việc | Trạng thái sản phẩm | Minh chứng/vị trí |
 |---|---|---|---|---|
@@ -36,3 +38,17 @@ Mốc báo cáo hiện tại là Tuần thực hành 04. Các mã W05 và tiêu 
 | W05-16 | Cả nhóm | Review AI, xác nhận đóng góp và góp ý giảng viên | Đã điền danh tính; chờ xác nhận thực tế | Báo cáo Tuần thực hành 04 |
 
 Luồng công việc: Dự kiến → Đang thực hiện → Chờ thành viên review → Hoàn thành có xác nhận. Mỗi thành viên tạo issue/nhánh/PR bằng tài khoản thật khi nhóm có quyền ghi; không tạo commit giả danh hoặc ghi lùi thời gian để bổ sung minh chứng quá khứ.
+
+## Theo dõi tiến độ Tuần 06
+
+Theo chỉ đạo hiện tại của Ngô Gia An (23120205), các hạng mục của cả năm vai trò trong tuần này do Ngô Gia An đảm nhận. AI hỗ trợ biên tập/tái hiện; dòng này không sửa lại tác giả lịch sử trong Git và không khẳng định các thành viên khác đã review. Theo chỉ đạo mới nhất, video/kịch bản/ảnh demo tạm thời được loại khỏi checklist nộp tuần 6; source, test, báo cáo, AI/Git và visualization văn bản vẫn thuộc phạm vi bắt buộc.
+
+| ID | Phạm vi kế hoạch Tuần 6 | Người đảm nhận tuần này | Tiến độ thực tế | Bằng chứng/ghi chú |
+|---|---|---|---|---|
+| W06-01 | TV1: kiểm kê source, phân công và minh chứng | Ngô Gia An (23120205) | Đã tách evidence Tuần 06, cập nhật chỉ mục và thêm ảnh JaCoCo; ZIP chuẩn bị tại `bai-nop/Group09-06.zip` | Bảng này, README, `evidence/tuan-06/README.md`; xác nhận nhóm/nộp chính thức còn phải do nhóm thực hiện |
+| W06-02 | TV2: chốt Unit Test và bài tập | Ngô Gia An (23120205) | Tài liệu/bài tập có; lượt verify thành công gần nhất 33/33; demo ngoài checklist nộp tuần 6 | `docs/thuc-hanh/HuongDan_Demo.md`, `BaiTap_Tuan_06.md`, `evidence/tuan-06/source-verify/surefire-reports/` |
+| W06-03 | TV3: chốt Coverage, CC-1/2/3, bài đọc báo cáo | Ngô Gia An (23120205) | Tài liệu có; full coverage verify pass; demo ngoài checklist nộp tuần 6 | `BaiTap_Tuan_06.md`, `evidence/tuan-06/source-verify/site/jacoco/`; PIT comparisons and gate examples remain in prior-week evidence |
+| W06-04 | TV4: đóng gói source và hướng dẫn chạy lại | Ngô Gia An (23120205) | Source và hướng dẫn có; HTTP smoke 5/5 trên JAR Java 25; ảnh request 201/409 được giữ tùy chọn ngoài checklist | `case-study/`, `README.md`, `evidence/tuan-06/http-smoke-java25/`; dữ liệu H2 mẫu xem `case-study/src/main/resources/data.sql` |
+| W06-05 | TV5: slide, báo cáo chi tiết, AI, bài tập, link | Ngô Gia An (23120205) | Slide/báo cáo/AI declaration/bài tập có; Gemini API live và evaluation fixture đạt 4/4; demo ngoài checklist nộp tuần 6 | `slides/`, `docs/thuc-hanh/BaoCao_ChiTiet.md`, `BaiTap_Tuan_06.md`, `evidence/tuan-06/ai-review/` |
+
+**Giới hạn ghi nhận:** lượt kiểm tra đầy đủ và smoke API là chạy local, không phải GitHub Actions/Jenkins hoặc triển khai production. Gemini API đã được gọi live trên diff fixture; evaluation 4/4 chỉ xác nhận phát hiện được lỗi seed trong fixture, không đánh giá độc lập/toàn diện source. Video/kịch bản/ảnh demo nằm ngoài checklist nộp tuần 6 theo chỉ đạo mới nhất; các ảnh đã có được giữ làm minh chứng phụ.

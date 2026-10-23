@@ -1,6 +1,6 @@
-# Bản thảo báo cáo seminar — Tuần thực hành 04, có phần làm trước Tuần 05
+# Báo cáo chi tiết seminar — cập nhật đến Tuần 06
 
-**Nhóm:** [Chờ mã nhóm]. **Tuần hiện tại:** Tuần thực hành 04, theo xác nhận của nhóm; một phần kế hoạch Tuần 05 đã được thực hiện sớm. **Ngày thực hành được ghi trong log:** 16/10/2026. Bản này được chuẩn bị với Codex hỗ trợ và cần các thành viên review trước khi nộp.
+**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần được lưu riêng trong `bao-cao-tuan/`. **Cập nhật tài liệu:** 23/10/2026. Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
 
 **Thành viên:** TV1: Phạm Quang Vinh (23120202); TV2: Nguyễn Bảo An (23120207); TV3: Trương Nhật Đạt (23120231); TV4: Nguyễn Lê Thế Vinh (23120190); TV5: Ngô Gia An (23120205)
 
@@ -55,23 +55,19 @@ Các bảng khảo sát ở gói đề xuất là dữ liệu tham khảo ban đ
 
 AI-1 sinh bản nháp 3 test; các test chạy đúng nhưng chỉ phủ 70% nhánh. AI-2 đọc JSON trích từ JaCoCo và source, nhận ra thiếu null, ngày âm, nhánh tính phí VIP; sinh 3 test bổ sung. Profile riêng cho phép đo đúng bộ 3 → 6 test mà không đưa bộ tham chiếu vào kết quả.
 
-AI-3 có prompt và client gọi Gemini qua biến môi trường, cùng workflow lưu artifact. Chế độ chuẩn bị không gọi dịch vụ và ghi `api_called=false`. Không có API key nên chưa đo độ chính xác của lời gọi dịch vụ thật. Output review của Codex trong phiên tương tác nhận xét 4 vấn đề cài sẵn; fixture và output có chung nguồn sinh nên không phải benchmark độc lập.
+AI-3 có prompt và client gọi Gemini qua biến môi trường, cùng workflow lưu artifact. Chế độ chuẩn bị không gọi dịch vụ và ghi `api_called=false`. Trong Tuần 06 đã có một lần gọi live bằng `gemini-3.6-flash` trên diff fixture; sau HTTP 503, retry thành công và lưu 4 findings. Đối chiếu với expected fixture đạt 4 đúng, 0 thừa, 0 bỏ sót. Fixture có lỗi seed nên đây là kiểm tra luồng gọi API, không phải benchmark độc lập hay review toàn diện repository.
 
 AI-4 có 13 dòng dữ liệu hợp lệ, được chạy với calculator thật bằng profile riêng. Bộ tham chiếu có 15 dòng; hai bộ trùng 13 ca, bộ AI không có NORMAL 3 ngày và VIP 0 ngày. Dữ liệu sai null/ngày âm được kiểm riêng bằng JUnit. Hai bộ đều có AI hỗ trợ chuẩn bị, nên cần thành viên nhóm tự viết/rà soát bộ chuẩn để có so sánh con người–AI hợp lệ.
 
 Tất cả nội dung AI cần được review theo checklist: đúng nghiệp vụ, assertion cụ thể, không bịa API, không mock logic thuần, đọc số đo thực tế. Nhóm sẽ bổ sung người xác nhận; chưa quy đóng góp thực tế cho TV1–TV5 từ sản phẩm do trợ lý chuẩn bị.
 
-## 7. Bài tập áp dụng dự kiến
+## 7. Bài tập áp dụng
 
-1. Thêm hạng STUDENT được gia hạn 1 ngày và giảm đơn giá; viết đặc tả trước, bổ sung CSV/test, kiểm báo cáo branch.
-2. Xóa một assertion tiền trong test và so sánh JaCoCo/PIT trước/sau; giải thích vì sao độ phủ có thể không đổi.
-3. Viết workflow Maven tối thiểu, thêm gate rồi chứng minh một PR bị chặn khi không đạt gate. Bài này cần quyền cấu hình repository.
+Bộ bài tập và đáp án gợi ý được chuẩn hóa tại [BaiTap_Tuan_06.md](BaiTap_Tuan_06.md): mở rộng data-driven Unit Test, phân biệt coverage với sức assertion qua PIT, đọc coverage gate trong pipeline, và chọn mức integration phù hợp. Ví dụ `STUDENT` là chính sách giả định riêng của bài tập; không sửa hợp đồng `NORMAL`/`VIP` trong source seminar.
 
-Đáp án gợi ý: liệt kê biên trước/đúng/sau ngưỡng; assert tiền bằng so giá trị; đọc mutant theo source; giữ ngưỡng gate và sửa test/logic đúng đặc tả thay vì hạ ngưỡng.
+## 8. Gói seminar và trạng thái hoàn thiện
 
-## 8. Sản phẩm và phần cần hoàn thiện
-
-Đã có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, bản thảo báo cáo và slide. Nhóm cần tự review, bổ sung danh tính/đóng góp, xác nhận góp ý giảng viên, chạy workflow bằng tài khoản có quyền, cấu hình API AI, quay video thuyết minh và chốt gói nộp Tuần 6.
+Gói có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, báo cáo chi tiết, slide, bài tập và hướng dẫn tái hiện. Ba video theo từng chủ đề có kịch bản trong `KichBan_QuayVideo_Tuan_06.md`; chưa có video đã quay. Bảng `BangCongViec.md` ghi giới hạn còn lại của GitHub/Jenkins, video và xác nhận của thành viên.
 
 Số đo và đường dẫn: xem [minh chứng](../../evidence/tuan-05/README.md) và [báo cáo Tuần thực hành 04](../../bao-cao-tuan/BaoCao_Tuan_04.md). Hướng dẫn tái hiện: [HuongDan_Demo.md](HuongDan_Demo.md).
 
