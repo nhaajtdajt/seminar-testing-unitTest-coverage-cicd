@@ -1,0 +1,21 @@
+{
+  "started_at_utc": "2026-10-23T10:01:33.645022+00:00",
+  "finished_at_utc": "2026-10-23T10:01:42.969731+00:00",
+  "elapsed_seconds": 9.324,
+  "command": [
+    "/usr/bin/env",
+    "JAVA_HOME=/opt/homebrew/opt/openjdk@25",
+    "MAVEN_USER_HOME=/private/tmp/seminar-week05/maven-home",
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Dmaven.repo.local=/private/tmp/seminar-week05/m2-repo",
+    "clean",
+    "verify"
+  ],
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local; not a GitHub Actions or Jenkins execution"
+}

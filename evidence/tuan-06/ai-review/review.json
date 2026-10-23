@@ -1,0 +1,28 @@
+{
+  "findings": [
+    {
+      "rule": "NO_ASSERTION",
+      "file": "case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java",
+      "line": 8,
+      "message": "Hàm test 'noAssertion' thực thi logic nhưng không có câu lệnh assertion hay verify nào. Cần bổ sung assertion để kiểm tra kết quả trả về."
+    },
+    {
+      "rule": "MOCK_SELF",
+      "file": "case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java",
+      "line": 11,
+      "message": "Đối tượng cần kiểm thử (FineCalculator) lại đang bị mock. Cần khởi tạo đối tượng thực `new FineCalculator()` để kiểm thử logic nghiệp vụ."
+    },
+    {
+      "rule": "BIGDECIMAL_EQUALS",
+      "file": "case-study/src/test/java/vn/edu/seminar/fine/ExampleTest.java",
+      "line": 16,
+      "message": "So sánh BigDecimal bằng equals() bị phụ thuộc vào scale (ví dụ: '6000.00' khác '6000'). Cần chuyển sang dùng `compareTo() == 0` hoặc `assertThat(...).isEqualByComparingTo(...)`."
+    },
+    {
+      "rule": "MISSING_BRANCH",
+      "file": "case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java",
+      "line": 8,
+      "message": "Nhánh nghiệp vụ mới `daysLate > 365` chưa thấy có test case tương ứng trong diff. Cần thêm test case truyền `daysLate > 365` để đảm bảo code coverage."
+    }
+  ]
+}

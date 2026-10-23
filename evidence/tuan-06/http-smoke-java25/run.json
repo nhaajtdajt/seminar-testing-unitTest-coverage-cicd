@@ -1,0 +1,15 @@
+{
+  "started_at_utc": "2026-10-23T10:02:26.348398+00:00",
+  "app_command": [
+    "/opt/homebrew/opt/openjdk@25/bin/java",
+    "-jar",
+    "/Users/ngogiaan1103/Downloads/abc/case-study/target/library-case-study-0.1.0.jar",
+    "--server.address=127.0.0.1",
+    "--server.port=0"
+  ],
+  "evidence_dir": "evidence/tuan-06/http-smoke-java25",
+  "environment": "local; not a GitHub Actions/Jenkins or production run",
+  "finished_at_utc": "2026-10-23T10:02:29.863879+00:00",
+  "elapsed_seconds": 3.515,
+  "cases_passed": 5
+}

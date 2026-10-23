@@ -1,0 +1,83 @@
+{
+  "command": [
+    "/opt/homebrew/opt/openjdk@25/bin/java",
+    "-jar",
+    "/Users/ngogiaan1103/Downloads/abc/case-study/target/library-case-study-0.1.0.jar",
+    "--server.address=127.0.0.1",
+    "--server.port=0"
+  ],
+  "port": 59258,
+  "cases": [
+    {
+      "time_utc": "2026-10-23T10:02:29.797437+00:00",
+      "request": {
+        "bookId": 1,
+        "memberId": 1
+      },
+      "expected_status": 201,
+      "actual_status": 201,
+      "response": {
+        "id": "097e363f-25a2-4eed-97c7-b041949f4eda",
+        "bookId": 1,
+        "memberId": 1,
+        "borrowedAt": "2026-10-23T10:02:29.751474Z"
+      },
+      "pass": true
+    },
+    {
+      "time_utc": "2026-10-23T10:02:29.805127+00:00",
+      "request": {
+        "bookId": 1,
+        "memberId": 1
+      },
+      "expected_status": 409,
+      "actual_status": 409,
+      "response": {
+        "code": "BOOK_UNAVAILABLE"
+      },
+      "pass": true
+    },
+    {
+      "time_utc": "2026-10-23T10:02:29.807274+00:00",
+      "request": {
+        "bookId": 99,
+        "memberId": 1
+      },
+      "expected_status": 404,
+      "actual_status": 404,
+      "response": {
+        "code": "BOOK_NOT_FOUND"
+      },
+      "pass": true
+    },
+    {
+      "time_utc": "2026-10-23T10:02:29.820239+00:00",
+      "request": {
+        "bookId": -1,
+        "memberId": 1
+      },
+      "expected_status": 400,
+      "actual_status": 400,
+      "response": {
+        "timestamp": "2026-10-23T10:02:29.818Z",
+        "status": 400,
+        "error": "Bad Request",
+        "path": "/api/loans"
+      },
+      "pass": true
+    },
+    {
+      "time_utc": "2026-10-23T10:02:29.823728+00:00",
+      "request": {
+        "bookId": 3,
+        "memberId": 2
+      },
+      "expected_status": 409,
+      "actual_status": 409,
+      "response": {
+        "code": "UNPAID_FINE"
+      },
+      "pass": true
+    }
+  ]
+}
