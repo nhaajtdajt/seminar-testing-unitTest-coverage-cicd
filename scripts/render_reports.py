@@ -2,8 +2,106 @@
 """Render submission Markdown as standalone HTML with offline, printable tables."""
 import html
 from pathlib import Path
+import re
 import sys
-from markdown_it import MarkdownIt
+
+
+def inline(value):
+    token = re.compile(r'(!?\[[^\]]*\]\([^)]*\)|`[^`]+`|\*\*[^*]+\*\*)')
+    out = []
+    pos = 0
+    for match in token.finditer(value):
+        out.append(html.escape(value[pos:match.start()]))
+        item = match.group(0)
+        if item.startswith('`'):
+            out.append('<code>' + html.escape(item[1:-1]) + '</code>')
+        elif item.startswith('**'):
+            out.append('<strong>' + html.escape(item[2:-2]) + '</strong>')
+        else:
+            image = item.startswith('!')
+            label, target = re.fullmatch(r'!?\[([^\]]*)\]\(([^)]*)\)', item).groups()
+            target = target.strip()
+            if image:
+                out.append('<img src="' + html.escape(target, quote=True) + '" alt="' + html.escape(label, quote=True) + '">')
+            else:
+                out.append('<a href="' + html.escape(target, quote=True) + '">' + html.escape(label) + '</a>')
+        pos = match.end()
+    out.append(html.escape(value[pos:]))
+    return ''.join(out)
+
+
+def render_markdown(markdown):
+    lines = markdown.splitlines()
+    blocks = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if not line.strip():
+            i += 1
+            continue
+        if line.startswith('```'):
+            code = []
+            i += 1
+            while i < len(lines) and not lines[i].startswith('```'):
+                code.append(lines[i])
+                i += 1
+            i += i < len(lines)
+            blocks.append('<pre><code>' + html.escape('\n'.join(code)) + '</code></pre>')
+            continue
+        heading = re.match(r'^(#{1,6})\s+(.*)$', line)
+        if heading:
+            level = len(heading.group(1))
+            blocks.append(f'<h{level}>' + inline(heading.group(2)) + f'</h{level}>')
+            i += 1
+            continue
+        if line.startswith('|') and i + 1 < len(lines) and re.match(r'^\|?\s*[-:| ]+\|?$', lines[i+1]):
+            rows = []
+            while i < len(lines) and lines[i].startswith('|'):
+                rows.append([cell.strip() for cell in lines[i].strip().strip('|').split('|')])
+                i += 1
+            headers = rows[0]
+            body = rows[2:]
+            blocks.append('<table><thead><tr>' + ''.join('<th>' + inline(c) + '</th>' for c in headers) + '</tr></thead><tbody>' + ''.join('<tr>' + ''.join('<td>' + inline(c) + '</td>' for c in row) + '</tr>' for row in body) + '</tbody></table>')
+            continue
+        if re.match(r'^\s*[-*]\s+', line):
+            items = []
+            while i < len(lines) and re.match(r'^\s*[-*]\s+', lines[i]):
+                item = re.sub(r'^\s*[-*]\s+', '', lines[i])
+                check = re.match(r'^\[([ xX])\]\s+(.*)$', item)
+                if check:
+                    checked = ' checked' if check.group(1).lower() == 'x' else ''
+                    item = '<input type="checkbox" disabled' + checked + '> ' + inline(check.group(2))
+                else:
+                    item = inline(item)
+                items.append('<li>' + item + '</li>')
+                i += 1
+            blocks.append('<ul>' + ''.join(items) + '</ul>')
+            continue
+        if re.match(r'^\s*\d+\.\s+', line):
+            items = []
+            while i < len(lines) and re.match(r'^\s*\d+\.\s+', lines[i]):
+                items.append('<li>' + inline(re.sub(r'^\s*\d+\.\s+', '', lines[i])) + '</li>')
+                i += 1
+            blocks.append('<ol>' + ''.join(items) + '</ol>')
+            continue
+        if line.startswith('>'):
+            quote = []
+            while i < len(lines) and lines[i].startswith('>'):
+                quote.append(inline(re.sub(r'^>\s?', '', lines[i])))
+                i += 1
+            blocks.append('<blockquote>' + '<br>'.join(quote) + '</blockquote>')
+            continue
+        if re.match(r'^\s*(---+|___+|\*\*\*+)\s*$', line):
+            blocks.append('<hr>')
+            i += 1
+            continue
+        paragraph = [line]
+        i += 1
+        while i < len(lines) and lines[i].strip() and not lines[i].startswith(('```', '#', '|', '>')) and not re.match(r'^\s*([-*]\s+|\d+\.\s+|---+\s*$)', lines[i]):
+            paragraph.append(lines[i])
+            i += 1
+        blocks.append('<p>' + '<br>'.join(inline(part) for part in paragraph) + '</p>')
+    return '\n'.join(blocks)
 
 STYLE = '''
 :root{font-family:"Segoe UI",Arial,sans-serif;color:#17212b;background:#fff;line-height:1.65}
@@ -26,8 +124,8 @@ def render(path):
     path = Path(path)
     markdown = path.read_text()
     title = next((line.lstrip('# ').strip() for line in markdown.splitlines() if line.startswith('# ')), path.stem)
-    body = MarkdownIt('commonmark', {'html': False}).enable('table').render(markdown)
-    result = '<!doctype html>\n<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>' + html.escape(title) + '</title><style>' + STYLE + '</style></head><body><header>Weekly Report · Tuần thực hành 04 · <a href="' + html.escape(path.name, quote=True) + '">Bản Markdown để đọc/scan</a></header><main>' + body + '</main></body></html>\n'
+    body = render_markdown(markdown)
+    result = '<!doctype html>\n<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>' + html.escape(title) + '</title><style>' + STYLE + '</style></head><body><header>Weekly Report · ' + html.escape(title) + ' · <a href="' + html.escape(path.name, quote=True) + '">Bản Markdown để đọc/scan</a></header><main>' + body + '</main></body></html>\n'
     path.with_suffix('.html').write_text(result)
 
 
