@@ -44,6 +44,36 @@ class EvidenceToolsTest(unittest.TestCase):
                 self.assertEqual(review.main(), 1)
             self.assertFalse((out/'review.json').exists())
 
+    def test_live_request_retries_temporary_503_before_saving_success(self):
+        raw = json.dumps({'candidates': [{'finishReason': 'STOP', 'content': {'parts': [{'text': '{"findings":[]}'}]}}]}).encode()
+        service_unavailable = lambda: review.urllib.error.HTTPError('https://example.test', 503, 'Unavailable', {}, io.BytesIO(b''))
+        with tempfile.TemporaryDirectory() as temporary:
+            out = Path(temporary) / 'out'
+            with patch('sys.argv', ['ai_review.py', '--diff', str(ROOT/'ai/fixtures/review.diff'), '--output', str(out), '--live']), \
+                 patch.dict('os.environ', {'GEMINI_API_KEY': 'dummy-unit-test-key', 'AI_MODEL': 'test-model'}), \
+                 patch.object(review.urllib.request, 'urlopen', side_effect=[service_unavailable(), service_unavailable(), io.BytesIO(raw)]) as api, \
+                 patch('time.sleep') as sleep:
+                self.assertEqual(review.main(), 0)
+            self.assertEqual(api.call_count, 3)
+            self.assertEqual([call.args[0] for call in sleep.call_args_list], [1, 2])
+            self.assertTrue(json.loads((out/'metadata.json').read_text())['api_called'])
+            self.assertEqual(json.loads((out/'review.json').read_text()), {'findings': []})
+
+    def test_timeout_retries_then_exits_cleanly_without_success_metadata(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            out = Path(temporary) / 'out'
+            stderr = io.StringIO()
+            with patch('sys.argv', ['ai_review.py', '--diff', str(ROOT/'ai/fixtures/review.diff'), '--output', str(out), '--live']), \
+                 patch.dict('os.environ', {'GEMINI_API_KEY': 'dummy-unit-test-key', 'AI_MODEL': 'test-model'}), \
+                 patch.object(review.urllib.request, 'urlopen', side_effect=TimeoutError('read timed out')) as api, \
+                 patch('time.sleep') as sleep, patch('sys.stderr', stderr):
+                self.assertEqual(review.main(), 1)
+            self.assertEqual(api.call_count, 3)
+            self.assertEqual([call.args[0] for call in sleep.call_args_list], [1, 2])
+            self.assertIn('timed out', stderr.getvalue())
+            self.assertFalse((out/'review.json').exists())
+            self.assertFalse((out/'metadata.json').exists())
+
     def test_bad_finding_shape_is_rejected(self):
         with self.assertRaises(ValueError):
             review.validate_review({'findings': [{'file':'X.java', 'line':0, 'rule':'OTHER', 'message':'x'}]})
