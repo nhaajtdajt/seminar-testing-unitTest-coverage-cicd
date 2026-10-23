@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Start the packaged app on a random loopback port, exercise HTTP, then shut it down."""
 from datetime import datetime, timezone
+import argparse
 import json
+import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import time
 import urllib.error
@@ -12,13 +15,27 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 
 def main():
-    dest = ROOT / 'evidence/tuan-05/http-smoke'
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--evidence-dir', default='evidence/tuan-06/http-smoke',
+                        help='relative output directory; must not already exist')
+    args = parser.parse_args()
+    relative_dest = Path(args.evidence_dir)
+    if relative_dest.is_absolute() or '..' in relative_dest.parts:
+        parser.error('--evidence-dir must stay inside the repository')
+    dest = ROOT / relative_dest
     if dest.exists():
         raise SystemExit('Evidence exists; use a fresh copy to rerun')
     dest.mkdir(parents=True)
     jar = ROOT / 'case-study/target/library-case-study-0.1.0.jar'
-    command = ['java', '-jar', str(jar), '--server.address=127.0.0.1', '--server.port=0']
+    java_home = Path(os.environ.get('JAVA_HOME', ''))
+    java = java_home / 'bin/java'
+    executable = str(java) if java.is_file() else (shutil.which('java') or 'java')
+    command = [executable, '-jar', str(jar), '--server.address=127.0.0.1', '--server.port=0']
     results = []
+    run = {'started_at_utc': datetime.now(timezone.utc).isoformat(), 'app_command': command,
+           'evidence_dir': str(relative_dest), 'environment': 'local; not a GitHub Actions/Jenkins or production run'}
+    (dest/'run.json').write_text(json.dumps(run, ensure_ascii=False, indent=2)+'\n')
+    started = time.monotonic()
     with (dest/'application.log').open('w') as log:
         app = subprocess.Popen(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
         try:
@@ -56,6 +73,9 @@ def main():
             except subprocess.TimeoutExpired:
                 app.kill(); app.wait()
     print(f'HTTP smoke: {len(results)}/5 scenarios passed; app stopped.')
+    run.update({'finished_at_utc': datetime.now(timezone.utc).isoformat(),
+                'elapsed_seconds': round(time.monotonic()-started, 3), 'cases_passed': len(results)})
+    (dest/'run.json').write_text(json.dumps(run, ensure_ascii=False, indent=2)+'\n')
 
 if __name__ == '__main__':
     main()
