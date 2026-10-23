@@ -41,7 +41,7 @@ output { margin-left:auto; font-variant-numeric:tabular-nums; }
 @media(max-width:650px) { header span,.hint { display:none; } main { padding:2rem 6vw 6rem; } h1 { margin-bottom:1.5rem; } .stage { margin-bottom:1.2rem; } }
 @media print { @page { size:landscape; margin:12mm; } header,nav { display:none; } main { padding:0; max-width:none; } .slide,.slide[hidden] { display:block!important; min-height:0; height:170mm; break-after:page; padding:6mm; } .slide:last-child { break-after:auto; } h1 { font-size:28pt; margin-bottom:12mm; } ul { font-size:19pt; line-height:1.35; } pre { font-size:14pt; white-space:pre-wrap; } .stage { font-size:12pt; margin-bottom:8mm; } }
 </style></head><body>
-<header><strong>Unit Test → Coverage → CI/CD</strong><span>Seminar · Tuần thực hành 04</span></header>
+<header><strong>Unit Test → Coverage → CI/CD</strong><span>Seminar · Tuần 06</span></header>
 <main>'''+''.join(sections)+'''</main>
 <nav aria-label="Điều khiển slide"><button id="prev" type="button">← Trước</button><button id="next" type="button">Tiếp →</button><span class="hint">Phím ← → · Ctrl+P để in</span><output id="counter" aria-live="polite"></output></nav>
 <script>
