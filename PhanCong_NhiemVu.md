@@ -31,6 +31,15 @@ Dùng **một ứng dụng quản lý thư viện** làm ví dụ duy nhất, đ
 
 AI hỗ trợ ở cả ba bước (sinh test, đọc coverage, review code). Mỗi bước có demo từ cài đặt, cơ bản đến phức tạp, kèm điểm yếu của công cụ. Câu hỏi xuyên suốt: **"Test xanh và coverage 100% đã chắc code đúng chưa?"**
 
+### Thầy nhắn thêm (cập nhật 28/10)
+1. **Gửi slide / gặp thầy trước 3–4 ngày** so với hạn, vì còn xếp lịch và chỉnh sửa ra bản final.
+2. **Phải có nhiều video demo**, không chỉ một: setup, khái niệm cơ bản trong tool, demo đơn giản, demo phức tạp, **demo trường hợp công cụ không xử lý được**, và có **data driven**. Nếu gộp một video thì phải **ghi timestamp rõ ràng**. Một video 2–3 phút cho cả nhóm sẽ bị đánh giá thấp.
+3. **Thầy đọc từ slide**, nên slide ngoài lý thuyết phải **nhắc đến từng video và tóm tắt nội dung video**.
+4. **Không tự implement lại paper.** Chọn paper **có source code công bố**, **chạy lại kết quả đã công bố**, rồi thử trên một số trường hợp test thực tế. Paper không có source code thì **chọn paper khác**. (Tự implement lại được dựa trên paper thì càng tốt.)
+5. Moodle bảo trì nên chưa nộp thì cứ nộp, đã nộp mà chưa ưng thì nộp lại.
+
+**Ảnh hưởng đến kế hoạch:** video là **bắt buộc** (việc H không còn "hỏi GV", bỏ quyết định tạm loại video khỏi checklist Tuần 6); việc E đổi thành "chọn paper có code, chạy lại, thử nghiệm"; slide phải có phần mô tả video.
+
 ---
 
 ## 2. Dự án của nhóm gồm những gì
@@ -114,10 +123,10 @@ Những mục này **chưa có** hoặc **còn yếu**, và là nơi thầy sẽ
 | B | **Khái niệm tổng quan unit testing** đầy đủ hơn (định nghĩa unit, test pyramid, test double, oracle...) | Yêu cầu trực tiếp của thầy; hiện mới 1–2 đoạn |
 | C | **Chạy CI thật trên GitHub** (PR đỏ → xanh, required checks) | Hiện chỉ có file workflow, chưa có lần chạy nào |
 | D | **Khảo sát công cụ và so sánh nhiều tiêu chí** | Đề yêu cầu; hiện chỉ có 1 bảng 4 dòng, chưa thử công cụ đối chiếu |
-| E | **Bài báo hạng ≥B trong 5 năm** (đọc, tóm tắt, gắn vào slide) | Yêu cầu trực tiếp của thầy; chưa có |
+| E | **Bài báo hạng ≥B trong 5 năm, có source code công bố:** chạy lại kết quả của paper và thử trên test thực tế của nhóm (không tự implement lại); gắn vào slide | Yêu cầu của thầy; chưa có |
 | F | **Record & Playback / Checkpoints** (diễn giải tương đương, trình bày rõ) | Đề yêu cầu đủ 3 phần; hiện chỉ Data driven có |
 | G | **Điểm yếu của công cụ** (mock static/final, mock quá sâu, JaCoCo với lambda, mutant tương đương, cache hỏng...) | Đề yêu cầu chỉ rõ |
-| H | **Video demo đăng YouTube** | Đề bắt buộc; nhóm đang tạm loại khỏi checklist, **cần hỏi GV** |
+| H | **Nhiều video demo** (setup, khái niệm cơ bản, đơn giản, phức tạp, trường hợp công cụ không xử lý được, data driven) đăng YouTube; slide tóm tắt từng video; nếu gộp thì ghi timestamp | Thầy xác nhận bắt buộc, một video 2–3 phút sẽ bị đánh giá thấp |
 | I | **Từng thành viên tự chạy, review và commit bằng tài khoản riêng** | Yêu cầu "chính chủ" và bằng chứng đóng góp |
 | J | **Trình bày thử với GV** | Không làm bị trừ 4đ |
 
