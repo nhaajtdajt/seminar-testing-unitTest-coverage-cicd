@@ -58,6 +58,16 @@ case-study/mvnw -B -ntp -f case-study/pom.xml clean verify -Dcoverage.gate.skip=
 
 Kỳ vọng nhánh JaCoCo: 3/6 → 5/6 → 6/6; bộ T2 + T3 cho 5/6 nhánh và dòng `days += 7` màu đỏ. Bảng giải thích ở `BaoCao_ChiTiet.md` mục 3.1; số đo đã lưu ở `evidence/tuan-06/coverage-types/`.
 
+### CC-0b — Đối chiếu với OpenClover
+
+Không cần sửa `pom.xml`; gọi plugin bằng tọa độ đầy đủ. Nên chạy trên một bản sao của `case-study/` để thư mục `target/` của OpenClover không lẫn với JaCoCo:
+
+```bash
+case-study/mvnw -B -ntp -f case-study/pom.xml clean org.openclover:clover-maven-plugin:4.5.2:setup test org.openclover:clover-maven-plugin:4.5.2:clover -Djacoco.skip=true -Dcoverage.gate.skip=true "-Dtest=LoanPeriodPolicyTest#t1*+t2*"
+```
+
+Mở `case-study/target/site/clover/index.html`: `LoanPeriodPolicy` báo 4/4 conditional (100%), trong khi JaCoCo cùng bộ test báo 5/6 nhánh. So sánh chi tiết ở `BaoCao_ChiTiet.md` mục 5.2.
+
 ## 6. CC-3 — Gate đỏ rồi xanh
 
 ```bash
