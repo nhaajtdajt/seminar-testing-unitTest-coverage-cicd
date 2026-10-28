@@ -1,6 +1,6 @@
 # Báo cáo chi tiết seminar — cập nhật đến Tuần 06
 
-**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần nằm ở `BangCongViec.md` và `evidence/tuan-06/README.md`. **Cập nhật tài liệu:** 23/10/2026. Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
+**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần nằm ở `BangCongViec.md` và `evidence/tuan-06/README.md`. **Cập nhật tài liệu:** 28/10/2026 (bổ sung phần Ngô Gia An). Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
 
 **Thành viên:** TV1: Phạm Quang Vinh (23120202); TV2: Nguyễn Bảo An (23120207); TV3: Trương Nhật Đạt (23120231); TV4: Nguyễn Lê Thế Vinh (23120190); TV5: Ngô Gia An (23120205)
 
@@ -266,3 +266,41 @@ Gói có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD
 Số đo và đường dẫn: xem [minh chứng](../../evidence/tuan-05/README.md) và [minh chứng Tuần 06](../../evidence/tuan-06/README.md). Hướng dẫn tái hiện: [HuongDan_Demo.md](HuongDan_Demo.md).
 
 Nguồn chính thức dùng đối chiếu: [JUnit guide](https://docs.junit.org/6.0.3/user-guide/), [Mockito](https://github.com/mockito/mockito), [JaCoCo](https://www.jacoco.org/jacoco/trunk/doc/), [PIT Maven](https://pitest.org/quickstart/maven/), [Spring Boot requirements](https://docs.spring.io/spring-boot/4.1/system-requirements.html), [GitHub Maven CI](https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven), [Gemini API](https://ai.google.dev/api/generate-content).
+
+
+## 9. Phần AI, paper và trình bày — Ngô Gia An (23120205)
+
+Phạm vi theo `PhanCong_NhiemVu.md` hiện tại, triển khai với Codex hỗ trợ ngày 28/10/2026. Trưởng nhóm hiện tại là Ngô Gia An; Nguyễn Bảo An phụ trách Unit Test. Các bằng chứng lịch sử ở phần trước không trở thành lượt chạy mới.
+
+### 9.1. Khả năng tái sử dụng AI trên LoanService
+
+Giữ nguyên nghiệp vụ production. Profile `ai-loan-draft`: 2 test pass, line 14/17 và branch 3/6. Trích gap và đối chiếu source rồi dùng profile `ai-loan-improved`: 10 test pass, line 17/17, branch 6/6. Bộ bổ sung kiểm sách unavailable, member missing, hạn mức 2/3/4, nợ dương 0.01/1000, không ghi khi từ chối, ID sách/thành viên và Clock.fixed bằng ArgumentCaptor. PIT trên bộ này diệt 9/9 mutant trong cấu hình hiện tại; không chứng minh mọi lỗi đều được tìm thấy. Bộ chuẩn repo vẫn 39/39, gate pass trên JDK 25.0.5.
+
+Profile `ai-loan-mistake` cố ý cài kỳ vọng sai “đang giữ 3 sách vẫn mượn được”, fail đúng một assertion. Fixture dùng để dạy kiểm oracle, không phải lỗi quan sát từ API hay kết quả paper. Prompt/source/log: [AI-5 review](../../ai/results/AI-5-loan-review.md), [evidence](../../evidence/gia-an/README.md).
+
+### 9.2. AI-4 đối chứng độc lập
+
+Gia An xác nhận chưa có dữ liệu người viết. Đã tạo [quy trình](../../ai/human/README.md), mẫu rỗng và script freeze/compare. Người chưa xem dữ liệu AI tự viết oracle theo đặc tả, khóa CSV bằng SHA-256/commit trước khi mở output AI; so ca trùng/thiếu/thêm và kết quả khác rồi thực thi profile `ai-human`. Test công cụ bằng fixture synthetic không thay cho đối chứng độc lập. Chưa có số liệu đánh giá người-với-AI.
+
+### 9.3. Hai paper có source và kiểm hạng
+
+Danh mục có DOI, năm, source, revision, nguồn hạng và giới hạn: [research/papers.json](../../research/papers.json); [phân tích và lệnh chạy](../../research/README.md).
+
+- **CoverUp: Effective High Coverage Test Generation for Python**, Pizzorno và Berger, FSE 2025 Research Papers / PACMSE, DOI 10.1145/3729398. Kết hợp coverage với ngữ cảnh và vòng phản hồi cho LLM; dùng tool Python gốc.
+- **ChatUniTest: A Framework for LLM-Based Test Generation**, Chen và cộng sự, FSE 2024 Demonstrations, DOI 10.1145/3663529.3663801. Dùng adaptive focal context và generation–validation–repair cho Java; giữ source gốc và trial plugin hiện tại tách riêng.
+
+[CORE2023 chính thức](https://portal.core.edu.au/conf-ranks/?by=all&search=&source=CORE2023) ghi FSE A*. Đây là hạng venue; ChatUniTest thuộc demo track cần xác nhận GV chấp nhận. Hai năm xuất bản 2024–2025 nằm trong yêu cầu 2021–2026.
+
+| Thử nghiệm | Kết quả thật | Giới hạn |
+|---|---|---|
+| CoverUp script gốc phân tích 163 module MT | overall line+branch 89,0%, MuTAP gpt4o_zero 76,8%; khớp 89% vs 77% làm tròn ở abstract v4 | Dữ liệu tác giả công bố, không sinh lại test; dependencies phân tích mới có khóa phiên bản |
+| CoverUp 0.6.0 trên `scripts/coverage_gaps.py` | dry-run pass, coverage smoke ban đầu 23,6%, sau dry-run vẫn 23,6% | Không gọi model, không tạo test mới, không dùng làm kết quả generation |
+| ChatUniTest plugin 2.1.1 trên bản sao case study | parse pass: 20 class, 28 method | Chỉ phân tích source, endpoint localhost không có model; chưa generation hoặc tái lập experiment gốc |
+
+Không tự implement lại thuật toán paper. Còn thiếu lượt model thật/benchmark và thử test sinh ra trên source nhóm cho cả hai bài; không đánh dấu mục E hoàn thành. Chia lượt chạy cho thành viên là kế hoạch đề xuất trong research, chưa khẳng định họ đã nhận/chạy.
+
+### 9.4. Slide, khai báo AI và video
+
+Đã hợp nhất nội dung phần Gia An vào slide nền trắng/chữ đen; nguồn JSON sinh HTML và Markdown đồng bộ. [Danh mục video](../gia-an/Video_Artifacts.md) ghi từng GA-01..07, nội dung, input/output và tình trạng. Slide nhắc video Unit Test/Coverage/CI/Case study theo người phụ trách; chờ URL thật. Video bắt buộc theo phân công hiện tại, nếu gộp phải có timestamp thật; chưa quay/đăng, không điền link giả.
+
+[Khai báo Gia An](../../ai-usage-declaration/01_NgoGiaAn.md) ghi đúng phần Codex tạo và chạy; phần người tự review/ký còn chờ. [Điều phối](../gia-an/DieuPhoi.md) chờ ngày hạn thật để tính mốc gửi slide/gặp GV trước 3–4 ngày, hai buổi tập và các mục nộp. Chưa thực hiện cuộc họp, liên hệ GV, điền Google Sheet hay nộp bài thay người dùng.

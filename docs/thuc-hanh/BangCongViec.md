@@ -1,5 +1,26 @@
 # Bảng công việc đến hết Tuần 6
 
+## Cập nhật hiện hành 28/10/2026 — phần Ngô Gia An (23120205)
+
+Căn cứ `PhanCong_NhiemVu.md` hiện tại: Gia An phụ trách AI, paper, hợp nhất trình bày và trưởng nhóm; Bảo An phụ trách Unit Test. Các mục W05/W06 phía dưới là ghi nhận lịch sử, không thay phân công hiện tại. **Video bắt buộc**; quyết định tạm loại video ở ghi nhận cũ đã được thay bởi yêu cầu ngày 28/10. Chỉ cập nhật phần được giao cho Gia An trong phiên này.
+
+| ID | Công việc hiện tại | Trạng thái | Minh chứng |
+|---|---|---|---|
+| GA-AI4 | Đối chứng độc lập dữ liệu biên | Công cụ/mẫu/runner đã có; người tự viết dữ liệu còn chờ | `ai/human/README.md`, `scripts/ai4_compare.py` |
+| GA-AI5 | Workflow AI trên LoanService | Đã chạy local, chờ người review: 2→10 test, branch 3/6→6/6, PIT 9/9 | `evidence/gia-an/`, `ai/results/AI-5-loan-review.md` |
+| GA-PAPER | Chọn/kiểm hạng/chạy paper có code | CoverUp replay phân tích + dry-run; ChatUniTest parse pass; generation thực nghiệm còn chờ | `research/`, `evidence/gia-an/papers/` |
+| GA-DECL | Khai báo dùng AI | Đã ghi phần Codex, chờ Gia An tự chạy/review/ký | `ai-usage-declaration/01_NgoGiaAn.md` |
+| GA-SLIDE | Hợp nhất slide/báo cáo | Đã bổ sung AI/paper/video và trạng thái, nền trắng/chữ đen | `slides/`, báo cáo mục 9 |
+| GA-VIDEO | Artifact AI/paper cho video | GA-01..07 đã có danh mục; chưa quay/đăng | `docs/gia-an/Video_Artifacts.md` |
+| GA-LEAD | Họp, gặp GV trước hạn 3–4 ngày, nộp | Có checklist; chờ hạn thật, hành động và xác nhận của nhóm | `docs/gia-an/DieuPhoi.md` |
+
+Mọi lượt mới do Codex chạy local; chưa có PR/push hoặc xác nhận reviewer chéo. Tiến độ paper chưa đủ để đánh dấu hoàn thành yêu cầu E.
+
+---
+
+## Ghi nhận lịch sử trước cập nhật trên
+
+
 Đây là bảng theo dõi trong repository, chưa đồng bộ thành GitHub Issues/Projects. Các dòng W05 giữ vai trò/mốc công việc được ghi trong lịch sử; theo xác nhận của người dùng, tiến độ Tuần 05 kỳ trước do Phạm Quang Vinh đảm nhận. Các hạng mục W06 hiện tại do Ngô Gia An đảm nhận; không dùng bảng này để sửa tác giả commit lịch sử hoặc khẳng định thành viên khác đã review.
 
 Theo xác nhận của người dùng, Tuần 05 là tiến độ kỳ trước do Phạm Quang Vinh đảm nhận; các dòng W05 bên dưới là phần lịch sử của kỳ trước. Phần đang thực hiện trong workspace là Tuần 06, do Ngô Gia An đảm nhận toàn bộ năm vai trò. Không sửa tác giả các commit lịch sử.

@@ -4,14 +4,14 @@
 
 Case study quản lý thư viện, dùng chung từ unit test đến coverage và pipeline.
 
-- [Kế hoạch và phân công hàng tuần](KeHoach_BaoCao_HangTuan.md) · [Bảng công việc](docs/thuc-hanh/BangCongViec.md).
+- [Phân công nhiệm vụ hiện tại](PhanCong_NhiemVu.md) · [Bảng công việc](docs/thuc-hanh/BangCongViec.md).
 - [Hướng dẫn chạy và kịch bản demo](docs/thuc-hanh/HuongDan_Demo.md).
 - [Báo cáo chi tiết](docs/thuc-hanh/BaoCao_ChiTiet.md).
 - [Bài tập áp dụng](docs/thuc-hanh/BaiTap_Tuan_06.md) · [Kịch bản quay video](docs/thuc-hanh/KichBan_QuayVideo_Tuan_06.md) (kịch bản, chưa có video).
 - Minh chứng: [Tuần 06 (mới nhất)](evidence/tuan-06/README.md) · [Các lượt chạy chính](evidence/tuan-05/README.md).
 - Slide: mở `slides/index.html` bằng trình duyệt (←/→ chuyển trang, Ctrl+P in); nguồn `slides/slides.json`, dựng bằng `scripts/render_slides.py`.
 - LaTeX: `report/main.tex` (XeLaTeX).
-- Đề bài và gói đề xuất ban đầu: nhánh [`noplan01`](../../tree/noplan01).
+- Đề bài và gói đề xuất ban đầu: nhánh [`noplan01`](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/tree/noplan01).
 
 ## Chạy nhanh
 
@@ -49,3 +49,13 @@ Mã nguồn, test, demo coverage/mutation/TDD và tài liệu seminar đã đư�
 Phần còn thiếu và trạng thái từng hạng mục: xem [Bảng công việc](docs/thuc-hanh/BangCongViec.md). Repo đã dọn các file build/cache và bằng chứng của cấu hình cũ (Java 21 + Spring Boot 3.5). Chạy Maven sẽ tạo lại `case-study/target/`. Các tài liệu đề xuất cũ (`nop-lan-1/`, `docs/00-…`, `docs/superpowers/`, `require.md`) nằm ở nhánh `noplan01`.
 
 Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả bản thực hành hiện tại. Lượt xác minh source, HTTP và Gemini API cho gói tuần này nằm trong `evidence/tuan-06/`. Theo phạm vi nộp mới nhất, video, kịch bản và ảnh demo không thuộc checklist Tuần 05; các tệp đã có được giữ làm tài liệu tùy chọn.
+
+
+## Phần Ngô Gia An (23120205), cập nhật 28/10/2026
+
+- [Phạm vi và kết quả](docs/gia-an/README.md), [artifact video](docs/gia-an/Video_Artifacts.md), [paper](research/README.md).
+- AI LoanService: `python3 scripts/run_ai_demo.py draft --output /tmp/ga-draft`, đổi `draft` thành `improved`, `mistake`, `mutation` hoặc `full` cho từng lượt. Mỗi output phải mới; chạy tuần tự.
+- [AI-4 đối chứng người viết](ai/human/README.md): mẫu đang rỗng, chờ người tự viết; không coi test synthetic là oracle độc lập.
+- [Evidence mới](evidence/gia-an/README.md): 39 test chuẩn; nháp/bổ sung 2→10 test, branch 50→100%, PIT 9/9. Paper mới đạt replay phân tích/dry-run/parse, chưa generation.
+- Slide nguồn `slides/slides.json` sinh HTML/Markdown bằng `python3 scripts/render_slides.py`; bản PDF nằm ở `output/pdf/`. Export bằng `scripts/render_artifacts.mjs` với Node + marked + playwright và Chrome (chi tiết trong source script).
+- Chưa quay video, chưa có URL YouTube/timestamp; chưa xác nhận review cá nhân, gặp GV hoặc nộp bài.

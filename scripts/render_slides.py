@@ -12,12 +12,13 @@ def main():
     for number, slide in enumerate(slides, 1):
         bullets = ''.join('<li>'+html.escape(item)+'</li>' for item in slide['bullets'])
         code = '<pre><code>'+html.escape(slide['code'])+'</code></pre>' if slide.get('code') else ''
-        sections.append(f'<section class="slide" id="slide-{number}" aria-labelledby="title-{number}"'+(' hidden' if number > 1 else '')+f'><p class="stage">{html.escape(slide["stage"])}</p><h1 id="title-{number}">{html.escape(slide["title"])}</h1>{code}<ul>{bullets}</ul></section>')
+        links = ''.join('<a href="'+html.escape(link['href'], quote=True)+'">'+html.escape(link['label'])+'</a>' for link in slide.get('links', []))
+        sections.append(f'<section class="slide" id="slide-{number}" aria-labelledby="title-{number}"'+(' hidden' if number > 1 else '')+f'><p class="stage">{html.escape(slide["stage"])}</p><h1 id="title-{number}">{html.escape(slide["title"])}</h1>{code}<ul>{bullets}</ul><p class="sources">{links}</p></section>')
     document = '''<!doctype html>
 <html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Seminar · Unit Test, Coverage, CI/CD</title><link rel="icon" href="data:,">
 <style>
-:root { --paper:#fff; --ink:#101010; --muted:#4c4c4c; --rule:#d4d4d4; --code:#f4f4f4; }
+:root { --paper:#fff; --ink:#000; --muted:#000; --rule:#d4d4d4; --code:#fff; }
 * { box-sizing:border-box; }
 body { margin:0; background:var(--paper); color:var(--ink); font-family:"Segoe UI",Arial,sans-serif; }
 header { display:flex; justify-content:space-between; gap:1rem; padding:1rem 4vw; border-bottom:1px solid var(--rule); font-size:.9rem; color:var(--muted); }
@@ -31,6 +32,8 @@ ul { font-size:clamp(1.2rem,2.1vw,2rem); line-height:1.5; padding-left:1.2em; ma
 li { padding-left:.25em; margin:.65em 0; }
 pre { background:var(--code); border-left:5px solid var(--ink); padding:1.2rem 1.4rem; overflow:auto; font-size:clamp(.95rem,1.65vw,1.45rem); line-height:1.6; margin:0 0 1.7rem; }
 code { font-family:Consolas,"DejaVu Sans Mono",monospace; }
+.sources { display:flex; gap:1.5rem; flex-wrap:wrap; font-size:1rem; margin-top:2rem; }
+a { color:var(--ink); text-decoration:underline; }
 nav { position:fixed; bottom:0; left:0; right:0; display:flex; align-items:center; gap:.8rem; background:var(--paper); border-top:1px solid var(--rule); padding:.8rem 4vw; }
 button { min-height:44px; padding:.5rem 1rem; border:1px solid var(--ink); background:var(--paper); color:var(--ink); font:inherit; cursor:pointer; }
 button:hover { background:var(--code); }
@@ -69,6 +72,15 @@ const hashIndex = /^#[0-9]+$/.test(location.hash) ? Number(location.hash.slice(1
 show(Number.isFinite(hashIndex) ? hashIndex : 0);
 </script></body></html>'''
     (ROOT/'slides/index.html').write_text(document)
+    markdown = ['# Seminar: Unit Test - Code Coverage - CI/CD\n']
+    for number, slide in enumerate(slides, 1):
+        markdown.append(f'## {number}. {slide["title"]}\n\n{slide["stage"]}\n')
+        markdown.extend('- '+item for item in slide['bullets'])
+        if slide.get('code'):
+            markdown.append('\n```text\n'+slide['code']+'\n```')
+        markdown.extend('\n['+link['label']+']('+link['href']+')' for link in slide.get('links', []))
+        markdown.append('\n---\n')
+    (ROOT/'slides/slides.md').write_text('\n'.join(markdown)+'\n')
     print(f'Rendered {len(slides)} slides.')
 
 if __name__ == '__main__':

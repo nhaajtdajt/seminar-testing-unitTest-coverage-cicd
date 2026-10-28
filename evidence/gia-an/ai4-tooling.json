@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-28",
+  "human_oracle_present": false,
+  "python_tooling_tests": 2,
+  "java_runner_synthetic_cases": 3,
+  "java_failures": 0,
+  "java_command": [
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Pai-human",
+    "-Dai4.cases=<synthetic-fixture.csv>",
+    "clean",
+    "verify"
+  ],
+  "limitation": "Synthetic test inputs validate tooling only, not a human-independent evaluation."
+}
