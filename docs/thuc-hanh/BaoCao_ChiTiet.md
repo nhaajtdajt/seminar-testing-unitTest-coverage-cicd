@@ -88,6 +88,54 @@ Dù JUnit 5 và Mockito 5 rất mạnh mẽ, việc lạm dụng hoặc dùng sa
 
 Line coverage đo số dòng thực thi; branch coverage đo các hướng rẽ trong mã đã được chạy. Một dòng có thể chứa nhiều nhánh; vì vậy chỉ xem màu xanh ở dòng là chưa đủ. JaCoCo thu dữ liệu thực thi và tạo HTML cho người đọc, XML/CSV cho xử lý tự động.
 
+### 3.1. Các loại coverage trên một ví dụ và một bộ test
+
+`FineCalculator` chỉ có điều kiện đơn, nên trên lớp này branch, condition và MC/DC luôn bằng nhau. Để thấy các loại coverage khác nhau, nhóm dùng lớp nhỏ `LoanPeriodPolicy` (số ngày được mượn) và bộ 4 test `LoanPeriodPolicyTest`:
+
+```java
+public int loanDays(MemberTier tier, boolean newRelease, BigDecimal unpaidFine) {
+    int days = 14;
+    if (tier == MemberTier.VIP && unpaidFine.signum() == 0) {   // D1 = C1 && C2
+        days += 7;
+    }
+    if (newRelease) {                                           // D2 = C3
+        days -= 7;
+    }
+    return days;
+}
+```
+
+Lớp có 6 câu lệnh, 2 quyết định (D1, D2), 3 điều kiện con (C1: hạng VIP, C2: không nợ phí, C3: sách mới), 4 đường đi (D1 × D2) và 1 phương thức.
+
+| Test | Đầu vào (hạng, sách mới, nợ) | Kỳ vọng | C1 C2 C3 | D1 D2 |
+|---|---|---|---|---|
+| T1 | VIP, có, 0 | 14 | T T T | T T |
+| T2 | NORMAL, không, 0 | 14 | F T F | F F |
+| T3 | VIP, có, 2.000 | 7 | T F T | F T |
+| T4 | VIP, không, 0 | 21 | T T F | T F |
+
+Bảng dưới cộng dồn từng test. Cột cuối là số JaCoCo đo thật (`evidence/tuan-06/coverage-types/`); các cột khác tính tay theo định nghĩa.
+
+| Bộ test | Statement | Decision (branch) | Condition | MC/DC | Path | Method | JaCoCo branch |
+|---|---|---|---|---|---|---|---|
+| {T1} | **6/6 (100%)** | 2/4 (50%) | 3/6 | 0/3 | 1/4 | **1/1** | 3/6 (50%) |
+| {T1, T2} | 6/6 | **4/4 (100%)** | 5/6 | 2/3 | 2/4 | 1/1 | 5/6 (83%) |
+| {T1, T2, T3} | 6/6 | 4/4 | **6/6 (100%)** | **3/3 (100%)** | 3/4 | 1/1 | 6/6 (100%) |
+| {T1, T2, T3, T4} | 6/6 | 4/4 | 6/6 | 3/3 | **4/4 (100%)** | 1/1 | 6/6 (100%) |
+
+Mỗi test đưa thêm một loại coverage lên 100%:
+
+- **Statement (C0)**: mỗi câu lệnh chạy ít nhất một lần. T1 đi vào cả hai `if` nên đạt ngay 100%, dù chưa lần nào đi nhánh "sai". Đây là lý do statement/line coverage dễ gây ảo giác.
+- **Decision/Branch (C1)**: mỗi quyết định nhận cả đúng và sai. T2 bổ sung hai hướng sai.
+- **Condition**: mỗi điều kiện con nhận cả T và F. Sau T1, T2, C2 chưa bao giờ sai; T3 (VIP nhưng nợ phí) bổ sung.
+- **MC/DC**: mỗi điều kiện con được chứng minh *tự nó* làm đổi kết quả quyết định, các điều kiện khác giữ nguyên. C1: cặp T1/T2 (chỉ đổi hạng, D1 đổi T→F). C2: cặp T1/T3 (chỉ đổi nợ phí). C3: cặp T1/T2 cho D2. MC/DC cần n+1 = 3 test cho D1, trong khi xét mọi tổ hợp (multiple condition coverage) cần 2² = 4 tổ hợp; bộ này vẫn thiếu tổ hợp (NORMAL, có nợ).
+- **Path**: mọi đường đi qua hàm. Hai `if` nối tiếp tạo 4 đường; T4 bổ sung đường "được +7 nhưng không bị −7". Số đường tăng theo cấp số nhân với số quyết định, và có thể có đường không khả thi: trong `FineCalculator`, hai biểu thức `tier == VIP ? … : …` luôn cùng kết quả, nên 2 trong 8 đường cú pháp không bao giờ chạy được. Path coverage 100% thường không đạt được trên mã thật.
+- **Method**: mỗi phương thức được gọi ít nhất một lần; đạt ngay từ T1, là thước đo thô nhất.
+
+Ví dụ phản chứng condition ≠ decision: chỉ chạy T2 và T3 thì C1, C2, C3 đều đã nhận cả T và F (condition 6/6), nhưng D1 chưa bao giờ đúng, nên dòng `days += 7` không chạy (statement 5/6, decision 3/4). JaCoCo đo bộ này được 6/7 dòng, 5/6 nhánh (`coverage-types/alt-t2-t3/`). Vì vậy condition coverage không suy ra branch coverage, và ngược lại.
+
+### 3.2. Coverage gate, test bẫy và mutation (CC-1 → CC-4)
+
 Trên riêng `FineCalculator`, bộ baseline 1 test phủ 5/10 nhánh (50%); bộ đầy đủ phủ 10/10 nhánh (100%). Gate dùng `jacoco:check` yêu cầu ít nhất 90% branch cho lớp này. Chạy baseline và bật gate làm Maven fail; bộ đầy đủ giữ nguyên gate thì pass. Các con số này không phải độ phủ 100% của toàn ứng dụng.
 
 Bộ test bẫy đi qua đủ nhánh nhưng không assert số tiền của trường hợp hợp lệ. Nó vẫn đạt 100% branch. PIT tạo 11 mutation: test yếu diệt 3; bộ đầy đủ diệt 10. Một mutant còn sống đổi `daysLate <= graceDays` thành `<`; tại đúng ngưỡng, cả hai cách vẫn trả 0 nên tương đương theo đặc tả hiện tại. Không sửa test để ép diệt một mutant không đổi hành vi quan sát được.
