@@ -91,6 +91,29 @@ case-study/mvnw -B -ntp -f case-study/pom.xml test-compile org.pitest:pitest-mav
 
 `FineCalculatorTrapTest` đi qua các trường hợp hợp lệ mà không assert tiền; chỉ assert hai ngoại lệ. JaCoCo vẫn ghi đủ nhánh. PIT sửa bytecode rồi chạy lại: nhiều thay đổi sai số tiền không bị test yếu phát hiện. So sánh `pit-weak/pit-reports` với `pit-strong/pit-reports`. Test bẫy được gắn tag và loại khỏi lần chạy thông thường.
 
+### CC-5 — Điểm mù: mức trần trong `Math.min`
+
+```bash
+# JaCoCo 10/10 nhánh, gate pass dù không ca nào chạm trần.
+case-study/mvnw -B -ntp -f case-study/pom.xml clean verify -Dtest=FineCalculatorNoCapTest -Dtest.excludedTags=
+# PIT mặc định: 10/11, bằng bộ đầy đủ.
+case-study/mvnw -B -ntp -f case-study/pom.xml clean test-compile org.pitest:pitest-maven:mutationCoverage -Dpit.tests=vn.edu.seminar.fine.FineCalculatorNoCapTest -Dtest.excludedTags=
+# Thêm mutator hằng số: mutant 50000 -> 50001 sống với bộ no-cap, bị diệt với bộ đầy đủ.
+case-study/mvnw -B -ntp -f case-study/pom.xml clean test-compile org.pitest:pitest-maven:mutationCoverage -Dpit.tests=vn.edu.seminar.fine.FineCalculatorNoCapTest -Dtest.excludedTags= -Dmutators=DEFAULTS,INLINE_CONSTS
+case-study/mvnw -B -ntp -f case-study/pom.xml clean test-compile org.pitest:pitest-maven:mutationCoverage -Dmutators=DEFAULTS,INLINE_CONSTS
+```
+
+`-Dtest.excludedTags=` (để trống) cần thiết vì test no-cap mang tag `antipattern`; PIT đọc cấu hình loại tag của Surefire.
+
+### CC-6 — Chi phí của PIT
+
+```bash
+case-study/mvnw -B -ntp -f case-study/pom.xml clean test
+case-study/mvnw -B -ntp -f case-study/pom.xml clean test-compile org.pitest:pitest-maven:mutationCoverage "-Dpit.classes=vn.edu.seminar.*" "-Dpit.tests=vn.edu.seminar.*"
+```
+
+Đọc khối `Timings` cuối log PIT (`coverage and dependency analysis`, `run mutation analysis`). Số đo tại máy: 39 test trong 22,3 s; PIT toàn project 84,9 s với 46 mutant. Mặc định POM chỉ chọn `FineCalculator` để PIT chạy trong vài giây.
+
 ## 8. CI-1/CI-2/CI-3 — Đọc cấu hình và chạy trên GitHub
 
 `.github/workflows/ci.yml` có ba job: `test` (JDK 25) → `coverage-gate` → `package`. Mỗi job dùng runner mới; không giả định `target/` của job trước còn tồn tại. Cache Maven khớp `pom.xml`; test report, coverage và JAR được upload thành artifact. Jenkinsfile làm ba bước tương ứng trên agent có JDK/Maven sẵn. Pipeline dừng ở kiểm tra/đóng gói, chưa triển khai ứng dụng lên server.
