@@ -163,6 +163,34 @@ Các điểm cần nhớ khi đọc báo cáo JaCoCo:
 - **Mã do trình biên dịch sinh** (constructor mặc định, phương thức của `enum`, `record`…) có thể làm số method/instruction khác với mã nguồn. JaCoCo có bộ lọc cho một số trường hợp, nhưng không lọc tất cả.
 - **"Branch 100%" không có nghĩa là "decision 100%".** Hai khái niệm khác cách đếm. Khi so ngưỡng gate (ví dụ 90% branch) cần ghi rõ là branch theo JaCoCo.
 
+### 3.4. Các trường hợp JaCoCo và PIT không xử lý tốt
+
+Bốn tình huống dưới đây đều chạy thật trên case study. Số đo nằm ở `evidence/tuan-05/` (CC-4) và `evidence/tuan-06/coverage-blindspot/`, `evidence/tuan-06/pit-cost/`.
+
+**1. Coverage 100% nhưng test yếu (CC-4).** `FineCalculatorTrapTest` gọi mọi nhánh nhưng không assert số tiền. JaCoCo báo 100% branch, gate pass. Chỉ PIT mới lộ ra: test này diệt được 3/11 mutant, bộ đầy đủ diệt 10/11. Coverage chỉ cho biết code *đã chạy*, không cho biết kết quả *đã được kiểm*.
+
+**2. Quyết định ẩn trong thư viện: cả JaCoCo lẫn PIT mặc định đều không thấy.** Mức trần 50.000 VND của `FineCalculator` nằm trong `Math.min(amount, 50_000L)`. Đây là một quyết định, nhưng nó nằm trong JDK nên không có nhánh nào trong bytecode của lớp. `FineCalculatorNoCapTest` assert đúng 4 số tiền và 2 ngoại lệ, nhưng không ca nào vượt trần:
+
+| Lượt chạy | Kết quả |
+|---|---|
+| JaCoCo, bộ no-cap | 10/10 nhánh (100%), gate 90% **pass** |
+| PIT mặc định, bộ no-cap | 10/11 mutant bị diệt (91%), **bằng đúng** bộ đầy đủ |
+| PIT `-Dmutators=DEFAULTS,INLINE_CONSTS`, bộ no-cap | 13/16; mutant `50000 → 50001` **sống** |
+| PIT `-Dmutators=DEFAULTS,INLINE_CONSTS`, bộ đầy đủ | 15/16; mutant hằng số bị diệt nhờ các ca vượt trần trong CSV (NORMAL 26 ngày, VIP 53 ngày, `Integer.MAX_VALUE`) |
+
+Nghĩa là nếu ai đó xóa luật trần, bộ no-cap vẫn xanh, coverage vẫn 100%, điểm PIT mặc định vẫn y như bộ tốt. Chỉ khi bật thêm mutator hằng số (không nằm trong bộ mặc định) hoặc đọc đặc tả để thêm ca biên, lỗ hổng mới lộ ra. Cũng trong lượt này, mutant "bỏ điều kiện `daysLate <= graceDays`" sống vì bộ no-cap không có ca VIP trễ dưới thời gian ân hạn (ví dụ 1 ngày).
+
+**3. Mutant tương đương: PIT không tự kết luận được.** Ở mọi lượt chạy, mutant đổi `daysLate <= graceDays` thành `<` ở dòng 15 đều sống. Tại đúng ngưỡng (`daysLate == graceDays`), code gốc trả `0` ngay. Bản mutant đi tiếp và tính `(graceDays - graceDays) × rate`, cũng ra `0`. Không có đầu vào nào phân biệt được hai bản, nên không test nào diệt được mutant này. PIT vẫn tính nó vào phần "sống" (điểm tối đa của bộ đầy đủ là 10/11 chứ không phải 11/11). Người review phải tự chứng minh mutant tương đương; không nên viết test vô nghĩa để "ép" điểm 100%.
+
+**4. PIT chậm hơn nhiều so với chạy test.**
+
+| Phạm vi | Chạy test thường | PIT | Ghi chú |
+|---|---|---|---|
+| `FineCalculator` (3 lượt) | test 0,6 s; cả Maven trung vị 16,1 s | PIT tự báo 4 s; cả Maven trung vị 18,9 s | 11 mutant, khoảng 3 test/mutant |
+| Toàn project (1 lượt) | 39 test, cả Maven 22,3 s | PIT 75 s (coverage 10 s + mutation 65 s); cả Maven 84,9 s | 46 mutant, 72 lượt chạy test |
+
+Với lớp nhỏ, thời gian khởi động Maven che mất chi phí của PIT. Khi mở ra cả project, PIT chậm gấp khoảng 4 lần lượt chạy test thường, dù project chỉ có vài lớp: mỗi mutant phải chạy lại các test phủ nó, kể cả test Spring khởi tạo context. Chi phí tăng theo số mutant (tỉ lệ với lượng mã) nhân số test phủ mỗi mutant. Cách giảm: giới hạn `targetClasses` cho phần logic quan trọng (cấu hình hiện tại chỉ chọn `FineCalculator`), tăng `threads`, dùng phân tích tăng dần (`withHistory`), hoặc chạy PIT theo lịch thay vì ở mọi PR. Lượt toàn project cũng cho thấy 4 mutant `NO_COVERAGE` ở getter của `LoanEntity` và 1 mutant sống ở `MemberEntity.id`: các test persistence không đọc các trường đó.
+
 ## 4. CI/CD
 
 CI tự động kiểm tra các thay đổi được tích hợp thường xuyên. Continuous Delivery tạo sản phẩm sẵn sàng phát hành với bước quyết định triển khai; Continuous Deployment tự động đưa thay đổi đạt yêu cầu lên môi trường đích. Bản case study hiện dừng ở kiểm thử và tạo JAR.
