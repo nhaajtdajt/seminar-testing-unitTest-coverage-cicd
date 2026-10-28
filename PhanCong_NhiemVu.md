@@ -40,6 +40,26 @@ AI hỗ trợ ở cả ba bước (sinh test, đọc coverage, review code). M�
 
 **Ảnh hưởng đến kế hoạch:** video là **bắt buộc** (việc H không còn "hỏi GV", bỏ quyết định tạm loại video khỏi checklist Tuần 6); việc E đổi thành "chọn paper có code, chạy lại, thử nghiệm"; slide phải có phần mô tả video.
 
+### Gói nộp bài (deadline khoảng Tuần 07)
+Cần hoàn thiện **khoảng 90% nội dung seminar** rồi nộp qua link của thầy. Không nộp hoặc làm sơ sài: có thể bị trừ 1–2đ.
+
+**Giới hạn:** tối đa **20 file**, mỗi file **≤ 20 MB**, tổng **≤ 400 MB**. **Không nộp bằng Google Drive.** File lớn hơn 20 MB thì nén/chia nhỏ và ghi **`ZipTool`** trong tên file để thầy giải nén được.
+
+| Mục phải nộp | Định dạng | Lấy từ đâu | Người làm |
+|---|---|---|---|
+| **Slide** (thầy đọc đầu tiên) | Markdown + PDF hoặc PowerPoint | `slides/` (xuất PDF), thêm phần tóm tắt từng video | Bảo An |
+| **Báo cáo** | Markdown + PDF | `docs/thuc-hanh/BaoCao_ChiTiet.md`, xuất PDF | Bảo An (mỗi người viết phần mình) |
+| **Link video demo** | Markdown (file liệt kê link + tóm tắt + timestamp) | Video đăng YouTube | Bảo An tổng hợp, mỗi người quay phần mình |
+| **Scripts / source code** | Nén (ZipTool nếu >20 MB) | `case-study/`, `ai/`, `scripts/`, `.github/`, `Jenkinsfile` | Thế Vinh |
+| **Seminar contribution** | **Google Sheet của thầy** (điền trực tiếp) | Mỗi người tự điền phần việc của mình | Cả nhóm |
+| **Git commit log** | Markdown | Xuất **từ `git log` thật** của repo | Quang Vinh |
+| **AI usage declaration** | Markdown + PDF | Khai báo trung thực AI dùng ở đâu, ai review | Bảo An, cả nhóm xác nhận |
+
+**Lưu ý quan trọng:**
+- **Git commit log và Seminar contribution phải khớp với Git thật.** Không dùng script sinh commit giả (script đó đã bị loại bỏ). Ai chưa có commit thì phải có commit/PR trước khi nộp.
+- **AI usage declaration** ghi đúng thực tế: AI hỗ trợ viết code, test, tài liệu, bằng chứng; người nào đã chạy lại và review phần nào.
+- Không đưa API key, mật khẩu, đường dẫn máy cá nhân vào file nộp. Kiểm kích thước từng file trước khi nộp.
+
 ---
 
 ## 2. Dự án của nhóm gồm những gì
@@ -290,4 +310,6 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 - [ ] Đã trình bày thử với GV (J)
 - [ ] Slide nền trắng, chữ đen, chữ to; tất cả liên kết hoạt động
 - [ ] Không có API key hoặc dữ liệu cá nhân trong repo
+- [ ] Gói nộp: ≤20 file, mỗi file ≤20 MB, tổng ≤400 MB, không dùng Google Drive, file nén ghi `ZipTool`
+- [ ] Đủ 7 mục: slide, báo cáo, link video, source, seminar contribution (Google Sheet), git commit log, AI usage declaration
 - [ ] Mỗi người giải thích được phần mình mà không cần nhìn tài liệu
