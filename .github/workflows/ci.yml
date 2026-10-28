@@ -1,10 +1,10 @@
 name: Seminar CI
-# TẠM TẮT TỰ ĐỘNG: đang trong giai đoạn sửa nhiều, workflow chỉ chạy tay
-# (tab Actions -> Seminar CI -> Run workflow).
-# TRƯỚC KHI LÀM DEMO CI-1/2/3: bỏ dấu '#' ở hai trigger dưới để bật lại tự động.
+# Tự động chạy khi có pull request và khi push vào nhánh làm việc chính.
+# Vẫn chạy tay được: tab Actions -> Seminar CI -> Run workflow.
 on:
-  # push:
-  # pull_request:
+  push:
+    branches: [master, seminar-core]
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
