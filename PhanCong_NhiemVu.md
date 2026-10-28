@@ -2,7 +2,7 @@
 
 **Môn:** Kiểm thử phần mềm (FIT@HCMUS) · **Nhóm:** 09 · **Chủ đề seminar:** Unit Test · Code Coverage · CI/CD
 
-> Tài liệu này dành cho cả nhóm đọc trước khi bắt tay làm. Phần 1–3 giải thích dự án làm gì và vì sao. Phần 4–5 là hiện trạng thật (đã có, chưa có). Phần 6 là phân công từng người. Phần 7–9 là quy tắc làm việc, rủi ro và checklist.
+> Tài liệu này dành cho cả nhóm đọc trước khi bắt tay làm. Phần 1–2 giải thích dự án làm gì và vì sao. Phần 3 là những gì **đã làm được**, phần 4 là những gì **chưa làm**. Phần 5 là phân công từng người. Phần 6–9 là việc chung, quy trình làm việc, rủi ro và checklist.
 >
 > **Ngày lập:** 28/10/2026, dựa trên nhánh `reportweek04` (commit `de9b88a`) và nhánh gọn `seminar-core`. Những chỗ ghi `___` là nhóm cần tự điền (ngày hạn, tên tài khoản...).
 
@@ -133,9 +133,40 @@ Câu hỏi dẫn dắt cả bài: **"Test chạy xanh và coverage 100% có ngh�
 
 ---
 
-## 3. Chúng ta sẽ làm gì thêm so với hiện tại
+## 3. Những gì đã làm được (hiện trạng thật)
 
-Những mục này **chưa có** hoặc **còn yếu**, và là nơi thầy sẽ nhìn kỹ:
+> Đa số mã, test, script, tài liệu và bằng chứng dưới đây được tạo với **AI hỗ trợ trong một số phiên làm việc** (chủ yếu qua tài khoản của Phạm Quang Vinh và `bingsu`). Vì vậy, **mỗi thành viên vẫn phải tự chạy lại, đọc hiểu và xác nhận phần của mình** trước khi nhận là của mình (xem mục 7).
+
+### 3.1. Mã nguồn và test (nhánh `master`, `seminar-core`)
+- Ứng dụng quản lý thư viện chạy được, build bằng `case-study/mvnw`.
+- **33 test pass** trên JDK 25: 17 cho `FineCalculator` (CSV 15 dòng + 2 ca lỗi), 6 cho `LoanService`, 5 cho tầng web, 2 integration, 3 persistence.
+- JaCoCo: toàn project branch 18/18, line khoảng 90,8%; `FineCalculator` 10/10 nhánh.
+- Cấu hình PIT và JaCoCo gate (ngưỡng 90% branch cho `FineCalculator`).
+
+### 3.3. CI/CD
+- `.github/workflows/ci.yml`: 3 job nối nhau (test → coverage-gate → package), cache Maven, upload artifact, summary.
+- `.github/workflows/ai-review.yml`: job review diff bằng AI.
+- `Jenkinsfile` mô tả cùng pipeline, chỉ để so sánh.
+- Đã kiểm cú pháp bằng actionlint.
+- **Chưa chạy trên GitHub/Jenkins.** Trigger tự động đang tắt, chỉ chạy tay.
+
+### 3.4. AI
+| Demo | Kết quả |
+|---|---|
+| AI-1 sinh test | 3 test, phủ 70% nhánh |
+| AI-2 đọc gap coverage | Thêm 3 test, phủ 100% nhánh |
+| AI-3 review diff (Gemini thật) | Tìm 4/4 lỗi cài sẵn trong fixture, 0 báo thừa; **chỉ đo trên fixture mẫu, không phải đánh giá độc lập** |
+| AI-4 dữ liệu biên | 13/15 ca trùng với bộ tham chiếu; thiếu 2 ca |
+
+### 3.5. Tài liệu
+23 slide (`slides/`), báo cáo chi tiết (8 mục), hướng dẫn demo, 4 bài tập kèm đáp án gợi ý, kịch bản quay video, bảng công việc, kế hoạch hàng tuần.
+
+
+---
+
+## 4. Những gì chưa làm và cần làm thêm
+
+Những mục này **chưa có** hoặc **còn yếu** (mục 3 ở trên là phần đã có), và là nơi thầy sẽ nhìn kỹ:
 
 | # | Việc | Vì sao quan trọng |
 |---|---|---|
@@ -152,58 +183,7 @@ Những mục này **chưa có** hoặc **còn yếu**, và là nơi thầy sẽ
 
 ---
 
-## 4. Những gì đã làm được (hiện trạng thật)
-
-> Đa số mã, test, script, tài liệu và bằng chứng dưới đây được tạo với **AI hỗ trợ trong một số phiên làm việc** (chủ yếu qua tài khoản của Phạm Quang Vinh và `bingsu`). Vì vậy, **mỗi thành viên vẫn phải tự chạy lại, đọc hiểu và xác nhận phần của mình** trước khi nhận là của mình (xem mục 7).
-
-### 4.1. Mã nguồn và test (nhánh `master`, `seminar-core`)
-- Ứng dụng quản lý thư viện chạy được, build bằng `case-study/mvnw`.
-- **33 test pass** trên JDK 25: 17 cho `FineCalculator` (CSV 15 dòng + 2 ca lỗi), 6 cho `LoanService`, 5 cho tầng web, 2 integration, 3 persistence.
-- JaCoCo: toàn project branch 18/18, line khoảng 90,8%; `FineCalculator` 10/10 nhánh.
-- Cấu hình PIT và JaCoCo gate (ngưỡng 90% branch cho `FineCalculator`).
-
-### 4.2. Các thí nghiệm đã đo (bằng chứng trong `evidence/`)
-| Thí nghiệm | Kết quả |
-|---|---|
-| Baseline 1 test | 5/10 nhánh (50%) |
-| Bộ đầy đủ | 10/10 nhánh (100%) |
-| Gate 90% với bộ thiếu test | Maven exit 1 (đỏ đúng như kỳ vọng) |
-| Test bẫy (không assert tiền) | 100% branch nhưng PIT diệt 3/11; bộ mạnh diệt 10/11 |
-| TDD replay | 4 vòng đỏ → xanh (chạy lại để minh họa, không phải lịch sử commit thật) |
-| HTTP smoke | 5/5 tình huống đúng mã trạng thái |
-| Benchmark JaCoCo | Trung vị 9,7s (không JaCoCo) và 12,8s (có JaCoCo), 3 lượt/cấu hình |
-| Benchmark cache Maven | Lạnh ~48s, ấm ~12,5s (3 cặp), mạng thay đổi nên chỉ mang tính tham khảo |
-
-### 4.3. CI/CD
-- `.github/workflows/ci.yml`: 3 job nối nhau (test → coverage-gate → package), cache Maven, upload artifact, summary.
-- `.github/workflows/ai-review.yml`: job review diff bằng AI.
-- `Jenkinsfile` mô tả cùng pipeline, chỉ để so sánh.
-- Đã kiểm cú pháp bằng actionlint.
-- **Chưa chạy trên GitHub/Jenkins.** Trigger tự động đang tắt, chỉ chạy tay.
-
-### 4.4. AI
-| Demo | Kết quả |
-|---|---|
-| AI-1 sinh test | 3 test, phủ 70% nhánh |
-| AI-2 đọc gap coverage | Thêm 3 test, phủ 100% nhánh |
-| AI-3 review diff (Gemini thật) | Tìm 4/4 lỗi cài sẵn trong fixture, 0 báo thừa; **chỉ đo trên fixture mẫu, không phải đánh giá độc lập** |
-| AI-4 dữ liệu biên | 13/15 ca trùng với bộ tham chiếu; thiếu 2 ca |
-
-### 4.5. Tài liệu
-23 slide (`slides/`), báo cáo chi tiết (8 mục), hướng dẫn demo, 4 bài tập kèm đáp án gợi ý, kịch bản quay video, bảng công việc, kế hoạch hàng tuần.
-
-
----
-
-## 5. Những gì còn thiếu (tóm tắt)
-- Chưa có bảng các loại coverage trên một bộ test (mục A) và phần khái niệm unit testing đầy đủ (mục B).
-- Chưa chạy CI thật (C), chưa có bộ video (H), chưa có paper chạy lại được (E), chưa có khảo sát công cụ đối chiếu (D).
-- Record & Playback / Checkpoints chưa được trình bày (F).
-- Phân công chưa có minh chứng đối chiếu được cho 3 trong 5 thành viên (I).
-
----
-
-## 6. Phân công từng người
+## 5. Phân công từng người
 
 Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chính mình. Cách làm chi tiết do từng người tự nghiên cứu. Hạn: `___` (nhóm thống nhất khi họp). Mỗi người **quay video demo phần của mình** (xem mục "Thầy nhắn thêm").
 
@@ -256,7 +236,7 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 6. Quay video: **demo AI (setup, cơ bản, phức tạp, trường hợp AI sai)** và video **phần paper**.
 7. **Điều phối chung**: họp hàng tuần, theo dõi `BangCongViec.md`, **gửi slide/gặp thầy trước hạn 3–4 ngày**, nộp bài.
 
-## 7. Việc chung của cả nhóm
+## 6. Việc chung của cả nhóm
 1. **Họp ngắn đầu tuần** (15 phút): mỗi người báo *đã làm / đang làm / vướng*; Bảo An ghi lại.
 2. **Mỗi người quay video demo phần công cụ của mình** (Bảo An điều phối) và nói được ý chính của paper nhóm chọn trong 2 phút.
 3. **Review chéo:** mỗi PR cần ít nhất 1 người khác đọc và nhận xét.
@@ -266,7 +246,7 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 
 ---
 
-## 8. Quy trình làm việc (để có minh chứng đóng góp)
+## 7. Quy trình làm việc (để có minh chứng đóng góp)
 
 1. **Mỗi việc = 1 issue = 1 nhánh = 1 PR.** Tên nhánh gợi ý: `feat/coverage-table`, `docs/papers`, `ci/real-run`.
 2. **Commit bằng tài khoản GitHub của chính mình**, thông điệp rõ ràng (`feat:`, `docs:`, `test:`, `ci:`).
@@ -282,7 +262,7 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 
 ---
 
-## 9. Rủi ro cần để ý
+## 8. Rủi ro cần để ý
 | Rủi ro | Cách giảm |
 |---|---|
 | Thiếu phần thầy yêu cầu (A, B, E) sát hạn nộp | Làm A, B, E trước; C, D sau |
@@ -296,7 +276,7 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 
 ---
 
-## 10. Checklist cuối trước khi nộp
+## 9. Checklist cuối trước khi nộp
 
 - [ ] Có bảng các loại coverage trên một ví dụ và một bộ test (A)
 - [ ] Có phần khái niệm unit testing đầy đủ (B)
