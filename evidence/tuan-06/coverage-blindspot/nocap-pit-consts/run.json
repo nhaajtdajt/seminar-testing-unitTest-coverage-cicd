@@ -1,0 +1,23 @@
+{
+  "started_at_utc": "2026-10-28T14:55:19.552166+00:00",
+  "finished_at_utc": "2026-10-28T14:55:35.134216+00:00",
+  "elapsed_seconds": 15.578,
+  "command": [
+    "cmd",
+    "/c",
+    "case-study\\mvnw.cmd",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "clean",
+    "test-compile",
+    "org.pitest:pitest-maven:mutationCoverage",
+    "-Dpit.tests=vn.edu.seminar.fine.FineCalculatorNoCapTest",
+    "-Dtest.excludedTags=",
+    "-Dmutators=DEFAULTS,INLINE_CONSTS"
+  ],
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local; not a GitHub Actions or Jenkins execution"
+}
