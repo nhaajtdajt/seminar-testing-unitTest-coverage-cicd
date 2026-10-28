@@ -44,6 +44,20 @@ Mở `target/site/jacoco/index.html`; chọn `FineCalculator`. Cột Branch khá
 
 Minh chứng đã lưu riêng ở `evidence/tuan-05/baseline/site/jacoco` và `evidence/tuan-05/final/site/jacoco`, tránh lần chạy sau ghi đè lần trước.
 
+### CC-0 — Các loại coverage trên `LoanPeriodPolicy`
+
+Chạy cộng dồn từng test T1–T4, mỗi lượt mở `target/site/jacoco/vn.edu.seminar.loan/LoanPeriodPolicy.java.html` để xem dòng xanh/vàng và số nhánh:
+
+```bash
+case-study/mvnw -B -ntp -f case-study/pom.xml clean verify -Dcoverage.gate.skip=true "-Dtest=LoanPeriodPolicyTest#t1*"
+case-study/mvnw -B -ntp -f case-study/pom.xml clean verify -Dcoverage.gate.skip=true "-Dtest=LoanPeriodPolicyTest#t1*+t2*"
+case-study/mvnw -B -ntp -f case-study/pom.xml clean verify -Dcoverage.gate.skip=true "-Dtest=LoanPeriodPolicyTest#t1*+t2*+t3*"
+# Phản chứng condition ≠ decision: chỉ T2 + T3
+case-study/mvnw -B -ntp -f case-study/pom.xml clean verify -Dcoverage.gate.skip=true "-Dtest=LoanPeriodPolicyTest#t2*+t3*"
+```
+
+Kỳ vọng nhánh JaCoCo: 3/6 → 5/6 → 6/6; bộ T2 + T3 cho 5/6 nhánh và dòng `days += 7` màu đỏ. Bảng giải thích ở `BaoCao_ChiTiet.md` mục 3.1; số đo đã lưu ở `evidence/tuan-06/coverage-types/`.
+
 ## 6. CC-3 — Gate đỏ rồi xanh
 
 ```bash
