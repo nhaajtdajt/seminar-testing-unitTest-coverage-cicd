@@ -16,6 +16,7 @@
     <test.excludedTags>baseline,antipattern,ai-draft,ai-gaps,ai-data</test.excludedTags>
     <coverage.gate.skip>false</coverage.gate.skip>
     <pit.tests>vn.edu.seminar.fine.FineCalculatorTest</pit.tests>
+    <pit.classes>vn.edu.seminar.fine.FineCalculator</pit.classes>
   </properties>
   <dependencies>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-webmvc</artifactId></dependency>
@@ -60,7 +61,7 @@
       <groupId>org.pitest</groupId><artifactId>pitest-maven</artifactId><version>1.30.0</version>
       <dependencies><dependency><groupId>org.pitest</groupId><artifactId>pitest-junit5-plugin</artifactId><version>1.2.3</version></dependency></dependencies>
       <configuration>
-        <targetClasses><param>vn.edu.seminar.fine.FineCalculator</param></targetClasses>
+        <targetClasses><param>${pit.classes}</param></targetClasses>
         <targetTests><param>${pit.tests}</param></targetTests>
         <threads>2</threads><timestampedReports>false</timestampedReports>
         <outputFormats><param>HTML</param><param>XML</param></outputFormats>
