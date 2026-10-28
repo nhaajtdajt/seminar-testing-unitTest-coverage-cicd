@@ -177,7 +177,7 @@ Những mục này **chưa có** hoặc **còn yếu**, và là nơi thầy sẽ
 
 ## 5. Những gì còn thiếu (tóm tắt)
 - Chưa có bảng các loại coverage trên một bộ test (mục A) và phần khái niệm unit testing đầy đủ (mục B).
-- Chưa chạy CI thật (C), chưa có video (H), chưa có paper (E), chưa có khảo sát công cụ đối chiếu (D).
+- Chưa chạy CI thật (C), chưa có bộ video (H), chưa có paper chạy lại được (E), chưa có khảo sát công cụ đối chiếu (D).
 - Record & Playback / Checkpoints chưa được trình bày (F).
 - Phân công chưa có minh chứng đối chiếu được cho 3 trong 5 thành viên (I).
 
@@ -193,17 +193,17 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 | **Trương Nhật Đạt** (23120231) | Code Coverage | JaCoCo, PIT, gate, CC-1/2/3, test bẫy, slide 11–14 | **A** bảng các loại coverage trên một ví dụ, một bộ test (ưu tiên số 1) · **D** thêm công cụ coverage thứ hai · **G** điểm yếu JaCoCo/PIT |
 | **Phạm Quang Vinh** (23120202) | CI/CD | `ci.yml`, `ai-review.yml`, `Jenkinsfile`, benchmark | **C** chạy CI thật, PR đỏ→xanh, required checks · tạo Issues/Projects · **D** so sánh với Jenkins (chạy thử) · **G** điểm yếu CI · mời thành viên vào repo |
 | **Nguyễn Lê Thế Vinh** (23120190) | Case study | Ứng dụng, test web/integration, HTTP smoke, README | Chạy lại từ máy sạch và sửa README · thêm hàm có điều kiện ghép để minh họa condition/MC/DC (cùng Đạt) · viết test của riêng mình · chuẩn bị dữ liệu demo |
-| **Nguyễn Bảo An** (23120207) | AI và trình bày | `ai/`, AI-1..4, slide 19–23, báo cáo chi tiết, bài tập | **E** paper hạng ≥B (kiểm hạng thật, tóm tắt bằng lời mình) · AI-4 đối chứng độc lập · hợp nhất slide, báo cáo |
+| **Nguyễn Bảo An** (23120207) | AI và trình bày | `ai/`, AI-1..4, slide 19–23, báo cáo chi tiết, bài tập | **E** paper hạng ≥B **có source code**, chạy lại kết quả và thử trên test của nhóm · AI-4 đối chứng độc lập · **H** điều phối bộ video, slide tóm tắt từng video · hợp nhất slide, báo cáo |
 
 **Điều phối chung** (họp, theo dõi bảng công việc, tổng hợp báo cáo tuần, nộp bài): Nguyễn Bảo An, trưởng nhóm theo kế hoạch ban đầu.
 
 ## 7. Việc chung của cả nhóm
 1. **Họp ngắn đầu tuần** (15 phút): mỗi người báo *đã làm / đang làm / vướng*; Bảo An ghi lại.
-2. **Mỗi người đọc 1–2 paper** (do Bảo An phân) và nói được ý chính trong 2 phút.
+2. **Mỗi người quay video demo phần công cụ của mình** (Bảo An điều phối) và nói được ý chính của paper nhóm chọn trong 2 phút.
 3. **Review chéo:** mỗi PR cần ít nhất 1 người khác đọc và nhận xét.
 4. **Tập thử trình bày** ít nhất 2 lần, một lần bấm giờ; **nộp trước và trình bày thử với GV**.
 5. **Chuẩn bị 10 câu hỏi khó** và người trả lời cho từng câu.
-6. **Hỏi GV** hai việc: video có bắt buộc không, và hệ xếp hạng "rank ≥ B" là CORE hay hệ khác.
+6. **Hỏi GV** hệ xếp hạng "rank ≥ B" là CORE hay hệ khác. **Gửi slide / gặp thầy trước hạn 3–4 ngày.**
 
 ---
 
@@ -231,7 +231,8 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 | Demo CI hỏng khi trình bày | Chạy sẵn, giữ PR đỏ/xanh, có video và ảnh dự phòng |
 | Mạng yếu làm Maven tải chậm | Chạy `mvnw` một lần trước để có cache |
 | Nội dung do AI sai hoặc bịa (nhất là paper, hạng, số liệu) | Kiểm trên trang gốc (DBLP, CORE, trang hội nghị) |
-| Không có video | Hỏi GV sớm; nếu bắt buộc thì quay song song |
+| Thiếu video hoặc video quá ngắn | Video bắt buộc: lập danh sách video (setup, cơ bản, đơn giản, phức tạp, không xử lý được, data driven), mỗi người quay phần công cụ của mình |
+| Paper không có source code | Bỏ, chọn paper khác; chạy lại kết quả công bố, không tự implement |
 | Slide quá dài hoặc quá ngắn | Mỗi phần có người chịu trách nhiệm số trang và thời lượng |
 
 ---
@@ -242,10 +243,10 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 - [ ] Có phần khái niệm unit testing đầy đủ (B)
 - [ ] CI chạy thật trên GitHub, có PR đỏ → xanh, required checks (C)
 - [ ] Có khảo sát và so sánh công cụ đã thử (D)
-- [ ] Có 4–6 paper hạng ≥B, đã kiểm hạng và tóm tắt (E)
+- [ ] Có paper hạng ≥B đã kiểm hạng, **có source code**, đã chạy lại kết quả và thử trên test của nhóm (E)
 - [ ] Trình bày Record & Playback / Data driven / Checkpoints (F)
 - [ ] Có điểm yếu công cụ có demo (G)
-- [ ] Video đã quay và có link hoặc đã được GV xác nhận không cần (H)
+- [ ] Đủ bộ video (setup, cơ bản, đơn giản, phức tạp, không xử lý được, data driven), đã đăng YouTube, slide tóm tắt từng video, có timestamp nếu gộp (H)
 - [ ] Mỗi thành viên có commit/PR bằng tài khoản riêng (I)
 - [ ] Đã trình bày thử với GV (J)
 - [ ] Slide nền trắng, chữ đen, chữ to; tất cả liên kết hoạt động
