@@ -178,7 +178,7 @@ Phép đo JaCoCo trên bản Java 25 có ba lượt/cấu hình: trung vị khô
 | Mục tiêu | Công cụ thực hành | Công cụ đối chiếu | Cơ sở nhận xét |
 |---|---|---|---|
 | Viết/chạy test Java | JUnit Jupiter, Mockito, AssertJ | TestNG, Spock, JUnit 4 | Chọn bộ do Spring Boot quản lý; đã chạy test trong case study. Chưa benchmark các bộ đối chiếu. |
-| Đo độ phủ | JaCoCo | Cobertura, OpenClover, coverage IDE | Đã chạy HTML/XML và gate; các công cụ đối chiếu chưa cài/chạy trong đợt này. |
+| Đo độ phủ | JaCoCo | OpenClover (đã chạy), Cobertura, coverage IDE | Đã chạy HTML/XML và gate với JaCoCo; OpenClover chạy trên cùng bộ test, so sánh ở mục 5.2. Cobertura và coverage IDE chưa chạy. |
 | Kiểm chất lượng assertion | PIT | Đọc test thủ công | Đã chạy cùng lớp với test mạnh/yếu; phải phân tích mutant tương đương. |
 | Tự động kiểm tra | GitHub Actions | Jenkins, GitLab CI, CircleCI | Có workflow và Jenkinsfile; mới kiểm tra tĩnh/lệnh tại máy, chưa đo trên dịch vụ. |
 
@@ -197,6 +197,23 @@ Trong hệ sinh thái Java, **JUnit 5** và **TestNG** là hai framework kiểm 
 - Là chuẩn mặc định của Spring Boot 4.x và Java 25.
 - Cú pháp `@ParameterizedTest` với file CSV phản ánh trực tiếp kỹ thuật Data-driven mà không cần viết mã đọc file trung gian.
 - Tuân thủ nghiêm ngặt nguyên tắc FIRST, ngăn chặn tình trạng viết test phụ thuộc thứ tự (anti-pattern thường gặp ở TestNG).
+
+### 5.2. So sánh công cụ coverage: JaCoCo vs OpenClover
+
+Nhóm chạy thử OpenClover 4.5.2 trên bản sao `case-study/` bằng lệnh gọi plugin đầy đủ tọa độ (không sửa `pom.xml`), cùng bộ test T1–T4 và cả bộ 39 test. Cả 39 test đều pass trên JDK 25. Số đo nằm ở `evidence/tuan-06/openclover/`.
+
+| Tiêu chí | JaCoCo 0.8.15 | OpenClover 4.5.2 | Nhận xét |
+|---|---|---|---|
+| **1. Cách đo** | Java agent gắn probe vào **bytecode** khi nạp lớp; không đụng mã nguồn. | **Sửa mã nguồn** (instrument) sang thư mục riêng rồi biên dịch lại; ghi dữ liệu vào `clover.db`. | JaCoCo đo được cả lớp không có mã nguồn. OpenClover bám sát cú pháp nguồn nhưng phụ thuộc parser hỗ trợ phiên bản Java. |
+| **2. Đơn vị "nhánh"** | Lệnh nhảy bytecode: `LoanPeriodPolicy` có 6 nhánh. | Kết quả đúng/sai của **cả biểu thức điều kiện** (decision): 4 conditional. | Cùng bộ {T1, T2}: JaCoCo 5/6 (83%), OpenClover 4/4 (100%). Bộ T2 + T3: JaCoCo 5/6, OpenClover 3/4. Hai con số "branch" không so trực tiếp được. |
+| **3. Statement / method** | Instructions 17, lines 7, methods 2 (tính cả constructor mặc định). | Statements 6, methods 1 (chỉ phương thức viết trong nguồn). | OpenClover gần với định nghĩa statement/method trong giáo trình hơn. |
+| **4. Chỉ số tổng hợp** | Từng counter riêng; gate `jacoco:check` theo counter (nhóm dùng BRANCH ≥ 90% cho `FineCalculator`). | Total Percentage Coverage (TPC) gộp statement + conditional + method; gate `clover:check` theo TPC. | Ngưỡng 90% ở hai công cụ không cùng ý nghĩa; khi đổi công cụ phải đặt lại ngưỡng. |
+| **5. Thời gian (3 lượt, cả bộ test)** | `clean verify` (test + report + gate): 37,1 / 46,6 / 47,9 s, trung vị **46,6 s**. | `clean clover:setup test clover:clover` (tắt JaCoCo): 38,8 / 44,8 / 43,4 s, trung vị **43,4 s**. | Chênh lệch nhỏ hơn dao động giữa các lượt trên cùng máy, nên không kết luận công cụ nào nhanh hơn với dự án nhỏ này. |
+| **6. Hệ sinh thái** | Mặc định trong hầu hết hướng dẫn Maven/Gradle, SonarQube, Codecov; cập nhật đều theo phiên bản JDK. | Mã nguồn mở từ Atlassian Clover; bản 4.5.2 phát hành 01/2024. Ưu điểm theo tài liệu: coverage theo từng test, test optimization (chỉ chạy test liên quan). | Nhóm chưa thử tính năng coverage theo từng test của OpenClover. |
+
+Cobertura không được chạy thử: bản cuối 2.1.1 phát hành năm 2015 và không còn được phát triển, nên nhóm không đưa vào so sánh thực nghiệm.
+
+**Kết luận:** nhóm giữ **JaCoCo** cho case study và CI vì không phải sửa mã nguồn, có sẵn gate theo counter và được tích hợp rộng. OpenClover hữu ích để minh họa vì đo theo decision ở mức mã nguồn, cho thấy rõ "branch" của mỗi công cụ là một định nghĩa khác nhau.
 
 Các bảng khảo sát ở gói đề xuất là dữ liệu tham khảo ban đầu, không thay cho kết quả trải nghiệm. Cần kiểm lại tình trạng phát triển, giấy phép, hạn mức và giá tại thời điểm nộp nếu đưa các thông tin đó vào bản chính thức. Mockito 5 đã dùng inline mock maker mặc định; không giữ kết luận cũ rằng mock final/static luôn cần thêm module.
 
