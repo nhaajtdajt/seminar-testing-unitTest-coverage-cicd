@@ -31,7 +31,7 @@ Nhóm em tìm hiểu chuỗi Unit Test $\rightarrow$ Code Coverage $\rightarrow$
 \toprule
 Vai & Nội dung phụ trách \\
 \midrule
-TV1 & Kế hoạch, bảng công việc, GitHub Actions, Jenkinsfile và báo cáo tổng hợp. \\
+TV1 & Kế hoạch, bảng công việc, GitHub Actions và báo cáo tổng hợp. \\
 TV2 & Unit Test với JUnit/Mockito, dữ liệu CSV, các kịch bản UT-1/2/3. \\
 TV3 & JaCoCo, coverage gate, PIT, số liệu và các kịch bản CC-1/2/3. \\
 TV4 & Mã nguồn case study, REST API, integration test và hướng dẫn chạy. \\
@@ -53,7 +53,7 @@ Riêng FineCalculator, baseline phủ 5/10 nhánh (50\%); bộ đầy đủ ph�
 Test bẫy không assert tiền ở ca hợp lệ vẫn phủ 100\% nhánh. PIT tạo 11 mutation: bộ yếu diệt 3, bộ đầy đủ diệt 10. Mutant còn sống đổi điều kiện tại đúng ngưỡng gia hạn nhưng vẫn trả tiền bằng 0, tương đương theo đặc tả hiện tại. Coverage cần được đọc cùng chất lượng assertion và dữ liệu biên.
 
 \subsection{CI/CD}
-Có workflow test (Java 25) $\rightarrow$ coverage-gate $\rightarrow$ package, cache Maven và artifact báo cáo/JAR. Jenkinsfile mô tả thứ tự tương ứng. Workflow qua actionlint, lệnh Maven đã chạy tại máy. Tài khoản GitHub hiện có quyền READ nên chưa có run/PR đỏ--xanh hay xác nhận quy tắc chặn merge. Jenkinsfile chưa được chạy trên Jenkins.
+Có workflow test (Java 25) $\rightarrow$ coverage-gate $\rightarrow$ package, cache Maven và artifact báo cáo/JAR. Workflow qua actionlint, lệnh Maven đã chạy tại máy. Tài khoản GitHub hiện có quyền READ nên chưa có run/PR đỏ--xanh hay xác nhận quy tắc chặn merge.
 
 \subsection{AI}
 AI-1 có bản nháp 3 test pass, phủ 70\% nhánh. AI-2 đối chiếu báo cáo với source, thêm 3 test null, ngày âm và phí VIP; bộ 6 test đạt 100\% nhánh. AI-4 có 13 dòng CSV được chạy pass, trùng 13/15 ca tham chiếu. Hai bộ dữ liệu đều có AI hỗ trợ nên chưa có so sánh con người--AI độc lập.

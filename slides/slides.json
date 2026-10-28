@@ -159,12 +159,12 @@
   },
   {
     "stage": "CI/CD",
-    "title": "GitHub Actions và Jenkins",
+    "title": "GitHub Actions: cấu trúc workflow",
     "bullets": [
-      "GitHub Actions dùng YAML và hosted runner.",
-      "Jenkinsfile mô tả cùng thứ tự test → gate → package.",
-      "Mỗi hệ có cú pháp và cách cấp môi trường riêng.",
-      "Jenkinsfile chưa chạy trên Jenkins; chưa kết luận về tốc độ hoặc độ dễ vận hành."
+      "Workflow viết bằng YAML trong .github/workflows, chạy trên runner do GitHub cấp.",
+      "Ba job nối nhau bằng needs: test → coverage-gate → package.",
+      "Job trước đỏ thì job sau không chạy.",
+      "Cache Maven và artifact giúp chạy nhanh và lưu báo cáo."
     ]
   },
   {
@@ -213,7 +213,7 @@
     "bullets": [
       "Gói tuần 6 gồm source, test, báo cáo, AI/Git, HTML và slide; video/kịch bản/ảnh trình diễn đã được loại khỏi checklist.",
       "Đối chiếu tác giả commit và minh chứng trước khi kết luận đóng góp thành viên.",
-      "Chạy GitHub Actions/Jenkins là trạng thái scope toàn dự án, không phải mục checklist nộp tuần 6."
+      "Chạy GitHub Actions là trạng thái scope toàn dự án, không phải mục checklist nộp tuần 6."
     ]
   },
   {

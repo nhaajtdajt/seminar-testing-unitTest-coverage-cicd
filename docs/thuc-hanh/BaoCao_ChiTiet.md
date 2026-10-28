@@ -195,11 +195,11 @@ Với lớp nhỏ, thời gian khởi động Maven che mất chi phí của PIT
 
 CI tự động kiểm tra các thay đổi được tích hợp thường xuyên. Continuous Delivery tạo sản phẩm sẵn sàng phát hành với bước quyết định triển khai; Continuous Deployment tự động đưa thay đổi đạt yêu cầu lên môi trường đích. Bản case study hiện dừng ở kiểm thử và tạo JAR.
 
-Workflow gồm `test` chạy JDK 25, `coverage-gate` phụ thuộc kết quả test, `package` phụ thuộc gate. Cache giữ dependency Maven; artifact lưu test report, coverage và JAR; summary giúp người xem đọc điều kiện gate. Jenkinsfile mô tả cùng thứ tự công việc bằng cú pháp pipeline của Jenkins.
+Workflow gồm `test` chạy JDK 25, `coverage-gate` phụ thuộc kết quả test, `package` phụ thuộc gate. Cache giữ dependency Maven; artifact lưu test report, coverage và JAR; summary giúp người xem đọc điều kiện gate.
 
-Workflow đã qua actionlint, các lệnh Maven đã chạy tại máy. Tài khoản GitHub đang dùng chỉ có quyền READ trên repo nhóm. Do đó chưa có lần chạy Actions, PR đỏ/xanh hay xác nhận required checks chặn merge. Jenkinsfile chưa được chạy trên Jenkins. Việc upload cấu hình không tự bật quy tắc bảo vệ nhánh; người quản trị cần cấu hình required status checks.
+Workflow đã qua actionlint, các lệnh Maven đã chạy tại máy. Tài khoản GitHub đang dùng chỉ có quyền READ trên repo nhóm. Do đó chưa có lần chạy Actions, PR đỏ/xanh hay xác nhận required checks chặn merge. Việc upload cấu hình không tự bật quy tắc bảo vệ nhánh; người quản trị cần cấu hình required status checks.
 
-Phép đo JaCoCo trên bản Java 25 có ba lượt/cấu hình: trung vị không bật JaCoCo là 9,727 giây; có JaCoCo/report/gate là 12,754 giây. Phép đo repo Maven lạnh/ấm đã đủ ba cặp hợp lệ trên Java 25, trung vị 48,412/12,539 giây. Cặp bổ sung chạy sau hai cặp đầu, mất 479,523/11,940 giây; dùng kho trống cho lượt lạnh và dùng lại kho đó cho lượt ấm, ưu tiên IPv4 và tăng thời gian chờ tải. Điều kiện mạng thay đổi nên không suy ra mức tăng tốc cố định từ trung vị. Log tải lỗi được giữ riêng và không tính vào số liệu hoàn thành. Phép đo cache dependency tại máy không đồng nhất với thời gian restore cache trên GitHub hoặc Jenkins.
+Phép đo JaCoCo trên bản Java 25 có ba lượt/cấu hình: trung vị không bật JaCoCo là 9,727 giây; có JaCoCo/report/gate là 12,754 giây. Phép đo repo Maven lạnh/ấm đã đủ ba cặp hợp lệ trên Java 25, trung vị 48,412/12,539 giây. Cặp bổ sung chạy sau hai cặp đầu, mất 479,523/11,940 giây; dùng kho trống cho lượt lạnh và dùng lại kho đó cho lượt ấm, ưu tiên IPv4 và tăng thời gian chờ tải. Điều kiện mạng thay đổi nên không suy ra mức tăng tốc cố định từ trung vị. Log tải lỗi được giữ riêng và không tính vào số liệu hoàn thành. Phép đo cache dependency tại máy không đồng nhất với thời gian restore cache trên GitHub.
 
 ## 5. Khảo sát và lựa chọn công cụ
 
@@ -208,7 +208,7 @@ Phép đo JaCoCo trên bản Java 25 có ba lượt/cấu hình: trung vị khô
 | Viết/chạy test Java | JUnit Jupiter, Mockito, AssertJ | TestNG, Spock, JUnit 4 | Chọn bộ do Spring Boot quản lý; đã chạy test trong case study. Chưa benchmark các bộ đối chiếu. |
 | Đo độ phủ | JaCoCo | OpenClover (đã chạy), Cobertura, coverage IDE | Đã chạy HTML/XML và gate với JaCoCo; OpenClover chạy trên cùng bộ test, so sánh ở mục 5.2. Cobertura và coverage IDE chưa chạy. |
 | Kiểm chất lượng assertion | PIT | Đọc test thủ công | Đã chạy cùng lớp với test mạnh/yếu; phải phân tích mutant tương đương. |
-| Tự động kiểm tra | GitHub Actions | Jenkins, GitLab CI, CircleCI | Có workflow và Jenkinsfile; mới kiểm tra tĩnh/lệnh tại máy, chưa đo trên dịch vụ. |
+| Tự động kiểm tra | GitHub Actions | GitLab CI, CircleCI (chỉ nêu, không chạy) | Có workflow; mới kiểm tra tĩnh/lệnh tại máy, chưa đo trên dịch vụ. |
 
 ### 5.1. So sánh chuyên sâu: JUnit 5 (Jupiter) vs TestNG
 Trong hệ sinh thái Java, **JUnit 5** và **TestNG** là hai framework kiểm thử phổ biến nhất. Dưới đây là bảng so sánh chi tiết trên 5 tiêu chí kỹ thuật:
@@ -261,7 +261,7 @@ Bộ bài tập và đáp án gợi ý được chuẩn hóa tại [BaiTap_Tuan_
 
 ## 8. Gói seminar và trạng thái hoàn thiện
 
-Gói có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, báo cáo chi tiết, slide, bài tập và hướng dẫn tái hiện. Ba video theo từng chủ đề có kịch bản trong `KichBan_QuayVideo_Tuan_06.md`; chưa có video đã quay. Bảng `BangCongViec.md` ghi giới hạn còn lại của GitHub/Jenkins, video và xác nhận của thành viên.
+Gói có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, báo cáo chi tiết, slide, bài tập và hướng dẫn tái hiện. Ba video theo từng chủ đề có kịch bản trong `KichBan_QuayVideo_Tuan_06.md`; chưa có video đã quay. Bảng `BangCongViec.md` ghi giới hạn còn lại của GitHub, video và xác nhận của thành viên.
 
 Số đo và đường dẫn: xem [minh chứng](../../evidence/tuan-05/README.md) và [minh chứng Tuần 06](../../evidence/tuan-06/README.md). Hướng dẫn tái hiện: [HuongDan_Demo.md](HuongDan_Demo.md).
 
