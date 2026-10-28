@@ -77,6 +77,24 @@ class LoanServiceTest {
         verify(books).save(new Book(1, false));
     }
 
+    /**
+     * Test case bổ sung của Ngô Gia An (23120205):
+     * Xác nhận hội viên hoàn toàn không nợ phí (unpaid_fine = 0.00) và chưa mượn cuốn nào (count = 0)
+     * thì được phép mượn sách thành công và cập nhật trạng thái sách thành unavailable.
+     */
+    @Test void muonThanhCongKhiThanhVienMoiChuaMuonSachVaKhongNoPhi() {
+        availableBook(); member(new BigDecimal("0.00"));
+        when(loans.countActiveByMemberId(1)).thenReturn(0L);
+        when(loans.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Loan result = service.borrow(1, 1);
+
+        assertThat(result).isNotNull();
+        assertThat(result.memberId()).isEqualTo(1);
+        verify(loans, times(1)).save(any(Loan.class));
+        verify(books, times(1)).save(new Book(1, false));
+    }
+
     private void availableBook() { when(books.findById(1)).thenReturn(Optional.of(new Book(1, true))); }
     private void member(BigDecimal debt) { when(members.findById(1)).thenReturn(Optional.of(new Member(1, debt))); }
     private void assertCode(LoanException.Code code) {
