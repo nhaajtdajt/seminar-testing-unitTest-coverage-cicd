@@ -12,13 +12,77 @@ Case study gồm tính phí trả sách trễ, mượn sách qua ba repository v
 
 ## 2. Unit Test
 
-Unit test kiểm tra một đơn vị hành vi với đầu vào và đầu ra xác định. Cấu trúc AAA gồm chuẩn bị dữ liệu (Arrange), thực hiện hành vi (Act), kiểm kết quả (Assert). Nguyên tắc FIRST hướng tới test nhanh, độc lập, lặp lại được, tự xác nhận kết quả và được viết đúng thời điểm.
+### 2.1. Khái niệm tổng quan về Unit Testing
+Unit test (kiểm thử đơn vị) kiểm tra một đơn vị phần mềm nhỏ nhất có thể cô lập được trong hệ thống (thường là một hàm, phương thức hoặc một lớp) với tập đầu vào và đầu ra xác định.
 
+- **Định nghĩa Unit:** Một "unit" không nhất thiết chỉ là một hàm đơn lẻ mà là một đơn vị hành vi (unit of behavior). Trong kiến trúc hướng đối tượng, đơn vị này có thể là một class độc lập hoặc một cụm đối tượng phối hợp chặt chẽ, được kiểm thử cách ly khỏi các phụ thuộc bên ngoài (cơ sở dữ liệu, mạng, hệ thống file).
+- **Quy tắc AAA (Arrange - Act - Assert):**
+  - *Arrange:* Chuẩn bị dữ liệu đầu vào, cấu hình trạng thái ban đầu và thiết lập các phụ thuộc giả lập (Test Double).
+  - *Act:* Kích hoạt thực thi hành vi hoặc phương thức cần kiểm thử với dữ liệu đã chuẩn bị.
+  - *Assert:* Kiểm tra và khẳng định kết quả thực tế trả về hoặc tác dụng phụ (side-effect) phải khớp hoàn toàn với kỳ vọng.
+- **Nguyên tắc FIRST:**
+  - *Fast (Nhanh):* Test phải chạy trong mili-giây để lập trình viên có thể chạy liên tục sau mỗi thay đổi nhỏ mà không ngại độ trễ.
+  - *Independent (Độc lập):* Không test case nào phụ thuộc vào kết quả hoặc thứ tự chạy của test case khác.
+  - *Repeatable (Lặp lại được):* Chạy 1.000 lần ở bất kỳ môi trường nào (máy cá nhân, CI server, không có mạng) đều cho ra cùng một kết quả.
+  - *Self-validating (Tự xác minh):* Test tự động trả về Pass hoặc Fail rõ ràng thông qua assertion, không đòi hỏi con người đọc log hay file để đoán kết quả.
+  - *Timely (Kịp thời):* Được viết song song hoặc ngay trước khi viết code sản phẩm (theo phong cách TDD).
+
+```text
+       /\
+      /  \        UI / End-to-End Tests (Ít, Chậm, Chi phí cao)
+     /----\
+    /      \      Integration / Service Tests (Trung bình, phụ thuộc component)
+   /--------\
+  /          \    Unit Tests (Nhiều nhất, Nhanh nhất, Chi phí thấp nhất)
+ /------------\
+```
+- **Kim tự tháp kiểm thử (Test Pyramid):** Mô hình do Mike Cohn đề xuất chỉ ra rằng Unit Test phải chiếm phần đáy lớn nhất của kim tự tháp (70-80% tổng số test) vì tính chất thực thi siêu nhanh, chi phí bảo trì thấp và khả năng định vị lỗi chính xác ở cấp độ dòng lệnh.
+- **Phân loại Test Double (Gerard Meszaros):** Khi kiểm thử một đơn vị có phụ thuộc phức tạp, ta dùng các đối tượng thay thế:
+  1. *Dummy:* Đối tượng truyền vào chỉ để thỏa mãn chữ ký phương thức (tham số bắt buộc), không bao giờ được gọi hay sử dụng logic bên trong.
+  2. *Stub:* Cung cấp sẵn các câu trả lời cố định (canned answers) cho các lệnh gọi trong quá trình test, không quan tâm đối tượng được gọi như thế nào.
+  3. *Fake:* Đối tượng có cài đặt hoạt động thực sự nhưng dùng đường tắt để đơn giản hóa, không phù hợp cho môi trường production (ví dụ: Database In-Memory H2 thay vì Oracle/PostgreSQL thật).
+  4. *Mock:* Đối tượng được lập trình trước với các kỳ vọng cụ thể về hành vi (expectations): phương thức nào sẽ được gọi, bao nhiêu lần, với tham số gì, và sẽ verify lại sau khi Act.
+  5. *Spy:* Đối tượng bọc lấy đối tượng thật (wrapper) để vừa thực thi logic thật, vừa ghi nhận/theo dõi lại các tương tác (số lần gọi, tham số).
+- **Khái niệm Test Oracle:** Test Oracle là cơ chế hoặc nguồn chân lý (source of truth) dùng để xác định xem kết quả thực thi của phần mềm là đúng hay sai. Trong Unit Test, Oracle có thể là:
+  - Giá trị tính toán kỳ vọng định sẵn từ đặc tả nghiệp vụ.
+  - Một mô hình toán học hoặc thuật toán tham chiếu độc lập.
+  - Dữ liệu lịch sử đã được kiểm chứng (Golden Master).
+
+### 2.2. Kỹ thuật áp dụng trong Case Study
 Với `FineCalculator`, dùng đối tượng thật vì lớp chỉ chứa logic. Với `LoanService`, dùng mock cho ba repository để tập trung vào quyết định nghiệp vụ. Stub cung cấp phản hồi từ phụ thuộc; mock/verify kiểm tra cách tương tác. `Clock.fixed` loại bỏ phụ thuộc giờ máy. Không dùng mock chính đối tượng đang cần kiểm logic.
 
-`@ParameterizedTest` + CSV giúp chạy cùng quy tắc với nhiều dữ liệu. Bộ tham chiếu có 15 ca hợp lệ và hai test dữ liệu sai, gồm biên gia hạn, mức trần và số ngày cực lớn. `LoanServiceTest` kiểm 6 tình huống và xác nhận nhánh bị từ chối không ghi phiếu. Kiểm thử tầng web xác nhận mã HTTP/validation; integration test kiểm các thành phần thật (controller, service, repository trên H2 in-memory) phối hợp với nhau.
+### 2.3. Phân tích ba kỹ thuật kiểm thử cốt lõi
+1. **Data-driven Testing (Kiểm thử hướng dữ liệu):**
+   - *Bản chất:* Tách biệt hoàn toàn giữa mã lệnh thực thi kiểm thử và ma trận dữ liệu kiểm thử (test input & expected output). Khi thay đổi yêu cầu hoặc bổ sung kịch bản kiểm thử biên, lập trình viên chỉ cần thêm dữ liệu vào bảng mà không phải sửa logic mã test.
+   - *Minh chứng trong Case Study:* Dự án sử dụng `@ParameterizedTest` kết hợp `@CsvFileSource(resources = "/fine-cases.csv")` trong `FineCalculatorTest`. Tập dữ liệu 15 dòng mô tả đầy đủ các biên phân lớp tương đương: ngưỡng ân hạn của NORMAL (0 ngày, 1 ngày) và VIP (0, 1, 2, 3 ngày), các mốc tiền tính theo ngày, và giá trị biên chạm trần 50.000đ (NORMAL 25 ngày, VIP 52 ngày).
+2. **Checkpoints (Điểm kiểm tra):**
+   - *Bản chất:* Checkpoint là các mốc được đặt xuyên suốt quy trình kiểm thử để kiểm tra tính hợp lệ của hệ thống tại từng thời điểm. Trong Unit Test, checkpoint thể hiện ở hai khía cạnh:
+     - *State Verification (Kiểm tra trạng thái):* Dùng các assertion như `assertEquals`, `assertThat` để kiểm tra giá trị trả về của phương thức hoặc trạng thái nội tại của đối tượng sau khi thực thi.
+     - *Behavior Verification (Kiểm tra tương tác hành vi):* Sử dụng `Mockito.verify(repo, times(1)).save(...)` hoặc `verifyNoInteractions(...)` làm checkpoint xác nhận rằng đối tượng phụ thuộc có được gọi đúng số lần, đúng thứ tự và đúng tham số hay không (ví dụ: khi từ chối mượn sách thì tuyệt đối không được gọi lệnh lưu phiếu mượn).
+3. **Record & Playback (Ghi nhận & Phát lại trong ngữ cảnh Unit Test):**
+   - *Diễn giải tương đương và ứng dụng:* Khái niệm Record & Playback khởi nguồn từ kiểm thử UI/E2E (ghi lại thao tác chuột/bàn phím và phát lại). Tuy nhiên ở cấp độ Unit & Backend Component Test, nhóm diễn giải kỹ thuật này theo hai hình thức tương đương:
+     - *HTTP Traffic Recording (WireMock / VCR pattern):* Ghi nhận lại request/response từ API bên thứ ba trong lần chạy thật đầu tiên, lưu thành các file JSON stub, và phát lại (replay) cục bộ ở các lần unit test tiếp theo để đảm bảo tính độc lập và tốc độ cao.
+     - *Golden Master / Snapshot Testing:* Ghi lại kết quả xuất bản (chụp snapshot cấu trúc dữ liệu hoặc file output) của một hàm phức tạp ở phiên bản ổn định, và so sánh output của phiên bản mới với snapshot đã lưu.
+   - *Lý do ưu tiên mã kiểm thử tường minh:* Nhóm không sử dụng công cụ sinh test tự động bằng record thao tác trong case study vì:
+     - Test được record thường có tính giòn (fragile), dễ gãy khi cấu trúc code thay đổi nhỏ dù nghiệp vụ không đổi.
+     - Thiếu tính rõ ràng về mặt ý đồ nghiệp vụ (lacking business intent): Unit test viết tay theo chuẩn AAA phản ánh trực tiếp tài liệu sống (living specification) của hệ thống, giúp người đọc code hiểu ngay yêu cầu chức năng.
 
 Bốn vòng TDD được tái hiện với test mới fail trước, sau đó sửa logic để toàn bộ test đã thêm pass. Nguồn và log từng vòng được giữ riêng. Đây là bài thực hành hiện tại, chưa có commit lịch sử của 5 thành viên.
+
+### 2.4. Các trường hợp JUnit / Mockito không xử lý tốt và Anti-patterns
+Dù JUnit 5 và Mockito 5 rất mạnh mẽ, việc lạm dụng hoặc dùng sai ngữ cảnh kiểm thử đơn vị dẫn đến nhiều hệ quả tiêu cực (đã được minh họa thực nghiệm trong class `MockitoAntiPatternTest` với tag `@Tag("antipattern")`):
+1. **Mock quá sâu (Train Wreck / vi phạm định luật Demeter):**
+   - *Biểu hiện:* Chuỗi stub dài dòng `when(a.getB().getC().doSomething()).thenReturn(...)`.
+   - *Nguy cơ:* Test bị gắn chặt chẽ vào cấu trúc nội bộ của mạng lưới đối tượng (tight coupling). Bất kỳ tái cấu trúc nhỏ nào (refactoring) cũng làm gãy test dù hành vi tổng thể không đổi.
+   - *Khắc phục:* Thiết kế lại hướng đối tượng theo nguyên tắc *Tell, Don't Ask* hoặc đóng gói phương thức trực tiếp trên đối tượng tầng ngoài (`a.doSomethingDirectly()`).
+2. **Test tự xác nhận (Self-fulfilling prophecy / Testing the mock):**
+   - *Biểu hiện:* Lập trình viên mock một dịch vụ trả về giá trị $X$, sau đó gọi phương thức mock và assert rằng kết quả đúng bằng $X$ (`when(mock.calc()).thenReturn(10); assertThat(mock.calc()).isEqualTo(10);`).
+   - *Nguy cơ:* Test luôn luôn pass 100% nhưng giá trị kiểm thử thực tế bằng 0. Test chỉ đang xác nhận lại cơ chế lưu trữ của Mockito chứ không kiểm thử bất kỳ dòng code nghiệp vụ nào của ứng dụng.
+3. **Mock logic thuần túy (Pure Logic / Value Objects):**
+   - *Biểu hiện:* Cố tình mock các hàm tính toán toán học hoặc các lớp tiện ích (Utility/Value Object) không hề có I/O hay side-effects.
+   - *Nguy cơ:* Làm chậm tốc độ thực thi test đáng kể (do chi phí sinh bytecode dynamic proxy của ByteBuddy), đồng thời che giấu các lỗi tính toán thực tế nếu hàm gốc bị sửa sai.
+4. **Hạn chế kỹ thuật khi Mock Static / Final:**
+   - Mặc dù Mockito 5 đã kích hoạt sẵn `mock-maker-inline` cho phép mock class final và static method (`mockStatic`), việc này vẫn tạo ra cảnh báo JVM (`Dynamic loading of agents will be disallowed by default in a future release`), làm chậm quá trình khởi động test và là dấu hiệu của kiến trúc ghép nối cứng (tight coupling), khó mở rộng.
 
 ## 3. Code Coverage và chất lượng test
 
@@ -48,6 +112,22 @@ Phép đo JaCoCo trên bản Java 25 có ba lượt/cấu hình: trung vị khô
 | Đo độ phủ | JaCoCo | Cobertura, OpenClover, coverage IDE | Đã chạy HTML/XML và gate; các công cụ đối chiếu chưa cài/chạy trong đợt này. |
 | Kiểm chất lượng assertion | PIT | Đọc test thủ công | Đã chạy cùng lớp với test mạnh/yếu; phải phân tích mutant tương đương. |
 | Tự động kiểm tra | GitHub Actions | Jenkins, GitLab CI, CircleCI | Có workflow và Jenkinsfile; mới kiểm tra tĩnh/lệnh tại máy, chưa đo trên dịch vụ. |
+
+### 5.1. So sánh chuyên sâu: JUnit 5 (Jupiter) vs TestNG
+Trong hệ sinh thái Java, **JUnit 5** và **TestNG** là hai framework kiểm thử phổ biến nhất. Dưới đây là bảng so sánh chi tiết trên 5 tiêu chí kỹ thuật:
+
+| Tiêu chí | JUnit 5 (Jupiter) | TestNG | Đánh giá & Khuyến nghị |
+|---|---|---|---|
+| **1. Data-Driven Testing** | Hỗ trợ đa dạng qua `@ParameterizedTest`: `@ValueSource`, `@CsvFileSource`, `@MethodSource`, `@ArgumentsSource`. Cực kỳ trực quan khi đọc file CSV bên ngoài (`fine-cases.csv`). | Sử dụng `@DataProvider` trả về mảng 2 chiều (`Object[][]`) hoặc `Iterator<Object[]>`. Cần viết code Java đọc CSV thủ công nếu dùng file ngoài. | **JUnit 5 thắng thế** về độ tiện lợi khi tích hợp file CSV/dữ liệu ngoài; TestNG mạnh khi dữ liệu sinh động bằng mã code. |
+| **2. Phân nhóm & Phụ thuộc test** | Dùng `@Tag` để lọc test trong build tool (`excludedGroups`). Không hỗ trợ phụ thuộc (dependency) giữa các test theo thiết kế (tuân thủ nguyên tắc độc lập FIRST). | Hỗ trợ cực mạnh với `groups`, `dependsOnGroups`, `dependsOnMethods`. Cho phép bỏ qua test downstream nếu test upstream fail. | **TestNG linh hoạt hơn** cho Integration/E2E test có thứ tự; **JUnit 5 chuẩn mực hơn** cho Unit test (tránh test phụ thuộc nhau). |
+| **3. Chạy song song (Parallel execution)** | Cấu hình qua file `junit-platform.properties` (`junit.jupiter.execution.parallel.enabled=true`). Hỗ trợ đồng bộ tài nguyên qua `@ResourceLock`. | Cấu hình trực tiếp trong file XML suite (`<suite parallel="methods" thread-count="4">`) hoặc qua thuộc tính `@Test(threadPoolSize = 3)`. | Cả hai đều rất mạnh; **TestNG cấu hình qua XML dễ kiểm soát** theo từng bộ test suite hơn. |
+| **4. Kiến trúc mở rộng (Extensibility)** | Kiến trúc mô-đun: JUnit Platform + JUnit Jupiter + JUnit Vintage. Cơ chế mở rộng duy nhất, mạnh mẽ: `Extension API` (`@ExtendWith`). | Dùng hệ thống Listener đa dạng (`ITestListener`, `ISuiteListener`, `IInvokedMethodListener`) kế thừa từ interface. | **JUnit 5 hiện đại hơn**, loại bỏ hoàn toàn mâu thuẫn giữa Runner và Rule của JUnit 4. |
+| **5. Tích hợp Spring Boot & Hệ sinh thái** | Được đóng gói mặc định trong `spring-boot-starter-test`. Tích hợp hoàn hảo với Spring TestContext Framework (`@SpringBootTest`, `@WebMvcTest`, `@MockitoBean`). | Cần loại trừ JUnit và cấu hình riêng thư viện TestNG + `spring-boot-starter-test`. Cần kế thừa `AbstractTestNGSpringContextTests`. | **JUnit 5 là tiêu chuẩn mặc định** của ngành cho các ứng dụng Spring Boot hiện đại. |
+
+**Kết luận lựa chọn:** Nhóm chọn **JUnit 5** làm công cụ thực hành chính vì:
+- Là chuẩn mặc định của Spring Boot 4.x và Java 25.
+- Cú pháp `@ParameterizedTest` với file CSV phản ánh trực tiếp kỹ thuật Data-driven mà không cần viết mã đọc file trung gian.
+- Tuân thủ nghiêm ngặt nguyên tắc FIRST, ngăn chặn tình trạng viết test phụ thuộc thứ tự (anti-pattern thường gặp ở TestNG).
 
 Các bảng khảo sát ở gói đề xuất là dữ liệu tham khảo ban đầu, không thay cho kết quả trải nghiệm. Cần kiểm lại tình trạng phát triển, giấy phép, hạn mức và giá tại thời điểm nộp nếu đưa các thông tin đó vào bản chính thức. Mockito 5 đã dùng inline mock maker mặc định; không giữ kết luận cũ rằng mock final/static luôn cần thêm module.
 
