@@ -1,0 +1,59 @@
+{
+  "scenario": "human",
+  "command": [
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Pai-human",
+    "clean",
+    "verify"
+  ],
+  "started_at_utc": "2026-10-28T16:14:09.670823+00:00",
+  "elapsed_seconds": 4.631,
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local execution by Codex; not a paper reproduction or a user self-run",
+  "java": "openjdk version \"25.0.5\" 2026-10-20 LTS\nOpenJDK Runtime Environment Temurin-25.0.5+8 (build 25.0.5+8-LTS)\nOpenJDK 64-Bit Server VM Temurin-25.0.5+8 (build 25.0.5+8-LTS, mixed mode, sharing)",
+  "test_summaries": [
+    {
+      "name": "vn.edu.seminar.fine.FineCalculatorHumanDataTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "dataset": {
+    "path": "ai/human/frozen/cases.csv",
+    "sha256": "97370c36a2d331a95681b42cff20938d69f0053535d3de0df815281915637fa1",
+    "origin": "user-supplied data; independence declared in supplied notes"
+  },
+  "fine_coverage": {
+    "INSTRUCTION": {
+      "covered": 49,
+      "missed": 0
+    },
+    "BRANCH": {
+      "covered": 10,
+      "missed": 0
+    },
+    "LINE": {
+      "covered": 11,
+      "missed": 0
+    },
+    "COMPLEXITY": {
+      "covered": 7,
+      "missed": 0
+    },
+    "METHOD": {
+      "covered": 2,
+      "missed": 0
+    },
+    "CLASS": {
+      "covered": 1,
+      "missed": 0
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "human_sha256": "97370c36a2d331a95681b42cff20938d69f0053535d3de0df815281915637fa1",
+  "ai_sha256": "e725bf37c7d74673f4c7f5cfafb403278dc8956d601b78339a11ee4cf403c03f",
+  "human_cases": 23,
+  "ai_cases": 13,
+  "matching_inputs": 11,
+  "matching_outcomes": 11,
+  "disagreements": [],
+  "missing_from_ai": [
+    {
+      "daysLate": -10,
+      "tier": "NORMAL"
+    },
+    {
+      "daysLate": -10,
+      "tier": "VIP"
+    },
+    {
+      "daysLate": -1,
+      "tier": "NORMAL"
+    },
+    {
+      "daysLate": -1,
+      "tier": "NULL"
+    },
+    {
+      "daysLate": -1,
+      "tier": "VIP"
+    },
+    {
+      "daysLate": 0,
+      "tier": "NULL"
+    },
+    {
+      "daysLate": 0,
+      "tier": "VIP"
+    },
+    {
+      "daysLate": 2,
+      "tier": "NORMAL"
+    },
+    {
+      "daysLate": 2,
+      "tier": "NULL"
+    },
+    {
+      "daysLate": 4,
+      "tier": "VIP"
+    },
+    {
+      "daysLate": 100,
+      "tier": "NORMAL"
+    },
+    {
+      "daysLate": 100,
+      "tier": "VIP"
+    }
+  ],
+  "extra_in_ai": [
+    {
+      "daysLate": 2147483647,
+      "tier": "NORMAL"
+    },
+    {
+      "daysLate": 2147483647,
+      "tier": "VIP"
+    }
+  ],
+  "limitation": "Agreement with the human oracle is not proof of correctness; run both against Java and review the specification."
+}

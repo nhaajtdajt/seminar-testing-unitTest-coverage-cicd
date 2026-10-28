@@ -2,6 +2,7 @@
 """Run isolated AI demo profiles and retain portable, current evidence."""
 import argparse
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -11,7 +12,8 @@ import time
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-PROFILES = {"draft": "ai-loan-draft", "improved": "ai-loan-improved", "mistake": "ai-loan-mistake"}
+PROFILES = {"draft": "ai-loan-draft", "improved": "ai-loan-improved", "mistake": "ai-loan-mistake",
+            "human": "ai-human", "data": "ai-data"}
 
 
 def main():
@@ -19,6 +21,16 @@ def main():
     parser.add_argument("scenario", choices=[*PROFILES, "full", "mutation"])
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    dataset = None
+    if args.scenario in ("human", "data"):
+        relative = "ai/human/frozen/cases.csv" if args.scenario == "human" else "ai/data/AI-4-boundaries.csv"
+        digest = hashlib.sha256((ROOT/relative).read_bytes()).hexdigest()
+        if args.scenario == "human":
+            receipt = json.loads((ROOT/"ai/human/frozen/receipt.json").read_text())
+            if digest != receipt["sha256"]:
+                parser.error("Frozen human data changed; execution refused")
+        dataset = {"path": relative, "sha256": digest,
+                   "origin": "user-supplied data; independence declared in supplied notes" if args.scenario == "human" else "existing AI-generated CSV"}
     if args.output.exists():
         parser.error("Output exists; use a new directory to retain previous evidence")
     args.output.mkdir(parents=True)
@@ -39,9 +51,11 @@ def main():
     metadata = {"scenario": args.scenario, "command": command, "started_at_utc": started,
                 "elapsed_seconds": round(time.monotonic()-clock, 3), "exit_code": result.returncode,
                 "expected_exit_code": 1 if args.scenario == "mistake" else 0,
-                "environment": "local execution; generated tests from interactive Codex, not a paper reproduction",
+                "environment": "local execution by Codex; not a paper reproduction or a user self-run",
                 "java": subprocess.run(["java", "-version"], capture_output=True, text=True).stderr.strip(),
                 "test_summaries": []}
+    if dataset:
+        metadata["dataset"] = dataset
     for path in sorted((ROOT/"case-study/target/surefire-reports").glob("TEST-*.xml")):
         if path.stat().st_mtime < started_epoch:
             continue
@@ -51,8 +65,9 @@ def main():
     if jacoco.exists() and jacoco.stat().st_mtime >= started_epoch:
         shutil.copy2(jacoco, args.output/"jacoco.xml")
         report = ET.parse(jacoco).getroot()
-        target = report.find(".//class[@name='vn/edu/seminar/loan/LoanService']")
-        metadata["loan_coverage"] = {c.get("type"): {"covered": int(c.get("covered")), "missed": int(c.get("missed"))} for c in target.findall("counter")}
+        target_name = "vn/edu/seminar/fine/FineCalculator" if dataset else "vn/edu/seminar/loan/LoanService"
+        target = report.find(f".//class[@name='{target_name}']")
+        metadata["fine_coverage" if dataset else "loan_coverage"] = {c.get("type"): {"covered": int(c.get("covered")), "missed": int(c.get("missed"))} for c in target.findall("counter")}
     mutations = ROOT/"case-study/target/pit-reports/mutations.xml"
     if mutations.exists() and mutations.stat().st_mtime >= started_epoch:
         (args.output/"mutations.xml").write_text(portable(mutations.read_text()))

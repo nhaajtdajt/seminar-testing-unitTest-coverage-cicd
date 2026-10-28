@@ -1,0 +1,59 @@
+{
+  "scenario": "data",
+  "command": [
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Pai-data",
+    "clean",
+    "verify"
+  ],
+  "started_at_utc": "2026-10-28T16:14:39.955088+00:00",
+  "elapsed_seconds": 4.656,
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local execution by Codex; not a paper reproduction or a user self-run",
+  "java": "openjdk version \"25.0.5\" 2026-10-20 LTS\nOpenJDK Runtime Environment Temurin-25.0.5+8 (build 25.0.5+8-LTS)\nOpenJDK 64-Bit Server VM Temurin-25.0.5+8 (build 25.0.5+8-LTS, mixed mode, sharing)",
+  "test_summaries": [
+    {
+      "name": "vn.edu.seminar.fine.FineCalculatorAiDataTest",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "dataset": {
+    "path": "ai/data/AI-4-boundaries.csv",
+    "sha256": "e725bf37c7d74673f4c7f5cfafb403278dc8956d601b78339a11ee4cf403c03f",
+    "origin": "existing AI-generated CSV"
+  },
+  "fine_coverage": {
+    "INSTRUCTION": {
+      "covered": 39,
+      "missed": 10
+    },
+    "BRANCH": {
+      "covered": 8,
+      "missed": 2
+    },
+    "LINE": {
+      "covered": 9,
+      "missed": 2
+    },
+    "COMPLEXITY": {
+      "covered": 5,
+      "missed": 2
+    },
+    "METHOD": {
+      "covered": 2,
+      "missed": 0
+    },
+    "CLASS": {
+      "covered": 1,
+      "missed": 0
+    }
+  }
+}
