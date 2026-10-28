@@ -1,0 +1,7 @@
+{
+  "started_at_utc": "2026-10-28T15:10:48Z",
+  "elapsed_seconds": 37.128,
+  "command": "case-study/mvnw -B -ntp -f case-study/pom.xml clean verify",
+  "exit_code": 0,
+  "environment": "local copy of case-study; not a GitHub Actions or Jenkins execution"
+}

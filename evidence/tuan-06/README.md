@@ -12,6 +12,7 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 ## Code Coverage (Trương Nhật Đạt)
 
 - [coverage-types/](coverage-types/): JaCoCo trên `LoanPeriodPolicy`, chạy cộng dồn T1 → T4 (`s1`–`s4`) và bộ phản chứng T2 + T3 (`alt-t2-t3`). Nhánh: 3/6, 5/6, 6/6, 6/6; bộ phản chứng 5/6 nhánh, 6/7 dòng. Mỗi lượt có `run.json`, `output.log` (đã thay đường dẫn máy bằng `<repo>`/`<home>`), `jacoco.csv`/`jacoco.xml`.
+- [openclover/](openclover/): OpenClover 4.5.2 chạy trên bản sao `case-study/` (không sửa `pom.xml`, gọi plugin bằng tọa độ đầy đủ). `s1`, `s2`, `s3`, `alt-t2-t3` cùng bộ test với JaCoCo: `LoanPeriodPolicy` đạt 2/4, 4/4, 4/4, 3/4 conditional; `full` là cả bộ 39 test. `time-jacoco-*` / `time-clover-*`: 3 lượt mỗi công cụ, trung vị 46,570 s (JaCoCo `clean verify`) và 43,446 s (OpenClover, tắt JaCoCo). `clover.xml` đã bỏ thuộc tính đường dẫn tệp.
 
 ## Ảnh JaCoCo do người dùng cung cấp
 

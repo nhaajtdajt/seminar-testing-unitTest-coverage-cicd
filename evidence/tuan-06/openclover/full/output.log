@@ -1,0 +1,260 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< vn.edu.seminar:library-case-study >------------------
+[INFO] Building library-case-study 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ library-case-study ---
+[INFO] Deleting <copy>\case-study\target
+[INFO] 
+[INFO] --- clover:4.5.2:setup (default-cli) @ library-case-study ---
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Creating new database at '<copy>\case-study\target\clover\clover.db'.
+[INFO] Processing files at JAVA_17 source level.
+[INFO] Clover all over. Instrumented 22 files (6 packages).
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Updating existing database at '<copy>\case-study\target\clover\clover.db'.
+[INFO] Processing files at JAVA_17 source level.
+[INFO] Clover all over. Instrumented 13 files (5 packages).
+[INFO] 38 test methods detected.
+[WARNING] Plugin is modifying compileSourceRoots through iterator.remove(), which will not work in Maven 4.0.0. Use MavenProject.addCompileSourceRoot()/removeCompileSourceRoot() methods instead. If using a plugin, please upgrade to the latest version or report the issue to the plugin maintainer. To disable these warnings, set -Dmaven.project.sourceRoots.warningsDisabled=true on the command line, in the .mvn/maven.config file, or in project POM properties.
+[WARNING] Plugin is modifying testCompileSourceRoots through iterator.remove(), which will not work in Maven 4.0.0. Use MavenProject.addTestCompileSourceRoot()/removeTestCompileSourceRoot() methods instead. If using a plugin, please upgrade to the latest version or report the issue to the plugin maintainer. To disable these warnings, set -Dmaven.project.sourceRoots.warningsDisabled=true on the command line, in the .mvn/maven.config file, or in project POM properties.
+[INFO] 
+[INFO] --- jacoco:0.8.15:prepare-agent (default) @ library-case-study ---
+[INFO] argLine set to "-javaagent:<home>\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.15\\org.jacoco.agent-0.8.15-runtime.jar=destfile=<copy>\\case-study\\target\\jacoco.exec"
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ library-case-study ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from target\classes\groverconfig4155813865964242721 to target\classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ library-case-study ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 22 source files with javac [debug parameters release 25] to target\classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ library-case-study ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] Copying 1 resource from ..\ai\data to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ library-case-study ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 13 source files with javac [debug parameters release 25] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ library-case-study ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.seminar.fine.FineCalculatorTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.656 s -- in vn.edu.seminar.fine.FineCalculatorTest
+[INFO] Running vn.edu.seminar.loan.LoanPeriodPolicyTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in vn.edu.seminar.loan.LoanPeriodPolicyTest
+[INFO] Running vn.edu.seminar.loan.LoanServiceTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (<home>\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.11\byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.906 s -- in vn.edu.seminar.loan.LoanServiceTest
+[INFO] Running vn.edu.seminar.persistence.JpaRepositoriesTest
+22:07:02.499 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [vn.edu.seminar.persistence.JpaRepositoriesTest]: JpaRepositoriesTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:07:02.861 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration vn.edu.seminar.LibraryApplication for test class vn.edu.seminar.persistence.JpaRepositoriesTest
+22:07:02.867 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [vn.edu.seminar.persistence.JpaRepositoriesTest]: JpaRepositoriesTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:07:02.915 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration vn.edu.seminar.LibraryApplication for test class vn.edu.seminar.persistence.JpaRepositoriesTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-28T22:07:03.966+07:00  INFO 30556 --- [           main] v.e.s.persistence.JpaRepositoriesTest    : Starting JpaRepositoriesTest using Java 25.0.2 with PID 30556 (started by <user> in <copy>\case-study)
+2026-10-28T22:07:03.968+07:00  INFO 30556 --- [           main] v.e.s.persistence.JpaRepositoriesTest    : No active profile set, falling back to 1 default profile: "default"
+2026-10-28T22:07:05.132+07:00  INFO 30556 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T22:07:05.314+07:00  INFO 30556 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 144 ms. Found 3 JPA repository interfaces.
+2026-10-28T22:07:05.479+07:00  INFO 30556 --- [           main] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
+2026-10-28T22:07:05.753+07:00  INFO 30556 --- [           main] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:08cc3534-f020-4060-b932-4b1db771f06e;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2026-10-28T22:07:06.616+07:00  INFO 30556 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-28T22:07:06.925+07:00  INFO 30556 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-28T22:07:08.581+07:00  INFO 30556 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T22:07:09.055+07:00  INFO 30556 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:08cc3534-f020-4060-b932-4b1db771f06e]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: 08CC3534-F020-4060-B932-4B1DB771F06E/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T22:07:12.538+07:00  INFO 30556 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: drop table if exists books cascade 
+Hibernate: drop table if exists loans cascade 
+Hibernate: drop table if exists members cascade 
+Hibernate: create table books (available boolean not null, id bigint not null, primary key (id))
+Hibernate: create table loans (book_id bigint not null, borrowed_at timestamp(6) with time zone, member_id bigint not null, id varchar(255) not null, primary key (id))
+Hibernate: create table members (unpaid_fine numeric(38,2), id bigint not null, primary key (id))
+2026-10-28T22:07:12.700+07:00  INFO 30556 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T22:07:12.986+07:00  INFO 30556 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-28T22:07:13.975+07:00  INFO 30556 --- [           main] v.e.s.persistence.JpaRepositoriesTest    : Started JpaRepositoriesTest in 10.884 seconds (process running for 16.189)
+Hibernate: select be1_0.id,be1_0.available from books be1_0 where be1_0.id=?
+Hibernate: select be1_0.id,be1_0.available from books be1_0 where be1_0.id=?
+Hibernate: select be1_0.id,be1_0.available from books be1_0 where be1_0.id=?
+Hibernate: select me1_0.id,me1_0.unpaid_fine from members me1_0 where me1_0.id=?
+Hibernate: select be1_0.id,be1_0.available from books be1_0 where be1_0.id=?
+Hibernate: select le1_0.id,le1_0.book_id,le1_0.borrowed_at,le1_0.member_id from loans le1_0 where le1_0.id=?
+Hibernate: select le1_0.id,le1_0.book_id,le1_0.borrowed_at,le1_0.member_id from loans le1_0 where le1_0.id=?
+Hibernate: select le1_0.id,le1_0.book_id,le1_0.borrowed_at,le1_0.member_id from loans le1_0 where le1_0.id=?
+Hibernate: insert into loans (book_id,borrowed_at,member_id,id) values (?,?,?,?)
+Hibernate: insert into loans (book_id,borrowed_at,member_id,id) values (?,?,?,?)
+Hibernate: insert into loans (book_id,borrowed_at,member_id,id) values (?,?,?,?)
+Hibernate: select count(le1_0.id) from loans le1_0 where le1_0.member_id=?
+Hibernate: select count(le1_0.id) from loans le1_0 where le1_0.member_id=?
+Hibernate: select count(le1_0.id) from loans le1_0 where le1_0.member_id=?
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.59 s -- in vn.edu.seminar.persistence.JpaRepositoriesTest
+[INFO] Running vn.edu.seminar.web.LoanControllerTest
+2026-10-28T22:07:15.651+07:00  INFO 30556 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [vn.edu.seminar.web.LoanControllerTest]: LoanControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T22:07:15.713+07:00  INFO 30556 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration vn.edu.seminar.LibraryApplication for test class vn.edu.seminar.web.LoanControllerTest
+2026-10-28T22:07:15.715+07:00  INFO 30556 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [vn.edu.seminar.web.LoanControllerTest]: LoanControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T22:07:15.737+07:00  INFO 30556 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration vn.edu.seminar.LibraryApplication for test class vn.edu.seminar.web.LoanControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-28T22:07:15.831+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanControllerTest    : Starting LoanControllerTest using Java 25.0.2 with PID 30556 (started by <user> in <copy>\case-study)
+2026-10-28T22:07:15.832+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanControllerTest    : No active profile set, falling back to 1 default profile: "default"
+2026-10-28T22:07:18.215+07:00  INFO 30556 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-28T22:07:18.216+07:00  INFO 30556 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-28T22:07:18.223+07:00  INFO 30556 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 6 ms
+2026-10-28T22:07:18.288+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanControllerTest    : Started LoanControllerTest in 2.52 seconds (process running for 20.502)
+2026-10-28T22:07:19.104+07:00  WARN 30556 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot map `null` into type `long` (set `DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES` to 'false' to allow)]
+2026-10-28T22:07:19.239+07:00  WARN 30556 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public vn.edu.seminar.loan.Loan vn.edu.seminar.web.LoanController.borrow(vn.edu.seminar.web.LoanController$BorrowRequest): [Field error in object 'borrowRequest' on field 'bookId': rejected value [-1]; codes [Positive.borrowRequest.bookId,Positive.bookId,Positive.long,Positive]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [borrowRequest.bookId,bookId]; arguments []; default message [bookId]]; default message [must be greater than 0]] ]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.607 s -- in vn.edu.seminar.web.LoanControllerTest
+[INFO] Running vn.edu.seminar.web.LoanFlowTest
+2026-10-28T22:07:19.258+07:00  INFO 30556 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [vn.edu.seminar.web.LoanFlowTest]: LoanFlowTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T22:07:19.268+07:00  INFO 30556 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration vn.edu.seminar.LibraryApplication for test class vn.edu.seminar.web.LoanFlowTest
+2026-10-28T22:07:19.277+07:00  INFO 30556 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [vn.edu.seminar.web.LoanFlowTest]: LoanFlowTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T22:07:19.281+07:00  INFO 30556 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration vn.edu.seminar.LibraryApplication for test class vn.edu.seminar.web.LoanFlowTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-28T22:07:19.349+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanFlowTest          : Starting LoanFlowTest using Java 25.0.2 with PID 30556 (started by <user> in <copy>\case-study)
+2026-10-28T22:07:19.349+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanFlowTest          : No active profile set, falling back to 1 default profile: "default"
+2026-10-28T22:07:20.005+07:00  INFO 30556 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T22:07:20.060+07:00  INFO 30556 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 3 JPA repository interfaces.
+2026-10-28T22:07:20.528+07:00  INFO 30556 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-28T22:07:20.583+07:00  INFO 30556 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T22:07:20.588+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-28T22:07:20.611+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn8: url=jdbc:h2:mem:library user=SA
+2026-10-28T22:07:20.615+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-28T22:07:20.634+07:00  INFO 30556 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:library]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: LIBRARY/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T22:07:20.705+07:00  INFO 30556 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T22:07:20.714+07:00  INFO 30556 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T22:07:20.876+07:00  WARN 30556 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-28T22:07:21.150+07:00  INFO 30556 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-28T22:07:21.151+07:00  INFO 30556 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-28T22:07:21.152+07:00  INFO 30556 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-28T22:07:21.162+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanFlowTest          : Started LoanFlowTest in 1.876 seconds (process running for 23.376)
+2026-10-28T22:07:21.242+07:00  INFO 30556 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T22:07:21.251+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-28T22:07:21.253+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-10-28T22:07:21.291+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanFlowTest          : Starting LoanFlowTest using Java 25.0.2 with PID 30556 (started by <user> in <copy>\case-study)
+2026-10-28T22:07:21.292+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanFlowTest          : No active profile set, falling back to 1 default profile: "default"
+2026-10-28T22:07:21.555+07:00  INFO 30556 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T22:07:21.578+07:00  INFO 30556 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 20 ms. Found 3 JPA repository interfaces.
+2026-10-28T22:07:21.640+07:00  INFO 30556 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-28T22:07:21.667+07:00  INFO 30556 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T22:07:21.669+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-10-28T22:07:21.669+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn18: url=jdbc:h2:mem:library user=SA
+2026-10-28T22:07:21.670+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-10-28T22:07:21.670+07:00  INFO 30556 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:library]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: LIBRARY/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T22:07:21.733+07:00  INFO 30556 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T22:07:21.742+07:00  INFO 30556 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T22:07:21.796+07:00  WARN 30556 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-28T22:07:21.878+07:00  INFO 30556 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-28T22:07:21.878+07:00  INFO 30556 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-28T22:07:21.879+07:00  INFO 30556 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-10-28T22:07:21.887+07:00  INFO 30556 --- [           main] vn.edu.seminar.web.LoanFlowTest          : Started LoanFlowTest in 0.629 seconds (process running for 24.102)
+2026-10-28T22:07:21.911+07:00  INFO 30556 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T22:07:21.913+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2026-10-28T22:07:21.930+07:00  INFO 30556 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.677 s -- in vn.edu.seminar.web.LoanFlowTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 39, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- clover:4.5.2:clover (default-cli) @ library-case-study ---
+[INFO] Using default-clover-report descriptor.
+[INFO] Using Clover report descriptor: <tmp>
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Clover is enabled with initstring '<copy>\case-study\target\clover\clover.db'
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Loading coverage database from: '<copy>\case-study\target\clover\clover.db'
+[INFO] Writing HTML report to '<copy>\case-study\target\site\clover'
+[INFO] Done. Processed 7 packages in 767ms (109ms per package).
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Clover is enabled with initstring '<copy>\case-study\target\clover\clover.db'
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Loading coverage database from: '<copy>\case-study\target\clover\clover.db'
+[INFO] Writing report to '<copy>\case-study\target\site\clover\clover.xml'
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  35.388 s
+[INFO] Finished at: 2026-10-28T22:07:25+07:00
+[INFO] ------------------------------------------------------------------------

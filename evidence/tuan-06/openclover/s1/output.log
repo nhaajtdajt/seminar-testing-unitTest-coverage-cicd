@@ -1,0 +1,77 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< vn.edu.seminar:library-case-study >------------------
+[INFO] Building library-case-study 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ library-case-study ---
+[INFO] Deleting <copy>\case-study\target
+[INFO] 
+[INFO] --- clover:4.5.2:setup (default-cli) @ library-case-study ---
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Creating new database at '<copy>\case-study\target\clover\clover.db'.
+[INFO] Processing files at JAVA_17 source level.
+[INFO] Clover all over. Instrumented 22 files (6 packages).
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Updating existing database at '<copy>\case-study\target\clover\clover.db'.
+[INFO] Processing files at JAVA_17 source level.
+[INFO] Clover all over. Instrumented 13 files (5 packages).
+[INFO] 38 test methods detected.
+[WARNING] Plugin is modifying compileSourceRoots through iterator.remove(), which will not work in Maven 4.0.0. Use MavenProject.addCompileSourceRoot()/removeCompileSourceRoot() methods instead. If using a plugin, please upgrade to the latest version or report the issue to the plugin maintainer. To disable these warnings, set -Dmaven.project.sourceRoots.warningsDisabled=true on the command line, in the .mvn/maven.config file, or in project POM properties.
+[WARNING] Plugin is modifying testCompileSourceRoots through iterator.remove(), which will not work in Maven 4.0.0. Use MavenProject.addTestCompileSourceRoot()/removeTestCompileSourceRoot() methods instead. If using a plugin, please upgrade to the latest version or report the issue to the plugin maintainer. To disable these warnings, set -Dmaven.project.sourceRoots.warningsDisabled=true on the command line, in the .mvn/maven.config file, or in project POM properties.
+[INFO] 
+[INFO] --- jacoco:0.8.15:prepare-agent (default) @ library-case-study ---
+[INFO] argLine set to "-javaagent:<home>\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.15\\org.jacoco.agent-0.8.15-runtime.jar=destfile=<copy>\\case-study\\target\\jacoco.exec"
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ library-case-study ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from target\classes\groverconfig7121476845176821499 to target\classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ library-case-study ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 22 source files with javac [debug parameters release 25] to target\classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ library-case-study ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] Copying 1 resource from ..\ai\data to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ library-case-study ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 13 source files with javac [debug parameters release 25] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ library-case-study ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running vn.edu.seminar.loan.LoanPeriodPolicyTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.332 s -- in vn.edu.seminar.loan.LoanPeriodPolicyTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- clover:4.5.2:clover (default-cli) @ library-case-study ---
+[INFO] Using default-clover-report descriptor.
+[INFO] Using Clover report descriptor: <tmp>
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Clover is enabled with initstring '<copy>\case-study\target\clover\clover.db'
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Loading coverage database from: '<copy>\case-study\target\clover\clover.db'
+[INFO] Writing HTML report to '<copy>\case-study\target\site\clover'
+[INFO] Done. Processed 7 packages in 561ms (80ms per package).
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Clover is enabled with initstring '<copy>\case-study\target\clover\clover.db'
+[INFO] OpenClover Version 4.5.2, built on 2024-01-31
+[INFO] Loading coverage database from: '<copy>\case-study\target\clover\clover.db'
+[INFO] Writing report to '<copy>\case-study\target\site\clover\clover.xml'
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  10.714 s
+[INFO] Finished at: 2026-10-28T22:05:53+07:00
+[INFO] ------------------------------------------------------------------------

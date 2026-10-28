@@ -1,0 +1,7 @@
+{
+  "started_at_utc": "2026-10-28T15:06:47Z",
+  "elapsed_seconds": 38.643,
+  "command": "case-study/mvnw -B -ntp -f case-study/pom.xml clean org.openclover:clover-maven-plugin:4.5.2:setup test org.openclover:clover-maven-plugin:4.5.2:clover -Dcoverage.gate.skip=true ",
+  "exit_code": 0,
+  "environment": "local copy of case-study; not a GitHub Actions or Jenkins execution"
+}
