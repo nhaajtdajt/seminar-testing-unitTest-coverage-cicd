@@ -1,0 +1,12 @@
+{
+  "author": "Ngô Gia An - 23120205",
+  "frozen_at_utc": "2026-10-28T16:13:14.605640+00:00",
+  "sha256": "97370c36a2d331a95681b42cff20938d69f0053535d3de0df815281915637fa1",
+  "case_count": 23,
+  "attestation": "Author states these cases were written without viewing AI output or reference test data.",
+  "limitation": "Self-attestation and hash preserve provenance; they cannot prove human independence.",
+  "frozen_by": "Codex, on behalf of Ngo Gia An under the request to sync the supplied files",
+  "attestation_source": "ai/human/cases-notes.md",
+  "notes_sha256": "2b04a3aecc32605dd18e7766c989318958ea02c00ee9046eb4b9a6b834f33d6a",
+  "provenance_limitation": "Independence is stated in the user-supplied notes; Codex did not observe authorship. Import and freeze were executed by Codex before comparison in this run."
+}
