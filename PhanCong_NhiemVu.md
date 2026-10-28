@@ -199,7 +199,7 @@ Những mục này **chưa có** hoặc **còn yếu** (mục 3 ở trên là ph
 
 Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chính mình. Cách làm chi tiết do từng người tự nghiên cứu. Hạn: `___` (nhóm thống nhất khi họp). Mỗi người **quay video demo phần của mình** (xem mục "Thầy nhắn thêm").
 
-### Ngô Gia An (23120205): Unit Test
+### Nguyễn Bảo An: Unit Test
 **Đã có để đọc và chạy lại:** test `FineCalculator`, `LoanServiceTest`, hướng dẫn UT-1/2/3, slide 4–10.
 **Cần làm:**
 1. Viết phần **khái niệm tổng quan về unit testing**: unit là gì, AAA, FIRST, test pyramid, stub/mock/fake/spy.
@@ -237,7 +237,7 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 5. Chuẩn bị **dữ liệu và môi trường demo**, chạy thử nhiều lần.
 6. Quay video: **giới thiệu và chạy case study**, demo integration.
 
-### Nguyễn Bảo An (23120207): AI, paper và trình bày (kiêm trưởng nhóm)
+### Ngô Gia An: AI, paper và trình bày (kiêm trưởng nhóm)
 **Đã có để đọc và chạy lại:** `ai/`, AI-1..4, slide 19–23, báo cáo chi tiết, bài tập.
 **Cần làm:**
 1. **Chọn 2–3 paper** hạng ≥B (2021–2026) về unit testing **có source code công bố**; **kiểm hạng thật** (CORE/Scimago).
