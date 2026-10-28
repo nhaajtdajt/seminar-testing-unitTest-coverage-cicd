@@ -143,6 +143,18 @@ Câu hỏi dẫn dắt cả bài: **"Test chạy xanh và coverage 100% có ngh�
 - JaCoCo: toàn project branch 18/18, line khoảng 90,8%; `FineCalculator` 10/10 nhánh.
 - Cấu hình PIT và JaCoCo gate (ngưỡng 90% branch cho `FineCalculator`).
 
+### 3.2. Các thí nghiệm đã đo (bằng chứng trong `evidence/`)
+| Thí nghiệm | Kết quả |
+|---|---|
+| Baseline 1 test | 5/10 nhánh (50%) |
+| Bộ đầy đủ | 10/10 nhánh (100%) |
+| Gate 90% với bộ thiếu test | Maven exit 1 (đỏ đúng như kỳ vọng) |
+| Test bẫy (không assert tiền) | 100% branch nhưng PIT diệt 3/11; bộ mạnh diệt 10/11 |
+| TDD replay | 4 vòng đỏ → xanh (chạy lại để minh họa, không phải lịch sử commit thật) |
+| HTTP smoke | 5/5 tình huống đúng mã trạng thái |
+| Benchmark JaCoCo | Trung vị 9,7s (không JaCoCo) và 12,8s (có JaCoCo), 3 lượt/cấu hình |
+| Benchmark cache Maven | Lạnh ~48s, ấm ~12,5s (3 cặp), mạng thay đổi nên chỉ mang tính tham khảo |
+
 ### 3.3. CI/CD
 - `.github/workflows/ci.yml`: 3 job nối nhau (test → coverage-gate → package), cache Maven, upload artifact, summary.
 - `.github/workflows/ai-review.yml`: job review diff bằng AI.
