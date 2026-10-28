@@ -251,7 +251,7 @@ AI-1 sinh bản nháp 3 test; các test chạy đúng nhưng chỉ phủ 70% nh�
 
 AI-3 có prompt và client gọi Gemini qua biến môi trường, cùng workflow lưu artifact. Chế độ chuẩn bị không gọi dịch vụ và ghi `api_called=false`. Trong Tuần 06 đã có một lần gọi live bằng `gemini-3.6-flash` trên diff fixture; sau HTTP 503, retry thành công và lưu 4 findings. Đối chiếu với expected fixture đạt 4 đúng, 0 thừa, 0 bỏ sót. Fixture có lỗi seed nên đây là kiểm tra luồng gọi API, không phải benchmark độc lập hay review toàn diện repository.
 
-AI-4 có 13 dòng dữ liệu hợp lệ, được chạy với calculator thật bằng profile riêng. Bộ tham chiếu có 15 dòng; hai bộ trùng 13 ca, bộ AI không có NORMAL 3 ngày và VIP 0 ngày. Dữ liệu sai null/ngày âm được kiểm riêng bằng JUnit. Hai bộ đều có AI hỗ trợ chuẩn bị, nên cần thành viên nhóm tự viết/rà soát bộ chuẩn để có so sánh con người–AI hợp lệ.
+Thí nghiệm AI-4 ban đầu có 13 dòng AI hợp lệ so với 15 ca tham chiếu cũng có AI hỗ trợ; không gọi lần so đó là đối chứng người viết. Cập nhật 28/10: Gia An gửi CSV 23 ca cùng ghi chú tuyên bố chỉ dựa đặc tả. Codex giữ nguyên/khóa/commit trước so sánh, chạy người dùng 23/23 và AI 13/13 pass; 11 ca chung khớp kỳ vọng. FineCalculator branch đạt 10/10 với bộ người dùng, 8/10 với riêng CSV AI. Xem mục 9.2 và [kết quả AI-4](../gia-an/AI4_KetQua.md); tính độc lập dựa vào ghi chú người dùng, không được hash tự chứng minh.
 
 Tất cả nội dung AI cần được review theo checklist: đúng nghiệp vụ, assertion cụ thể, không bịa API, không mock logic thuần, đọc số đo thực tế. Nhóm sẽ bổ sung người xác nhận; chưa quy đóng góp thực tế cho TV1–TV5 từ sản phẩm do trợ lý chuẩn bị.
 
@@ -280,7 +280,11 @@ Profile `ai-loan-mistake` cố ý cài kỳ vọng sai “đang giữ 3 sách v�
 
 ### 9.2. AI-4 đối chứng độc lập
 
-Gia An xác nhận chưa có dữ liệu người viết. Đã tạo [quy trình](../../ai/human/README.md), mẫu rỗng và script freeze/compare. Người chưa xem dữ liệu AI tự viết oracle theo đặc tả, khóa CSV bằng SHA-256/commit trước khi mở output AI; so ca trùng/thiếu/thêm và kết quả khác rồi thực thi profile `ai-human`. Test công cụ bằng fixture synthetic không thay cho đối chứng độc lập. Chưa có số liệu đánh giá người-với-AI.
+Gia An cung cấp CSV **23 ca (16 hợp lệ, 7 lỗi)** cùng bảng ghi chú đủ 23 dòng. Ghi chú tuyên bố chỉ dựa vào đặc tả, chưa xem AI/test tham chiếu; Codex chép nguyên byte, khóa SHA-256 và commit `0e58f5f` trước khi so sánh. Receipt ghi rõ Codex thực hiện theo yêu cầu đồng bộ, không phải Gia An trực tiếp chạy lệnh. Giữ nguyên ghi chú gốc và không tự chứng minh quá trình viết độc lập.
+
+So với CSV AI 13 ca, có **11 đầu vào chung, cả 11 khớp kỳ vọng, 0 disagreement**; 12 ca chỉ có trong bộ Gia An (5 hợp lệ, 7 lỗi), 2 ca chỉ có trong AI là Integer.MAX_VALUE cho mỗi hạng. Bộ Gia An kiểm đủ các quy tắc chính nhưng chưa có giá trị int cực lớn. Số đầu vào trùng không phải accuracy mô hình.
+
+Java chạy riêng: `ai-human` **23/23 pass, line 11/11, branch 10/10** của FineCalculator; `ai-data` **13/13 pass, line 9/11, branch 8/10**. Hai profile skip gate theo cấu hình demo; không suy ra coverage toàn project từ CSV AI. [Kết quả, nguồn và giới hạn](../gia-an/AI4_KetQua.md), [bằng chứng](../../evidence/gia-an/README.md). Gia An còn cần tự review/chạy lại; video chưa quay.
 
 ### 9.3. Hai paper có source và kiểm hạng
 

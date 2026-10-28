@@ -6,7 +6,7 @@ Căn cứ `PhanCong_NhiemVu.md` hiện tại: Gia An phụ trách AI, paper, h�
 
 | ID | Công việc hiện tại | Trạng thái | Minh chứng |
 |---|---|---|---|
-| GA-AI4 | Đối chứng độc lập dữ liệu biên | Công cụ/mẫu/runner đã có; người tự viết dữ liệu còn chờ | `ai/human/README.md`, `scripts/ai4_compare.py` |
+| GA-AI4 | Đối chứng độc lập dữ liệu biên | Đã nhận/khóa 23 ca + notes Gia An cung cấp trước so sánh; 11 ca chung khớp; Java 23/23 vs AI 13/13 pass. Codex chạy; độc lập theo notes, chờ người review | `ai/human/`, `docs/gia-an/AI4_KetQua.md`, `evidence/gia-an/ai4-*` |
 | GA-AI5 | Workflow AI trên LoanService | Đã chạy local, chờ người review: 2→10 test, branch 3/6→6/6, PIT 9/9 | `evidence/gia-an/`, `ai/results/AI-5-loan-review.md` |
 | GA-PAPER | Chọn/kiểm hạng/chạy paper có code | CoverUp replay phân tích + dry-run; ChatUniTest parse pass; generation thực nghiệm còn chờ | `research/`, `evidence/gia-an/papers/` |
 | GA-DECL | Khai báo dùng AI | Đã ghi phần Codex, chờ Gia An tự chạy/review/ký | `ai-usage-declaration/01_NgoGiaAn.md` |

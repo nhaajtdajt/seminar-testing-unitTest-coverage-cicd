@@ -246,8 +246,8 @@ AI
 
 - AI-3 đã gọi live Gemini 3.6 Flash trên diff fixture; kết quả đối chiếu: 4 đúng, 0 thừa, 0 bỏ sót.
 - Đây là kiểm tra fixture có lỗi seed, không phải benchmark độc lập hay review toàn bộ repository.
-- AI-4 có 13 ca CSV chạy pass, trùng 13/15 ca tham chiếu.
-- Chưa có bộ test do người viết độc lập để so sánh công bằng.
+- AI-4: bộ Gia An 23/23 ca pass; CSV AI 13/13 ca pass.
+- Có 11 đầu vào chung, cả 11 khớp kỳ vọng; độc lập theo ghi chú Gia An gửi.
 
 ---
 
@@ -281,12 +281,14 @@ AI · GA-04
 
 AI · GA-05
 
-- Người chưa xem output AI tự viết dữ liệu và kỳ vọng từ đặc tả.
-- Khóa CSV, receipt SHA-256 và commit trước khi đối chiếu.
-- So ca trùng/thiếu/thêm, kiểm kết quả sai; chạy oracle trên Java.
-- Chưa có CSV do người tự viết; hiện chỉ sẵn công cụ và mẫu rỗng.
+- Gia An cung cấp 23 ca và ghi chú tuyên bố chỉ dựa trên đặc tả.
+- Khóa dữ liệu, hash và commit 0e58f5f trước khi so sánh.
+- Java: Gia An 23/23 pass, branch 100%; AI 13/13 pass, branch 80%.
+- 11 ca chung khớp; 12 ca chỉ người dùng, 2 chỉ AI. Codex chạy; GA-05 chờ quay.
 
-[Quy trình đối chứng](../ai/human/README.md)
+[Kết quả và giới hạn](../docs/gia-an/AI4_KetQua.md)
+
+[Ghi chú thiết kế gốc](../ai/human/cases-notes.md)
 
 ---
 

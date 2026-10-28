@@ -19,7 +19,7 @@ Ngô Gia An (23120205), trưởng nhóm theo `PhanCong_NhiemVu.md` hiện tại.
 - [x] Kiểm nguồn paper, hạng venue và artifact.
 - [x] Chạy lại phân tích dữ liệu CoverUp và thử dry-run source nhóm.
 - [ ] Chạy sinh test mới của cả hai paper và lưu kết quả thực tế.
-- [ ] Người viết oracle độc lập khóa CSV, so và chạy Java.
+- [x] Đã nhận CSV/notes Gia An cung cấp; Codex khóa, commit rồi so và chạy Java: 23/23 người dùng, 13/13 AI. Độc lập theo tuyên bố trong notes; chờ Gia An tự review/chạy lại.
 - [ ] Gia An đọc hiểu, chạy lại và xác nhận AI declaration.
 - [ ] Thành viên khác review chéo và xác nhận phần của họ.
 - [ ] Đủ URL video, timestamp thật và nội dung slide tương ứng.
@@ -35,7 +35,7 @@ Ghi commit thật bằng `git log --date=iso-strict --format='%h | %aI | %an <%a
 |---|---|
 | Vì sao AI test xanh vẫn thiếu? | Nháp LoanService 2 test chỉ 3/6 nhánh; mở gap và source |
 | 100% branch có đủ? | Cần oracle/assertion, mutation; 9/9 chỉ trên tập mutant đã chạy |
-| AI-4 đã độc lập chưa? | Chưa; người chưa xem output phải tự viết và khóa trước |
+| AI-4 đã có đối chứng chưa? | Đã khóa 23 ca Gia An cung cấp trước so sánh; ghi chú tuyên bố chỉ dựa đặc tả. Độc lập không được hash tự chứng minh |
 | Hash chứng minh tác giả người? | Không; chỉ phát hiện dữ liệu thay đổi, vẫn cần xác nhận trung thực |
 | Fixture sai có phải lỗi model thật? | Không; cài sẵn để minh họa, đã ghi nhãn |
 | CoverUp có test Java không? | Tool gốc dùng Python; thử trên coverage_gaps.py, không dịch nghiệp vụ Java |

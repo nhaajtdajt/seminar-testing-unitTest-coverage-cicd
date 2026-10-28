@@ -14,7 +14,7 @@ Căn cứ duy nhất về phạm vi: `PhanCong_NhiemVu.md`, mục **Ngô Gia An:
 
 | Yêu cầu | Artifact | Kết quả / giới hạn |
 |---|---|---|
-| AI-4 độc lập | [Quy trình và mẫu rỗng](../../ai/human/README.md), `scripts/ai4_compare.py`, Java human-data runner | Công cụ khóa/hash/so sánh đã kiểm; **chưa có oracle do người viết**, theo xác nhận của Gia An |
+| AI-4 độc lập | [Dữ liệu và quy trình](../../ai/human/README.md), `scripts/ai4_compare.py`, Java human-data runner | Đã khóa 23 ca + ghi chú Gia An cung cấp; so 11 ca chung khớp; Java 23/23 pass, FineCalculator branch 10/10. Độc lập theo ghi chú; Codex chạy lệnh. [Kết quả](AI4_KetQua.md) |
 | Lớp khác | [AI-5 review](../../ai/results/AI-5-loan-review.md), prompt và ba suite LoanService | Nháp 2 test, 3/6 branch → bổ sung 10 test, 6/6 branch; PIT 9/9; fixture sai đỏ đúng 1 assertion |
 | Paper có code/hạng | [Danh mục và thử nghiệm](../../research/README.md) | CoverUp 2025, ChatUniTest 2024; FSE CORE2023 A*, ChatUniTest thuộc demo track |
 | Tái hiện paper | `evidence/gia-an/papers/` | CoverUp replay **phân tích** 163 module đạt 89,0% vs 76,8%; dry-run trên source nhóm. ChatUniTest chưa có thí nghiệm generation; không nhận replay phân tích là chạy lại toàn bộ paper |
@@ -24,7 +24,7 @@ Căn cứ duy nhất về phạm vi: `PhanCong_NhiemVu.md`, mục **Ngô Gia An:
 
 ## Bạn cần tự làm tiếp
 
-- Tự viết CSV đối chứng theo `ai/human/README.md` (hoặc nhờ người chưa xem output AI); chạy lệnh freeze rồi commit trước so sánh.
+- Đọc lại CSV/ghi chú và [kết quả AI-4](AI4_KetQua.md), tự chạy lại để xác nhận; dữ liệu đã khóa/commit/so sánh, không còn chờ tạo CSV.
 - Đọc source/test mới, chạy các lệnh trong `Video_Artifacts.md`, ghi phần hiểu/sửa của mình và ký AI declaration khi thực sự xác nhận.
 - Hoàn thiện generation thực nghiệm paper với model/môi trường thật, lưu cả lỗi và output; xác nhận GV chấp nhận demo track của ChatUniTest.
 - Cung cấp ngày hạn thật trong [điều phối](DieuPhoi.md), tổ chức review và lịch gặp GV. Chưa có email, cuộc họp hoặc nộp bài nào được thực hiện thay bạn.

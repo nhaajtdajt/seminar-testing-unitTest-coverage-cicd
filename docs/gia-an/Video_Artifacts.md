@@ -10,7 +10,7 @@ Ngày chuẩn bị: 28/10/2026. **Chưa quay, chưa đăng YouTube; timestamp th
 | GA-02 | Cơ bản: AI nháp → coverage | `LoanServiceAiDraftTest`, `loan-draft/run.json`, `loan-draft/gaps.json` | 2 test pass nhưng 3/6 branch; chỉ đúng chỗ còn thiếu | Đã chạy, chờ quay |
 | GA-03 | Phức tạp: bổ sung → mutation | `LoanServiceAiImprovedTest`, `loan-improved/`, `loan-mutation-retry2/` | 10 test, 6/6 branch, PIT 9/9; xem cả assertion và side effect | Đã chạy, chờ quay |
 | GA-04 | Trường hợp AI/test oracle sai | `LoanServiceAiMistakeTest`, `loan-mistake/` | Giới hạn là >=3; fixture cố ý kỳ vọng sai làm đỏ 1 assertion | Đã chạy, chờ quay; ghi nhãn fixture cài sẵn |
-| GA-05 | Data driven và AI-4 đối chứng | `ai/human/README.md`, mẫu CSV, `ai4_compare.py`, profile `ai-human` | Người tự viết dữ liệu → khóa commit/hash → mới so với AI → chạy Java | Công cụ đủ; thiếu CSV do người tự viết |
+| GA-05 | Data driven và AI-4 đối chứng | `ai/human/README.md`, mẫu CSV, `ai4_compare.py`, profile `ai-human` | Người tự viết dữ liệu → khóa commit/hash → mới so với AI → chạy Java | Đã khóa 23 ca + ghi chú; người dùng 23/23, AI 13/13 pass; chờ quay |
 | GA-06 | Paper CoverUp | `research/papers.json`, `research/README.md`, `papers/coverup-mt/`, `papers/coverup-group-dry-retry/` | Nguồn/rank, script tác giả, bảng 163 module, 89,0% vs 76,8%; dry-run không sinh test | Có replay phân tích + dry-run; thiếu lượt sinh test mới |
 | GA-07 | Paper ChatUniTest | Source tác giả, `research/chatunitest/`, preflight và môi trường bản sao | Generation–validation–repair, target LoanService, tương thích môi trường; chỉ trình bày kết quả đã chạy | Chưa tái lập thí nghiệm/sinh test; không quay như đã thành công |
 
@@ -28,9 +28,13 @@ python3 scripts/coverage_gaps.py /tmp/ga-draft/jacoco.xml \
 python3 scripts/run_ai_demo.py improved --output /tmp/ga-improved
 python3 scripts/run_ai_demo.py mistake --output /tmp/ga-mistake
 python3 scripts/run_ai_demo.py mutation --output /tmp/ga-mutation
+python3 scripts/run_ai_demo.py human --output /tmp/ga-ai4-human
+python3 scripts/run_ai_demo.py data --output /tmp/ga-ai4-ai
 ```
 
 `clean` xóa report trong `target`, nên mở bản evidence tương ứng để so trước/sau. Không chạy hai Maven scenario cùng lúc. Lệnh full cuối buổi khôi phục JAR/report chuẩn nếu cần chạy ứng dụng.
+
+AI-4 GA-05 đã có [kết quả](AI4_KetQua.md): 11 ca chung khớp kỳ vọng; bộ Gia An 23/23 pass và 10/10 branch, bộ AI 13/13 pass và 8/10 branch. Hai ca Integer.MAX_VALUE chỉ có ở AI; bộ Gia An có thêm ca lỗi. Độc lập theo tuyên bố trong ghi chú người dùng; thao tác khóa/so/test do Codex, chưa phải Gia An tự chạy.
 
 ## Video toàn nhóm cần đưa lên slide
 

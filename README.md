@@ -55,7 +55,7 @@ Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả b
 
 - [Phạm vi và kết quả](docs/gia-an/README.md), [artifact video](docs/gia-an/Video_Artifacts.md), [paper](research/README.md).
 - AI LoanService: `python3 scripts/run_ai_demo.py draft --output /tmp/ga-draft`, đổi `draft` thành `improved`, `mistake`, `mutation` hoặc `full` cho từng lượt. Mỗi output phải mới; chạy tuần tự.
-- [AI-4 đối chứng người viết](ai/human/README.md): mẫu đang rỗng, chờ người tự viết; không coi test synthetic là oracle độc lập.
+- [AI-4 đối chứng người viết](ai/human/README.md): đã nhận và khóa 23 ca + ghi chú Gia An cung cấp; cả 23 ca pass. Xem [kết quả AI-4](docs/gia-an/AI4_KetQua.md); độc lập theo ghi chú, Codex chạy lệnh.
 - [Evidence mới](evidence/gia-an/README.md): 39 test chuẩn; nháp/bổ sung 2→10 test, branch 50→100%, PIT 9/9. Paper mới đạt replay phân tích/dry-run/parse, chưa generation.
 - Slide nguồn `slides/slides.json` sinh HTML/Markdown bằng `python3 scripts/render_slides.py`; bản PDF nằm ở `output/pdf/`. Export bằng `scripts/render_artifacts.mjs` với Node + marked + playwright và Chrome (chi tiết trong source script).
 - Chưa quay video, chưa có URL YouTube/timestamp; chưa xác nhận review cá nhân, gặp GV hoặc nộp bài.
