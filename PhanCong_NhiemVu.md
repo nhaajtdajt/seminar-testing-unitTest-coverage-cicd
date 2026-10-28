@@ -185,17 +185,56 @@ Những mục này **chưa có** hoặc **còn yếu**, và là nơi thầy sẽ
 
 ## 6. Phân công từng người
 
-Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chính mình. Chi tiết cách làm do từng người tự nghiên cứu và triển khai. Hạn: `___` (nhóm thống nhất khi họp).
+Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chính mình. Cách làm chi tiết do từng người tự nghiên cứu. Hạn: `___` (nhóm thống nhất khi họp). Mỗi người **quay video demo phần của mình** (xem mục "Thầy nhắn thêm").
 
-| Người | Vai trò | Đã có để đọc và chạy lại | Cần làm (mã việc ở mục 3) |
-|---|---|---|---|
-| **Ngô Gia An** (23120205) | Unit Test | Test `FineCalculator`, `LoanServiceTest`, UT-1/2/3, slide 4–10 | **B** khái niệm unit testing · **F** Data driven / Checkpoints / Record&Playback tương đương · **G** điểm yếu JUnit/Mockito · **D** so sánh với TestNG · viết thêm test của riêng mình |
-| **Trương Nhật Đạt** (23120231) | Code Coverage | JaCoCo, PIT, gate, CC-1/2/3, test bẫy, slide 11–14 | **A** bảng các loại coverage trên một ví dụ, một bộ test (ưu tiên số 1) · **D** thêm công cụ coverage thứ hai · **G** điểm yếu JaCoCo/PIT |
-| **Phạm Quang Vinh** (23120202) | CI/CD | `ci.yml`, `ai-review.yml`, `Jenkinsfile`, benchmark | **C** chạy CI thật, PR đỏ→xanh, required checks · tạo Issues/Projects · **D** so sánh với Jenkins (chạy thử) · **G** điểm yếu CI · mời thành viên vào repo |
-| **Nguyễn Lê Thế Vinh** (23120190) | Case study | Ứng dụng, test web/integration, HTTP smoke, README | Chạy lại từ máy sạch và sửa README · thêm hàm có điều kiện ghép để minh họa condition/MC/DC (cùng Đạt) · viết test của riêng mình · chuẩn bị dữ liệu demo |
-| **Nguyễn Bảo An** (23120207) | AI và trình bày | `ai/`, AI-1..4, slide 19–23, báo cáo chi tiết, bài tập | **E** paper hạng ≥B **có source code**, chạy lại kết quả và thử trên test của nhóm · AI-4 đối chứng độc lập · **H** điều phối bộ video, slide tóm tắt từng video · hợp nhất slide, báo cáo |
+### Ngô Gia An (23120205): Unit Test
+**Đã có để đọc và chạy lại:** test `FineCalculator`, `LoanServiceTest`, hướng dẫn UT-1/2/3, slide 4–10.
+**Cần làm:**
+1. Viết phần **khái niệm tổng quan về unit testing**: unit là gì, AAA, FIRST, test pyramid, stub/mock/fake/spy.
+2. Trình bày **Data driven** (CSV), **Checkpoints** (assertion/verify) và **Record & Playback** theo cách nhóm diễn giải tương đương, nêu rõ lý do.
+3. Làm demo **trường hợp JUnit/Mockito không xử lý tốt** (mock quá sâu, test tự xác nhận, mock static/final).
+4. **Khảo sát và so sánh JUnit với TestNG** (≥4 tiêu chí), chạy thử TestNG.
+5. Tự viết **thêm 1–2 test** của riêng mình.
+6. Quay video: **setup, cơ bản, phức tạp, trường hợp không xử lý được, data driven** cho Unit Test.
 
-**Điều phối chung** (họp, theo dõi bảng công việc, tổng hợp báo cáo tuần, nộp bài): Nguyễn Bảo An, trưởng nhóm theo kế hoạch ban đầu.
+### Trương Nhật Đạt (23120231): Code Coverage
+**Đã có để đọc và chạy lại:** JaCoCo, PIT, gate, CC-1/2/3, test bẫy, slide 11–14.
+**Cần làm:**
+1. **Việc ưu tiên số 1:** một ví dụ và một bộ test để giải thích các loại coverage (statement, branch, condition, MC/DC, path, method), kèm **bảng: mỗi test làm loại coverage nào tăng**.
+2. Nói rõ **JaCoCo đo được loại nào, không đo được loại nào**.
+3. Chạy thử **một công cụ coverage thứ hai** (OpenClover hoặc Cobertura) và so sánh với JaCoCo (≥4 tiêu chí).
+4. Làm demo **trường hợp JaCoCo/PIT không xử lý tốt** (100% coverage nhưng test yếu, mutant tương đương, PIT chậm).
+5. Quay video: **setup, cơ bản, phức tạp, trường hợp không xử lý được** cho Coverage.
+
+### Phạm Quang Vinh (23120202): CI/CD
+**Đã có để đọc và chạy lại:** `ci.yml`, `ai-review.yml`, `Jenkinsfile`, benchmark.
+**Cần làm:**
+1. **Việc ưu tiên số 1:** bật lại trigger, **chạy CI thật trên GitHub**, tạo **PR đỏ rồi xanh**, bật **required checks** để không merge được khi đỏ.
+2. Tạo **GitHub Issues/Projects** theo bảng phân công này; mời thành viên vào repo; hướng dẫn mọi người tạo nhánh và PR.
+3. **So sánh GitHub Actions với Jenkins** (≥4 tiêu chí), chạy thử Jenkinsfile.
+4. Làm demo **trường hợp CI gặp vấn đề** (cache hỏng, lộ secret giả, job chậm, test flaky).
+5. Quay video: **setup, cơ bản, phức tạp (PR đỏ→xanh), trường hợp không xử lý được** cho CI/CD.
+
+### Nguyễn Lê Thế Vinh (23120190): Case study
+**Đã có để đọc và chạy lại:** ứng dụng, test web/integration, HTTP smoke, README.
+**Cần làm:**
+1. **Chạy lại từ máy sạch** (cài JDK 25, clone, `mvnw clean verify`, gọi `curl`), ghi lỗi gặp và sửa README.
+2. **Thêm một hàm có điều kiện ghép** (`a && b`) vào case study kèm test, để Đạt minh họa condition coverage và MC/DC.
+3. Viết **sơ đồ/mô tả nghiệp vụ** ngắn, dễ hiểu cho slide mở đầu.
+4. Tự viết **thêm 1–2 test** của riêng mình (web hoặc persistence).
+5. Chuẩn bị **dữ liệu và môi trường demo**, chạy thử nhiều lần.
+6. Quay video: **giới thiệu và chạy case study**, demo integration.
+
+### Nguyễn Bảo An (23120207): AI, paper và trình bày (kiêm trưởng nhóm)
+**Đã có để đọc và chạy lại:** `ai/`, AI-1..4, slide 19–23, báo cáo chi tiết, bài tập.
+**Cần làm:**
+1. **Chọn 2–3 paper** hạng ≥B (2021–2026) về unit testing **có source code công bố**; **kiểm hạng thật** (CORE/Scimago).
+2. Với mỗi paper: **chạy lại kết quả công bố**, rồi **thử trên test của nhóm**; chia cho từng người chạy từng bài, không tự cài đặt lại.
+3. Làm **AI-4 đối chứng độc lập** (một người tự viết dữ liệu biên trước, rồi so với bản AI) và thử quy trình AI trên **một lớp khác** (`LoanService`).
+4. Viết **trang khai báo dùng AI** (AI viết phần nào, ai review).
+5. **Hợp nhất slide và báo cáo**: slide có lý thuyết, **nhắc và tóm tắt từng video**, nền trắng chữ đen.
+6. Quay video: **demo AI (setup, cơ bản, phức tạp, trường hợp AI sai)** và video **phần paper**.
+7. **Điều phối chung**: họp hàng tuần, theo dõi `BangCongViec.md`, **gửi slide/gặp thầy trước hạn 3–4 ngày**, nộp bài.
 
 ## 7. Việc chung của cả nhóm
 1. **Họp ngắn đầu tuần** (15 phút): mỗi người báo *đã làm / đang làm / vướng*; Bảo An ghi lại.
