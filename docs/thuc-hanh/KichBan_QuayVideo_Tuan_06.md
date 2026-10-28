@@ -14,13 +14,17 @@
 | **4. Mockito phức tạp (UT-3)** | `03:45 - 05:15` | - Khái niệm Test Double: Stub vs Mock/Spy.<br>- Trình bày `LoanServiceTest`: giải thích tại sao cô lập 3 Repository bằng Mockito mock để tập trung test logic mượn sách.<br>- Demo 1 ca nghiệp vụ lỗi (nợ phí / hết hạn mức): `verify` không lưu phiếu mượn.<br>- Demo ca mượn thành công: dùng `ArgumentCaptor` kiểm tra thông tin phiếu mượn và cập nhật trạng thái sách. | `LoanServiceTest.java`<br>`./mvnw test -Dtest=LoanServiceTest` |
 | **5. Trường hợp công cụ gặp hạn chế / Anti-patterns** | `05:15 - 06:45` | - Mở file `MockitoAntiPatternTest.java` (đánh dấu `@Tag("antipattern")`).<br>- Minh họa **Train Wreck Mocking** (vi phạm định luật Demeter).<br>- Minh họa **Self-fulfilling Prophecy** (test chính mock thay vì test code thật).<br>- Minh họa lạm dụng mock pure logic & cảnh báo JVM khi inline mock static/final.<br>- Kết luận bài học thực tế cho kiểm thử đơn vị. | `MockitoAntiPatternTest.java`<br>`./mvnw test -Dtest=MockitoAntiPatternTest -Dtest.excludedTags=""` |
 
-## Video B — Coverage và mutation testing (5–7 phút)
+## Video B — Code Coverage và mutation testing (8–9 phút) — Người thực hiện: Trương Nhật Đạt (23120231)
 
-1. Chạy profile baseline và mở `target/site/jacoco/index.html`.
-2. Giải thích line coverage và branch coverage trên `FineCalculator`.
-3. Chạy bộ đầy đủ, mở gate result và chỉ ra điều kiện pass.
-4. Mở PIT weak/strong; giải thích killed/survived mutant bằng source và assertion liên quan.
-5. Kết luận ngắn: coverage là tín hiệu thực thi; PIT bổ sung góc nhìn về sức phát hiện lỗi.
+**Yêu cầu sư phạm:** đủ các phân đoạn GV yêu cầu: Setup, Khái niệm cơ bản, Demo đơn giản, Demo phức tạp, Trường hợp công cụ không xử lý được. Lệnh đầy đủ ở `HuongDan_Demo.md` (CC-0 → CC-6). Nếu tách thành nhiều video, giữ nguyên tên phân đoạn để slide dẫn chiếu.
+
+| Phân đoạn | Timestamp | Nội dung chi tiết cần quay và thuyết minh | Lệnh / File minh chứng |
+|---|---|---|---|
+| **1. Setup** | `00:00 - 01:00` | - Mở `pom.xml`: plugin JaCoCo (`prepare-agent`, `report`, `check` với BRANCH ≥ 90% cho `FineCalculator`) và PIT (`targetClasses` = `${pit.classes}`).<br>- Giải thích JaCoCo là Java agent gắn vào bytecode lúc chạy test, không sửa mã nguồn. | `case-study/pom.xml` |
+| **2. Khái niệm cơ bản: các loại coverage** | `01:00 - 03:00` | - Mở `LoanPeriodPolicy.java`: chỉ ra 6 câu lệnh, 2 quyết định, 3 điều kiện con, 4 đường đi.<br>- Chạy cộng dồn T1 → T2 → T3; mỗi lần mở HTML JaCoCo, chỉ dòng xanh/vàng và số nhánh 3/6 → 5/6 → 6/6.<br>- Đọc bảng mục 3.1: statement đạt từ T1, decision từ T2, condition và MC/DC từ T3, path từ T4.<br>- Chạy bộ T2 + T3: condition đủ nhưng dòng `days += 7` đỏ, tức condition ≠ decision. | CC-0 trong `HuongDan_Demo.md`<br>`BaoCao_ChiTiet.md` mục 3.1, 3.3 |
+| **3. Demo đơn giản: trước/sau (CC-1/CC-2)** | `03:00 - 04:00` | - Chạy `-Pbaseline`: `FineCalculator` 5/10 nhánh (50%).<br>- Chạy bộ đầy đủ: 10/10 nhánh.<br>- Chỉ cột Line và cột Branch khác nhau. | `-Pbaseline clean verify`<br>`clean verify` |
+| **4. Demo phức tạp: gate và mutation (CC-3/CC-4) + công cụ thứ hai** | `04:00 - 06:00` | - Gate đỏ: baseline + bật gate → `Rule violated`, Maven exit 1; bộ đầy đủ → `All coverage checks have been met`.<br>- Test bẫy: 100% branch nhưng PIT chỉ diệt 3/11; bộ đầy đủ 10/11. Mở báo cáo PIT, đọc một mutant sống.<br>- OpenClover: cùng bộ {T1, T2}, OpenClover báo 4/4 (100%), JaCoCo báo 5/6 (83%). Giải thích hai công cụ định nghĩa "branch" khác nhau. | CC-3, CC-4, CC-0b<br>`BaoCao_ChiTiet.md` mục 5.2 |
+| **5. Trường hợp công cụ không xử lý được** | `06:00 - 08:30` | - **Quyết định ẩn trong thư viện:** chạy `FineCalculatorNoCapTest`: JaCoCo 10/10, gate pass, PIT mặc định 10/11 giống hệt bộ tốt, nhưng không ca nào chạm trần 50.000. Bật `INLINE_CONSTS`: mutant `50000 → 50001` sống.<br>- **Mutant tương đương:** mở mutant dòng 15 (`<=` → `<`), giải thích vì sao không đầu vào nào phân biệt được.<br>- **PIT chậm:** so log `clean test` (39 test, 22 s) với PIT toàn project (85 s, 46 mutant).<br>- Kết luận: coverage cho biết code đã chạy; PIT cho biết test có bắt lỗi không; cả hai vẫn cần người đọc đặc tả. | CC-5, CC-6<br>`BaoCao_ChiTiet.md` mục 3.4 |
 
 ## Video C — Ứng dụng / HTTP (3–5 phút)
 
