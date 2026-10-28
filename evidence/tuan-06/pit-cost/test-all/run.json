@@ -1,0 +1,19 @@
+{
+  "started_at_utc": "2026-10-28T15:03:13.781467+00:00",
+  "finished_at_utc": "2026-10-28T15:03:36.031950+00:00",
+  "elapsed_seconds": 22.25,
+  "command": [
+    "cmd",
+    "/c",
+    "case-study\\mvnw.cmd",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "clean",
+    "test"
+  ],
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local; not a GitHub Actions or Jenkins execution"
+}
