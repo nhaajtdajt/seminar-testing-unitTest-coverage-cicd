@@ -85,6 +85,23 @@ Câu hỏi dẫn dắt cả bài: **"Test chạy xanh và coverage 100% có ngh�
 
 (Kịch bản từng phút sẽ viết sau khi các phần dưới đã xong.)
 
+### 2.6. AI trong dự án làm gì
+
+**Đề yêu cầu:** trình bày khả năng áp dụng AI vào chủ đề testing, có demo cụ thể, **tổng quát hóa và tái sử dụng được**. Cần phân biệt: (1) AI là **nội dung demo** (bắt buộc có); (2) AI là **công cụ làm bài** (được phép, nhưng phải review và nhận trách nhiệm, nên cần khai báo trung thực).
+
+| Mã | AI làm gì | Kết quả đã có | Điểm yếu cần nói |
+|---|---|---|---|
+| **AI-1** | Sinh test nháp cho `FineCalculator` | 3 test, phủ 70% nhánh | Bỏ sót ca lỗi, nhánh VIP |
+| **AI-2** | Đọc báo cáo coverage, chỉ ra nhánh chưa phủ, đề xuất test bổ sung | Thêm 3 test, phủ 100% nhánh | Phủ nhánh chưa chắc assertion tốt (cần PIT) |
+| **AI-3** | Review `git diff`, nêu lỗi tiềm ẩn (gọi Gemini, dùng được trong CI) | 4/4 lỗi cài sẵn trong diff mẫu | Chỉ đo trên diff mẫu, chưa là đánh giá độc lập |
+| **AI-4** | Sinh dữ liệu biên cho test data-driven | 13/15 ca trùng bộ tham chiếu | Thiếu 2 ca; bộ so sánh cũng có AI hỗ trợ, cần người tự viết đối chứng |
+
+**Tái sử dụng được vì:** prompt nằm trong `ai/prompts/`, script (`coverage_gaps.py`, `ai_review.py`, `evaluate_review.py`) nhận đầu vào bất kỳ, quy trình chung là *AI sinh nháp → chạy test → đo coverage/mutation → người review → lặp*. **Còn thiếu:** thử cùng quy trình trên một lớp khác (ví dụ `LoanService`) để chứng minh tổng quát.
+
+**Gắn với paper (mục E):** các nghiên cứu về LLM sinh test cho thấy test sinh ra thường đạt coverage khá nhưng có test sai hoặc flaky; kết quả AI-1 của nhóm là bằng chứng thực nghiệm tương ứng.
+
+**Khai báo dùng AI:** nhóm cần một trang ghi rõ AI viết phần nào, ai review, ai chạy lại. Không đưa API key vào repo, slide hay video.
+
 ---
 
 ## 3. Chúng ta sẽ làm gì thêm so với hiện tại
