@@ -142,6 +142,27 @@ Bộ test bẫy đi qua đủ nhánh nhưng không assert số tiền của trư
 
 Kết quả cho thấy coverage cần được kết hợp với assertion có ý nghĩa và dữ liệu biên. Mutation testing hỗ trợ tìm test yếu nhưng có chi phí chạy thêm và cần đọc mutant còn sống.
 
+### 3.3. JaCoCo đo được gì, không đo được gì
+
+JaCoCo gắn probe vào **bytecode** lúc chạy (Java agent), không đọc mã nguồn. Báo cáo có 6 counter: instructions, branches, lines, methods, classes và cyclomatic complexity ([tài liệu counters](https://www.jacoco.org/jacoco/trunk/doc/counters.html)). Đối chiếu với các loại coverage ở mục 3.1:
+
+| Loại coverage | JaCoCo | Giải thích, dẫn chứng trên `LoanPeriodPolicy` |
+|---|---|---|
+| Statement | Có (gián tiếp) | Counter Instructions (17 lệnh bytecode) và Lines (7 dòng) thay cho câu lệnh nguồn. Một dòng có thể chỉ phủ một phần: JaCoCo tô vàng. |
+| Method | Có | Counter Methods tính cả constructor mặc định do trình biên dịch sinh, nên lớp có 1 phương thức viết tay nhưng JaCoCo báo 2/2. |
+| Decision (branch) | Gần đúng, không trùng | JaCoCo đếm mỗi lệnh nhảy có điều kiện trong bytecode. `C1 && C2` biên dịch thành 2 lệnh nhảy nên D1 có 4 nhánh, cả lớp 6 nhánh, không phải 4 hướng quyết định. Với {T1, T2}, decision đã 100% nhưng JaCoCo báo 5/6 (83%). |
+| Condition | Gần đúng (có short-circuit) | Vì đếm từng lệnh nhảy, branch của JaCoCo gần với condition coverage *có tính short-circuit*: điều kiện không được đánh giá thì không tính. Bộ T2 + T3 phủ đủ giá trị T/F của C1–C3 nhưng JaCoCo vẫn báo 5/6, vì C2 chỉ được đánh giá khi C1 đúng. |
+| MC/DC | Không | Không có khái niệm cặp test chứng minh từng điều kiện độc lập. Riêng chuỗi `&&` ngắn như D1, muốn đủ 6/6 nhánh JaCoCo thì cũng phải có đúng các cặp MC/DC ({T1, T2, T3}). Điều này không được đảm bảo với biểu thức phức tạp hơn, và JaCoCo không báo cặp nào còn thiếu. |
+| Path | Không | Bước 3 và bước 4 cùng 6/6 nhánh, dù T4 là đường đi mới. JaCoCo không biết thứ tự các nhánh trong một lần chạy. |
+| Nhánh trong thư viện | Không | Chỉ đo lớp của dự án. Quyết định nằm trong `Math.min` của `FineCalculator` (mức trần 50.000 VND) không có nhánh nào trong báo cáo, xem mục 3.4. |
+| Chất lượng assertion | Không | Test bẫy CC-4 không assert số tiền vẫn đạt 100% branch. Cần PIT hoặc review. |
+
+Các điểm cần nhớ khi đọc báo cáo JaCoCo:
+
+- **Ngoại lệ không được tính là nhánh.** Khối `try/catch` không làm tăng số nhánh. Theo tài liệu JaCoCo, dòng ném ngoại lệ giữa chừng có thể bị tô là chưa chạy vì probe nằm sau lệnh.
+- **Mã do trình biên dịch sinh** (constructor mặc định, phương thức của `enum`, `record`…) có thể làm số method/instruction khác với mã nguồn. JaCoCo có bộ lọc cho một số trường hợp, nhưng không lọc tất cả.
+- **"Branch 100%" không có nghĩa là "decision 100%".** Hai khái niệm khác cách đếm. Khi so ngưỡng gate (ví dụ 90% branch) cần ghi rõ là branch theo JaCoCo.
+
 ## 4. CI/CD
 
 CI tự động kiểm tra các thay đổi được tích hợp thường xuyên. Continuous Delivery tạo sản phẩm sẵn sàng phát hành với bước quyết định triển khai; Continuous Deployment tự động đưa thay đổi đạt yêu cầu lên môi trường đích. Bản case study hiện dừng ở kiểm thử và tạo JAR.
