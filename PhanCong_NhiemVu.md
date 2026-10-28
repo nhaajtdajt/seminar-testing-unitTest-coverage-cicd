@@ -53,7 +53,7 @@ Cần hoàn thiện **khoảng 90% nội dung seminar** rồi nộp qua link c�
 | **Scripts / source code** | Nén (ZipTool nếu >20 MB) | `case-study/`, `ai/`, `scripts/`, `.github/`, `Jenkinsfile` | Thế Vinh |
 | **Seminar contribution** | **Google Sheet của thầy** (điền trực tiếp) | Mỗi người tự điền phần việc của mình | Cả nhóm |
 | **Git commit log** | Markdown | Xuất **từ `git log` thật** của repo | Quang Vinh |
-| **AI usage declaration** | Markdown + PDF | Khai báo trung thực AI dùng ở đâu, ai review | Bảo An, cả nhóm xác nhận |
+| **AI usage declaration** | Markdown + PDF | Thư mục `ai-usage-declaration/`: **mỗi người tự điền file của mình**, Bảo An gộp | Bảo An, cả nhóm xác nhận |
 
 **Lưu ý quan trọng:**
 - **Git commit log và Seminar contribution phải khớp với Git thật.** Không dùng script sinh commit giả (script đó đã bị loại bỏ). Ai chưa có commit thì phải có commit/PR trước khi nộp.
