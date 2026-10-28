@@ -5,7 +5,6 @@ Bản cập nhật dùng Java 25, Spring Boot 4.1.1, Maven Wrapper 3.9.16 và H2
 | Minh chứng | Nội dung |
 |---|---|
 | [final](final/run.json) | 33 lượt test pass trên Java 25; FineCalculator đạt 100% branch, gate pass. |
-| [jdk21](jdk21/run.json) | 33 lượt test pass với `-Djava.version=21`. |
 | [baseline](baseline/run.json) | Bộ 1 test, FineCalculator phủ 50% branch; tắt gate để thu báo cáo ban đầu. |
 | [gate-fail](gate-fail/run.json) | Bật gate 90% cho bộ thiếu test; Maven exit 1. |
 | [coverage-trap](coverage-trap/run.json) | Test bẫy phủ đủ nhánh nhưng không assert tiền của ca hợp lệ. |
@@ -16,7 +15,6 @@ Bản cập nhật dùng Java 25, Spring Boot 4.1.1, Maven Wrapper 3.9.16 và H2
 | [ai-improved](ai-improved/run.json) | 6 test sau khi bổ sung theo gap, phủ 100% branch. |
 | [ai-data](ai-data/run.json) | 13 ca CSV AI chạy pass. |
 | [http-smoke](http-smoke/results.json) | 5 tình huống HTTP trên ứng dụng đóng gói. |
-| [python-tools](python-tools/run.json) | Kiểm công cụ trích coverage và xử lý review AI tại máy. |
 | [workflow-lint](workflow-lint/run.json) | Kiểm tra tĩnh workflow; chưa phải lần chạy GitHub Actions. |
 | [benchmark-jacoco](benchmark-jacoco/summary.json) | 3 lượt/cấu hình: trung vị không JaCoCo 9,727s; có JaCoCo 12,754s. |
 | [benchmark-cache](benchmark-cache/summary.json) | Đủ **3/3 cặp** kho Maven lạnh/ấm, trung vị 48,412s / 12,539s (`complete: true`). |
@@ -28,4 +26,4 @@ Phép đo cache của bản Java 25 đã đủ 3/3 cặp hợp lệ. Cặp 3 ch�
 
 Các bước cần thực hiện trên dịch vụ: chạy GitHub Actions/PR đỏ–xanh, bật required checks, chạy Jenkins và gọi API AI khi nhóm có cấu hình. Danh tính và phân công đã được điền theo thông tin nhóm cung cấp; nhóm cần xác nhận đóng góp thực tế. Gói Tuần 04 dùng ảnh minh chứng theo yêu cầu của nhóm.
 
-Chi tiết dọn repo nằm trong [cleanup.json](cleanup.json). Bằng chứng chuẩn trong `final/` được giữ; lượt kiểm lặp `java25-review/`, ảnh kiểm bố cục cũ và bằng chứng của cấu hình Java 21/Boot 3.5 đã được dọn khỏi repo. `case-study/target/` sẽ được tạo lại khi chạy Maven; các báo cáo đã lưu ở đây vẫn mở được sau khi dọn.
+ Bằng chứng chuẩn trong `final/` được giữ; lượt kiểm lặp `java25-review/`, ảnh kiểm bố cục cũ và bằng chứng của cấu hình Java 21/Boot 3.5 đã được dọn khỏi repo. `case-study/target/` sẽ được tạo lại khi chạy Maven; các báo cáo đã lưu ở đây vẫn mở được sau khi dọn.

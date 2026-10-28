@@ -6,7 +6,7 @@
 
 **Nhóm:** Nhóm 09 (Group09)
 
-**Cập nhật:** Hiện tại là **Tuần thực hành 04** theo xác nhận của nhóm; một phần công việc dự kiến cho Tuần 05 đã được thực hiện sớm. Kết quả và phần còn thiếu được tổng hợp trong [Báo cáo Tuần thực hành 04](bao-cao-tuan/BaoCao_Tuan_04.md).
+**Cập nhật:** Hiện tại là **Tuần thực hành 04** theo xác nhận của nhóm; một phần công việc dự kiến cho Tuần 05 đã được thực hiện sớm. Kết quả và phần còn thiếu xem [Bảng công việc](docs/thuc-hanh/BangCongViec.md)..
 
 **Thành viên:** TV1: Nguyễn Bảo An (23120207); TV2: Phạm Quang Vinh (23120202); TV3: Trương Nhật Đạt (23120231); TV4: Nguyễn Lê Thế Vinh (23120190); TV5: Ngô Gia An (23120205)
 

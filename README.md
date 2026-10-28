@@ -1,20 +1,17 @@
 # Seminar: Unit Test · Code Coverage · CI/CD
 
-> Nhánh `reportweek04` giữ lịch sử tài liệu/evidence cũ. Bản nộp trước là Tuần thực hành 04; báo cáo hiện tại là Tuần thực hành 05 với đầu việc được chia theo năm thành viên như bảng phân công. Mã nguồn case study nằm trong `case-study/`.
+> Nhánh `seminar-core`: bản gọn chỉ giữ phần quan trọng (mã nguồn, test, CI, AI, slide, báo cáo chi tiết, bài tập và bằng chứng đã chọn lọc). Báo cáo tuần cũ, HTML sinh tự động và các lượt chạy lặp đã bỏ; xem lịch sử ở các nhánh `reportweek04` và `noplan01`.
 
 Case study quản lý thư viện, dùng chung từ unit test đến coverage và pipeline.
 
-- Báo cáo kỳ trước có sẵn trong checkout: [Markdown](bao-cao-tuan/BaoCao_Tuan_04.md) · [HTML](bao-cao-tuan/BaoCao_Tuan_04.html). Tên file lịch sử được giữ nguyên.
-- Báo cáo Tuần 05: [Markdown](bao-cao-tuan/BaoCao_Tuan_05.md) · [HTML](bao-cao-tuan/BaoCao_Tuan_05.html); hồ sơ AI và Git log nằm cùng thư mục.
-- [Kế hoạch và phân công hàng tuần](KeHoach_BaoCao_HangTuan.md).
+- [Kế hoạch và phân công hàng tuần](KeHoach_BaoCao_HangTuan.md) · [Bảng công việc](docs/thuc-hanh/BangCongViec.md).
 - [Hướng dẫn chạy và kịch bản demo](docs/thuc-hanh/HuongDan_Demo.md).
-- [Bài tập áp dụng Unit Test/Coverage](docs/thuc-hanh/BaiTap_Tuan_06.md).
-- [Kịch bản quay video](docs/thuc-hanh/KichBan_QuayVideo_Tuan_06.md) (kịch bản, không phải video đã quay).
-- [Bản thảo báo cáo chi tiết](docs/thuc-hanh/BaoCao_ChiTiet.md).
-- [Minh chứng Tuần 05](evidence/tuan-06/README.md) · [Minh chứng tích lũy/kỳ trước](evidence/tuan-05/README.md).
-- Bản nháp slide: mở `slides/index.html` bằng trình duyệt; phím ←/→ chuyển trang, Ctrl+P in.
-- Bản LaTeX lịch sử của báo cáo Tuần 04: `report/main.tex` (dùng XeLaTeX); báo cáo hiện tại là Markdown/HTML ở trên.
-- Gói đề xuất nộp lần 1, đặc tả thiết kế gốc và đề bài: nhánh [`noplan01`](../../tree/noplan01).
+- [Báo cáo chi tiết](docs/thuc-hanh/BaoCao_ChiTiet.md).
+- [Bài tập áp dụng](docs/thuc-hanh/BaiTap_Tuan_06.md) · [Kịch bản quay video](docs/thuc-hanh/KichBan_QuayVideo_Tuan_06.md) (kịch bản, chưa có video).
+- Minh chứng: [Tuần 06 (mới nhất)](evidence/tuan-06/README.md) · [Các lượt chạy chính](evidence/tuan-05/README.md).
+- Slide: mở `slides/index.html` bằng trình duyệt (←/→ chuyển trang, Ctrl+P in); nguồn `slides/slides.json`, dựng bằng `scripts/render_slides.py`.
+- LaTeX: `report/main.tex` (XeLaTeX).
+- Đề bài và gói đề xuất ban đầu: nhánh [`noplan01`](../../tree/noplan01).
 
 ## Chạy nhanh
 
@@ -49,6 +46,6 @@ Lần đầu trả 201; mượn lại sách 1 trả 409. Tắt và khởi độn
 
 Mã nguồn, test, demo coverage/mutation/TDD và tài liệu seminar đã được triển khai với AI hỗ trợ. Workflow GitHub Actions và Jenkinsfile đã được viết. Trạng thái hiện tại và các giới hạn được ghi trong báo cáo Tuần 05; lịch sử Git không bị sửa để nhận công của tuần khác.
 
-Đối chiếu chi tiết phần còn thiếu: [mục 8 của báo cáo Tuần thực hành 04](bao-cao-tuan/BaoCao_Tuan_04.md#8-phần-đã-làm-trước-và-phần-còn-lại-của-kế-hoạch-tuần-05). Repo đã dọn các file build/cache và bằng chứng của cấu hình cũ (Java 21 + Spring Boot 3.5); lịch dọn nằm trong `evidence/tuan-05/cleanup.json`. Chạy Maven sẽ tạo lại `case-study/target/`. Các tài liệu đề xuất cũ (`nop-lan-1/`, `docs/00-…`, `docs/superpowers/`, `require.md`) nằm ở nhánh `noplan01`.
+Phần còn thiếu và trạng thái từng hạng mục: xem [Bảng công việc](docs/thuc-hanh/BangCongViec.md). Repo đã dọn các file build/cache và bằng chứng của cấu hình cũ (Java 21 + Spring Boot 3.5); lịch dọn nằm trong `evidence/tuan-05/cleanup.json`. Chạy Maven sẽ tạo lại `case-study/target/`. Các tài liệu đề xuất cũ (`nop-lan-1/`, `docs/00-…`, `docs/superpowers/`, `require.md`) nằm ở nhánh `noplan01`.
 
 Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả bản thực hành hiện tại. Lượt xác minh source, HTTP và Gemini API cho gói tuần này nằm trong `evidence/tuan-06/`. Theo phạm vi nộp mới nhất, video, kịch bản và ảnh demo không thuộc checklist Tuần 05; các tệp đã có được giữ làm tài liệu tùy chọn.

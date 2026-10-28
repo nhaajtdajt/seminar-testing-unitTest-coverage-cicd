@@ -1,6 +1,6 @@
 # Báo cáo chi tiết seminar — cập nhật đến Tuần 06
 
-**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần được lưu riêng trong `bao-cao-tuan/`. **Cập nhật tài liệu:** 23/10/2026. Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
+**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần nằm ở `BangCongViec.md` và `evidence/tuan-06/README.md`. **Cập nhật tài liệu:** 23/10/2026. Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
 
 **Thành viên:** TV1: Phạm Quang Vinh (23120202); TV2: Nguyễn Bảo An (23120207); TV3: Trương Nhật Đạt (23120231); TV4: Nguyễn Lê Thế Vinh (23120190); TV5: Ngô Gia An (23120205)
 
@@ -69,6 +69,6 @@ Bộ bài tập và đáp án gợi ý được chuẩn hóa tại [BaiTap_Tuan_
 
 Gói có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, báo cáo chi tiết, slide, bài tập và hướng dẫn tái hiện. Ba video theo từng chủ đề có kịch bản trong `KichBan_QuayVideo_Tuan_06.md`; chưa có video đã quay. Bảng `BangCongViec.md` ghi giới hạn còn lại của GitHub/Jenkins, video và xác nhận của thành viên.
 
-Số đo và đường dẫn: xem [minh chứng](../../evidence/tuan-05/README.md) và [báo cáo Tuần thực hành 04](../../bao-cao-tuan/BaoCao_Tuan_04.md). Hướng dẫn tái hiện: [HuongDan_Demo.md](HuongDan_Demo.md).
+Số đo và đường dẫn: xem [minh chứng](../../evidence/tuan-05/README.md) và [minh chứng Tuần 06](../../evidence/tuan-06/README.md). Hướng dẫn tái hiện: [HuongDan_Demo.md](HuongDan_Demo.md).
 
 Nguồn chính thức dùng đối chiếu: [JUnit guide](https://docs.junit.org/6.0.3/user-guide/), [Mockito](https://github.com/mockito/mockito), [JaCoCo](https://www.jacoco.org/jacoco/trunk/doc/), [PIT Maven](https://pitest.org/quickstart/maven/), [Spring Boot requirements](https://docs.spring.io/spring-boot/4.1/system-requirements.html), [GitHub Maven CI](https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven), [Gemini API](https://ai.google.dev/api/generate-content).

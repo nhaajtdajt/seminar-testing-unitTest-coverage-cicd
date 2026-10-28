@@ -5,7 +5,7 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 ## Source và kiểm thử
 
 - [Lượt `clean verify` thành công](source-verify/run.json): JDK 25.0.2, 33/33 test, 0 failure/error/skipped. Bắt đầu 2026-10-23 10:01:33 UTC (17:01:33 +07).
-- [Log](source-verify/output.log) và [Surefire reports](source-verify/surefire-reports/).
+- [Log](source-verify/output.log). Surefire reports đã bỏ khỏi nhánh gọn (còn ở `reportweek04`).
 - [JaCoCo HTML](source-verify/site/jacoco/index.html), [XML](source-verify/site/jacoco/jacoco.xml): instruction 429/455 (94%), branch 18/18 (100%), line 69/76 (90,8%).
 - [HTTP smoke trên JAR Java 25](http-smoke-java25/results.json): 5/5 tình huống đạt status mong đợi.
 
