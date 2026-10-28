@@ -1,0 +1,48 @@
+{
+  "started_at_utc": "2026-10-28T15:42:37.538677+00:00",
+  "finished_at_utc": "2026-10-28T15:42:38.779404+00:00",
+  "command": [
+    "/tmp/seminar-paper-venv/bin/python",
+    "scripts/compare.py",
+    "--suite",
+    "mutap",
+    "--to",
+    "mutap-gpt4o_zero",
+    "--array"
+  ],
+  "exit_code": 0,
+  "scope": "published-data-reanalysis",
+  "new_model_generation": false,
+  "source": {
+    "url": "https://github.com/plasma-umass/coverup-eval",
+    "revision": "f3173196b90181974b0b684600ffde42ac36672c",
+    "script_sha256": "829c331c1d54db6b1f7d972c2e19bf36ab15a9c281f559e7c4c1e8b1a3e112c1",
+    "limitation": "Original author data and script; no fresh LLM calls or fresh benchmark test execution. Analysis dependencies differ from original pins; record your environment."
+  },
+  "metrics": {
+    "CoverUp (gpt4o-v2)": [
+      89.2,
+      88.7,
+      89.0,
+      100.0,
+      100.0,
+      100.0
+    ],
+    "MuTAP (gpt4o_zero)": [
+      78.0,
+      74.5,
+      76.8,
+      100.0,
+      100.0,
+      100.0
+    ]
+  },
+  "metric_order": [
+    "overall_line",
+    "overall_branch",
+    "overall_line_branch",
+    "median_module_line",
+    "median_module_branch",
+    "median_module_line_branch"
+  ]
+}

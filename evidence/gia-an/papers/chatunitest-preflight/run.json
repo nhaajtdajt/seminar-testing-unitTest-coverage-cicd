@@ -1,0 +1,16 @@
+{
+  "started_at_utc": "2026-10-28T15:42:38.844985+00:00",
+  "finished_at_utc": "2026-10-28T15:42:38.876061+00:00",
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-c",
+    "import importlib.util,json,os; print(json.dumps({'python_modules':{m:importlib.util.find_spec(m) is not None for m in ['openai','tree_sitter','mysql.connector'] if m != 'mysql.connector'},'mysql_cli':__import__('shutil').which('mysql') is not None,'config_ini_present':__import__('pathlib').Path('../config/config.ini').exists(),'api_key_present':bool(os.environ.get('OPENAI_API_KEY'))})); raise SystemExit(2)"
+  ],
+  "exit_code": 2,
+  "scope": "prerequisite-check-only-not-reproduction",
+  "new_model_generation": false,
+  "source": {
+    "url": "https://github.com/ZJU-ACES-ISE/ChatUniTest/tree/python",
+    "revision": "e7c18b5f4b9fcc66c4585e35af7ea99017674073"
+  }
+}

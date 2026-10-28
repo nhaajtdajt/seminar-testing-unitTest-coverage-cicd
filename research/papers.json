@@ -1,0 +1,58 @@
+{
+  "verified_on": "2026-10-28",
+  "ranking": {
+    "system": "CORE2023",
+    "venue": "FSE",
+    "rank": "A*",
+    "source": "https://portal.core.edu.au/conf-ranks/?by=all&search=&source=CORE2023",
+    "qualification": "Venue ranking, not a ranking assigned to an individual paper. ChatUniTest is a demonstration-track paper. Confirm the lecturer accepts that track."
+  },
+  "papers": [
+    {
+      "id": "P1",
+      "title": "CoverUp: Effective High Coverage Test Generation for Python",
+      "authors": [
+        "Juan Altmayer Pizzorno",
+        "Emery D. Berger"
+      ],
+      "year": 2025,
+      "venue": "FSE",
+      "track": "Research Papers / PACMSE 2 FSE128",
+      "doi": "10.1145/3729398",
+      "paper": "https://arxiv.org/html/2403.16218v4",
+      "publication": "https://conf.researchr.org/details/fse-2025/fse-2025-research-papers/112/CoverUp-Effective-High-Coverage-Test-Generation-for-Python",
+      "artifact": "https://github.com/plasma-umass/coverup-eval",
+      "artifact_revision": "f3173196b90181974b0b684600ffde42ac36672c",
+      "tool": "https://github.com/plasma-umass/coverup",
+      "tool_version": "0.6.0",
+      "tool_revision": "6474814f28408ddee4cc01662215ad4eae6a3302",
+      "group_target": "scripts/coverage_gaps.py",
+      "status": "Published MT data reanalysed with original compare.py; group-source dry-run is recorded separately. Fresh LLM generation remains pending."
+    },
+    {
+      "id": "P2",
+      "title": "ChatUniTest: A Framework for LLM-Based Test Generation",
+      "authors": [
+        "Yinghao Chen",
+        "Zehao Hu",
+        "Chen Zhi",
+        "Junxiao Han",
+        "Shuiguang Deng",
+        "Jianwei Yin"
+      ],
+      "year": 2024,
+      "venue": "FSE",
+      "track": "Demonstrations, Companion Proceedings, pp. 572-576",
+      "doi": "10.1145/3663529.3663801",
+      "paper": "https://arxiv.org/abs/2305.04764",
+      "publication": "https://2024.esec-fse.org/details/fse-2024-demonstrations/6/ChatUniTest-A-Framework-for-LLM-based-Test-Generation",
+      "artifact": "https://github.com/ZJU-ACES-ISE/ChatUniTest/tree/python",
+      "artifact_revision": "e7c18b5f4b9fcc66c4585e35af7ea99017674073",
+      "current_tool": "https://github.com/ZJU-ACES-ISE/chatunitest-maven-plugin",
+      "current_tool_revision": "38f152ce9186bc42f2b08b73a07dce8af54b1378",
+      "current_tool_version": "2.1.1",
+      "group_target": "vn.edu.seminar.loan.LoanService#borrow",
+      "status": "Original prerequisites checked. Current author plugin 2.1.1 parsed the disposable group case study (20 classes, 28 methods). No model generation; original experiment and group generated-test evaluation pending."
+    }
+  ]
+}

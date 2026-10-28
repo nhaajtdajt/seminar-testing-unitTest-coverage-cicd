@@ -1,0 +1,38 @@
+{
+  "className": "LoanService",
+  "methodName": "borrow",
+  "brief": "public synchronized Loan borrow(long bookId, long memberId){}",
+  "methodSignature": "borrow(long, long)",
+  "sourceCode": "public synchronized Loan borrow(long bookId, long memberId) {\n        Book book = books.findById(bookId).orElseThrow(() -> new LoanException(BOOK_NOT_FOUND));\n        if (!book.available()) {\n            throw new LoanException(BOOK_UNAVAILABLE);\n        }\n        Member member = members.findById(memberId).orElseThrow(() -> new LoanException(MEMBER_NOT_FOUND));\n        if (loans.countActiveByMemberId(memberId) >= 3) {\n            throw new LoanException(LIMIT_REACHED);\n        }\n        if (member.unpaidFine().compareTo(BigDecimal.ZERO) > 0) {\n            throw new LoanException(UNPAID_FINE);\n        }\n        Loan loan = loans.save(new Loan(UUID.randomUUID().toString(), bookId, memberId, clock.instant()));\n        books.save(new Book(bookId, false));\n        return loan;\n    }",
+  "useField": true,
+  "isConstructor": false,
+  "isGetSet": false,
+  "isPublic": true,
+  "isBoolean": false,
+  "isAbstract": false,
+  "parameters": [
+    "long",
+    "long"
+  ],
+  "dependentMethods": {
+    "vn.edu.seminar.loan.BookRepository": [
+      "findById(long)"
+    ],
+    "vn.edu.seminar.loan.MemberRepository": [
+      "findById(long)"
+    ],
+    "vn.edu.seminar.loan.LoanRepository": [
+      "countActiveByMemberId(long)"
+    ],
+    "java.util.UUID": [
+      "toString()",
+      "randomUUID()"
+    ],
+    "java.time.Clock": [
+      "instant()"
+    ]
+  },
+  "full_method_info": "public synchronized Loan borrow(long bookId, long memberId) {\n    Book book = books.findById(bookId).orElseThrow(() -> new LoanException(BOOK_NOT_FOUND));\n    if (!book.available()) {\n        throw new LoanException(BOOK_UNAVAILABLE);\n    }\n    Member member = members.findById(memberId).orElseThrow(() -> new LoanException(MEMBER_NOT_FOUND));\n    if (loans.countActiveByMemberId(memberId) >= 3) {\n        throw new LoanException(LIMIT_REACHED);\n    }\n    if (member.unpaidFine().compareTo(BigDecimal.ZERO) > 0) {\n        throw new LoanException(UNPAID_FINE);\n    }\n    Loan loan = loans.save(new Loan(UUID.randomUUID().toString(), bookId, memberId, clock.instant()));\n    books.save(new Book(bookId, false));\n    return loan;\n}",
+  "method_comment": "",
+  "method_annotation": ""
+}
