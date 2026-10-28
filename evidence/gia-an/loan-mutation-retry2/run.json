@@ -1,0 +1,24 @@
+{
+  "scenario": "mutation",
+  "command": [
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Pai-loan-improved",
+    "clean",
+    "test-compile",
+    "org.pitest:pitest-maven:mutationCoverage"
+  ],
+  "started_at_utc": "2026-10-28T15:43:38.243968+00:00",
+  "elapsed_seconds": 17.561,
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local execution; generated tests from interactive Codex, not a paper reproduction",
+  "java": "openjdk version \"25.0.5\" 2026-10-20 LTS\nOpenJDK Runtime Environment Temurin-25.0.5+8 (build 25.0.5+8-LTS)\nOpenJDK 64-Bit Server VM Temurin-25.0.5+8 (build 25.0.5+8-LTS, mixed mode, sharing)",
+  "test_summaries": [],
+  "mutations": {
+    "KILLED": 9
+  }
+}

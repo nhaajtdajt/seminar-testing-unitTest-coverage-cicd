@@ -1,0 +1,526 @@
+{
+  "report": "evidence/gia-an/loan-draft/jacoco.xml",
+  "note": "XML reports branch counts, not exact true/false predicates; inspect source to propose tests.",
+  "gaps": [
+    {
+      "file": "vn/edu/seminar/persistence/BookEntity.java",
+      "line": 13,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "protected BookEntity() { }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/BookEntity.java",
+      "line": 14,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 9,
+      "source": "BookEntity(Long id, boolean available) { this.id = id; this.available = available; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/BookEntity.java",
+      "line": 16,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "Long id() { return id; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/BookEntity.java",
+      "line": 17,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "boolean available() { return available; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/MemberEntity.java",
+      "line": 14,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "protected MemberEntity() { }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/MemberEntity.java",
+      "line": 15,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 9,
+      "source": "MemberEntity(Long id, BigDecimal unpaidFine) { this.id = id; this.unpaidFine = unpaidFine; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/MemberEntity.java",
+      "line": 17,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "Long id() { return id; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/MemberEntity.java",
+      "line": 18,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "BigDecimal unpaidFine() { return unpaidFine; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaMemberRepository.java",
+      "line": 12,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 6,
+      "source": "JpaMemberRepository(MemberJpaRepository jpa) { this.jpa = jpa; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaMemberRepository.java",
+      "line": 15,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 17,
+      "source": "return jpa.findById(id).map(entity -> new Member(entity.id(), entity.unpaidFine()));"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/LoanEntity.java",
+      "line": 16,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "protected LoanEntity() { }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/LoanEntity.java",
+      "line": 17,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "LoanEntity(String id, long bookId, long memberId, Instant borrowedAt) {"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/LoanEntity.java",
+      "line": 18,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 12,
+      "source": "this.id = id; this.bookId = bookId; this.memberId = memberId; this.borrowedAt = borrowedAt;"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/LoanEntity.java",
+      "line": 19,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 1,
+      "source": "}"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/LoanEntity.java",
+      "line": 21,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "String id() { return id; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/LoanEntity.java",
+      "line": 22,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "long bookId() { return bookId; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/LoanEntity.java",
+      "line": 23,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "long memberId() { return memberId; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/LoanEntity.java",
+      "line": 24,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "Instant borrowedAt() { return borrowedAt; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaLoanRepository.java",
+      "line": 11,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 6,
+      "source": "JpaLoanRepository(LoanJpaRepository jpa) { this.jpa = jpa; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaLoanRepository.java",
+      "line": 14,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 5,
+      "source": "@Override public long countActiveByMemberId(long memberId) { return jpa.countByMemberId(memberId); }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaLoanRepository.java",
+      "line": 17,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 15,
+      "source": "jpa.save(new LoanEntity(loan.id(), loan.bookId(), loan.memberId(), loan.borrowedAt()));"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaLoanRepository.java",
+      "line": 18,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "return loan;"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaBookRepository.java",
+      "line": 12,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 6,
+      "source": "JpaBookRepository(BookJpaRepository jpa) { this.jpa = jpa; }"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaBookRepository.java",
+      "line": 15,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 17,
+      "source": "return jpa.findById(id).map(entity -> new Book(entity.id(), entity.available()));"
+    },
+    {
+      "file": "vn/edu/seminar/persistence/JpaBookRepository.java",
+      "line": 18,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 13,
+      "source": "@Override public void save(Book book) { jpa.save(new BookEntity(book.id(), book.available())); }"
+    },
+    {
+      "file": "vn/edu/seminar/LibraryApplication.java",
+      "line": 7,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "public class LibraryApplication {"
+    },
+    {
+      "file": "vn/edu/seminar/LibraryApplication.java",
+      "line": 9,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 4,
+      "source": "SpringApplication.run(LibraryApplication.class, args);"
+    },
+    {
+      "file": "vn/edu/seminar/LibraryApplication.java",
+      "line": 10,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 1,
+      "source": "}"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 6,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "public final class FineCalculator {"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 8,
+      "missed_branches": 2,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "if (tier == null) {"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 9,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 5,
+      "source": "throw new IllegalArgumentException(\"Hạng thành viên không được trống\");"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 11,
+      "missed_branches": 2,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "if (daysLate < 0) {"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 12,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 5,
+      "source": "throw new IllegalArgumentException(\"Số ngày trễ không được âm\");"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 14,
+      "missed_branches": 2,
+      "covered_branches": 0,
+      "missed_instructions": 7,
+      "source": "int graceDays = tier == MemberTier.VIP ? 2 : 0;"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 15,
+      "missed_branches": 2,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "if (daysLate <= graceDays) {"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 16,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "return BigDecimal.ZERO;"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 18,
+      "missed_branches": 2,
+      "covered_branches": 0,
+      "missed_instructions": 7,
+      "source": "long dailyRate = tier == MemberTier.VIP ? 1000L : 2000L;"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 19,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 8,
+      "source": "long amount = (daysLate - (long) graceDays) * dailyRate;"
+    },
+    {
+      "file": "vn/edu/seminar/fine/FineCalculator.java",
+      "line": 20,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 5,
+      "source": "return BigDecimal.valueOf(Math.min(amount, 50_000L));"
+    },
+    {
+      "file": "vn/edu/seminar/fine/MemberTier.java",
+      "line": 3,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 15,
+      "source": "public enum MemberTier { NORMAL, VIP }"
+    },
+    {
+      "file": "vn/edu/seminar/config/DemoConfiguration.java",
+      "line": 9,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "public class DemoConfiguration {"
+    },
+    {
+      "file": "vn/edu/seminar/config/DemoConfiguration.java",
+      "line": 10,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "@Bean Clock clock() { return Clock.systemUTC(); }"
+    },
+    {
+      "file": "vn/edu/seminar/config/DemoConfiguration.java",
+      "line": 13,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 8,
+      "source": "return new LoanService(books, members, loans, clock);"
+    },
+    {
+      "file": "vn/edu/seminar/web/LoanExceptionHandler.java",
+      "line": 10,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "public class LoanExceptionHandler {"
+    },
+    {
+      "file": "vn/edu/seminar/web/LoanExceptionHandler.java",
+      "line": 13,
+      "missed_branches": 2,
+      "covered_branches": 0,
+      "missed_instructions": 7,
+      "source": "int status = switch (exception.code()) {"
+    },
+    {
+      "file": "vn/edu/seminar/web/LoanExceptionHandler.java",
+      "line": 14,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "case BOOK_NOT_FOUND, MEMBER_NOT_FOUND -> 404;"
+    },
+    {
+      "file": "vn/edu/seminar/web/LoanExceptionHandler.java",
+      "line": 15,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 1,
+      "source": "default -> 409;"
+    },
+    {
+      "file": "vn/edu/seminar/web/LoanExceptionHandler.java",
+      "line": 17,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 9,
+      "source": "return ResponseEntity.status(status).body(Map.of(\"code\", exception.code().name()));"
+    },
+    {
+      "file": "vn/edu/seminar/web/LoanController.java",
+      "line": 15,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 6,
+      "source": "public LoanController(LoanService service) { this.service = service; }"
+    },
+    {
+      "file": "vn/edu/seminar/web/LoanController.java",
+      "line": 17,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 9,
+      "source": "public record BorrowRequest(@Positive long bookId, @Positive long memberId) { }"
+    },
+    {
+      "file": "vn/edu/seminar/web/LoanController.java",
+      "line": 22,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 8,
+      "source": "return service.borrow(request.bookId(), request.memberId());"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanPeriodPolicy.java",
+      "line": 10,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 3,
+      "source": "public final class LoanPeriodPolicy {"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanPeriodPolicy.java",
+      "line": 12,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "int days = 14;"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanPeriodPolicy.java",
+      "line": 13,
+      "missed_branches": 4,
+      "covered_branches": 0,
+      "missed_instructions": 6,
+      "source": "if (tier == MemberTier.VIP && unpaidFine.signum() == 0) {"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanPeriodPolicy.java",
+      "line": 14,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 1,
+      "source": "days += 7;"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanPeriodPolicy.java",
+      "line": 16,
+      "missed_branches": 2,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "if (newRelease) {"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanPeriodPolicy.java",
+      "line": 17,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 1,
+      "source": "days -= 7;"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanPeriodPolicy.java",
+      "line": 19,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 2,
+      "source": "return days;"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanService.java",
+      "line": 24,
+      "missed_branches": 1,
+      "covered_branches": 1,
+      "missed_instructions": 0,
+      "source": "if (!book.available()) {"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanService.java",
+      "line": 25,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 5,
+      "source": "throw new LoanException(BOOK_UNAVAILABLE);"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanService.java",
+      "line": 27,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 5,
+      "source": "Member member = members.findById(memberId).orElseThrow(() -> new LoanException(MEMBER_NOT_FOUND));"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanService.java",
+      "line": 28,
+      "missed_branches": 1,
+      "covered_branches": 1,
+      "missed_instructions": 0,
+      "source": "if (loans.countActiveByMemberId(memberId) >= 3) {"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanService.java",
+      "line": 29,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 5,
+      "source": "throw new LoanException(LIMIT_REACHED);"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanService.java",
+      "line": 31,
+      "missed_branches": 1,
+      "covered_branches": 1,
+      "missed_instructions": 0,
+      "source": "if (member.unpaidFine().compareTo(BigDecimal.ZERO) > 0) {"
+    },
+    {
+      "file": "vn/edu/seminar/loan/LoanService.java",
+      "line": 32,
+      "missed_branches": 0,
+      "covered_branches": 0,
+      "missed_instructions": 5,
+      "source": "throw new LoanException(UNPAID_FINE);"
+    }
+  ]
+}

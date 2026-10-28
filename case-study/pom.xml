@@ -13,7 +13,7 @@
   <properties>
     <java.version>25</java.version>
     <test.pattern>**/*Test.java</test.pattern>
-    <test.excludedTags>baseline,antipattern,ai-draft,ai-gaps,ai-data,ai-human</test.excludedTags>
+    <test.excludedTags>baseline,antipattern,ai-draft,ai-gaps,ai-data,ai-human,ai-loan-draft,ai-loan-improved,ai-loan-mistake</test.excludedTags>
     <coverage.gate.skip>false</coverage.gate.skip>
     <argLine></argLine>
     <pit.tests>vn.edu.seminar.fine.FineCalculatorTest</pit.tests>
@@ -72,6 +72,9 @@
     </plugin>
   </plugins></build>
   <profiles>
+    <profile><id>ai-loan-draft</id><properties><test.pattern>**/LoanServiceAiDraftTest.java</test.pattern><test.excludedTags></test.excludedTags><coverage.gate.skip>true</coverage.gate.skip></properties></profile>
+    <profile><id>ai-loan-improved</id><properties><test.pattern>**/LoanServiceAiImprovedTest.java</test.pattern><test.excludedTags></test.excludedTags><coverage.gate.skip>true</coverage.gate.skip><pit.tests>vn.edu.seminar.loan.LoanServiceAiImprovedTest</pit.tests><pit.classes>vn.edu.seminar.loan.LoanService</pit.classes></properties></profile>
+    <profile><id>ai-loan-mistake</id><properties><test.pattern>**/LoanServiceAiMistakeTest.java</test.pattern><test.excludedTags></test.excludedTags><coverage.gate.skip>true</coverage.gate.skip></properties></profile>
     <profile><id>ai-human</id><properties><test.pattern>**/FineCalculatorHumanDataTest.java</test.pattern><test.excludedTags></test.excludedTags><coverage.gate.skip>true</coverage.gate.skip></properties></profile>
     <profile><id>baseline</id><properties><test.pattern>**/FineCalculatorBaselineTest.java</test.pattern><test.excludedTags></test.excludedTags><coverage.gate.skip>true</coverage.gate.skip></properties></profile>
     <profile><id>coverage-trap</id><properties><test.pattern>**/FineCalculatorTrapTest.java</test.pattern><test.excludedTags></test.excludedTags><pit.tests>vn.edu.seminar.fine.FineCalculatorTrapTest</pit.tests></properties></profile>

@@ -1,0 +1,28 @@
+{
+  "scenario": "mistake",
+  "command": [
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Pai-loan-mistake",
+    "clean",
+    "verify"
+  ],
+  "started_at_utc": "2026-10-28T15:40:20.020567+00:00",
+  "elapsed_seconds": 4.789,
+  "exit_code": 1,
+  "expected_exit_code": 1,
+  "environment": "local execution; generated tests from interactive Codex, not a paper reproduction",
+  "java": "openjdk version \"25.0.5\" 2026-10-20 LTS\nOpenJDK Runtime Environment Temurin-25.0.5+8 (build 25.0.5+8-LTS)\nOpenJDK 64-Bit Server VM Temurin-25.0.5+8 (build 25.0.5+8-LTS, mixed mode, sharing)",
+  "test_summaries": [
+    {
+      "name": "vn.edu.seminar.loan.LoanServiceAiMistakeTest",
+      "tests": "3",
+      "failures": "1",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "scenario": "improved",
+  "command": [
+    "case-study/mvnw",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "-Pai-loan-improved",
+    "clean",
+    "verify"
+  ],
+  "started_at_utc": "2026-10-28T15:39:45.683288+00:00",
+  "elapsed_seconds": 7.47,
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local execution; generated tests from interactive Codex, not a paper reproduction",
+  "java": "openjdk version \"25.0.5\" 2026-10-20 LTS\nOpenJDK Runtime Environment Temurin-25.0.5+8 (build 25.0.5+8-LTS)\nOpenJDK 64-Bit Server VM Temurin-25.0.5+8 (build 25.0.5+8-LTS, mixed mode, sharing)",
+  "test_summaries": [
+    {
+      "name": "vn.edu.seminar.loan.LoanServiceAiImprovedTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "loan_coverage": {
+    "INSTRUCTION": {
+      "covered": 95,
+      "missed": 0
+    },
+    "BRANCH": {
+      "covered": 6,
+      "missed": 0
+    },
+    "LINE": {
+      "covered": 17,
+      "missed": 0
+    },
+    "COMPLEXITY": {
+      "covered": 7,
+      "missed": 0
+    },
+    "METHOD": {
+      "covered": 4,
+      "missed": 0
+    },
+    "CLASS": {
+      "covered": 1,
+      "missed": 0
+    }
+  }
+}
