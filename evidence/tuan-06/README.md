@@ -9,6 +9,10 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 - [JaCoCo HTML](source-verify/site/jacoco/index.html), [XML](source-verify/site/jacoco/jacoco.xml): instruction 429/455 (94%), branch 18/18 (100%), line 69/76 (90,8%).
 - [HTTP smoke trên JAR Java 25](http-smoke-java25/results.json): 5/5 tình huống đạt status mong đợi.
 
+## Code Coverage (Trương Nhật Đạt)
+
+- [coverage-types/](coverage-types/): JaCoCo trên `LoanPeriodPolicy`, chạy cộng dồn T1 → T4 (`s1`–`s4`) và bộ phản chứng T2 + T3 (`alt-t2-t3`). Nhánh: 3/6, 5/6, 6/6, 6/6; bộ phản chứng 5/6 nhánh, 6/7 dòng. Mỗi lượt có `run.json`, `output.log` (đã thay đường dẫn máy bằng `<repo>`/`<home>`), `jacoco.csv`/`jacoco.xml`.
+
 ## Ảnh JaCoCo do người dùng cung cấp
 
 - Tệp: [jacoco-summary-2026-10-23.png](screenshots/jacoco-summary-2026-10-23.png). Timestamp sửa tệp nhận được: 2026-10-23 17:32:21 +07; SHA-256: `746c16203f5801ffaf8fd581c31359f67cfd45107a78492405d382fba95a7a51`.

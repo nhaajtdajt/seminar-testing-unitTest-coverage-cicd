@@ -1,0 +1,21 @@
+{
+  "started_at_utc": "2026-10-28T14:51:13.055297+00:00",
+  "finished_at_utc": "2026-10-28T14:51:29.341780+00:00",
+  "elapsed_seconds": 16.281,
+  "command": [
+    "cmd",
+    "/c",
+    "case-study\\mvnw.cmd",
+    "-B",
+    "-ntp",
+    "-f",
+    "case-study/pom.xml",
+    "clean",
+    "verify",
+    "-Dcoverage.gate.skip=true",
+    "-Dtest=LoanPeriodPolicyTest#t1*+t2*"
+  ],
+  "exit_code": 0,
+  "expected_exit_code": 0,
+  "environment": "local; not a GitHub Actions or Jenkins execution"
+}
