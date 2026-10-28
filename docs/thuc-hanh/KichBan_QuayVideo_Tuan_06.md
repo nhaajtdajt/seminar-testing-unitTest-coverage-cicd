@@ -2,13 +2,17 @@
 
 **Mục đích:** hướng dẫn quay demo Unit Test, Code Coverage và luồng ứng dụng. Đây là kịch bản quay, không phải video đã ghi. Chỉ đưa video vào gói nộp sau khi quay thật và kiểm tra file phát được.
 
-## Video A — Unit Test (5–7 phút)
+## Video A — Unit Test (5–7 phút) — Người thực hiện: Ngô Gia An (23120205)
 
-1. Giới thiệu Java 25, project `case-study/` và yêu cầu chạy lại.
-2. Chạy test `FineCalculatorTest`; mở Surefire XML để giải thích pass/fail/error.
-3. Mở `fine-cases.csv`, giải thích dữ liệu biên và `@CsvFileSource`.
-4. Chạy `LoanServiceTest`; chỉ ra một nhánh nghiệp vụ lỗi, một nhánh thành công, verify không ghi dữ liệu khi lỗi.
-5. Chỉ ra `LoanFlowTest` dùng H2 thật trong phạm vi integration test và nêu giới hạn của mock.
+**Yêu cầu sư phạm:** Đầy đủ 5 phân đoạn chuẩn theo yêu cầu của GV: Setup môi trường, Khái niệm cơ bản (UT-1), Data-driven & Biên (UT-2), Mockito nâng cao (UT-3), và Trường hợp công cụ không xử lý tốt / Anti-patterns.
+
+| Phân đoạn | Timestamp | Nội dung chi tiết cần quay và thuyết minh | Lệnh / File minh chứng |
+|---|---|---|---|
+| **1. Setup môi trường** | `00:00 - 01:00` | - Giới thiệu Java 25 (`java --version`), cấu trúc project `case-study/`, Maven Wrapper (`./mvnw`).<br>- Mở `pom.xml`, chỉ ra `spring-boot-starter-test` quản lý JUnit Jupiter 6 và Mockito 5. | `java --version`<br>`case-study/pom.xml` |
+| **2. Khái niệm & UT-1** | `01:00 - 02:15` | - Khái niệm Unit test, quy tắc AAA (Arrange-Act-Assert).<br>- Chạy `FineCalculatorTest` cơ bản.<br>- Mở Surefire XML report (`target/surefire-reports/TEST-*.xml`) để giải thích trạng thái Pass, Fail, Error và thời gian thực thi (nguyên tắc Fast của FIRST). | `./mvnw test -Dtest=FineCalculatorTest`<br>`target/surefire-reports/` |
+| **3. Data-driven & Biên (UT-2)** | `02:15 - 03:45` | - Trình bày kỹ thuật Data-driven testing: tách mã test khỏi dữ liệu.<br>- Mở `fine-cases.csv` phân tích các mốc biên (0 ngày, ân hạn 2 ngày VIP, chạm trần 50.000 VND).<br>- Mở code `@ParameterizedTest` kết hợp `@CsvFileSource`.<br>- Chạy test và cho thấy 15 test con được sinh ra tự động từ bảng dữ liệu. | `fine-cases.csv`<br>`FineCalculatorTest.java` |
+| **4. Mockito phức tạp (UT-3)** | `03:45 - 05:15` | - Khái niệm Test Double: Stub vs Mock/Spy.<br>- Trình bày `LoanServiceTest`: giải thích tại sao cô lập 3 Repository bằng Mockito mock để tập trung test logic mượn sách.<br>- Demo 1 ca nghiệp vụ lỗi (nợ phí / hết hạn mức): `verify` không lưu phiếu mượn.<br>- Demo ca mượn thành công: dùng `ArgumentCaptor` kiểm tra thông tin phiếu mượn và cập nhật trạng thái sách. | `LoanServiceTest.java`<br>`./mvnw test -Dtest=LoanServiceTest` |
+| **5. Trường hợp công cụ gặp hạn chế / Anti-patterns** | `05:15 - 06:45` | - Mở file `MockitoAntiPatternTest.java` (đánh dấu `@Tag("antipattern")`).<br>- Minh họa **Train Wreck Mocking** (vi phạm định luật Demeter).<br>- Minh họa **Self-fulfilling Prophecy** (test chính mock thay vì test code thật).<br>- Minh họa lạm dụng mock pure logic & cảnh báo JVM khi inline mock static/final.<br>- Kết luận bài học thực tế cho kiểm thử đơn vị. | `MockitoAntiPatternTest.java`<br>`./mvnw test -Dtest=MockitoAntiPatternTest -Dtest.excludedTags=""` |
 
 ## Video B — Coverage và mutation testing (5–7 phút)
 
