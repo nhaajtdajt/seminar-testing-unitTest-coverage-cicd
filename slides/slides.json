@@ -151,10 +151,10 @@
     "stage": "CI/CD",
     "title": "CI-1/2/3: workflow và minh chứng",
     "bullets": [
-      "CI-1: checkout, setup Java, chạy Maven.",
-      "CI-2: cache dependency, upload báo cáo và summary.",
-      "CI-3: các job phụ thuộc nhau; workflow bật push master, pull request vào master và chạy tay.",
-      "Local test → coverage gate → package đã pass; GitHub run/PR thật và required checks chưa có (CLI chưa đăng nhập, repo chưa có quyền ghi được xác nhận)."
+      "CI-1: checkout, setup JDK 25, chạy Maven. CI-2: cache dependency, upload báo cáo, step summary.",
+      "CI-3: ba job nối bằng needs; chạy khi có pull request, push vào master/seminar-core, hoặc chạy tay.",
+      "Đã chạy thật trên GitHub: PR #1 xanh; PR #2 đỏ vì coverage-gate (branch 0,00 < 0,90) rồi xanh lại.",
+      "Required checks bật trên master: PR đỏ #6 có trạng thái BLOCKED, không merge được."
     ]
   },
   {
@@ -165,6 +165,36 @@
       "Ba job nối nhau bằng needs: test → coverage-gate → package.",
       "Job trước đỏ thì job sau không chạy.",
       "Cache Maven và artifact giúp chạy nhanh và lưu báo cáo."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "Khi test xanh mà vẫn bị chặn",
+    "bullets": [
+      "Xóa FineCalculatorTest: job test vẫn xanh (không test nào fail).",
+      "Job coverage-gate đỏ: FineCalculator phủ 0,00 nhánh, yêu cầu 0,90.",
+      "Job package bị bỏ qua vì needs: code thiếu test không được đóng gói.",
+      "Test pass chưa đủ; cần gate về coverage và PIT cho chất lượng assertion."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "CI gặp vấn đề: điểm yếu quan sát được",
+    "bullets": [
+      "Đổi pom.xml (dù chỉ một dòng comment) làm khóa cache đổi: log ghi maven cache is not found.",
+      "coverage-gate chạy lại toàn bộ test; thời gian runner dao động (cùng bước: 29 s đến 70 s).",
+      "Required check làm PR kẹt nếu workflow trên master chưa có trigger (PR #4).",
+      "Gate chỉ kiểm cái được cấu hình; chưa đo được lộ secret hay flaky test."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "Video D: CI/CD với GitHub Actions (8–9 phút)",
+    "bullets": [
+      "00:00 Setup: ci.yml, trigger, JDK 25.  01:00 Khái niệm: CI/CD, needs, jacoco:check.",
+      "02:15 Demo đơn giản: run xanh, log, artifact, cache.",
+      "04:00 Demo phức tạp: PR đỏ rồi xanh; PR vào master bị BLOCKED.",
+      "06:30 Điểm yếu: cache miss, test chạy hai lần, thời gian dao động, PR kẹt."
     ]
   },
   {
@@ -211,9 +241,9 @@
     "stage": "Tuần 6",
     "title": "Gói tuần 6: các đầu ra cần chốt",
     "bullets": [
-      "Gói tuần 6 gồm source, test, báo cáo, AI/Git, HTML và slide; video/kịch bản/ảnh trình diễn đã được loại khỏi checklist.",
-      "Đối chiếu tác giả commit và minh chứng trước khi kết luận đóng góp thành viên.",
-      "Chạy GitHub Actions là trạng thái scope toàn dự án, không phải mục checklist nộp tuần 6."
+      "Gói nộp: slide, báo cáo, link video, source, seminar contribution (Google Sheet), git commit log, AI usage declaration.",
+      "Video là bắt buộc: setup, khái niệm cơ bản, đơn giản, phức tạp, trường hợp không xử lý được, data driven.",
+      "Đối chiếu tác giả commit và minh chứng trước khi kết luận đóng góp thành viên."
     ]
   },
   {
