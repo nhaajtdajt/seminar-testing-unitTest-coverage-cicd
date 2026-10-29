@@ -1,5 +1,6 @@
 {
   "verified_on": "2026-10-28",
+  "experiment_status_updated_on": "2026-10-29",
   "ranking": {
     "system": "CORE2023",
     "venue": "FSE",
@@ -27,7 +28,8 @@
       "tool_version": "0.6.0",
       "tool_revision": "6474814f28408ddee4cc01662215ad4eae6a3302",
       "group_target": "scripts/coverage_gaps.py",
-      "status": "Published MT data reanalysed with original compare.py; group-source dry-run is recorded separately. Fresh LLM generation remains pending."
+      "status": "Published MT data reanalysed with original compare.py. User ran fresh CoverUp 0.6.0 + Gemini generation on author benchmark f003: 2 added test functions, 3 passing in offline verification, 8/8 lines and 4/4 branches. Different model, seed suite, tool/dependencies and budget; not a full reproduction. Broader benchmark and group-source generation remain pending.",
+      "fresh_generation_evidence": "evidence/tuan-06/papers/coverup-f003-gemini-2026-10-29/README.md"
     },
     {
       "id": "P2",

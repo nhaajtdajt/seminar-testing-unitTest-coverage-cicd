@@ -53,7 +53,7 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 
 ## Paper — Artifact tác giả (Ngô Gia An điều phối)
 
-[Chỉ mục kết quả và giới hạn](papers/README.md): CoverUp replay phân tích MT 163 module (overall line+branch 89,0% vs 76,8%), dry-run source Python nhóm; ChatUniTest plugin parse 20 class/28 method. Chưa chạy generation hoặc tái lập đầy đủ thí nghiệm gốc. Source/revision/cách chạy: `research/`.
+[Chỉ mục kết quả và giới hạn](papers/README.md): CoverUp replay phân tích MT 163 module (overall line+branch 89,0% vs 76,8%), dry-run source Python nhóm; ChatUniTest plugin parse 20 class/28 method. [Lượt Gia An tự chạy CoverUp + Gemini trên benchmark f003](papers/coverup-f003-gemini-2026-10-29/README.md): sinh hai hàm test, xác minh offline cả bộ 3/3 pass; line 5/8 → 8/8, branch 1/4 → 4/4, khớp số đo tác giả của đúng module. Khác model/baseline/môi trường; chưa tái lập đầy đủ benchmark hoặc generation trên source nhóm. Source/revision/cách chạy: `research/`.
 
 ## Quy ước lưu minh chứng
 
@@ -65,7 +65,7 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 ## Phần còn chờ
 
 - Gia An tự đọc, chạy lại và xác nhận khai báo AI; reviewer chéo chưa xác nhận.
-- Paper còn generation thật, chạy benchmark gốc và thử test sinh ra trên source nhóm.
+- Paper đã có generation thật trên một module CoverUp (f003); còn mở rộng benchmark, thử trên source nhóm và generation/tái lập ChatUniTest.
 - Video là yêu cầu seminar, chưa có file video/URL/timestamp thật; script/ảnh không thay cho video.
 - Phần slide/HTML Gia An hoãn đến cuối theo yêu cầu ngày 29/10, dùng nguyên nguồn core. Chưa xuất lại PDF riêng.
 - CI GitHub và required checks có evidence ở `github-actions/`; trạng thái quyền/nhánh là snapshot, không tự suy ra cấu hình live hôm nay. Nhóm đã bỏ Jenkins.

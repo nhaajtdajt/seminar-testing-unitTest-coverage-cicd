@@ -371,11 +371,12 @@ Danh mục có DOI, năm, source, revision, nguồn hạng và giới hạn: [re
 | Thử nghiệm | Kết quả thật | Giới hạn |
 |---|---|---|
 | CoverUp script gốc phân tích 163 module MT | overall line+branch 89,0%, MuTAP gpt4o_zero 76,8%; khớp 89% vs 77% làm tròn ở abstract v4 | Dữ liệu tác giả công bố, không sinh lại test; dependencies phân tích mới có khóa phiên bản |
+| CoverUp 0.6.0 + Gemini, benchmark f003 — Gia An tự chạy | Sinh 2 hàm test; xác minh offline cả bộ 3/3 pass; line 5/8 → 8/8, branch 1/4 → 4/4; bằng số đo tác giả của đúng module | Một module; đổi model/baseline/môi trường/ngân sách, chưa tái lập đầy đủ benchmark. [Evidence](../../evidence/tuan-06/papers/coverup-f003-gemini-2026-10-29/README.md) |
 | CoverUp 0.6.0 trên `scripts/coverage_gaps.py` | dry-run pass, coverage smoke ban đầu 23,6%, sau dry-run vẫn 23,6% | Không gọi model, không tạo test mới, không dùng làm kết quả generation |
 | ChatUniTest plugin 2.1.1 trên bản sao case study | parse pass: 20 class, 28 method | Chỉ phân tích source, endpoint localhost không có model; chưa generation hoặc tái lập experiment gốc |
 
-Không tự implement lại thuật toán paper. Còn thiếu lượt model thật/benchmark và thử test sinh ra trên source nhóm cho cả hai bài; không đánh dấu mục E hoàn thành. Chia lượt chạy cho thành viên là kế hoạch đề xuất trong research, chưa khẳng định họ đã nhận/chạy.
+Không tự implement lại thuật toán paper. CoverUp đã có lượt model thật trên f003; còn mở rộng benchmark và thử test sinh ra trên source nhóm. ChatUniTest chưa generation/tái lập gốc; không đánh dấu mục E hoàn thành. Chia lượt chạy cho thành viên là kế hoạch đề xuất trong research, chưa khẳng định họ đã nhận/chạy.
 
 ### 9.2. Cách tái hiện và điều kiện hoàn thành
 
-Hướng dẫn cài/chạy tool tác giả ở [research/README.md](../../research/README.md); chỉ mục số liệu ở [evidence paper](../../evidence/tuan-06/papers/README.md). Hoàn thành yêu cầu paper cần chạy thí nghiệm generation bằng tool gốc, đối chiếu kết quả công bố và thử trên source nhóm; replay phân tích, dry-run và parse không thay cho các bước đó. Chưa đánh dấu hoàn tất, chưa có generation mới trong các lượt đã ghi.
+Hướng dẫn cài/chạy tool tác giả ở [research/README.md](../../research/README.md); chỉ mục số liệu ở [evidence paper](../../evidence/tuan-06/papers/README.md). Hoàn thành yêu cầu paper cần chạy thí nghiệm generation bằng tool gốc, đối chiếu kết quả công bố và thử trên source nhóm; replay phân tích, dry-run và parse không thay cho các bước đó. Đã có generation mới CoverUp trên f003; chưa đánh dấu hoàn tất toàn bộ phần paper.

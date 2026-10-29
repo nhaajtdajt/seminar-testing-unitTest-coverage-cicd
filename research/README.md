@@ -1,8 +1,8 @@
 # Paper: nguồn, kết quả và cách chạy lại
 
-Ngô Gia An (23120205), AI hỗ trợ: Codex, 28/10/2026. Danh mục máy đọc được: [papers.json](papers.json). Không tự viết lại thuật toán của paper.
+Ngô Gia An (23120205), AI hỗ trợ: Codex, cập nhật 29/10/2026. Danh mục máy đọc được: [papers.json](papers.json). Không tự viết lại thuật toán của paper.
 
-Bài làm thử từng bước, có expected: [Ứng dụng → CoverUp với Gemini](../docs/thuc-hanh/ThucHanh_App_Paper.md). Ngày 29/10 đã kiểm baseline/dry-run offline với route Gemini; chưa gọi model sinh test. Lock pin pytest 8.3.5 để tương thích SlipCover; khác snapshot dependencies lúc thử ngày 28/10, không thay số liệu cũ.
+Bài làm thử từng bước, có expected: [Ứng dụng → CoverUp với Gemini](../docs/thuc-hanh/ThucHanh_App_Paper.md). Phần source nhóm hiện vẫn chỉ baseline/dry-run. Gia An đã tự chạy [generation CoverUp + Gemini trên benchmark f003](../evidence/tuan-06/papers/coverup-f003-gemini-2026-10-29/README.md): 1 → 3 hàm test, line/branch đạt 100%, xác minh offline pass; chưa phải tái lập cả benchmark. Lượt thành công có dependency snapshot riêng gồm MCP 2.3.0; lock dry-run cũ pin pytest 8.3.5 chưa chứa đầy đủ dependency của lượt live, không dùng nó thay snapshot mới.
 
 ## Hai bài được chọn
 
@@ -24,6 +24,7 @@ Bài làm thử từng bước, có expected: [Ứng dụng → CoverUp với Ge
 | Thí nghiệm | Kết quả | Được phép kết luận |
 |---|---|---|
 | P1: chạy nguyên `scripts/compare.py` trên dữ liệu MT công bố, 163 module | CoverUp overall line 89,2%; branch 88,7%; line+branch 89,0%. MuTAP `gpt4o_zero`: 78,0%; 74,5%; 76,8% | Tái hiện **bước phân tích dữ liệu công bố**, khớp số 89% vs 77% đã làm tròn ở abstract v4. Không phải sinh lại tất cả test bằng LLM |
+| P1: Gia An tự chạy CoverUp 0.6.0 + Gemini trên benchmark f003 | Thêm 2 hàm test; tổng 3/3 pass khi xác minh offline; line 5/8 → 8/8, branch 1/4 → 4/4, bằng reference đúng module | Generation mới trên một module; khác model, seed suite, versions và số vòng. Không thay kết quả toàn benchmark hoặc lượt áp dụng source nhóm |
 | P1: chạy tool gốc trên source Python nhóm với `--dry-run` | Xem `evidence/tuan-06/papers/coverup-group-dry*/run.json` và log | Chỉ kiểm môi trường/coverage/chuẩn bị prompt. Không có model output hay kết quả test mới |
 | P2: kiểm điều kiện chạy artifact gốc | Chưa có config, API key, thư viện và môi trường MySQL/grammar gốc | Chưa chạy tái lập P2; không điền coverage/số test giả |
 | P2: plugin tác giả 2.1.1 parse bản sao case study | 20 class, 28 method; build success, endpoint localhost không có model | Thử tương thích parser hiện tại, chưa sinh test và chưa tái lập thí nghiệm gốc |
@@ -72,4 +73,4 @@ Bước `package` và `:parse` đã chạy được trên bản sao Java 25: **2
 
 Đề xuất để Gia An điều phối, chưa xác nhận người khác đã nhận/chạy: Gia An giữ P1 và tổng hợp; Bảo An chạy P2 Java; Thế Vinh thử môi trường sạch và dữ liệu; Đạt review coverage/mutation; Quang Vinh review khả năng đưa lệnh vào CI. Mỗi người lưu lệnh, ngày, revision, model, seed/tham số, số test build/pass, coverage và giới hạn rồi commit bằng tài khoản thật.
 
-P1 còn thiếu sinh test mới trên benchmark và trên source nhóm. P2 còn thiếu chạy artifact gốc, thí nghiệm LoanService và kết quả định lượng. Chỉ đánh dấu mục paper hoàn thành sau các bước này; việc xác nhận track/hạng với GV nằm trong việc điều phối của trưởng nhóm.
+P1 đã có generation mới trên f003, còn thiếu phạm vi benchmark rộng hơn và generation trên source nhóm. P2 còn thiếu chạy artifact gốc, thí nghiệm LoanService và kết quả định lượng. Chỉ đánh dấu mục paper hoàn thành sau các bước này; việc xác nhận track/hạng với GV nằm trong việc điều phối của trưởng nhóm.
