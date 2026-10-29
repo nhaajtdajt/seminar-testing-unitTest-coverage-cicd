@@ -18,6 +18,8 @@ report/*.toc
 report/*.out
 report/*.synctex.gz
 bai-nop/
+# Local contribution log is regenerated after the remaining work is finished.
+/docs/thuc-hanh/GitCommitLog_NgoGiaAn.md
 report/*.fls
 report/*.fdb_latexmk
 report/*.xdv
