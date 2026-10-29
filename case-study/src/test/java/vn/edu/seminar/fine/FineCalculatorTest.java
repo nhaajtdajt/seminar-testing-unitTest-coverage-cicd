@@ -25,7 +25,7 @@ class FineCalculatorTest {
     }
 
     /**
-     * Test case bổ sung của Ngô Gia An (23120205):
+     * Test case bổ sung của Nguyễn Bảo An (23120207):
      * Kiểm thử giá trị ngày trễ cực lớn (365 ngày) cho cả hai hạng hội viên để đảm bảo
      * không bị tràn số và luôn chặn ở mức trần tối đa 50.000 VND.
      */

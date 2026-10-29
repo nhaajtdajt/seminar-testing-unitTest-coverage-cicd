@@ -78,7 +78,7 @@ class LoanServiceTest {
     }
 
     /**
-     * Test case bổ sung của Ngô Gia An (23120205):
+     * Test case bổ sung của Nguyễn Bảo An (23120207):
      * Xác nhận hội viên hoàn toàn không nợ phí (unpaid_fine = 0.00) và chưa mượn cuốn nào (count = 0)
      * thì được phép mượn sách thành công và cập nhật trạng thái sách thành unavailable.
      */
