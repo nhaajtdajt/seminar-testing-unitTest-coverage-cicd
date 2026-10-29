@@ -9,8 +9,9 @@ Source, prompt và script được giữ trong Git. Output sinh ra chỉ dùng l
 Bạn chọn class trong src/main/java
     ↓
 Script đọc trực tiếp source + dependency/domain/schema liên quan
-    ├── AI-1: Gemini sinh Java test → tự chạy JUnit/JaCoCo
-    ├── AI-2: đọc test nháp + kết quả thật → bổ sung → chạy lại
+    ├── AI-1: sinh Java test → JUnit/JaCoCo → tối đa 2 vòng sửa lỗi kỹ thuật
+    ├── AI-2: đọc test nháp + kết quả thật → bổ sung → chạy lại → review.md
+    │         → người review → apply → full suite/gate → src/test → dọn output
     └── AI-4: CSV người viết đã có trước
               → Gemini suy ra schema/harness theo src và header
               → Gemini sinh CSV riêng, không xem dữ liệu người
@@ -21,6 +22,8 @@ Gemini API không tự mở filesystem trên máy. Script đọc file rồi gử
 Không lưu bản copy source trong output. Khi chạy test, source được copy vào thư mục tạm
 hệ thống để không trộn với test chuẩn; thư mục build tạm được dọn khi kết thúc.
 Chỉ hash/context nhỏ được giữ để phát hiện source thay đổi giữa AI-1 và AI-2.
+Output AI-1/AI-2 phải nằm trong thư mục con của `.ai-work/` (hoặc đường dẫn
+`gemini-live` cũ) để apply có thể dọn đúng phạm vi sau khi sync test.
 
 Không có mức phí, hạn mức hoặc schema nghiệp vụ mặc định trong runner/prompt.
 Class/service mới được tự phát hiện. Có thể thêm `--requirements <file.md>` và
@@ -124,9 +127,32 @@ Gemini nhận source class và dependency liên quan, suy ra constructor/API/moc
 trả code. Script tự lưu `generated/<Class>GeminiDraftTest.java`, rồi chạy JUnit và JaCoCo.
 Bạn không cần copy-paste code hoặc sửa test chuẩn.
 
+Runner kiểm tra hợp đồng test, chạy code và chỉ tự sửa lỗi kỹ thuật (compile/import/API,
+cách khai báo Mockito stub) tối đa **2 vòng**. Dùng `--max-repairs 0`, `1` hoặc `2`
+để chọn ngân sách. Mỗi vòng gọi model còn có retry API giới hạn riêng, không đồng
+nghĩa một vòng chỉ có một HTTP request. Mọi vòng nằm trong `attempts/`, không tự ghi src.
+Assertion fail, timeout hoặc source đổi sẽ dừng để review; vòng repair cũng bị dừng
+nếu làm thay đổi/xóa assertion cũ. Đó là kiểm tra cú pháp bảo thủ, không chứng minh
+expected đúng nghiệp vụ. Giới hạn API/setup/repair không thay cho người review.
+
+Model mặc định là **gemini-3.6-flash**. Khi dịch vụ tạm lỗi, có thể tăng số lần retry
+tuần tự (mặc định 3, cho phép 1–10) và chọn timeout mỗi request (mặc định 180 giây,
+cho phép 10–180). Backoff tăng dần, tối đa 30 giây; không tự đổi model:
+
+```bash
+GEMINI_MAX_ATTEMPTS=8 GEMINI_API_TIMEOUT=90 \
+  python3 scripts/ai_generate.py pipeline --class LoanService \
+  --model gemini-3.6-flash --output "$GA_RUN"
+```
+
+Chọn `$GA_RUN` mới cho mỗi lượt. Các biến trên chỉ áp dụng cho lệnh đó; key vẫn được
+đọc tự động từ `.env.gemini`. Retry API khác vòng sửa code; lỗi key/model/quyền không
+được retry như lỗi dịch vụ tạm thời.
+
 Xem `analysis.md`, file Java mới, `run.json` và `output.log`. Expected kỹ thuật:
 `run.json.passed: true`, có test thực sự chạy, không failures/errors và có counter target.
 Số test và coverage phụ thuộc kết quả thật, không có số cố định phải đạt trong demo.
+`review.md` là bản tóm tắt để đọc, `review.json` khóa hash test và kết quả đo.
 
 ## 5. AI-2: bổ sung từ đúng test/coverage vừa chạy
 
@@ -145,6 +171,87 @@ Không cần bản source copy trong output; không cần truyền lại dữ li
 Output có `generated/<Class>GeminiAdditionalTest.java`, bản nháp giữ nguyên và
 `comparison.json` so before/after. Test nháp và bổ sung được chạy chung trong thư mục tạm.
 Nếu AI-1 đã đạt 100% branch, AI-2 có thể thêm ca/assertion hữu ích mà coverage không tăng.
+Nếu toàn bộ counter target đã đầy đủ và không tìm được bổ sung có ích, AI-2 được trả
+`no_additions_needed`; lúc đó output chỉ giữ bản nháp đã chạy lại, không cố sinh test trùng.
+
+Đọc `ai2/review.md`: `coverage_increased`, `no_coverage_gain_needs_review`,
+`no_additions_proposed_needs_review`, `coverage_regressed` hoặc `tests_failed`.
+Test pass và cải thiện coverage là hai kết luận riêng. Coverage giảm/không so sánh
+được sẽ không được apply. Không tăng coverage vẫn cần bạn đánh giá ca mới/assertion.
+
+### Chạy AI-1 → AI-2 bằng một lệnh
+
+Nếu chỉ làm phần sinh test, không cần CSV/AI-4:
+
+```bash
+AI_CLASS="LoanService"
+GA_RUN=".ai-work/${AI_CLASS}-$(date +%Y%m%d-%H%M%S)"
+python3 scripts/ai_generate.py pipeline --class "$AI_CLASS" \
+  --model gemini-3.6-flash --output "$GA_RUN"
+open "$GA_RUN/ai2/review.md"
+```
+
+AI-2 chỉ chạy sau khi AI-1 pass. Nếu AI-1 dừng sau khi đo, đọc `ai1/review.md`, `attempts.json`
+và output của lượt tương ứng. Nếu API lỗi trước khi có code, có thể chưa có review.md;
+xem `stage.json` và `attempts/<số-vòng>/model/api.json`. Không tự coi AI-2 đã hoàn thành. Có thể thêm
+`--requirements`, `--schema`, `--max-repairs` như khi chạy từng bước.
+
+### Review → apply → xóa output → PR
+
+1. Đọc `ai2/review.md`, `analysis.md`, các file Java trong `ai2/generated` và report thật.
+   Kiểm expected, assertion, mock state, ca trùng và giới hạn source-only.
+2. Xem trước file sẽ sync và thư mục output sẽ xóa:
+
+```bash
+python3 scripts/ai_apply.py --from-ai2 "$GA_RUN/ai2"
+```
+
+Preview không gọi API/Maven, không ghi source hoặc xóa output. Nếu đồng ý sau khi
+đã đọc, chạy apply với tên người thực sự review (không điền thay người khác):
+
+```bash
+python3 scripts/ai_apply.py --from-ai2 "$GA_RUN/ai2" \
+  --apply --reviewed --reviewer "Ngô Gia An - 23120205"
+```
+
+Apply không gọi Gemini. Script kiểm hash source/test/report, từ chối ghi đè test có sẵn,
+chạy **full suite chuẩn + test ứng viên + coverage gate** trong bản sao tạm, kiểm ứng viên
+có thực sự được chạy. Sau khi pass, nó tạo file mới ở package tương ứng trong
+`case-study/src/test/java/`. Source/test/data đổi trong lúc verify thì dừng, không sync.
+Nếu ghi file giữa chừng lỗi, các file mới vừa ghi được rollback; test cũ giữ nguyên.
+
+Sau khi sync thành công, **xóa toàn bộ output AI-1/AI-2 của phiên**. Với lệnh `pipeline`,
+cả `$GA_RUN` được xóa nếu chỉ chứa hai stage và metadata phiên. Nếu cùng thư mục còn
+AI-4 hoặc dữ liệu khác, chỉ dọn hai stage; giữ AI-4, CSV human gốc, `.env.gemini` và
+evidence paper. Không cần chạy cleaner thêm cho lượt đã apply. Lượt apply lỗi giữ output;
+nếu chỉ cleanup lỗi sau khi đã sync, script báo rõ trạng thái đó, không apply lần nữa.
+
+Nếu sửa file ứng viên/report sau khi đo, apply từ chối để tránh dùng số đo cũ.
+Hãy giữ lượt này để kiểm tra và sinh/đo một lượt mới trước khi apply. Tên file test đã
+tồn tại cũng bị từ chối; script không tự ghi đè test bạn đã chỉnh hoặc commit.
+
+Sau apply, dùng Git như bình thường. Tạo nhánh riêng **trước khi apply**; ví dụ từ
+checkout sạch trên nhánh tích hợp (không chạy lệnh đổi nhánh khi đang có thay đổi riêng):
+
+```bash
+git switch -c "codex/ai-tests-$(date +%Y%m%d-%H%M%S)"
+```
+
+Sau khi apply, kiểm tra diff, chỉ add các file mới của class bạn chọn. Ví dụ LoanService:
+
+```bash
+git diff --stat
+git status --short
+git add case-study/src/test/java/vn/edu/seminar/loan/LoanServiceGemini*Test.java
+git commit -m "test(loan): add reviewed Gemini unit tests"
+git push -u origin HEAD
+gh pr create --base seminar-core --title "test(loan): add reviewed Gemini tests" \
+  --body "Test sinh bằng Gemini, đã review và chạy full suite/gate qua ai_apply. Xem CI để kiểm tra kết quả PR."
+```
+
+Nếu AI-2 không bổ sung file, chỉ có `GeminiDraftTest.java` để add. Script không tự
+commit/push/tạo PR. PR mới sẽ chạy test/coverage/package và AI-3 như mục 10;
+output local đã được dọn, Git chỉ nhận các file test đã chọn cùng thay đổi bạn chủ động add.
 
 ## 6. AI-4: sinh CSV AI riêng và đối chiếu báo cáo
 
@@ -224,7 +331,8 @@ Không clean giữa AI-1 và AI-2, hoặc trước khi AI-4 chạy xong: baselin
 Đã clean thì tạo phiên mới để sinh/chạy lại khi demo lần sau.
 
 Cả hai thư mục output đã được `.gitignore` bỏ qua, kể cả quên clean rồi `git add .`.
-Không force-add chúng. Runner/cleaner không tự commit, push, merge hoặc triển khai server.
+Không force-add chúng. Cleaner là dọn thủ công khi chưa/không apply; lệnh apply thành
+công tự xóa output AI-1/AI-2. Runner/cleaner/apply không tự commit, push, merge hoặc triển khai server.
 
 ## 10. AI-3 tự động trong CI và comment PR
 
@@ -435,10 +543,12 @@ git push
 gh pr view "$AI3_PR" --web
 ```
 
-**Bước 5 — Kiểm tra kết quả xanh và comment cập nhật.** Đợi đủ cả năm job kết thúc.
+**Bước 5 — Kiểm tra kết quả xanh và comment cập nhật.** Đợi các job kết thúc.
 Với source/bộ test chuẩn ở phiên đã chạy, cả test, coverage, package, Gemini và comment
 đều success; có 40 tests, BRANCH toàn project 100%. Lượt của bạn dùng số đo thật,
 không lấy bảng mẫu làm output bắt buộc. Nếu bộ test chuẩn đang lỗi, kiểm tra log tương ứng.
+Workflow hiện còn có job **AI tooling offline checks** kiểm các script AI bằng Python;
+job này không gọi Gemini và không thay thế JUnit/coverage của ứng dụng.
 
 Trong comment, kiểm tra SHA đã đổi sang commit bước 4, link Actions trỏ đúng lượt mới,
 kết quả CI được cập nhật và không xuất hiện comment bot thứ hai. Gemini không còn

@@ -166,7 +166,7 @@ Với zsh trên macOS:
 read -s "GEMINI_API_KEY?Nhập Gemini API key (sẽ ẩn): "
 export GEMINI_API_KEY
 printf '\n'
-export GA_COVERUP_MODEL='gemini/gemini-3.8-flash'
+export GA_COVERUP_MODEL='gemini/gemini-3.6-flash'
 ```
 
 Key được nhập ở prompt ẩn. Không dùng lệnh echo để in giá trị. Route `gemini/` và biến GEMINI_API_KEY là cách LiteLLM gọi Gemini API; không phải Vertex AI. Model được chọn phải là model key của bạn có quyền truy cập. Nguồn: [LiteLLM Gemini](https://docs.litellm.ai/docs/providers/gemini), [Google models](https://ai.google.dev/gemini-api/docs/models).
