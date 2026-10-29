@@ -6,6 +6,9 @@ __pycache__/
 !.env.example
 *.log
 !evidence/**/*.log
+# Local AI demo output (including legacy output paths), never submission evidence.
+/.ai-work/
+/evidence/tuan-06/gemini-live/
 .playwright-cli/
 output/playwright/
 .DS_Store

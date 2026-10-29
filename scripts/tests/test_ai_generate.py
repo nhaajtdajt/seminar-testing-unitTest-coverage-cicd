@@ -72,7 +72,7 @@ class GenerationWorkflowTests(unittest.TestCase):
             with patch.object(client, "configured", return_value=("dummy-key", "test-model")), \
                     patch.object(client.urllib.request, "urlopen", return_value=model_response({}, "MAX_TOKENS")):
                 with self.assertRaises(ValueError):
-                    client.generate("prompt", output)
+                    client.generate("prompt", output, keep_payloads=True)
             self.assertFalse(json.loads((output / "api.json").read_text())["completed"])
             self.assertTrue((output / "response.json").exists())
             self.assertNotIn("dummy-key", (output / "request.json").read_text())
@@ -87,6 +87,15 @@ class GenerationWorkflowTests(unittest.TestCase):
                 self.assertEqual(client.generate("prompt", output), {"ok": True})
             self.assertEqual(json.loads((output / "api.json").read_text())["attempts"], 2)
         error.close()
+
+    def test_default_client_does_not_persist_source_or_response_payloads(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            with patch.object(client, "configured", return_value=("dummy-key", "test-model")), \
+                    patch.object(client.urllib.request, "urlopen", return_value=model_response({"analysis": "fixture"})):
+                self.assertEqual(client.generate("source bytes are only sent in memory", output), {"analysis": "fixture"})
+            self.assertEqual([p.name for p in output.iterdir()], ["api.json"])
+            self.assertFalse(json.loads((output / "api.json").read_text())["payloads_retained"])
 
     def test_new_class_discovered_without_registry_or_business_prompt(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -112,7 +121,7 @@ class GenerationWorkflowTests(unittest.TestCase):
                     self.assertIn(target["name"] + "GeminiDraftTest", text)
                     self.assertNotIn("LoanServiceAiDraftTest", text)
                     self.assertNotIn("File src/main/java/vn/edu/seminar/fine/FineCalculator.java", text)
-                    self.assertFalse((output / "inputs/project/src/test").exists())
+                    self.assertFalse((output / "inputs/project").exists())
                     self.assertFalse((output / "inputs/project/.env.gemini").exists())
                     self.assertFalse(result["api_called"])
             api.assert_not_called()
@@ -146,7 +155,7 @@ class GenerationWorkflowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             prompts = []
-            def generated(text, output, model):
+            def generated(text, output, model, **kwargs):
                 prompts.append(text)
                 client.save(output / "api.json", {"completed": True, "provider": "synthetic fixture"})
                 name = target["name"] + ("GeminiDraftTest" if len(prompts) == 1 else "GeminiAdditionalTest")
@@ -167,7 +176,7 @@ class GenerationWorkflowTests(unittest.TestCase):
         original = (human / "cases.csv").read_bytes()
         prompts = []
         data = "daysLate,tier,expected,expectedException\n1,NORMAL,2000,\n-1,VIP,,IllegalArgumentException\n"
-        def generated(text, output, model):
+        def generated(text, output, model, **kwargs):
             prompts.append(text)
             self.assertNotIn(original.decode(), text)
             if len(prompts) == 1:
@@ -199,7 +208,7 @@ class GenerationWorkflowTests(unittest.TestCase):
         target = context.select("LoanService")
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            def generated(text, output, model):
+            def generated(text, output, model, **kwargs):
                 client.save(output / "api.json", {"completed": True})
                 return {"analysis": "fixture", "test_source": java(target, target["name"] + "GeminiDraftTest")}
             with patch.object(client, "generate", side_effect=generated), patch.object(demo.subprocess, "run", side_effect=fake_maven):
@@ -211,9 +220,11 @@ class GenerationWorkflowTests(unittest.TestCase):
                 demo.ai2(root / "ai2-test-changed", root / "ai1")
             api.assert_not_called()
             test.write_text(original)
-            source = root / "ai1/inputs/project" / target["source"]
-            source.write_text(source.read_text() + "// edited")
-            with patch.object(client, "generate") as api, self.assertRaisesRegex(ValueError, "snapshot changed"):
+            manifest_path = root / "ai1/inputs/manifest.json"
+            expected = json.loads(manifest_path.read_text())
+            expected[target["source"]] = "simulated-change"
+            client.save(manifest_path, expected)
+            with patch.object(client, "generate") as api, self.assertRaisesRegex(ValueError, "source/build inputs changed"):
                 demo.ai2(root / "ai2-source-changed", root / "ai1")
             api.assert_not_called()
 
@@ -221,7 +232,7 @@ class GenerationWorkflowTests(unittest.TestCase):
         target = context.select("FineCalculator")
         data = "daysLate,tier,expected,expectedException\n1,NORMAL,2000,\n-1,VIP,,java.lang.IllegalArgumentException\n"
         calls = []
-        def generated(text, directory, model):
+        def generated(text, directory, model, **kwargs):
             calls.append(text)
             if len(calls) == 1:
                 return {**fixture_schema(), "analysis": "fixture", "test_source": java(target, "FineCalculatorGeminiCsvTest", True)}

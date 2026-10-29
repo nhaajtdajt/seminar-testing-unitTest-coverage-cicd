@@ -23,8 +23,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def fresh(destination, stage, target):
     destination.mkdir(parents=True, exist_ok=False)
     client.save(destination / "stage.json", {"stage": stage, "target_class": target["fqcn"],
-        "started_at_utc": client.utc(), "completed": False, "human_review": "pending",
-        "environment": "local isolated Maven copy; not CI or paper reproduction"})
+        "started_at_utc": client.utc(), "completed": False,
+        "environment": "local demo; reads src directly and tests in a system temporary directory"})
 
 
 def finish(destination, **fields):
@@ -47,7 +47,7 @@ def render(name, values):
 def java_answer(answer, name, destination, target):
     code, analysis = answer.get("test_source"), answer.get("analysis")
     if not isinstance(code, str) or not isinstance(analysis, str):
-        raise ValueError("Expected test_source and analysis strings; raw response retained")
+        raise ValueError("Expected test_source and analysis strings; use --keep-payloads for payload debugging")
     package = re.search(r"\bpackage\s+([\w.]+)\s*;", code)
     if ((package.group(1) if package else "") != target["package"]
             or not re.search(r"\bclass\s+" + re.escape(name) + r"\b", code)
@@ -61,11 +61,12 @@ def java_answer(answer, name, destination, target):
     return path
 
 
-def run_java(source, tests, destination, target, csv_path=None):
+def run_java(source, tests, destination, target, csv_path=None, expected_manifest=None):
     destination.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="seminar-ai-java-") as temporary:
         project = Path(temporary) / "case-study"
-        shutil.copytree(source, project)
+        expected = expected_manifest or context_builder.manifest(source)
+        context_builder.copy_project(source, project, expected)
         test_directory = project / "src/test/java" / Path(*target["package"].split("."))
         test_directory.mkdir(parents=True)
         for path in tests:
@@ -123,25 +124,27 @@ def run_java(source, tests, destination, target, csv_path=None):
         return result
 
 
-def ai1(destination, target, model=None, prepare=False, requirements=None, schema=None):
+def ai1(destination, target, model=None, prepare=False, requirements=None, schema=None, keep_payloads=False):
     fresh(destination, "AI-1", target)
     try:
         project, context = context_builder.snapshot(destination, target, requirements=requirements, schema=schema)
         name = target["name"] + "GeminiDraftTest"
         text = render("AI-1-generate-tests.md", context_builder.substitutions(project, context, name))
-        (destination / "prompt.md").write_text(text)
+        if prepare or keep_payloads:
+            (destination / "prompt.md").write_text(text)
         if prepare:
             return finish(destination, status="prepared_only", api_called=False)
-        answer = client.generate(text, destination / "model", model)
+        answer = client.generate(text, destination / "model", model, keep_payloads=keep_payloads)
         test = java_answer(answer, name, destination, target)
-        measured = run_java(project, [test], destination, target)
+        measured = run_java(project, [test], destination, target,
+                            expected_manifest=json.loads((destination / "inputs/manifest.json").read_text()))
         return finish(destination, completed=measured["passed"], status="tested", new_model_generation=True)
     except Exception as error:
         finish(destination, status="failed", error_type=type(error).__name__)
         raise
 
 
-def ai2(destination, previous, model=None, prepare=False):
+def ai2(destination, previous, model=None, prepare=False, keep_payloads=False):
     before = json.loads((previous / "run.json").read_text())
     context = json.loads((previous / "inputs/context.json").read_text())
     target = context["target"]
@@ -158,12 +161,14 @@ def ai2(destination, previous, model=None, prepare=False):
         values.update(DRAFT_TEST=draft.read_text(), TEST_RESULT=json.dumps(before, ensure_ascii=False),
                       GAPS_JSON=(previous / "gaps.json").read_text())
         text = render("AI-2-coverage.md", values)
-        (destination / "prompt.md").write_text(text)
+        if prepare or keep_payloads:
+            (destination / "prompt.md").write_text(text)
         if prepare:
             return finish(destination, status="prepared_only", api_called=False)
-        additional = java_answer(client.generate(text, destination / "model", model), name, destination, target)
+        additional = java_answer(client.generate(text, destination / "model", model, keep_payloads=keep_payloads), name, destination, target)
         shutil.copy2(draft, additional.parent / draft.name)
-        after = run_java(project, [additional.parent / draft.name, additional], destination, target)
+        after = run_java(project, [additional.parent / draft.name, additional], destination, target,
+                         expected_manifest=json.loads((destination / "inputs/manifest.json").read_text()))
         comparison = {"target_class": target["fqcn"], "before": before, "after": after,
                       "limitation": "Coverage/green tests do not certify business rules or assertions"}
         if "BRANCH" in before["target_coverage"] and "BRANCH" in after["target_coverage"]:
@@ -176,7 +181,7 @@ def ai2(destination, previous, model=None, prepare=False):
         raise
 
 
-def build_schema(destination, target, model=None, prepare=False, header=None, requirements=None, domain_schema=None):
+def build_schema(destination, target, model=None, prepare=False, header=None, requirements=None, domain_schema=None, keep_payloads=False):
     fresh(destination, "AI-4-schema", target)
     try:
         project, context = context_builder.snapshot(destination, target, requirements=requirements, schema=domain_schema)
@@ -184,10 +189,11 @@ def build_schema(destination, target, model=None, prepare=False, header=None, re
         values = context_builder.substitutions(project, context, name)
         values["CSV_HEADER"] = json.dumps(header) if header is not None else "Not provided; derive it from the API and dependency state."
         text = render("AI-4-schema.md", values)
-        (destination / "prompt.md").write_text(text)
+        if prepare or keep_payloads:
+            (destination / "prompt.md").write_text(text)
         if prepare:
             return finish(destination, status="prepared_only", api_called=False, human_rows_sent_to_model=False)
-        answer = client.generate(text, destination / "model", model)
+        answer = client.generate(text, destination / "model", model, keep_payloads=keep_payloads)
         columns = ai_csv.validate_schema(answer, header)
         harness = java_answer(answer, name, destination, target)
         code = harness.read_text()
@@ -205,27 +211,41 @@ def build_schema(destination, target, model=None, prepare=False, header=None, re
         raise
 
 
-def freeze_data(destination, schema_from, csv_path, author):
-    schema = json.loads((schema_from / "schema.json").read_text())
-    cases = ai_csv.read(csv_path, schema)
+def freeze_data(destination, schema_from, csv_path, author, target=None):
+    if schema_from:
+        schema = json.loads((schema_from / "schema.json").read_text())
+        count = len(ai_csv.read(csv_path, schema))
+        fqcn = schema["target_class"]
+        validation = "validated against existing CSV schema"
+    else:
+        with csv_path.open(encoding="utf-8-sig", newline="") as stream:
+            reader = csv.DictReader(stream)
+            header, rows = reader.fieldnames, list(reader)
+        if (not header or len(set(header)) != len(header) or not rows
+                or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", h) for h in header)
+                or any(None in row or any(v is None for v in row.values()) for row in rows)):
+            raise ValueError("Human CSV needs unique header identifiers and complete data rows")
+        count, fqcn = len(rows), target["fqcn"]
+        validation = "structure/hash only; semantic schema will be inferred later from src and header"
     if not author.strip():
         raise ValueError("Provide the actual human author")
     destination.mkdir(parents=True, exist_ok=False)
     shutil.copy2(csv_path, destination / "cases.csv")
-    client.save(destination / "receipt.json", {"author": author, "target_class": schema["target_class"],
-        "sha256": context_builder.sha(csv_path), "frozen_at_utc": client.utc(), "case_count": len(cases),
+    client.save(destination / "receipt.json", {"author": author, "target_class": fqcn,
+        "sha256": context_builder.sha(csv_path), "frozen_at_utc": client.utc(), "case_count": count,
+        "validation": validation,
         "attestation": "Author declares cases written before viewing AI data; schema/harness may be AI-assisted",
         "limitation": "Self-attestation and hash do not prove independent authorship"})
 
 
-def ai4(destination, target, human, model=None, prepare=False, schema_from=None, requirements=None, domain_schema=None):
+def ai4(destination, target, human, model=None, prepare=False, schema_from=None, requirements=None, domain_schema=None, keep_payloads=False):
     receipt = ai_csv.check_frozen(human, target["fqcn"])
     fresh(destination, "AI-4", target)
     try:
         if not schema_from:
             schema_from = destination / "schema-stage"
             built = build_schema(schema_from, target, model, prepare, ai_csv.header(human / "cases.csv"),
-                                 requirements, domain_schema)
+                                 requirements, domain_schema, keep_payloads)
             if prepare:
                 return finish(destination, status="schema_prompt_prepared_only", api_called=False, human_rows_sent_to_model=False)
             if not built["completed"]:
@@ -241,10 +261,11 @@ def ai4(destination, target, human, model=None, prepare=False, schema_from=None,
         values = context_builder.substitutions(project, context, harness.stem)
         values["CSV_SCHEMA"] = json.dumps(schema, ensure_ascii=False)
         text = render("AI-4-boundary-data.md", values)
-        (destination / "prompt.md").write_text(text)
+        if prepare or keep_payloads:
+            (destination / "prompt.md").write_text(text)
         if prepare:
             return finish(destination, status="prepared_only", api_called=False, human_rows_sent_to_model=False)
-        answer = client.generate(text, destination / "model", model)
+        answer = client.generate(text, destination / "model", model, keep_payloads=keep_payloads)
         if not isinstance(answer.get("csv"), str) or not isinstance(answer.get("analysis"), str):
             raise ValueError("AI-4 needs csv and analysis strings")
         generated = destination / "generated"
@@ -262,8 +283,9 @@ def ai4(destination, target, human, model=None, prepare=False, schema_from=None,
         client.save(destination / "schema.json", schema)
         comparison = ai_csv.compare(saved_human / "cases.csv", ai_data, schema)
         client.save(destination / "comparison.json", comparison)
-        before = run_java(project, [harness], destination / "human", target, saved_human / "cases.csv")
-        after = run_java(project, [harness], destination / "ai", target, ai_data)
+        expected = json.loads((destination / "inputs/manifest.json").read_text())
+        before = run_java(project, [harness], destination / "human", target, saved_human / "cases.csv", expected)
+        after = run_java(project, [harness], destination / "ai", target, ai_data, expected)
         client.save(destination / "execution-comparison.json", {"human": before, "ai": after})
         reconciled = ai_csv.reconcile(destination, target["fqcn"], saved_human / "cases.csv", ai_data, schema, comparison, harness)
         client.save(destination / "reconciliation.json", reconciled)
@@ -291,6 +313,7 @@ def main():
     parser.add_argument("--output", type=Path)
     parser.add_argument("--model")
     parser.add_argument("--prepare-only", action="store_true")
+    parser.add_argument("--keep-payloads", action="store_true", help="Debug only: retain full prompts and model payloads")
     args = parser.parse_args()
     if args.stage == "list-classes":
         print(json.dumps(context_builder.discover(), ensure_ascii=False, indent=2))
@@ -301,15 +324,17 @@ def main():
         parser.error("ai2 needs --from-ai1")
     if args.stage in ("ai4", "all") and not args.human_frozen:
         parser.error("AI-4 needs --human-frozen; never reuse another class's human data")
-    if args.stage == "freeze" and not (args.schema_from and args.csv and args.author and args.attest_independent):
-        parser.error("freeze needs --schema-from, --csv, --author and --attest-independent")
+    if args.stage == "freeze" and not ((args.schema_from or args.class_name) and args.csv and args.author
+                                        and args.attest_independent and args.output):
+        parser.error("freeze needs --class (or --schema-from), --csv, --author, --attest-independent and durable --output")
     try:
         if args.stage != "freeze" and not args.prepare_only:
             client.configured(args.model)
         stamp = client.utc().replace(":", "").replace(".", "").replace("+0000", "Z")
-        output = (args.output or ROOT / "evidence/tuan-06/gemini-live" / f"{stamp}-{args.stage}").resolve()
+        output = (args.output or ROOT / ".ai-work" / f"{stamp}-{args.stage}").resolve()
         if args.stage == "freeze":
-            freeze_data(output, args.schema_from.resolve(), args.csv.resolve(), args.author)
+            freeze_data(output, args.schema_from.resolve() if args.schema_from else None, args.csv.resolve(), args.author,
+                        context_builder.select(args.class_name) if args.class_name else None)
             print(f"Human data frozen: {output}")
             return 0
         target = context_builder.select(args.class_name) if args.class_name else None
@@ -317,7 +342,7 @@ def main():
             baseline_target = json.loads((args.from_ai1 / "inputs/context.json").read_text())["target"]
             if baseline_target["fqcn"] != target["fqcn"]:
                 raise ValueError("--class differs from the AI-1 baseline target")
-        common = {"model": args.model, "prepare": args.prepare_only}
+        common = {"model": args.model, "prepare": args.prepare_only, "keep_payloads": args.keep_payloads}
         inputs = {"requirements": args.requirements, "schema": args.schema}
         print(f"Output: {output}", flush=True)
         if args.stage == "ai1":

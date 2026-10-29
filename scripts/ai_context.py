@@ -1,4 +1,4 @@
-"""Discover Java targets and snapshot source context without business-specific constants."""
+"""Read Java context directly from src; persist fingerprints, never source trees."""
 import hashlib
 import json
 from pathlib import Path
@@ -62,35 +62,45 @@ def related_sources(project, target):
     return [target["source"]] + sorted(seen - {target["source"]})
 
 
+def manifest(project):
+    files = [project / "pom.xml", project / "mvnw"]
+    files += [p for p in (project / ".mvn").rglob("*") if p.is_file()]
+    files += list((project / "src/main/java").rglob("*.java"))
+    return {p.relative_to(project).as_posix(): sha(p) for p in files}
+
+
+def check_project(project, expected):
+    if manifest(project) != expected:
+        raise ValueError("Production source/build inputs changed; generate a fresh baseline/schema")
+
+
+def copy_project(source, destination, expected):
+    """Only for the ephemeral Maven build; no standard tests, target or local config."""
+    check_project(source, expected)
+    destination.mkdir(parents=True)
+    for name in ("pom.xml", "mvnw"):
+        shutil.copy2(source / name, destination / name)
+    shutil.copytree(source / ".mvn", destination / ".mvn")
+    shutil.copytree(source / "src/main/java", destination / "src/main/java")
+    check_project(destination, expected)
+
+
 def snapshot(destination, target=None, previous=None, requirements=None, schema=None):
+    """Compatibility name: save context/hash metadata, read the live project directly."""
     import gemini_client as client
-    project = destination / "inputs/project"
+    project = ROOT / "case-study"
     if previous:
-        source = previous / "inputs/project"
-        manifest = json.loads((previous / "inputs/manifest.json").read_text())
-        actual = {p.relative_to(source).as_posix(): sha(p) for p in source.rglob("*") if p.is_file()}
-        if actual != manifest:
-            raise ValueError("Source snapshot changed after the baseline was measured")
+        expected = json.loads((previous / "inputs/manifest.json").read_text())
+        check_project(project, expected)
         context = json.loads((previous / "inputs/context.json").read_text())
         if target and target["fqcn"] != context["target"]["fqcn"]:
             raise ValueError("Target differs from baseline/schema source")
-        for relative in context.get("context_source_files", [context["target"]["source"]]):
-            current = ROOT / "case-study" / relative
-            if not current.is_file() or sha(current) != manifest.get(relative):
-                raise ValueError("Selected production source/dependency changed; generate a fresh baseline/schema")
-        shutil.copytree(source, project)
     else:
-        source = ROOT / "case-study"
-        project.mkdir(parents=True)
-        for name in ("pom.xml", "mvnw"):
-            shutil.copy2(source / name, project / name)
-        shutil.copytree(source / ".mvn", project / ".mvn")
-        # Compile all production dependencies, but never copy existing tests or .env files.
-        shutil.copytree(source / "src/main/java", project / "src/main/java")
+        expected = manifest(project)
         context = {"target": target, "requirements": requirements.read_text() if requirements else "",
                    "schema": schema.read_text() if schema else "", "schema_files": []}
         if not schema:
-            for sql in sorted((source / "src/main/resources").rglob("*.sql")):
+            for sql in sorted((project / "src/main/resources").rglob("*.sql")):
                 ddl = [part.strip() for part in sql.read_text().split(";")
                        if re.search(r"\b(?:CREATE|ALTER)\s+TABLE\b", part, re.I)]
                 if ddl:
@@ -98,8 +108,8 @@ def snapshot(destination, target=None, previous=None, requirements=None, schema=
                     context["schema"] += f"\nFile {sql.name}:\n" + ";\n".join(ddl)
         context["requirements_origin"] = "user_document" if requirements else "source_only; intent requires human review"
         context["context_source_files"] = related_sources(project, target)
-        manifest = {p.relative_to(project).as_posix(): sha(p) for p in project.rglob("*") if p.is_file()}
-    client.save(destination / "inputs/manifest.json", manifest)
+    context["source_storage"] = "read directly from src; only build copies live in system temporary directory"
+    client.save(destination / "inputs/manifest.json", expected)
     client.save(destination / "inputs/context.json", context)
     return project, context
 
