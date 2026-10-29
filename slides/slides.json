@@ -4,19 +4,19 @@
     "title": "Một lần mượn sách, ba lớp kiểm chứng",
     "bullets": [
       "Unit Test → Code Coverage → CI/CD",
-      "Seminar Kiểm thử phần mềm · Nhóm [mã nhóm]",
-      "Tuần 06 · cập nhật 23/10/2026"
+      "Seminar Kiểm thử phần mềm · Nhóm 09",
+      "Tuần 06 · cập nhật 29/10/2026"
     ]
   },
   {
     "stage": "Nhóm thực hiện",
     "title": "Thành viên và phân công",
     "bullets": [
-      "Nguyễn Bảo An · 23120207: Trưởng nhóm, Unit Test, JUnit/Mockito và tổng hợp báo cáo.",
+      "Nguyễn Bảo An · 23120207: Unit Test, JUnit/Mockito và tổng hợp nội dung Unit Test.",
       "Phạm Quang Vinh · 23120202: CI/CD, Build Java 25 & Benchmark.",
       "Trương Nhật Đạt · 23120231: Code Coverage, JaCoCo, coverage gate và mutation testing.",
       "Nguyễn Lê Thế Vinh · 23120190: Case study, REST API, persistence và demo tích hợp.",
-      "Ngô Gia An · 23120205: AI, slide, báo cáo chi tiết và điều phối video."
+      "Ngô Gia An · 23120205: Trưởng nhóm, AI, paper và hợp nhất nội dung trình bày."
     ]
   },
   {
@@ -63,7 +63,7 @@
     "title": "UT-1: chạy và đọc kết quả",
     "code": "case-study/mvnw -B -ntp -f case-study/pom.xml clean test",
     "bullets": [
-      "33 lượt trong bộ chuẩn: 17 tính phí, 6 nghiệp vụ, 5 web, 2 integration, 3 persistence.",
+      "Bộ core hiện có 39 lượt; PR AI #13 có 49 lượt sau khi áp dụng 10 test Gemini.",
       "Đọc Tests / Failures / Errors / Skipped trong Surefire.",
       "Đã chạy bộ chuẩn trên Java 25 và Java 21 tại máy."
     ]
@@ -125,7 +125,7 @@
     "bullets": [
       "Giữ gate 90% branch cho FineCalculator.",
       "Khôi phục bộ test đầy đủ: build pass.",
-      "Mới chứng minh gate tại máy; required checks trên GitHub còn cần cấu hình."
+      "GitHub Actions đã chạy gate thật; PR đỏ bị chặn và PR xanh được phép merge."
     ]
   },
   {
@@ -230,22 +230,62 @@
   },
   {
     "stage": "AI",
-    "title": "AI-1/2: sinh test, đọc gap, kiểm lại",
+    "title": "AI-1/2: Gemini sinh, review rồi mới áp dụng",
     "bullets": [
-      "Bản nháp Codex: 3 test đúng, chỉ phủ 70% nhánh.",
-      "Đọc gap và source: thiếu null, ngày âm, tính phí VIP sau gia hạn.",
-      "Thêm 3 test: bộ 6 test phủ 100% nhánh.",
-      "Prompt và test có thể tái sử dụng; thành viên nhóm cần review lại."
+      "Runner đọc class và source liên quan, không hard-code FineCalculator hay LoanService vào prompt.",
+      "Gemini 3.6 sinh 7 test LoanService; AI-2 bổ sung 3 test sau khi đọc coverage và bản nháp.",
+      "Sau review, apply kiểm full suite: 49 test pass; LoanService đạt line 17/17, branch 6/6.",
+      "Apply tạo hai file test thật rồi xóa session output tạm; lỗi assertion dừng để người review."
     ]
   },
   {
     "stage": "AI",
-    "title": "AI-3/4: review và dữ liệu biên",
+    "title": "AI-3: review PR chạy song song với CI",
     "bullets": [
-      "AI-3 đã gọi live Gemini 3.6 Flash trên diff fixture; kết quả đối chiếu: 4 đúng, 0 thừa, 0 bỏ sót.",
-      "Đây là kiểm tra fixture có lỗi seed, không phải benchmark độc lập hay review toàn bộ repository.",
-      "AI-4 có 13 ca CSV chạy pass, trùng 13/15 ca tham chiếu.",
-      "Chưa có bộ test do người viết độc lập để so sánh công bằng."
+      "Gemini chỉ đọc diff test của PR; JUnit, JaCoCo gate và package vẫn là required checks riêng.",
+      "PR #13: sáu job xanh, 49 test pass, project line 76/83 và branch 24/24.",
+      "Bot cập nhật một comment gồm trạng thái CI và nhận xét Gemini; lượt cuối không có finding.",
+      "AI review không tự sửa test, không tự commit và không thay quyền quyết định merge."
+    ]
+  },
+  {
+    "stage": "AI",
+    "title": "AI-4: bộ người viết và bộ AI bổ sung nhau",
+    "bullets": [
+      "Gia An thiết kế trước 23 ca từ đặc tả: 16 hợp lệ, 7 lỗi; Java chạy 23/23 pass, branch 10/10.",
+      "Gemini tạo 13 ca hợp lệ; Java chạy 13/13 pass, branch 8/10.",
+      "11 đầu vào chung có cùng kỳ vọng; không có disagreement.",
+      "Bộ người viết có ca lỗi; bộ AI có Integer.MAX_VALUE. Phép so này không phải accuracy benchmark."
+    ]
+  },
+  {
+    "stage": "Paper",
+    "title": "CoverUp: coverage dẫn đường cho LLM",
+    "bullets": [
+      "FSE 2025, CORE2023 A*. Nhóm chạy script tác giả trên 163 module: 89,0% so với MuTAP 76,8%.",
+      "Gia An chạy Gemini 3.6 trên f003: 3 test pass, line 8/8 và branch 4/4.",
+      "Trên scripts/coverage_gaps.py: 7 test pass; coverage kết hợp tăng 23,6% lên 96,4%.",
+      "Đổi model, baseline và môi trường; kết quả không đại diện toàn benchmark."
+    ]
+  },
+  {
+    "stage": "Paper",
+    "title": "Pynguin: sinh test bằng tìm kiếm tiến hóa",
+    "bullets": [
+      "Empirical Software Engineering 2023, CORE2020 A; tool không gọi LLM.",
+      "Notebook tác giả: 134 module, 40.200 dòng dữ liệu; 8 cột thống kê của 10 cấu hình khớp output gốc.",
+      "Benchmark codetiming._timers: coverage nội bộ 81,48%, bằng median 30 lượt công bố; 10 pass, 5 xfail.",
+      "Trên source nhóm, test có seed chỉ gọi hàm mà thiếu assertion; coverage không hơn smoke baseline."
+    ]
+  },
+  {
+    "stage": "Video E",
+    "title": "AI và paper: nội dung đã sẵn sàng để quay",
+    "bullets": [
+      "GA-01/02: setup Gemini, AI-1 sinh test và AI-2 review/repair/apply.",
+      "GA-03/04: AI-3 comment PR; demo oracle sai để giải thích giới hạn của test xanh.",
+      "GA-05: so bộ dữ liệu biên người viết với Gemini rồi chạy qua Java.",
+      "GA-06/07: CoverUp và Pynguin, gồm cả kết quả tốt và trường hợp tool tạo test yếu. URL/timestamp điền sau khi quay."
     ]
   },
   {
@@ -262,7 +302,7 @@
     "stage": "Tuần 6",
     "title": "Gói tuần 6: các đầu ra cần chốt",
     "bullets": [
-      "Gói nộp: slide, báo cáo, link video, source, seminar contribution (Google Sheet), git commit log, AI usage declaration.",
+      "Gói nộp: slide, báo cáo, link video, source, seminar contribution, git commit log và AI usage declaration.",
       "Video là bắt buộc: setup, khái niệm cơ bản, đơn giản, phức tạp, trường hợp không xử lý được, data driven.",
       "Đối chiếu tác giả commit và minh chứng trước khi kết luận đóng góp thành viên."
     ]
@@ -273,7 +313,7 @@
     "bullets": [
       "README.md: điểm vào cho gói thực hành.",
       "docs/thuc-hanh/HuongDan_Demo.md: lệnh cho từng demo.",
-      "evidence/tuan-05/: log, XML/HTML và số liệu gốc.",
+      "evidence/tuan-05/ và tuan-06/: log, XML/HTML, CI, AI và paper.",
       "Tài liệu chính thức: JUnit, Mockito, JaCoCo, PIT, Spring Boot, GitHub Actions, Gemini API (link trong báo cáo)."
     ]
   }

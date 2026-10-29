@@ -11,7 +11,7 @@ Bảng theo dõi dùng chung theo `PhanCong_NhiemVu.md`. Cập nhật cấu trú
 | TV2 | 23120202 | Phạm Quang Vinh | CI/CD, Build Java 25 & Benchmark |
 | TV3 | 23120231 | Trương Nhật Đạt | Code Coverage, JaCoCo, coverage gate và mutation testing |
 | TV4 | 23120190 | Nguyễn Lê Thế Vinh | Case study, REST API, persistence và demo tích hợp |
-| TV5 | 23120205 | Ngô Gia An | AI, paper, trưởng nhóm; slide/HTML làm sau cùng |
+| TV5 | 23120205 | Ngô Gia An | AI, paper, trưởng nhóm; hợp nhất slide/HTML |
 
 
 ## Tiến độ Tuần 05 — kỳ trước
@@ -41,7 +41,7 @@ Luồng công việc: Dự kiến → Đang thực hiện → Chờ thành viên
 
 ## Theo dõi tiến độ Tuần 06
 
-W06-01..05 là snapshot công việc tích lũy trước khi phân lại vai trò, không phải phân công hiện hành hoặc xác nhận tất cả thành viên đã tự review. W06-06 trở đi cập nhật theo chủ đề và người phụ trách hiện tại. Video vẫn là yêu cầu seminar; chỉ phần slide/HTML của Gia An tạm hoãn đến cuối.
+W06-01..05 là snapshot công việc tích lũy trước khi phân lại vai trò, không phải phân công hiện hành hoặc xác nhận tất cả thành viên đã tự review. W06-06 trở đi cập nhật theo chủ đề và người phụ trách hiện tại. Video vẫn là yêu cầu seminar; slide/HTML của Gia An đã được hoàn tất sau phần AI/paper.
 
 | ID | Phạm vi kế hoạch Tuần 6 | Người đảm nhận tuần này | Tiến độ thực tế | Bằng chứng/ghi chú |
 |---|---|---|---|---|
@@ -56,7 +56,7 @@ W06-01..05 là snapshot công việc tích lũy trước khi phân lại vai tr�
 | W06-09 | TV5: paper có source/hạng và thực nghiệm | Ngô Gia An (23120205), Codex hỗ trợ chạy | CoverUp và Pynguin: phân tích dữ liệu công bố, generation mới trên benchmark và thử source nhóm. CoverUp nhóm 7 pass/96,4%; Pynguin benchmark 10 pass + 5 xfail, group có seed 2 pass nhưng không assertion/không tăng coverage so smoke | `research/`; báo cáo mục 9; `evidence/tuan-06/papers/README.md` |
 | W06-10 | TV5: khai báo AI, chuẩn hóa docs/evidence | Ngô Gia An (23120205), Codex hỗ trợ | Theo 6 mục chung; Gia An xác nhận thực hiện/review ngày 29/10; phân biệt tự chạy và Codex chạy theo ủy quyền. Chưa có review chéo/chữ ký bản nộp | `ai-usage-declaration/01_NgoGiaAn.md`; `evidence/tuan-06/README.md` |
 | W06-11 | TV5: artifact video AI/paper | Ngô Gia An (23120205) | GA-01..07 có đầu vào/bằng chứng; chưa quay/đăng, chưa có URL/timestamp thực tế | `KichBan_QuayVideo_Tuan_06.md`, Video E |
-| W06-12 | TV5: hợp nhất slide/HTML | Ngô Gia An (23120205) | Hoãn đến bước cuối theo yêu cầu 29/10; dùng nguyên slide/HTML trên core, không xuất PDF riêng | `slides/` giữ bản core; không đánh dấu đã hoàn thành phần AI/paper trên slide |
+| W06-12 | TV5: hợp nhất slide/HTML | Ngô Gia An (23120205), Codex hỗ trợ | Đã cập nhật nguồn JSON và render lại 32 slide: AI-1..4, CoverUp, Pynguin và tóm tắt Video E; giữ nền trắng/chữ đen | `slides/slides.json`, `slides/index.html`; URL/timestamp điền sau khi quay |
 | W06-13 | TV2: CI thật, required checks và điểm yếu | Phạm Quang Vinh (23120202) | Có evidence PR đỏ → xanh; required checks master theo snapshot; GitHub Actions là công cụ CI duy nhất | `evidence/tuan-06/github-actions/`; báo cáo mục 4.1 |
 | W06-14 | TV5: pipeline AI-1/2 và AI-3 trên PR thật | Ngô Gia An (23120205), Codex hỗ trợ | Gemini 3.6 LoanService 7 → 10 test; apply tạo test thật, xóa output tạm; 49 test/gate pass, 74 offline checks; sáu job CI xanh và comment review hoàn tất | [PR #13](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/13), run 40889189664; code nằm nhánh PR riêng, chưa merge core |
 
@@ -80,10 +80,10 @@ W06-01..05 là snapshot công việc tích lũy trước khi phân lại vai tr�
 - [x] Kiểm nguồn paper, hạng venue và artifact.
 - [x] Chạy lại phân tích dữ liệu CoverUp và thử dry-run source nhóm.
 - [x] Cả hai paper có reanalysis, generation mới trên benchmark và thử source nhóm; output/giới hạn trong evidence.
-- [x] Đã nhận CSV/notes Gia An cung cấp; Codex khóa, commit rồi so và chạy Java: 23/23 người dùng, 13/13 AI. Độc lập theo tuyên bố trong notes; chờ Gia An tự review/chạy lại.
+- [x] Đã nhận CSV/notes Gia An cung cấp; Codex khóa, commit rồi so và chạy Java: 23/23 người dùng, 13/13 AI. Độc lập theo tuyên bố trong notes; Gia An đã review kết quả.
 - [x] Gia An xác nhận thực hiện/review AI/paper; declaration ghi rõ ai thao tác từng lượt, chưa ký thay trên bản nộp.
 - [ ] Thành viên khác review chéo và xác nhận phần của họ.
-- [ ] Đủ URL video và timestamp thật; hợp nhất slide/HTML sau cùng.
+- [ ] Đủ URL video và timestamp thật. Slide/HTML đã hợp nhất; chỉ còn điền link/timestamp sau khi quay.
 - [ ] Gửi slide / gặp GV trước hạn 3–4 ngày.
 - [ ] Điền Google Sheet contribution và xuất git log thật khi nộp.
 - [ ] Kiểm gói: ≤20 file, mỗi file ≤20 MB, tổng ≤400 MB; tên ZipTool nếu cần chia/nén; không dùng Google Drive.

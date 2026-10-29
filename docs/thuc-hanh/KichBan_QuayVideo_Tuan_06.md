@@ -49,7 +49,7 @@
 
 ## Video E — AI và paper — Người thực hiện: Ngô Gia An (23120205)
 
-**Trạng thái:** mới chuẩn bị artifact, chưa quay/đăng YouTube. Timestamp thực tế điền sau khi quay; chưa ấn định thời lượng. Slide/HTML phần Gia An hoãn đến cuối; chưa đưa nội dung mới vào slide chung.
+**Trạng thái:** artifact và slide tóm tắt đã hoàn tất; chưa quay/đăng YouTube. Timestamp thực tế điền sau khi quay; chưa ấn định thời lượng. Slide 24–29 trình bày AI-1..4, hai paper và các đoạn GA-01..07.
 
 | Phân đoạn | Timestamp | Nội dung cần minh họa | Lệnh / File minh chứng |
 |---|---|---|---|

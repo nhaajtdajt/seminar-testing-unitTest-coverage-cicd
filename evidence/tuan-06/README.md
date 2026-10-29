@@ -64,8 +64,8 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 
 ## Phần còn chờ
 
-- Gia An tự đọc, chạy lại và xác nhận khai báo AI; reviewer chéo chưa xác nhận.
-- Paper đã có đủ các loại lượt chạy ở phạm vi đã ghi; không nhận là tái lập toàn bộ benchmark nhiều seed. Video/slide và review chéo còn làm sau.
+- Gia An đã xác nhận thực hiện/review AI và paper ngày 29/10; reviewer chéo của thành viên khác chưa xác nhận.
+- Paper đã có đủ các loại lượt chạy ở phạm vi đã ghi; không nhận là tái lập toàn bộ benchmark nhiều seed. Slide/HTML đã hợp nhất; review chéo còn chờ.
 - Video là yêu cầu seminar, chưa có file video/URL/timestamp thật; script/ảnh không thay cho video.
-- Phần slide/HTML Gia An hoãn đến cuối theo yêu cầu ngày 29/10, dùng nguyên nguồn core. Chưa xuất lại PDF riêng.
+- Nguồn slide JSON và HTML đã cập nhật kết quả AI-1..4, CoverUp, Pynguin và nội dung Video E. Chưa có URL/timestamp thật vì video chưa quay.
 - CI GitHub và required checks có evidence ở `github-actions/`; trạng thái quyền/nhánh là snapshot, không tự suy ra cấu hình live hôm nay. Nhóm đã bỏ Jenkins.

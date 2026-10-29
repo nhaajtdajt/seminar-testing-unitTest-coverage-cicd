@@ -5,7 +5,7 @@
 ## 1. Phần việc của tôi
 
 - Phụ trách AI-1/2/3/4, đối chứng dữ liệu người–AI, thử trên LoanService; chọn/kiểm hạng/chạy hai paper có source, tổng hợp kết quả và khai báo AI.
-- Slide/HTML, quay video và điều phối nộp/trình bày làm sau; không đánh dấu đã quay hoặc đã có xác nhận của giảng viên.
+- Slide/HTML và báo cáo AI/paper đã hợp nhất. Quay video và điều phối nộp/trình bày làm sau; không đánh dấu đã quay hoặc đã có xác nhận của giảng viên.
 - PR triển khai AI: [#13](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/13), các commit `b4b4d30`, `3bdbbc8`, `6c928b0`, `f351e88`. Phần paper: nhánh `codex/paper-live-results`; đối chiếu commit thật bằng Git, không gán lại tác giả lịch sử.
 
 ## 2. Tôi đã dùng AI như thế nào
@@ -17,7 +17,7 @@
 | 3 | Codex/Gemini | Chuẩn bị AI-4; khóa dữ liệu người dùng cung cấp, sinh/so/chạy dữ liệu AI | Giữ nguyên CSV/notes của Gia An; báo cáo phân biệt so CSV với chạy Java, không sửa human oracle để khớp AI | `ai/human/`, `scripts/ai4_compare.py`, hướng dẫn AI-1/2/4 |
 | 4 | Gemini 3.6 Flash trong CI | Review diff PR song song test/coverage, cập nhật comment khi pass hoặc fail | PR #13 review hoàn tất, không finding; summary có số test và JaCoCo thật | Workflow và [comment PR](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/13#issuecomment-6498531583) |
 | 5 | Codex + tra cứu nguồn chính thức | Chọn paper, kiểm hạng, chạy tool/mã phân tích tác giả, thu output gọn | CoverUp + Gemini 3.6 và Pynguin; phân tích dữ liệu công bố, generation benchmark và thử source nhóm | `research/`, `evidence/tuan-06/papers/` |
-| 6 | Codex | Biên tập báo cáo/hướng dẫn, bỏ trial cũ và output trùng | Tài liệu cùng format nhóm, chỉ giữ output cần đối chiếu; chưa chỉnh slide/HTML | `docs/thuc-hanh/`, declaration và evidence |
+| 6 | Codex | Biên tập báo cáo/hướng dẫn, bỏ trial cũ và output trùng; hợp nhất slide | Tài liệu cùng format nhóm, chỉ giữ output cần đối chiếu; slide 24–29 cập nhật AI/paper và Video E | `docs/thuc-hanh/`, `slides/`, declaration và evidence |
 
 Pynguin dùng tìm kiếm DynaMOSA, không gọi Gemini/LLM. CoverUp lượt mới có gọi Gemini thật. Codex thu output từ công cụ và biên tập tài liệu; không dùng response tự viết thay kết quả thực thi của tác giả.
 
@@ -42,7 +42,7 @@ Thực nghiệm paper dùng tool/mã phân tích của tác giả, có Codex h�
 
 - Paper mới tái hiện có giới hạn: phân tích dữ liệu công bố và một lượt generation benchmark mỗi bài, cộng source nhóm. Chưa chạy mới toàn benchmark nhiều seed hoặc mutation RQ3; môi trường/model có khác biệt đã ghi trong research.
 - 100% coverage hoặc test pass không chứng minh đúng mọi nghiệp vụ; `xfail` không được cộng vào số pass. Hai tool paper thử trên source Python của nhóm, không nhận là generation JUnit cho LoanService.
-- Reviewer chéo của thành viên khác chưa xác nhận. Video/URL/timestamp, hợp nhất slide/HTML và gặp GV chưa hoàn tất.
+- Reviewer chéo của thành viên khác chưa xác nhận. Video/URL/timestamp và gặp GV chưa hoàn tất. Slide/HTML đã có chỗ để gắn URL/timestamp sau khi quay.
 - Họp/nộp bài/Google Sheet và chữ ký chính thức trên bản xuất vẫn do thành viên thực hiện.
 
 ## 6. Xác nhận
