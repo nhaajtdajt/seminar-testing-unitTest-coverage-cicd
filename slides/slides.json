@@ -140,6 +140,27 @@
   },
   {
     "stage": "CI/CD",
+    "title": "CI, Continuous Delivery, Continuous Deployment",
+    "code": "Commit → Build + Test → Artifact → Duyệt → Triển khai\n        |______ CI ______|\n        |________ Continuous Delivery ________|\n        |_______________ Continuous Deployment ___________|",
+    "bullets": [
+      "CI (tích hợp liên tục): mỗi lần đẩy code, tự build và chạy test; lỗi phát hiện ngay.",
+      "Continuous Delivery: sau CI luôn có bản (artifact) sẵn sàng phát hành; việc triển khai do người bấm duyệt.",
+      "Continuous Deployment: bản đạt mọi kiểm tra tự động được triển khai lên môi trường chạy thật, không cần người duyệt.",
+      "Mỗi mức đòi hỏi bộ test và gate tin cậy hơn mức trước."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "Nhóm làm đến mức nào?",
+    "bullets": [
+      "CI: có. Mỗi pull request tự chạy test và coverage gate trên GitHub Actions.",
+      "Delivery: ở mức tạo JAR (job package) và lưu làm artifact; chưa có bước duyệt phát hành.",
+      "Deployment: không làm. Chủ đề là kiểm thử nên không triển khai lên máy chủ.",
+      "Nếu cần: thêm job deploy chạy sau package, có điều kiện nhánh master và bước duyệt."
+    ]
+  },
+  {
+    "stage": "CI/CD",
     "title": "Từ lệnh tại máy đến pipeline",
     "code": "test [JDK 25]\n        ↓\ncoverage-gate [branch >= 90%]\n        ↓\npackage [JAR + artifact]",
     "bullets": [
