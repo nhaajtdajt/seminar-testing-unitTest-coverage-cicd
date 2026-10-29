@@ -339,7 +339,7 @@ Tất cả output AI cần được kiểm theo đặc tả, assertion cụ th�
 | Fixture sai có phải lỗi model thật? | Không; cài sẵn để minh họa, đã ghi nhãn |
 | CoverUp có test Java không? | Tool gốc dùng Python; thử trên coverage_gaps.py, không dịch nghiệp vụ Java |
 | 89,0% là kết quả nhóm tự sinh? | Là replay phân tích dữ liệu tác giả trên 163 module MT |
-| ChatUniTest đã tái lập chưa? | Chưa; nêu đúng preflight/parse và kết quả thực tế, không gán AI-5 cho paper |
+| Paper đã được chạy ở phạm vi nào? | Mỗi bài đã có phân tích dữ liệu công bố, generation mới trên một benchmark và thử source Python nhóm; chưa chạy lại toàn benchmark nhiều seed |
 | Hạng của bài là gì? | FSE CORE2023 A* là venue; P2 demo track cần GV xác nhận |
 | Ai tự review phần mới? | Chờ tên/ngày thật trong khai báo cá nhân, không điền thay |
 
@@ -361,22 +361,26 @@ Nguồn chính thức dùng đối chiếu: [JUnit guide](https://docs.junit.org
 
 ### 9.1. Paper, kết quả đã chạy và giới hạn
 
-Danh mục có DOI, năm, source, revision, nguồn hạng và giới hạn: [research/papers.json](../../research/papers.json); [phân tích và lệnh chạy](../../research/README.md).
+Danh mục DOI/nguồn/hạng/phiên bản: [papers.json](../../research/papers.json); [lệnh chạy lại và phân tích](../../research/README.md).
 
-- **CoverUp: Effective High Coverage Test Generation for Python**, Pizzorno và Berger, FSE 2025 Research Papers / PACMSE, DOI 10.1145/3729398. Kết hợp coverage với ngữ cảnh và vòng phản hồi cho LLM; dùng tool Python gốc.
-- **ChatUniTest: A Framework for LLM-Based Test Generation**, Chen và cộng sự, FSE 2024 Demonstrations, DOI 10.1145/3663529.3663801. Dùng adaptive focal context và generation–validation–repair cho Java; giữ source gốc và trial plugin hiện tại tách riêng.
+- **CoverUp: Effective High Coverage Test Generation for Python**, Pizzorno và Berger, FSE 2025 Research Papers / PACMSE, DOI 10.1145/3729398. Vòng coverage → ngữ cảnh → LLM → chạy/sửa test. FSE A*, CORE2023.
+- **An empirical study of automated unit test generation for Python**, Lukasczyk, Kroiß và Fraser, Empirical Software Engineering 2023, 28:36, DOI 10.1007/s10664-022-10248-w. Tool Pynguin dùng tìm kiếm tiến hóa và type hints để sinh pytest, không cần LLM. Venue A theo CORE2020 journal ranking; bảng journal đã ngừng cập nhật từ 2022.
 
-[CORE2023 chính thức](https://portal.core.edu.au/conf-ranks/?by=all&search=&source=CORE2023) ghi FSE A*. Đây là hạng venue; ChatUniTest thuộc demo track cần xác nhận GV chấp nhận. Hai năm xuất bản 2024–2025 nằm trong yêu cầu 2021–2026.
+Hai năm xuất bản 2023/2025 thuộc 2021–2026. Hạng là của venue theo nguồn chính thức trong research, không gán hạng trực tiếp cho từng paper.
 
-| Thử nghiệm | Kết quả thật | Giới hạn |
+| Thí nghiệm | Kết quả thực tế | Giới hạn |
 |---|---|---|
-| CoverUp script gốc phân tích 163 module MT | overall line+branch 89,0%, MuTAP gpt4o_zero 76,8%; khớp 89% vs 77% làm tròn ở abstract v4 | Dữ liệu tác giả công bố, không sinh lại test; dependencies phân tích mới có khóa phiên bản |
-| CoverUp 0.6.0 + Gemini, benchmark f003 — Gia An tự chạy | Sinh 2 hàm test; xác minh offline cả bộ 3/3 pass; line 5/8 → 8/8, branch 1/4 → 4/4; bằng số đo tác giả của đúng module | Một module; đổi model/baseline/môi trường/ngân sách, chưa tái lập đầy đủ benchmark. [Evidence](../../evidence/tuan-06/papers/coverup-f003-gemini-2026-10-29/README.md) |
-| CoverUp 0.6.0 trên `scripts/coverage_gaps.py` | dry-run pass, coverage smoke ban đầu 23,6%, sau dry-run vẫn 23,6% | Không gọi model, không tạo test mới, không dùng làm kết quả generation |
-| ChatUniTest plugin 2.1.1 trên bản sao case study | parse pass: 20 class, 28 method | Chỉ phân tích source, endpoint localhost không có model; chưa generation hoặc tái lập experiment gốc |
+| CoverUp: script tác giả trên dữ liệu MT | 163 module; overall line+branch 89,0% vs MuTAP 76,8% | Reanalysis dữ liệu công bố |
+| CoverUp + Gemini 3.6: f003, Gia An tự chạy | Thêm 2 hàm; 3 pass; line 8/8, branch 4/4, bằng reference cùng module | Đổi model/baseline/môi trường/ngân sách |
+| CoverUp + Gemini 3.6: source nhóm | Thêm 6 hàm; 7 pass; line 38/39, branch 15/16; kết hợp 23,6% → 96,4% | Còn entrypoint; Python script, không phải Java business layer |
+| Pynguin: numeric cells notebook tác giả | 134 module sau lọc; 40.200 dòng; 30 lượt/config/module; 8 cột thống kê × 10 cấu hình khớp; median DynaMOSA-TypeHints 80,72% | Không sinh lại toàn bộ dữ liệu |
+| Pynguin 0.25.2: codetiming._timers | DYNAMOSA 600s/seed 23120205; coverage nội bộ 81,48%, bằng median 30 lượt cùng module/config; 10 pass, 5 xfail. SlipCover target line 42/42, branch 4/4 | Một seed; reference module trước lọc completeness. Metric bytecode khác metric source |
+| Pynguin: scripts/coverage_gaps.py | 0.25.2: 1 xfail không gọi SUT. 0.48.0: 1 xfail, kết hợp 20%; thêm seed XML: 2 pass, 23,6%, không assertion, bằng smoke baseline | Kết quả yếu trên module này; bản 0.48.0 là thử thích nghi riêng |
 
-Không tự implement lại thuật toán paper. CoverUp đã có lượt model thật trên f003; còn mở rộng benchmark và thử test sinh ra trên source nhóm. ChatUniTest chưa generation/tái lập gốc; không đánh dấu mục E hoàn thành. Chia lượt chạy cho thành viên là kế hoạch đề xuất trong research, chưa khẳng định họ đã nhận/chạy.
+Dùng tool và mã phân tích của tác giả, không implement lại thuật toán. Cả hai paper được thử trên source Python thật của nhóm, không dịch LoanService sang Python. Gia An tự chạy f003; Codex thực hiện các lượt bổ sung theo ủy quyền. Không nhận thành viên khác đã tự chạy. `xfail` không tính là pass; không tự đưa test paper vào suite chuẩn.
 
-### 9.2. Cách tái hiện và điều kiện hoàn thành
+### 9.2. Kết luận và bàn giao
 
-Hướng dẫn cài/chạy tool tác giả ở [research/README.md](../../research/README.md); chỉ mục số liệu ở [evidence paper](../../evidence/tuan-06/papers/README.md). Hoàn thành yêu cầu paper cần chạy thí nghiệm generation bằng tool gốc, đối chiếu kết quả công bố và thử trên source nhóm; replay phân tích, dry-run và parse không thay cho các bước đó. Đã có generation mới CoverUp trên f003; chưa đánh dấu hoàn tất toàn bộ phần paper.
+Đã có nguồn/hạng, phân tích kết quả công bố, generation mới trên một benchmark và áp dụng source nhóm cho mỗi paper; xem [output tối thiểu](../../evidence/tuan-06/papers/README.md). CoverUp tăng coverage rõ ở script nhóm; Pynguin gặp giới hạn tạo input filesystem/XML và assertion. Đây là ví dụ thực tế về điểm yếu công cụ.
+
+Phạm vi là tái hiện có giới hạn; chưa chạy lại toàn bộ benchmark nhiều seed, mutation RQ3 hoặc thiết lập đúng mọi phiên bản/môi trường gốc. Không suy ra test đúng nghiệp vụ chỉ vì pass/coverage cao. Video, hợp nhất slide/HTML, review chéo và trình bày với GV làm ở bước bàn giao tiếp theo.

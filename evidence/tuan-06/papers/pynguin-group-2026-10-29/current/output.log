@@ -1,0 +1,2 @@
+XFAIL ../../../tmp/ga-paper-pynguin-group-modern/generated/test_coverage_gaps.py::test_0
+1 xfailed in 0.04s

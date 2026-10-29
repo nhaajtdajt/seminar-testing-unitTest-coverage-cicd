@@ -58,7 +58,7 @@ Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả b
 - Nội dung AI ở [báo cáo mục 6](docs/thuc-hanh/BaoCao_ChiTiet.md); paper ở mục 9 và [research/README.md](research/README.md).
 - Lệnh chạy theo cùng format nhóm tại [hướng dẫn mục 9](docs/thuc-hanh/HuongDan_Demo.md). AI LoanService dùng `run_ai_demo.py draft/improved/mistake/mutation`; AI-4 dùng `human/data`. Chọn output mới và chạy tuần tự.
 - [AI-4](evidence/tuan-06/ai-4/README.md): đã khóa CSV/notes 23 ca Gia An cung cấp trước so; 23/23 người dùng và 13/13 AI pass. Độc lập theo notes, Codex chạy lệnh.
-- [AI Loan](evidence/tuan-06/ai-loan/README.md): 2 → 10 test, branch 50% → 100%, PIT 9/9. [Paper evidence](evidence/tuan-06/papers/README.md): mới reanalysis/dry-run/parse, chưa generation.
+- [AI Loan](evidence/tuan-06/ai-loan/README.md): 2 → 10 test, branch 50% → 100%, PIT 9/9. [Paper evidence](evidence/tuan-06/papers/README.md): CoverUp/Pynguin đã có phân tích công bố, generation benchmark và thử source nhóm; xem phạm vi/giới hạn trong chỉ mục.
 - Bằng chứng dùng chung `evidence/tuan-06/<chu-de>/<luot>/`: `run.json`, `output.log`, `site/jacoco/`, `pit-reports/`. Không để docs/evidence theo thư mục tên cá nhân.
 - [Video E](docs/thuc-hanh/KichBan_QuayVideo_Tuan_06.md) mới có artifact GA-01..07; chưa quay, chưa URL/timestamp. [Bảng công việc](docs/thuc-hanh/BangCongViec.md) theo dõi phần còn chờ.
 - Theo yêu cầu ngày 29/10, phần slide/HTML của Gia An làm sau cùng. Giữ nguyên slide/source renderer từ core, đã gỡ các PDF/Markdown slide tự xuất trước đó; không còn bản xuất riêng để nộp nhầm.

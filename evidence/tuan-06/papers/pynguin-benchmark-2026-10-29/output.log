@@ -1,0 +1,6 @@
+XFAIL ../../../../../../tmp/ga-paper-pynguin-benchmark-fixed/generated/test_codetiming__timers.py::test_case_1
+XFAIL ../../../../../../tmp/ga-paper-pynguin-benchmark-fixed/generated/test_codetiming__timers.py::test_case_6
+XFAIL ../../../../../../tmp/ga-paper-pynguin-benchmark-fixed/generated/test_codetiming__timers.py::test_case_7
+XFAIL ../../../../../../tmp/ga-paper-pynguin-benchmark-fixed/generated/test_codetiming__timers.py::test_case_9
+XFAIL ../../../../../../tmp/ga-paper-pynguin-benchmark-fixed/generated/test_codetiming__timers.py::test_case_13
+10 passed, 5 xfailed in 0.09s

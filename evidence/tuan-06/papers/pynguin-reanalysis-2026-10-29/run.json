@@ -1,0 +1,170 @@
+{
+  "scope": "author-notebook-numeric-cells-on-published-data",
+  "new_test_generation": false,
+  "artifact_doi": "10.5281/zenodo.6838658",
+  "executed_cells": [
+    10,
+    12,
+    14,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    31,
+    38,
+    39
+  ],
+  "retained_modules": 134,
+  "runs_per_configuration_per_module": 30,
+  "retained_rows": 40200,
+  "configurations": [
+    {
+      "ConfigurationId": "DynaMOSA-NoTypeHints",
+      "count": 4020.0,
+      "mean": 0.6940724385009968,
+      "std": 0.3102414287525422,
+      "min": 0.0,
+      "25%": 0.4285714285714285,
+      "50%": 0.7647058823529411,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "DynaMOSA-TypeHints",
+      "count": 4020.0,
+      "mean": 0.7159005093832217,
+      "std": 0.3050160101769221,
+      "min": 0.0,
+      "25%": 0.4583333333333333,
+      "50%": 0.807207498383969,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "MIO-NoTypeHints",
+      "count": 4020.0,
+      "mean": 0.6843210778861252,
+      "std": 0.3134696541514621,
+      "min": 0.0,
+      "25%": 0.4285714285714285,
+      "50%": 0.75,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "MIO-TypeHints",
+      "count": 4020.0,
+      "mean": 0.7132313777233108,
+      "std": 0.3072702253939233,
+      "min": 0.0,
+      "25%": 0.4583333333333333,
+      "50%": 0.8,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "MOSA-NoTypeHints",
+      "count": 4020.0,
+      "mean": 0.6873565466000008,
+      "std": 0.31651875735181084,
+      "min": 0.0,
+      "25%": 0.4,
+      "50%": 0.7674418604651163,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "MOSA-TypeHints",
+      "count": 4020.0,
+      "mean": 0.7128297523262948,
+      "std": 0.30819930868767936,
+      "min": 0.0,
+      "25%": 0.4580662393162393,
+      "50%": 0.8,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "Random-NoTypeHints",
+      "count": 4020.0,
+      "mean": 0.6262277276183505,
+      "std": 0.3290571525287129,
+      "min": 0.0,
+      "25%": 0.3333333333333333,
+      "50%": 0.6666666666666666,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "Random-TypeHints",
+      "count": 4020.0,
+      "mean": 0.6693970907666118,
+      "std": 0.3150876429847331,
+      "min": 0.0,
+      "25%": 0.376068376068376,
+      "50%": 0.7142857142857143,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "WS-NoTypeHints",
+      "count": 4020.0,
+      "mean": 0.6750810878730079,
+      "std": 0.3148719960029746,
+      "min": 0.0,
+      "25%": 0.4,
+      "50%": 0.7142857142857143,
+      "75%": 1.0,
+      "max": 1.0
+    },
+    {
+      "ConfigurationId": "WS-TypeHints",
+      "count": 4020.0,
+      "mean": 0.7063297669822799,
+      "std": 0.30714453301022654,
+      "min": 0.0,
+      "25%": 0.4583333333333333,
+      "50%": 0.8,
+      "75%": 1.0,
+      "max": 1.0
+    }
+  ],
+  "matches_author_stored_describe_output": true,
+  "compared_columns": [
+    "count",
+    "mean",
+    "std",
+    "min",
+    "25%",
+    "50%",
+    "75%",
+    "max"
+  ],
+  "selected_module_reference": {
+    "module": "codetiming._timers",
+    "configuration": "DynaMOSA-TypeHints",
+    "runs": 30,
+    "median_branch_coverage": 0.8148148148148148,
+    "reference_stage": "Published data before cross-configuration completeness filter",
+    "in_retained_cross_configuration_comparison": false
+  },
+  "input_sha256": {
+    "notebooks/project-analysis.ipynb": "8d2030e7dfd8bc178d4989f884bd5418e6aa1f82e9c49be6070b894bc2542338",
+    "data/results.csv.xz": "9518618b0b2518c282e9af0d7cb06aab2f4850016c12bec379d371ec63f1270d",
+    "data/results-assertions.csv.xz": "94686f249c56966c1192006fb36f93b5306584ba6c4b54d658090e107457bbac",
+    "data/loc_data.csv": "71be61c0597c6872cf11fb7690d583aeb433ded066398b94309b8c12964971c6",
+    "data/types.csv": "572fe3aad78d3f9e3191832168450e0617a3a0f262643c6c86796d3ac5b99a88",
+    "data/types_per_project.csv": "dba3e23e3f19934dda5633f66ab05a9bb56ea2df497d0ebf53451887d169ea49"
+  },
+  "limitation": "Re-executes numeric analysis, not 30 fresh runs per module/configuration; plotting and TeX export omitted.",
+  "executed_by": "Codex, authorized by Ngô Gia An (23120205)",
+  "exit_code": 0,
+  "executed_on": "2026-10-29",
+  "command": [
+    "<analysis-python>",
+    "research/pynguin/reanalyse.py",
+    "<artifact>/emse2022-experiments"
+  ]
+}

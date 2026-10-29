@@ -193,7 +193,7 @@ Mỗi output phải là thư mục mới; chạy tuần tự. Cấu trúc kết 
 
 ### 9.5. Paper
 
-Thực hiện theo [research/README.md](../../research/README.md); [evidence](../../evidence/tuan-06/papers/README.md) phân biệt reanalysis/dry-run/parse/generation. Chưa có bằng chứng generation mới; không gọi replay phân tích là tái lập toàn bộ paper.
+Thực hiện theo [research/README.md](../../research/README.md); [evidence](../../evidence/tuan-06/papers/README.md) có reanalysis, generation mới trên benchmark và thử source Python của nhóm cho CoverUp/Pynguin. Không gọi các lượt có giới hạn này là tái lập toàn bộ benchmark nhiều seed.
 
 ## 10. Lỗi thường gặp
 
