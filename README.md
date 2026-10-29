@@ -47,7 +47,7 @@ Lần đầu trả 201; mượn lại sách 1 trả 409. Tắt và khởi độn
 
 Mã nguồn, test, demo coverage/mutation/TDD và tài liệu seminar được triển khai với AI hỗ trợ. Đã tích hợp core mới: workflow CI tự chạy trên PR và push master/seminar-core; bằng chứng GitHub đỏ/xanh và required checks theo snapshot nằm ở [github-actions](evidence/tuan-06/github-actions/README.md). Lượt local sau tích hợp ngày 29/10 đạt 39/39 test và gate pass. Trạng thái còn chờ ở bảng công việc; không suy ra cấu hình live từ snapshot hoặc sửa tác giả lịch sử.
 
-Phần còn thiếu và trạng thái từng hạng mục: xem [Bảng công việc](docs/thuc-hanh/BangCongViec.md). Repo đã dọn các file build/cache và bằng chứng của cấu hình cũ (Java 21 + Spring Boot 3.5). Chạy Maven sẽ tạo lại `case-study/target/`. Các tài liệu đề xuất cũ (`nop-lan-1/`, `docs/00-…`, `docs/superpowers/`, `require.md`) nằm ở nhánh `noplan01`.
+Phần còn thiếu và trạng thái từng hạng mục: xem [Bảng công việc](docs/thuc-hanh/BangCongViec.md). Repo đã dọn các file build/cache và bằng chứng của cấu hình cũ (Java 21 + Spring Boot 3.5). Chạy Maven sẽ tạo lại `case-study/target/`. Các tài liệu đề xuất cũ (`nop-lan-1/`, `docs/00-…`, `docs/superpowers/`) nằm ở nhánh `noplan01`. Đề bài gốc của thầy: [require.md](require.md).
 
 Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả bản thực hành hiện tại. Lượt xác minh source, HTTP và Gemini API cho gói tuần này nằm trong `evidence/tuan-06/`. Video là yêu cầu seminar theo `PhanCong_NhiemVu.md`; kịch bản/ảnh chỉ là chuẩn bị, không thay video đã quay. Phần slide/HTML riêng của Gia An được hoãn đến cuối.
 
