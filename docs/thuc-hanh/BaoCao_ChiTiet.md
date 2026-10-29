@@ -197,9 +197,62 @@ CI tự động kiểm tra các thay đổi được tích hợp thường xuyê
 
 Workflow gồm `test` chạy JDK 25, `coverage-gate` phụ thuộc kết quả test, `package` phụ thuộc gate. Cache giữ dependency Maven; artifact lưu test report, coverage và JAR; summary giúp người xem đọc điều kiện gate.
 
-Workflow đã qua actionlint, các lệnh Maven đã chạy tại máy. Tài khoản GitHub đang dùng chỉ có quyền READ trên repo nhóm. Do đó chưa có lần chạy Actions, PR đỏ/xanh hay xác nhận required checks chặn merge. Việc upload cấu hình không tự bật quy tắc bảo vệ nhánh; người quản trị cần cấu hình required status checks.
+Workflow đã chạy thật trên GitHub Actions (JDK 25): PR xanh, PR đỏ vì coverage gate rồi xanh lại, và PR đỏ vào `master` bị chặn merge bởi required status checks. Link từng lần chạy và giới hạn nằm ở [evidence/tuan-06/github-actions](../../evidence/tuan-06/github-actions/README.md). Nhóm không dùng Jenkins; CI/CD chỉ dùng GitHub Actions.
 
 Phép đo JaCoCo trên bản Java 25 có ba lượt/cấu hình: trung vị không bật JaCoCo là 9,727 giây; có JaCoCo/report/gate là 12,754 giây. Phép đo repo Maven lạnh/ấm đã đủ ba cặp hợp lệ trên Java 25, trung vị 48,412/12,539 giây. Cặp bổ sung chạy sau hai cặp đầu, mất 479,523/11,940 giây; dùng kho trống cho lượt lạnh và dùng lại kho đó cho lượt ấm, ưu tiên IPv4 và tăng thời gian chờ tải. Điều kiện mạng thay đổi nên không suy ra mức tăng tốc cố định từ trung vị. Log tải lỗi được giữ riêng và không tính vào số liệu hoàn thành. Phép đo cache dependency tại máy không đồng nhất với thời gian restore cache trên GitHub.
+
+
+### 4.1. Tích hợp unit test và coverage gate vào workflow
+
+**Mục tiêu:** mỗi lần có pull request hoặc push, test và coverage chạy tự động; code thiếu test không được đóng gói và không được merge vào `master`.
+
+**Sơ đồ pipeline** (`.github/workflows/ci.yml`):
+
+```text
+pull_request / push (master, seminar-core)
+        │
+        ▼
+ [test (JDK 25)]  ──pass──▶ [coverage-gate] ──pass──▶ [package]
+ mvnw clean test            mvnw clean verify          mvnw -DskipTests package
+ upload: tests-jdk-25       JaCoCo report + gate       upload: library-app (JAR)
+                            upload: coverage
+```
+
+| Job | Lệnh Maven | Làm gì | Artifact |
+|---|---|---|---|
+| `test` | `clean test` | Chạy toàn bộ unit/web/integration test bằng Surefire (JUnit Jupiter). Một test fail thì job đỏ | `tests-jdk-25` (báo cáo Surefire) |
+| `coverage-gate` | `clean verify` | Chạy lại test cùng agent JaCoCo, tạo báo cáo, rồi `jacoco:check` kiểm ngưỡng | `coverage` (JaCoCo HTML) |
+| `package` | `-DskipTests package` | Đóng gói JAR của đúng revision đã qua gate | `library-app` (JAR) |
+
+**Ba cơ chế tích hợp chính:**
+
+1. **Chạy test tự động, có điều kiện nối.** `coverage-gate` khai báo `needs: test` và `package` khai báo `needs: coverage-gate`. Job trước đỏ thì job sau bị bỏ qua (`skipped`), nên code lỗi không bao giờ đến bước đóng gói.
+2. **Coverage gate bằng JaCoCo.** Trong `pom.xml`, execution `gate` gắn `jacoco:check` vào pha `verify` với quy tắc: lớp `vn.edu.seminar.fine.FineCalculator` phải có BRANCH covered ratio ≥ 0,90. Không đạt thì Maven in `Rule violated for class ...` rồi `BUILD FAILURE`, và job `coverage-gate` đỏ. Ngưỡng nằm trong `pom.xml` nên chạy ở máy hay trên CI đều giống nhau (có thể tắt tạm bằng `-Dcoverage.gate.skip=true`, chỉ dùng khi thu báo cáo baseline).
+3. **Chặn merge bằng required status checks.** Trên `master`, chủ repo bật ba check `test (JDK 25)`, `coverage-gate`, `package` là bắt buộc. PR đỏ có trạng thái `BLOCKED` và không merge được.
+
+**Các thành phần phụ trợ:**
+- **Cache Maven:** `actions/setup-java` với `cache: maven` và `cache-dependency-path: case-study/pom.xml`, khóa cache theo `pom.xml`. Lần chạy sau tải ít dependency hơn.
+- **Artifact:** báo cáo Surefire và JaCoCo được upload cả khi job đỏ (`if: always()`), để người xem mở báo cáo xem vì sao fail.
+- **Step summary:** job `coverage-gate` ghi ghi chú ngưỡng vào `GITHUB_STEP_SUMMARY`, hiện ngay trên trang run.
+- **Phân quyền tối thiểu:** `permissions: contents: read`.
+- **Tag loại trừ:** các test minh họa lỗi (`baseline`, `antipattern`, `ai-draft`, `ai-gaps`, `ai-data`) bị loại khỏi lần chạy thường qua `test.excludedTags`, nên CI chỉ chạy bộ test chuẩn.
+
+**Kết quả chạy thật** (chi tiết và link ở `evidence/tuan-06/github-actions/README.md`):
+
+| Tình huống | `test` | `coverage-gate` | `package` |
+|---|---|---|---|
+| PR bình thường (PR #1) | pass | pass | pass |
+| Xóa `FineCalculatorTest` (PR #2 lần đầu) | pass (21 test) | **fail**: branch 0,00 < 0,90 | skipped |
+| Khôi phục test (PR #2 sau đó) | pass | pass | pass |
+| PR đỏ vào `master` (PR #6) | pass | **fail** | skipped, trạng thái merge **BLOCKED** |
+
+Điểm cần để ý: khi xóa test, job `test` vẫn xanh vì không có test nào fail. Chính **coverage gate** mới phát hiện được code không còn được kiểm. Đây là lý do pipeline cần cả hai lớp: test pass chưa chứng minh test đủ.
+
+**Hạn chế đã biết:**
+- `coverage-gate` chạy lại toàn bộ test một lần nữa (`clean verify` sau `clean test`), nên tốn thời gian gấp đôi cho phần test. Có thể gộp `test` vào `coverage-gate` nếu cần nhanh hơn; nhóm giữ hai job để tách rõ "test fail" với "thiếu coverage" khi trình bày.
+- Gate chỉ kiểm branch coverage của `FineCalculator`, không phải toàn project, và branch coverage không đo chất lượng assertion (xem mục 3.4). PIT chưa được đưa vào CI vì chạy chậm.
+- Mới chạy trên `ubuntu-latest` với JDK 25; chưa có ma trận nhiều JDK/hệ điều hành.
+- Dừng ở bước tạo JAR (Continuous Delivery); không tự triển khai lên môi trường chạy thật.
 
 ## 5. Khảo sát và lựa chọn công cụ
 
