@@ -49,6 +49,7 @@ def main():
         return text.replace(str(ROOT), "<repo>").replace(str(Path.home()), "<home>")
     (args.output/"output.log").write_text(portable(result.stdout))
     metadata = {"scenario": args.scenario, "command": command, "started_at_utc": started,
+                "finished_at_utc": datetime.now(timezone.utc).isoformat(),
                 "elapsed_seconds": round(time.monotonic()-clock, 3), "exit_code": result.returncode,
                 "expected_exit_code": 1 if args.scenario == "mistake" else 0,
                 "environment": "local execution by Codex; not a paper reproduction or a user self-run",
@@ -63,14 +64,18 @@ def main():
         metadata["test_summaries"].append({k: suite.get(k) for k in ["name", "tests", "failures", "errors", "skipped"]})
     jacoco = ROOT/"case-study/target/site/jacoco/jacoco.xml"
     if jacoco.exists() and jacoco.stat().st_mtime >= started_epoch:
-        shutil.copy2(jacoco, args.output/"jacoco.xml")
+        report_directory = args.output/"site/jacoco"
+        report_directory.mkdir(parents=True)
+        shutil.copy2(jacoco, report_directory/"jacoco.xml")
         report = ET.parse(jacoco).getroot()
         target_name = "vn/edu/seminar/fine/FineCalculator" if dataset else "vn/edu/seminar/loan/LoanService"
         target = report.find(f".//class[@name='{target_name}']")
         metadata["fine_coverage" if dataset else "loan_coverage"] = {c.get("type"): {"covered": int(c.get("covered")), "missed": int(c.get("missed"))} for c in target.findall("counter")}
     mutations = ROOT/"case-study/target/pit-reports/mutations.xml"
     if mutations.exists() and mutations.stat().st_mtime >= started_epoch:
-        (args.output/"mutations.xml").write_text(portable(mutations.read_text()))
+        report_directory = args.output/"pit-reports"
+        report_directory.mkdir(parents=True)
+        (report_directory/"mutations.xml").write_text(portable(mutations.read_text()))
         statuses = {}
         for mutation in ET.parse(mutations).getroot():
             status = mutation.get("status")

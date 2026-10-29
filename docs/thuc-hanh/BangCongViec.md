@@ -1,39 +1,18 @@
 # Bảng công việc đến hết Tuần 6
 
-## Cập nhật hiện hành 28/10/2026 — phần Ngô Gia An (23120205)
-
-Căn cứ `PhanCong_NhiemVu.md` hiện tại: Gia An phụ trách AI, paper, hợp nhất trình bày và trưởng nhóm; Bảo An phụ trách Unit Test. Các mục W05/W06 phía dưới là ghi nhận lịch sử, không thay phân công hiện tại. **Video bắt buộc**; quyết định tạm loại video ở ghi nhận cũ đã được thay bởi yêu cầu ngày 28/10. Chỉ cập nhật phần được giao cho Gia An trong phiên này.
-
-| ID | Công việc hiện tại | Trạng thái | Minh chứng |
-|---|---|---|---|
-| GA-AI4 | Đối chứng độc lập dữ liệu biên | Đã nhận/khóa 23 ca + notes Gia An cung cấp trước so sánh; 11 ca chung khớp; Java 23/23 vs AI 13/13 pass. Codex chạy; độc lập theo notes, chờ người review | `ai/human/`, `docs/gia-an/AI4_KetQua.md`, `evidence/gia-an/ai4-*` |
-| GA-AI5 | Workflow AI trên LoanService | Đã chạy local, chờ người review: 2→10 test, branch 3/6→6/6, PIT 9/9 | `evidence/gia-an/`, `ai/results/AI-5-loan-review.md` |
-| GA-PAPER | Chọn/kiểm hạng/chạy paper có code | CoverUp replay phân tích + dry-run; ChatUniTest parse pass; generation thực nghiệm còn chờ | `research/`, `evidence/gia-an/papers/` |
-| GA-DECL | Khai báo dùng AI | Đã ghi phần Codex, chờ Gia An tự chạy/review/ký | `ai-usage-declaration/01_NgoGiaAn.md` |
-| GA-SLIDE | Hợp nhất slide/báo cáo | Đã bổ sung AI/paper/video và trạng thái, nền trắng/chữ đen | `slides/`, báo cáo mục 9 |
-| GA-VIDEO | Artifact AI/paper cho video | GA-01..07 đã có danh mục; chưa quay/đăng | `docs/gia-an/Video_Artifacts.md` |
-| GA-LEAD | Họp, gặp GV trước hạn 3–4 ngày, nộp | Có checklist; chờ hạn thật, hành động và xác nhận của nhóm | `docs/gia-an/DieuPhoi.md` |
-
-Mọi lượt mới do Codex chạy local; chưa có PR/push hoặc xác nhận reviewer chéo. Tiến độ paper chưa đủ để đánh dấu hoàn thành yêu cầu E.
-
----
-
-## Ghi nhận lịch sử trước cập nhật trên
-
-
-Đây là bảng theo dõi trong repository, chưa đồng bộ thành GitHub Issues/Projects. Các dòng W05 giữ vai trò/mốc công việc được ghi trong lịch sử; theo xác nhận của người dùng, tiến độ Tuần 05 kỳ trước do Phạm Quang Vinh đảm nhận. Các hạng mục W06 hiện tại do Ngô Gia An đảm nhận; không dùng bảng này để sửa tác giả commit lịch sử hoặc khẳng định thành viên khác đã review.
-
-Theo xác nhận của người dùng, Tuần 05 là tiến độ kỳ trước do Phạm Quang Vinh đảm nhận; các dòng W05 bên dưới là phần lịch sử của kỳ trước. Phần đang thực hiện trong workspace là Tuần 06, do Ngô Gia An đảm nhận toàn bộ năm vai trò. Không sửa tác giả các commit lịch sử.
+Bảng theo dõi dùng chung theo `PhanCong_NhiemVu.md`. Cập nhật cấu trúc ngày 29/10/2026: giữ các ghi nhận lịch sử, đưa AI/paper vào cùng bảng W06 với Unit Test/Coverage/CI; không gán lại tác giả commit. Các trạng thái “đã chạy” phải đọc cùng evidence và người thực hiện.
 
 ## Thành viên phụ trách
 
+
 | Vai trò | MSSV | Họ tên | Phụ trách |
 |---|---|---|---|
-| TV1 | 23120207 | Nguyễn Bảo An | Trưởng nhóm, Unit Test, JUnit/Mockito và tổng hợp báo cáo |
+| TV1 | 23120207 | Nguyễn Bảo An | Unit Test, JUnit/Mockito |
 | TV2 | 23120202 | Phạm Quang Vinh | CI/CD, Build Java 25 & Benchmark |
 | TV3 | 23120231 | Trương Nhật Đạt | Code Coverage, JaCoCo, coverage gate và mutation testing |
 | TV4 | 23120190 | Nguyễn Lê Thế Vinh | Case study, REST API, persistence và demo tích hợp |
-| TV5 | 23120205 | Ngô Gia An | AI, slide, báo cáo chi tiết và điều phối video |
+| TV5 | 23120205 | Ngô Gia An | AI, paper, trưởng nhóm; slide/HTML làm sau cùng |
+
 
 ## Tiến độ Tuần 05 — kỳ trước
 
@@ -59,9 +38,10 @@ Các dòng W05 ghi trạng thái và minh chứng của kỳ trước; không g�
 
 Luồng công việc: Dự kiến → Đang thực hiện → Chờ thành viên review → Hoàn thành có xác nhận. Mỗi thành viên tạo issue/nhánh/PR bằng tài khoản thật khi nhóm có quyền ghi; không tạo commit giả danh hoặc ghi lùi thời gian để bổ sung minh chứng quá khứ.
 
+
 ## Theo dõi tiến độ Tuần 06
 
-Theo chỉ đạo hiện tại của Ngô Gia An (23120205), các hạng mục của cả năm vai trò trong tuần này do Ngô Gia An đảm nhận. AI hỗ trợ biên tập/tái hiện; dòng này không sửa lại tác giả lịch sử trong Git và không khẳng định các thành viên khác đã review. Theo chỉ đạo mới nhất, video/kịch bản/ảnh demo tạm thời được loại khỏi checklist nộp tuần 6; source, test, báo cáo, AI/Git và visualization văn bản vẫn thuộc phạm vi bắt buộc.
+W06-01..05 là snapshot công việc tích lũy trước khi phân lại vai trò, không phải phân công hiện hành hoặc xác nhận tất cả thành viên đã tự review. W06-06 trở đi cập nhật theo chủ đề và người phụ trách hiện tại. Video vẫn là yêu cầu seminar; chỉ phần slide/HTML của Gia An tạm hoãn đến cuối.
 
 | ID | Phạm vi kế hoạch Tuần 6 | Người đảm nhận tuần này | Tiến độ thực tế | Bằng chứng/ghi chú |
 |---|---|---|---|---|
@@ -71,5 +51,40 @@ Theo chỉ đạo hiện tại của Ngô Gia An (23120205), các hạng mục c
 | W06-04 | TV4: đóng gói source và hướng dẫn chạy lại | Ngô Gia An (23120205) | Source và hướng dẫn có; HTTP smoke 5/5 trên JAR Java 25; ảnh request 201/409 được giữ tùy chọn ngoài checklist | `case-study/`, `README.md`, `evidence/tuan-06/http-smoke-java25/`; dữ liệu H2 mẫu xem `case-study/src/main/resources/data.sql` |
 | W06-05 | TV5: slide, báo cáo chi tiết, AI, bài tập, link | Ngô Gia An (23120205) | Slide/báo cáo/AI declaration/bài tập có; Gemini API live và evaluation fixture đạt 4/4; demo ngoài checklist nộp tuần 6 | `slides/`, `docs/thuc-hanh/BaoCao_ChiTiet.md`, `BaiTap_Tuan_06.md`, `evidence/tuan-06/ai-review/` |
 | W06-06 | TV3: các loại coverage, JaCoCo đo gì, công cụ thứ hai, điểm yếu công cụ, kịch bản video | Trương Nhật Đạt (23120231), AI hỗ trợ (Claude Code) | Ví dụ `LoanPeriodPolicy` + bộ T1–T4 và bảng 6 loại coverage; bảng JaCoCo đo/không đo; OpenClover chạy thật, so 6 tiêu chí; demo mức trần ẩn trong `Math.min`, mutant tương đương, chi phí PIT; kịch bản Video B có timestamp. **Chưa quay video.** | `BaoCao_ChiTiet.md` mục 3.1–3.4, 5.2; `HuongDan_Demo.md` CC-0, CC-0b, CC-5, CC-6; `evidence/tuan-06/coverage-types/`, `openclover/`, `coverage-blindspot/`, `pit-cost/` |
+| W06-07 | TV5: AI-4 đối chứng dữ liệu biên | Ngô Gia An (23120205), Codex hỗ trợ chạy | Khóa 23 ca/notes trước so; 11 ca chung khớp; Java 23/23 vs AI 13/13 pass. Độc lập theo notes, chờ người tự review | `ai/human/`; `evidence/tuan-06/ai-4/` |
+| W06-08 | TV5: AI trên LoanService | Ngô Gia An (23120205), Codex hỗ trợ | Nháp 2 → bổ sung 10 test; branch 3/6 → 6/6; PIT 9/9; fixture sai đỏ đúng 1 assertion | `HuongDan_Demo.md` mục 9.4; `evidence/tuan-06/ai-loan/` |
+| W06-09 | TV5: paper có source/hạng và thực nghiệm | Ngô Gia An (23120205) điều phối | Có danh mục/nguồn hạng; CoverUp reanalysis/dry-run, ChatUniTest parse; generation và tái lập đầy đủ còn chờ | `research/`; báo cáo mục 9; `evidence/tuan-06/papers/` |
+| W06-10 | TV5: khai báo AI, chuẩn hóa docs/evidence | Ngô Gia An (23120205), Codex hỗ trợ | Theo template 6 mục chung; docs vào tài liệu chung, evidence theo tuần/chủ đề; chờ Gia An tự chạy/review/ký | `ai-usage-declaration/01_NgoGiaAn.md`; `evidence/tuan-06/README.md` |
+| W06-11 | TV5: artifact video AI/paper | Ngô Gia An (23120205) | GA-01..07 có đầu vào/bằng chứng; chưa quay/đăng, chưa có URL/timestamp thực tế | `KichBan_QuayVideo_Tuan_06.md`, Video E |
+| W06-12 | TV5: hợp nhất slide/HTML | Ngô Gia An (23120205) | Hoãn đến bước cuối theo yêu cầu 29/10; dùng nguyên slide/HTML trên core, không xuất PDF riêng | `slides/` giữ bản core; không đánh dấu đã hoàn thành phần AI/paper trên slide |
+| W06-13 | TV2: CI thật, required checks và điểm yếu | Phạm Quang Vinh (23120202) | Có evidence PR đỏ → xanh; required checks master theo snapshot; GitHub Actions là công cụ CI duy nhất | `evidence/tuan-06/github-actions/`; báo cáo mục 4.1 |
 
-**Giới hạn ghi nhận:** lượt kiểm tra đầy đủ và smoke API là chạy local, không phải GitHub Actions hoặc triển khai production. Gemini API đã được gọi live trên diff fixture; evaluation 4/4 chỉ xác nhận phát hiện được lỗi seed trong fixture, không đánh giá độc lập/toàn diện source. Video/kịch bản/ảnh demo nằm ngoài checklist nộp tuần 6 theo chỉ đạo mới nhất; các ảnh đã có được giữ làm minh chứng phụ.
+
+**Giới hạn ghi nhận:** bằng chứng local không thay cho GitHub run. AI-3 4/4 chỉ trên fixture. Paper chưa có generation mới. Từng người phải tự xác nhận review; không tự điền thay. Các mô tả quyền/required checks đọc theo thời điểm evidence, không mặc định là cấu hình live hiện tại.
+
+## Điều phối chung — Ngô Gia An phụ trách
+
+| Mốc | Quy tắc | Ngày thực tế | Bằng chứng |
+|---|---|---|---|
+| Hạn nộp seminar | Lấy từ thông báo GV | Chưa xác nhận | Link/thông báo GV |
+| Gửi slide / gặp GV | Trước hạn nộp 3–4 ngày | Tính sau khi có hạn thật | Lịch hẹn hoặc phản hồi thật |
+| Họp nhóm mỗi tuần | Mỗi người báo đã làm / đang làm / vướng | Chưa đặt lịch | Biên bản thật, tên người tham gia |
+| Tập trình bày 1 | Chạy đủ tool/video | Chưa đặt lịch | Ghi nhận lỗi cần sửa |
+| Tập trình bày 2 | Bấm giờ, kiểm Q&A | Chưa đặt lịch | Thời lượng đo thật |
+
+## Checklist phần AI/paper và bàn giao
+
+- [x] AI-5 LoanService chạy thật và lưu evidence.
+- [x] Chuẩn bị bộ công cụ AI-4 để người tự điền.
+- [x] Kiểm nguồn paper, hạng venue và artifact.
+- [x] Chạy lại phân tích dữ liệu CoverUp và thử dry-run source nhóm.
+- [ ] Chạy sinh test mới của cả hai paper và lưu kết quả thực tế.
+- [x] Đã nhận CSV/notes Gia An cung cấp; Codex khóa, commit rồi so và chạy Java: 23/23 người dùng, 13/13 AI. Độc lập theo tuyên bố trong notes; chờ Gia An tự review/chạy lại.
+- [ ] Gia An đọc hiểu, chạy lại và xác nhận AI declaration.
+- [ ] Thành viên khác review chéo và xác nhận phần của họ.
+- [ ] Đủ URL video và timestamp thật; hợp nhất slide/HTML sau cùng.
+- [ ] Gửi slide / gặp GV trước hạn 3–4 ngày.
+- [ ] Điền Google Sheet contribution và xuất git log thật khi nộp.
+- [ ] Kiểm gói: ≤20 file, mỗi file ≤20 MB, tổng ≤400 MB; tên ZipTool nếu cần chia/nén; không dùng Google Drive.
+
+Ghi commit thật bằng `git log --date=iso-strict --format='%h | %aI | %an <%ae> | %s' seminar-core`. Bảng contribution phải mô tả đúng phần có AI hỗ trợ, không coi một tài khoản Git là bằng chứng cả nhóm đã thực hiện.

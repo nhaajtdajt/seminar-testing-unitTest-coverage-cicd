@@ -10,7 +10,7 @@ Người được phân công: Ngô Gia An (23120205). Code/test và lượt ch�
 | PIT bộ bổ sung | PIT chạy test riêng | — | — | 9 KILLED / 9 mutant, không sống trong tập mutator hiện tại |
 | Bộ chuẩn của repo | 39 | 17/17 | 6/6 | Pass; gate FineCalculator pass |
 
-Bằng chứng: `evidence/gia-an/loan-draft`, `loan-improved`, `loan-mistake`, `loan-mutation-retry2`, `full-verify`. Hai lượt PIT trước chưa chạy mutation vì quyền cache và HTTP 502; giữ nguyên log lỗi, không tính thành công. Thời gian là thời gian cục bộ, không suy ra tốc độ CI.
+Bằng chứng theo cấu trúc chung: [AI Loan](../../evidence/tuan-06/ai-loan/README.md), [bộ chuẩn 28/10](../../evidence/tuan-06/source-verify-2026-10-28/run.json). Hai lượt PIT trước chưa chạy mutation vì quyền cache và HTTP 502; giữ riêng log lỗi, không tính thành công. Thời gian là local, không suy ra tốc độ CI. Báo cáo ở `site/jacoco/` và `pit-reports/`.
 
 Gap của nháp gồm nhánh sách unavailable, số sách đạt giới hạn và phí còn nợ; test missing member cũng cần để kiểm lambda ném lỗi (JaCoCo không tính exception handling thành một nhánh điều kiện riêng). Bộ bổ sung kiểm count 0/2/3/4, phí 0.00/0.01/1000, mã lỗi cụ thể và side effect không lưu khi bị từ chối. `ArgumentCaptor` và `Clock.fixed` kiểm phiếu lưu thay vì chỉ xác nhận mock trả đúng giá trị đã stub.
 

@@ -139,15 +139,61 @@ MAVEN_OPTS=-Djava.net.preferIPv4Stack=true python3 scripts/benchmark_maven.py ca
 
 Tùy chọn IPv4 chỉ áp dụng cho lệnh này. Các lượt mới ghi thời điểm bắt đầu/kết thúc, thời hạn, lệnh Maven, `java_home` và `ipv4_preferred` trong `measurements.json`; các lượt cũ được giữ nguyên. Số đo ở các thời điểm hoặc cấu hình kết nối khác nhau cần được đọc cùng metadata, không dùng để kết luận mức cải thiện hiệu năng cố định.
 
-## 9. AI-1/AI-2/AI-3/AI-4
+## 9. AI-1/AI-2/AI-3/AI-4/AI-5 — Ngô Gia An (23120205)
 
-- AI-1: prompt `ai/prompts/AI-1-generate-tests.md`; bản nháp `FineCalculatorAiDraftTest` → bản bổ sung `FineCalculatorTest`/CSV. Chạy `-Pai-draft clean verify` để đối chiếu. Bản nháp do Codex sinh trong phiên này; review tại `ai/results/AI-1-review.md` cần nhóm kiểm lại.
-- AI-2: `python3 scripts/coverage_gaps.py evidence/tuan-05/ai-draft-recheck/site/jacoco/jacoco.xml --source-root case-study/src/main/java --output /tmp/coverage-gaps.json`; ghép JSON/source vào prompt AI-2. Output chỉ mô tả vị trí/số nhánh bỏ sót, không tự biết chính xác điều kiện true/false. Chạy `case-study/mvnw -f case-study/pom.xml -Pai-improved clean verify` để kiểm riêng bộ 3 test ban đầu + 3 test bổ sung; kết quả thực tế là 70% → 100% branch.
-- AI-3: `python3 scripts/ai_review.py --diff ai/fixtures/review.diff --output /tmp/seminar-ai-review` chỉ chuẩn bị prompt. Có `GEMINI_API_KEY` và `AI_MODEL` thì thêm `--live` để gọi API. `.github/workflows/ai-review.yml` có bước tương ứng, lưu kết quả dạng artifact; chưa tự đăng comment lên PR.
-- Khi gọi live, client retry tối đa hai lần sau request đầu cho timeout và lỗi HTTP tạm thời (`408`, `429`, `5xx`), với chờ 1 rồi 2 giây. Nếu vẫn lỗi, chưa có `review.json`; chờ API ổn định rồi chạy lại.
-- AI-4: CSV do AI sinh tại `ai/data/AI-4-boundaries.csv`; chạy `case-study/mvnw -f case-study/pom.xml -Pai-data clean verify` để nạp 13 ca qua JUnit và calculator thật; đối chiếu với bộ tham chiếu `fine-cases.csv`. Cả hai bộ được chuẩn bị có AI hỗ trợ trong phiên này, nên chưa có số liệu so với bộ do con người viết độc lập.
+### 9.1. AI-1/AI-2 — Sinh nháp, đọc gap, bổ sung
 
-Script live đã được gọi trong Tuần 06 bằng `gemini-3.6-flash` trên `ai/fixtures/review.diff`; metadata, prompt và response thật nằm ở `evidence/tuan-06/ai-review/`. `evaluation.json` đối chiếu rule/file/dòng với expected fixture và đạt 4 đúng, 0 thừa, 0 bỏ sót; đây không phải benchmark độc lập. Review fixture cũ ở `ai/results/AI-3-session-review.json` là output Codex trong phiên tương tác, không phải phản hồi Gemini. Workflow GitHub AI chưa được xác minh bằng run dịch vụ thật.
+Prompt ở `ai/prompts/AI-1-generate-tests.md` và `AI-2-coverage.md`; test nháp/gap ở `FineCalculatorAiDraftTest`/`FineCalculatorAiGapsTest`. Các lệnh dưới chạy output đã có, không gọi API.
+
+```bash
+case-study/mvnw -B -ntp -f case-study/pom.xml -Pai-draft clean verify
+python3 scripts/coverage_gaps.py case-study/target/site/jacoco/jacoco.xml \
+  --source-root case-study/src/main/java --output /tmp/ai2-gaps.json
+# Giữ report nháp trước khi clean lượt tiếp theo.
+case-study/mvnw -B -ntp -f case-study/pom.xml -Pai-improved clean verify
+```
+
+Kết quả demo đã lưu: 3 → 6 test, branch 70% → 100%. XML chỉ báo số nhánh bỏ sót; cần đọc source để xác định điều kiện.
+
+### 9.2. AI-3 — Review fixture/diff
+
+```bash
+python3 scripts/ai_review.py --diff ai/fixtures/review.diff --output /tmp/ai3-prepare
+python3 scripts/evaluate_review.py ai/fixtures/review-expected.json \
+  evidence/tuan-06/ai-review/review.json --output /tmp/ai3-evaluation.json
+```
+
+Lệnh đầu chỉ chuẩn bị prompt; lệnh thứ hai đánh giá response đã lưu. Có GEMINI_API_KEY/AI_MODEL thì thêm `--live` vào lệnh review để gọi Gemini mới. Client retry tối đa ba request cho timeout/HTTP tạm thời; không lưu key. Xem metadata để phân biệt prepare/live. `ai/results/AI-3-session-review.json` là output Codex, khác response Gemini tại `evidence/tuan-06/ai-review/`. Workflow lưu artifact; chưa tự comment PR. Kết quả 4/4 chỉ trên fixture cài sẵn.
+
+### 9.3. AI-4 — Đối chứng CSV người dùng và AI
+
+CSV/notes Gia An cung cấp đã được khóa trước so sánh ở commit `0e58f5f`. Không sửa/khóa đè `ai/human/frozen/`.
+
+```bash
+python3 scripts/ai4_compare.py compare ai/human/frozen ai/data/AI-4-boundaries.csv \
+  --output /tmp/ai4-comparison.json
+python3 scripts/run_ai_demo.py human --output /tmp/ai4-human
+python3 scripts/run_ai_demo.py data --output /tmp/ai4-ai
+```
+
+Kỳ vọng: 11 đầu vào chung khớp; người dùng 23/23 test pass, FineCalculator branch 10/10; AI 13/13 pass, branch 8/10. Hai profile skip gate theo mục tiêu demo. [Phân tích và nguồn dữ liệu](../../evidence/tuan-06/ai-4/README.md). Độc lập theo tuyên bố trong notes, không được hash tự chứng minh.
+
+### 9.4. AI-5 — LoanService: nháp, bổ sung, oracle sai và PIT
+
+```bash
+python3 scripts/run_ai_demo.py draft --output /tmp/ai-loan-draft
+python3 scripts/run_ai_demo.py improved --output /tmp/ai-loan-improved
+python3 scripts/run_ai_demo.py mistake --output /tmp/ai-loan-mistake
+python3 scripts/run_ai_demo.py mutation --output /tmp/ai-loan-pit
+```
+
+Kỳ vọng: 2 → 10 test, branch 3/6 → 6/6; fixture mistake có đúng một assertion fail; PIT 9/9 KILLED trong cấu hình đã chạy. Collector trả 0 khi đúng kịch bản, kể cả Maven exit 1 ở mistake. Fixture sai được cài sẵn, không phải lỗi model thật. [Minh chứng](../../evidence/tuan-06/ai-loan/README.md).
+
+Mỗi output phải là thư mục mới; chạy tuần tự. Cấu trúc kết quả thống nhất: `run.json`, `output.log`, `site/jacoco/jacoco.xml` hoặc `pit-reports/mutations.xml`. Không ghi đè lượt lỗi bằng lượt thành công. Lưu ý `run_ai_demo.py draft` chạy LoanService, còn `-Pai-draft` chạy FineCalculator.
+
+### 9.5. Paper
+
+Thực hiện theo [research/README.md](../../research/README.md); [evidence](../../evidence/tuan-06/papers/README.md) phân biệt reanalysis/dry-run/parse/generation. Chưa có bằng chứng generation mới; không gọi replay phân tích là tái lập toàn bộ paper.
 
 ## 10. Lỗi thường gặp
 

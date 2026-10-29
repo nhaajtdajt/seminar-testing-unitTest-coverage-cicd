@@ -2,7 +2,7 @@
 
 Trạng thái cập nhật 28/10/2026: **đã nhận và khóa 23 ca cùng ghi chú do Gia An cung cấp**. Hai tệp được giữ nguyên byte tại [cases.csv](cases.csv) và [cases-notes.md](cases-notes.md); ghi chú tuyên bố chỉ dựa trên đặc tả, chưa xem dữ liệu AI/test tham chiếu. Codex thực hiện nhập/khóa thay mặt người dùng theo yêu cầu đồng bộ, rồi commit `0e58f5f` trước khi so sánh. Không tự chứng minh quá trình viết độc lập thay người dùng.
 
-Đã chạy: bộ Gia An **23/23 pass, 10/10 branch**; CSV AI **13/13 pass, 8/10 branch** của FineCalculator. Có 11 đầu vào chung, cả 11 khớp kỳ vọng. [Kết quả và giới hạn](../../docs/gia-an/AI4_KetQua.md), [receipt](frozen/receipt.json). Chưa có xác nhận Gia An tự chạy lại; video còn chờ quay.
+Đã chạy: bộ Gia An **23/23 pass, 10/10 branch**; CSV AI **13/13 pass, 8/10 branch** của FineCalculator. Có 11 đầu vào chung, cả 11 khớp kỳ vọng. [Kết quả và giới hạn](../../evidence/tuan-06/ai-4/README.md), [receipt](frozen/receipt.json). Chưa có xác nhận Gia An tự chạy lại; video còn chờ quay.
 
 Các bước dưới mô tả quy trình tái sử dụng. Bản `frozen/` hiện tại đã tồn tại; không chạy freeze đè hoặc sửa bộ dữ liệu đã khóa. Ghi chú gốc được giữ nguyên, kể cả câu mô tả chưa freeze tại thời điểm người dùng viết tệp.
 
@@ -21,7 +21,7 @@ git commit -m 'test(ai4): freeze independently authored boundary oracle'
 
 ```bash
 python3 scripts/ai4_compare.py compare ai/human/frozen ai/data/AI-4-boundaries.csv \
-  --output evidence/gia-an/ai4-human-comparison.json
+  --output evidence/tuan-06/ai-4/comparison.json
 case-study/mvnw -B -ntp -f case-study/pom.xml -Pai-human clean verify
 ```
 

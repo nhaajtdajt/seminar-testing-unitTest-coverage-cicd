@@ -1,6 +1,6 @@
-# AI-4: đối chiếu bộ ca Gia An cung cấp với CSV AI
+# Minh chứng AI-4 — Đối chứng dữ liệu biên (28/10/2026)
 
-Ngày đồng bộ: 28/10/2026. Thành viên: Ngô Gia An (23120205). Codex nhập và giữ nguyên hai tệp người dùng gửi: [cases.csv](../../ai/human/cases.csv), [cases-notes.md](../../ai/human/cases-notes.md).
+Ngày đồng bộ: 28/10/2026. Thành viên: Ngô Gia An (23120205). Codex nhập và giữ nguyên hai tệp người dùng gửi: [cases.csv](../../../ai/human/cases.csv), [cases-notes.md](../../../ai/human/cases-notes.md).
 
 ## 1. Nguồn và thứ tự thực hiện
 
@@ -11,17 +11,17 @@ Ghi chú người dùng cung cấp tuyên bố chỉ sử dụng đặc tả ngh
 3. Commit khóa **`0e58f5f`** trước khi chạy so sánh của lượt này.
 4. Chạy compare, rồi chạy Java lần lượt bằng hai profile cô lập; giữ evidence từng bộ trước khi lượt sau `clean`.
 
-CSV gốc và bản khóa có SHA-256 `97370c36a2d331a95681b42cff20938d69f0053535d3de0df815281915637fa1`. Receipt có cả hash ghi chú: [receipt.json](../../ai/human/frozen/receipt.json). Dòng “chưa chạy freeze hoặc commit” trong ghi chú được giữ nguyên vì mô tả thời điểm người dùng viết tệp, trước lượt đồng bộ này.
+CSV gốc và bản khóa có SHA-256 `97370c36a2d331a95681b42cff20938d69f0053535d3de0df815281915637fa1`. Receipt có cả hash ghi chú: [receipt.json](../../../ai/human/frozen/receipt.json). Dòng “chưa chạy freeze hoặc commit” trong ghi chú được giữ nguyên vì mô tả thời điểm người dùng viết tệp, trước lượt đồng bộ này.
 
-## 2. Bạn làm có đúng hướng không?
+## 2. Đánh giá thiết kế dữ liệu
 
-**Đúng hướng AI-4.** Các ca tự thiết kế kiểm NORMAL/VIP, ân hạn, trước–đúng–sau mức trần, vượt xa trần, ngày âm và tier null. Mỗi ca có lý do và phép tính; hai tệp khớp nhau. Cả 23 kỳ vọng đều phù hợp với implementation hiện tại khi chạy Java.
+Bộ ca đối chứng kiểm NORMAL/VIP, ân hạn, trước–đúng–sau mức trần, vượt xa trần, ngày âm và tier null. Mỗi ca có lý do và phép tính; hai tệp khớp nhau. Cả 23 kỳ vọng đều phù hợp với implementation hiện tại khi chạy Java.
 
 Bộ đối chứng chưa có `Integer.MAX_VALUE`; đây là khoảng trống về đầu vào cực lớn, không làm các kỳ vọng đã viết thành sai. Giữ bản khóa đầu tiên; nếu mở rộng sau khi xem AI, ghi bộ bổ sung là dữ liệu sau đối chiếu, không gọi nó là bộ độc lập ban đầu.
 
 ## 3. Kết quả đối chiếu
 
-Nguồn số liệu: [ai4-human-comparison.json](../../evidence/gia-an/ai4-human-comparison.json).
+Nguồn số liệu: [ai4-human-comparison.json](comparison.json).
 
 | Chỉ số | Kết quả |
 |---|---:|
@@ -44,8 +44,8 @@ Năm đầu vào hợp lệ chỉ có trong bộ Gia An: NORMAL 2 ngày, VIP 0 n
 
 Hai lượt `clean verify` đều exit 0 trên JDK 25.0.5. Gate FineCalculator được skip theo cấu hình hai profile demo; không báo kết quả này là kiểm tra quality gate. Khác biệt coverage xuất phát từ bộ AI chỉ chứa đầu vào hợp lệ nên chưa chạy hai nhánh ném lỗi. Bộ chuẩn của repo có các test lỗi riêng; không suy rộng 80% của profile CSV thành coverage toàn project.
 
-- [Lệnh, hash và tổng hợp bộ Gia An](../../evidence/gia-an/ai4-human-run/run.json), [log](../../evidence/gia-an/ai4-human-run/output.log), [JaCoCo XML](../../evidence/gia-an/ai4-human-run/jacoco.xml).
-- [Lệnh, hash và tổng hợp bộ AI](../../evidence/gia-an/ai4-ai-run/run.json), [log](../../evidence/gia-an/ai4-ai-run/output.log), [JaCoCo XML](../../evidence/gia-an/ai4-ai-run/jacoco.xml).
+- [Lệnh, hash và tổng hợp bộ Gia An](human/run.json), [log](human/output.log), [JaCoCo XML](human/site/jacoco/jacoco.xml).
+- [Lệnh, hash và tổng hợp bộ AI](ai/run.json), [log](ai/output.log), [JaCoCo XML](ai/site/jacoco/jacoco.xml).
 
 Các lượt chạy trên do **Codex** thực hiện bằng công cụ ở máy local. Chưa có xác nhận Gia An tự chạy lại hay reviewer khác đã kiểm.
 

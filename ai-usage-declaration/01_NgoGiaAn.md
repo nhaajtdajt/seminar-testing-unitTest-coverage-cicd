@@ -1,53 +1,51 @@
 # Ngô Gia An (23120205): AI, paper và trình bày
 
-Cập nhật 28/10/2026 theo `PhanCong_NhiemVu.md` hiện tại. **Bản khai do Codex hỗ trợ biên tập, chờ Gia An tự review và xác nhận.**
+> Theo template 6 mục chung của nhóm. Cập nhật 29/10/2026: nội dung do Codex hỗ trợ biên tập, chờ Gia An tự review và xác nhận; không tự ký thay người dùng.
 
-## 1. Phần việc được giao
+## 1. Phần việc của tôi
 
-AI-4 đối chứng độc lập; mở rộng AI trên LoanService; chọn/kiểm hạng/chạy paper có code; hợp nhất slide/báo cáo; chuẩn bị artifact video AI/paper và điều phối trưởng nhóm. Triển khai trực tiếp trên `seminar-core` theo yêu cầu của Gia An, commit bằng identity Git đã có (`bingsu`), không đổi tác giả lịch sử. Chưa push/tạo PR.
+- Việc được giao: AI-4 đối chứng dữ liệu, thử quy trình AI trên LoanService, chọn/kiểm hạng/chạy paper có code, khai báo AI, video và điều phối. Phần slide/HTML tạm hoãn đến cuối theo yêu cầu ngày 29/10.
+- Link PR / commit của tôi: các commit local gồm `1bdadf6`, `1c1e3b6`, `e569765`, `1ef2b11`, `0e58f5f`, `f3df2ee`, `b698bac`, `4cf5467`; xem git log thật để đối chiếu các commit chuẩn hóa tiếp theo. Chưa push hoặc tạo PR cho phần mới trong phiên này.
 
-## 2. AI đã hỗ trợ như thế nào
+## 2. Tôi đã dùng AI như thế nào
 
-| Công cụ | Người dùng yêu cầu | AI thực hiện | Artifact |
-|---|---|---|---|
-| Codex (OpenAI), phiên 28/10/2026 | Đọc đúng phân công hiện tại, implement và commit từng thay đổi | Kiểm source, sửa Mockito agent, tạo test/script, chạy lệnh kiểm chứng | `case-study/pom.xml`, `scripts/run_ai_demo.py`, `evidence/gia-an/` |
-| Codex | Chuẩn bị công cụ, sau đó đồng bộ CSV và notes người dùng gửi | Giữ nguyên tệp, khóa/hash và commit trước so sánh, chạy hai bộ Java, tổng hợp kết quả; không sinh/sửa ca người dùng cung cấp | `ai/human/`, `docs/gia-an/AI4_KetQua.md`, `evidence/gia-an/ai4-*` |
-| Codex | Thử workflow AI trên lớp khác | Sinh nháp/bổ sung LoanService; fixture oracle sai ghi nhãn; đo coverage/PIT | `LoanServiceAi*Test`, `ai/prompts/AI-5-loan-service.md`, `ai/results/AI-5-loan-review.md` |
-| Codex + web/terminal | Chọn paper có code, kiểm hạng và thử artifact | Kiểm trang công bố/CORE; chạy script phân tích CoverUp, dry-run source nhóm; ChatUniTest preflight và parse | `research/`, `scripts/paper_experiments.py`, `evidence/gia-an/papers/` |
-| Codex | Hợp nhất trình bày, artifact trước khi quay | Viết phần AI/paper/video; cập nhật JSON/HTML/Markdown, xuất PDF; danh mục video | `slides/`, `docs/gia-an/`, báo cáo chi tiết, `output/pdf/` |
+| # | Công cụ AI | Tôi nhờ AI làm gì (tóm tắt prompt) | Kết quả AI đưa ra | Nằm ở đâu trong repo |
+|---|---|---|---|---|
+| 1 | Codex, 28/10 | Đọc source và implement phần được giao, commit từng thay đổi | Sửa startup agent Mockito, tạo test/script và chạy kiểm chứng local | `case-study/pom.xml`, `scripts/run_ai_demo.py`, `evidence/tuan-06/` |
+| 2 | Codex, 28/10 | Chuẩn bị đối chứng, sau đó đồng bộ CSV/notes người dùng gửi | Mẫu/runner, giữ nguyên dữ liệu, khóa/hash/commit trước so; không sinh/sửa ca người dùng cung cấp | `ai/human/`, `scripts/ai4_compare.py`, `evidence/tuan-06/ai-4/` |
+| 3 | Codex, 28/10 | Tái sử dụng quy trình trên LoanService | Nháp/bổ sung, fixture oracle sai ghi nhãn, đo coverage và PIT | `LoanServiceAi*Test`, `ai/prompts/AI-5-loan-service.md`, `evidence/tuan-06/ai-loan/` |
+| 4 | Codex + web/terminal, 28/10 | Chọn paper có code và kiểm hạng, thử artifact tác giả | Kiểm nguồn, CoverUp reanalysis/dry-run, ChatUniTest preflight/parse | `research/`, `scripts/paper_experiments.py`, `evidence/tuan-06/papers/` |
+| 5 | Codex, 28–29/10 | Biên tập tài liệu; tích hợp core rồi thống nhất format docs/evidence | Docs vào tài liệu chung, evidence theo tuần/chủ đề; giữ slide/HTML core và gỡ bản xuất riêng trước đó theo yêu cầu | `docs/thuc-hanh/`, `evidence/tuan-06/`, lịch sử Git |
 
-Các lượt lệnh evidence do **Codex chạy bằng công cụ trong workspace**. Chưa ghi nhận Gia An tự chạy lại hoặc thành viên khác review. Không có Gemini/model API được gọi trong các thí nghiệm mới này; output Gemini có sẵn thuộc lượt cũ.
+Không có Gemini/model API mới được gọi trong các lượt thí nghiệm AI-4/AI-5/paper trên. Lượt Gemini AI-3 có sẵn ngày 23/10 ở `evidence/tuan-06/ai-review/`; không nhận nó là output mới của phiên này.
 
-## 3. AI đã kiểm bằng công cụ
+## 3. Tôi đã review và kiểm chứng gì
 
-- Bộ chuẩn: 39 test pass trên JDK 25.0.5; coverage gate pass.
-- LoanService AI: 2 test, branch 3/6 → 10 test, branch 6/6; PIT 9/9 mutant. Fixture sai fail 1 assertion đúng dự kiến.
-- Đối chứng: tooling từng kiểm bằng fixture synthetic. Sau khi nhận CSV/notes của Gia An, Codex khóa ở commit `0e58f5f`, so sánh rồi chạy Java: người dùng 23/23 pass, branch 10/10; AI 13/13 pass, branch 8/10. Có 11 ca chung và cả 11 khớp kỳ vọng. Thêm kiểm hash trước thực thi; bộ Python hiện có 10 test pass.
-- CoverUp: script tác giả phân tích MT 163 module, overall line+branch 89,0% vs 76,8%; dry-run source Python nhóm pass. Chưa sinh lại test bằng model.
-- ChatUniTest: kiểm prerequisites artifact gốc; plugin 2.1.1 parse bản sao case study đạt 20 class/28 method. Chưa có generation hay tái lập thí nghiệm gốc.
+- Tôi đã tự chạy lại: **chưa xác nhận**. Các lượt evidence dưới đây do Codex chạy bằng công cụ ở máy local, không phải Gia An tự chạy.
+- Tôi đã đọc hiểu: **chưa xác nhận**, Gia An tự điền sau khi xem source/test/script.
+- Kiểm chứng bằng công cụ: bộ chuẩn 39 test/gate pass; AI-4 người dùng 23/23, branch 10/10; AI CSV 13/13, branch 8/10; AI-5 nháp 2 → bổ sung 10 test, branch 3/6 → 6/6, PIT 9/9 KILLED; fixture sai fail đúng một assertion.
+- Kiểm chứng paper: CoverUp phân tích 163 module, overall line+branch 89,0% vs 76,8%; dry-run source nhóm pass. ChatUniTest plugin parse 20 class/28 method. Chưa generation/tái lập đầy đủ.
+- AI sai hoặc thiếu ở: collector ban đầu từng gắn Surefire cũ vào lượt lỗi trước clean; đã loại metadata cũ, ghi chú và thêm kiểm report mới. Fragment ChatUniTest có tham số prune không được bản phát hành nhận; đã bỏ. Fixture oracle sai là cố ý cài, không nhận là lỗi model thật.
+- Tôi đã sửa: **chưa có xác nhận phần Gia An tự sửa**. Các sửa agent, collector và tài liệu trên do Codex hỗ trợ; source Git giữ nguyên tác giả lịch sử.
 
-## 4. Hạn chế và sửa sai
+## 4. Phần tôi tự làm, không dùng AI
 
-- Mockito self-attach lỗi tại máy trên JDK 25; startup javaagent giữ argLine JaCoCo đã khắc phục, 39 test pass.
-- Collector từng gắn Surefire cũ vào lượt PIT thất bại trước clean. Đã bỏ metadata cũ, ghi chú sửa và thêm kiểm thời gian sửa report. Giữ log lỗi thật.
-- PIT: từng lỗi quyền cache và HTTP 502; retry thành công lưu riêng. CoverUp dry-run đầu lỗi tải tokenizer, retry thành công riêng.
-- ChatUniTest parse đầu thiếu JAR; đóng gói bản sao rồi parse thành công. Fragment có tham số prune không được bản plugin phát hành nhận, đã bỏ khỏi fragment; không ảnh hưởng kết quả parse.
-- Paper còn thiếu generation mới. Không lấy AI-5 thay cho kết quả paper.
-- Hash không chứng minh dữ liệu do người viết độc lập; vẫn cần xác nhận thật và commit trước đối chiếu.
+CSV và ghi chú thiết kế 23 ca do Gia An cung cấp; ghi chú tuyên bố chỉ dùng đặc tả, chưa tham chiếu AI/test tham chiếu. Codex giữ nguyên hai tệp và ghi nguồn trong receipt. Việc kê khai công cụ đã dùng khi soạn và xác nhận cá nhân do Gia An chịu trách nhiệm; hash không chứng minh tác giả hay tính độc lập.
 
-## 5. Gia An tự điền sau khi review
+## 5. Điều tôi chưa chắc hoặc chưa kiểm được
 
-- Tôi tự chạy lại (lệnh, ngày, kết quả): **chưa xác nhận**.
-- Tôi đã đọc hiểu source/test/script: **chưa xác nhận**.
-- Tôi tự sửa gì và vì sao: **chưa xác nhận**.
-- CSV và ghi chú thiết kế đã do Gia An cung cấp; ghi chú tuyên bố chỉ sử dụng đặc tả, chưa tham chiếu AI/test tham chiếu. Codex giữ nguyên hai tệp. Việc kê khai công cụ đã dùng khi soạn và xác nhận cá nhân vẫn do Gia An chịu trách nhiệm; Codex không tự ký thay.
-- Oracle AI-4: **đã nhận 23 ca và notes**, khóa/so/test bởi Codex theo yêu cầu đồng bộ. Độc lập theo notes; chưa có xác nhận Gia An tự chạy lại.
-- Reviewer chéo và commit/PR họ đã đọc: **chưa có xác nhận**.
+- Gia An tự review/chạy lại và reviewer chéo: chưa có xác nhận.
+- Generation mới và tái lập đầy đủ hai paper chưa hoàn tất; ChatUniTest thuộc demo track cần xác nhận GV chấp nhận.
+- 100% branch hoặc 9/9 mutant không chứng minh mọi lỗi đã được loại bỏ; phép so AI-4 chỉ trên một lớp và một CSV AI có sẵn.
+- Video chưa quay/đăng, chưa có URL/timestamp thật. Slide/HTML riêng hoãn đến cuối, hiện dùng nguyên bản core; không ghi là đã hoàn thành phần trình bày mới.
+- Ký khai báo, gặp GV, họp/nộp bài/Google Sheet vẫn chờ hành động thật của thành viên.
 
-## 6. Xác nhận cá nhân
+## 6. Xác nhận
 
-- [ ] Tôi đã đối chiếu khai báo với commit/artifact thật.
-- [ ] Tôi đã chạy lại, hiểu phần của mình và điền mục 5.
-- [ ] Tôi chịu trách nhiệm nội dung nộp và giải thích được giới hạn.
+Tôi chỉ xác nhận nội dung đúng sự thật và chịu trách nhiệm sau khi tự đọc, chạy lại và bổ sung phần còn chờ.
 
-Ngày xác nhận và chữ ký Gia An: **chờ người dùng tự điền**.
+- [ ] Gia An đã đối chiếu khai báo với commit/artifact thật.
+- [ ] Gia An đã chạy lại, hiểu phần của mình và bổ sung mục 3–5.
+- [ ] Gia An xác nhận chịu trách nhiệm và giải thích được giới hạn.
+
+Ngày: **chưa xác nhận** · Ký tên (họ tên): **chờ Gia An tự điền**.

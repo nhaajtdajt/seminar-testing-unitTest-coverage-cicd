@@ -17,8 +17,8 @@ Thư mục chung để **mỗi người tự điền phần của mình**. Cuố
 | File | Nội dung |
 |---|---|
 | `00_Chung.md` | Công cụ AI của nhóm, quy trình review chung |
-| `01_NgoGiaAn.md` | Unit Test |
+| `01_NgoGiaAn.md` | AI, paper, trưởng nhóm; slide/HTML làm sau cùng |
 | `02_TruongNhatDat.md` | Code Coverage |
 | `03_PhamQuangVinh.md` | CI/CD |
 | `04_NguyenLeTheVinh.md` | Case study |
-| `05_NguyenBaoAn.md` | AI, paper, trình bày |
+| `05_NguyenBaoAn.md` | Unit Test |

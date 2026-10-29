@@ -1,8 +1,8 @@
 # Báo cáo chi tiết seminar — cập nhật đến Tuần 06
 
-**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần nằm ở `BangCongViec.md` và `evidence/tuan-06/README.md`. **Cập nhật tài liệu:** 28/10/2026 (bổ sung phần Ngô Gia An). Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
+**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần nằm ở `BangCongViec.md` và `evidence/tuan-06/README.md`. **Cập nhật tài liệu:** 29/10/2026 (tích hợp core, thống nhất cấu trúc docs/evidence; hoãn phần slide/HTML của Gia An). Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
 
-**Thành viên:** TV1: Phạm Quang Vinh (23120202); TV2: Nguyễn Bảo An (23120207); TV3: Trương Nhật Đạt (23120231); TV4: Nguyễn Lê Thế Vinh (23120190); TV5: Ngô Gia An (23120205)
+**Thành viên:** TV1: Nguyễn Bảo An (23120207); TV2: Phạm Quang Vinh (23120202); TV3: Trương Nhật Đạt (23120231); TV4: Nguyễn Lê Thế Vinh (23120190); TV5: Ngô Gia An (23120205)
 
 ## 1. Mục tiêu và phạm vi
 
@@ -300,13 +300,48 @@ Các bảng khảo sát ở gói đề xuất là dữ liệu tham khảo ban đ
 
 ## 6. Áp dụng AI
 
-AI-1 sinh bản nháp 3 test; các test chạy đúng nhưng chỉ phủ 70% nhánh. AI-2 đọc JSON trích từ JaCoCo và source, nhận ra thiếu null, ngày âm, nhánh tính phí VIP; sinh 3 test bổ sung. Profile riêng cho phép đo đúng bộ 3 → 6 test mà không đưa bộ tham chiếu vào kết quả.
+**Phụ trách:** Ngô Gia An (23120205). **Phạm vi:** sinh/đọc gap/review test, đối chứng dữ liệu và tái sử dụng quy trình trên lớp khác. Các lượt đã lưu do Codex hỗ trợ chạy local; thành viên tự review và xác nhận riêng. Slide/HTML của phần này được hoãn đến bước cuối theo yêu cầu ngày 29/10/2026, giữ bản chung từ `seminar-core`.
 
-AI-3 có prompt và client gọi Gemini qua biến môi trường, cùng workflow lưu artifact. Chế độ chuẩn bị không gọi dịch vụ và ghi `api_called=false`. Trong Tuần 06 đã có một lần gọi live bằng `gemini-3.6-flash` trên diff fixture; sau HTTP 503, retry thành công và lưu 4 findings. Đối chiếu với expected fixture đạt 4 đúng, 0 thừa, 0 bỏ sót. Fixture có lỗi seed nên đây là kiểm tra luồng gọi API, không phải benchmark độc lập hay review toàn diện repository.
+### 6.1. AI-1/AI-2 — Sinh test và bổ sung từ coverage
 
-Thí nghiệm AI-4 ban đầu có 13 dòng AI hợp lệ so với 15 ca tham chiếu cũng có AI hỗ trợ; không gọi lần so đó là đối chứng người viết. Cập nhật 28/10: Gia An gửi CSV 23 ca cùng ghi chú tuyên bố chỉ dựa đặc tả. Codex giữ nguyên/khóa/commit trước so sánh, chạy người dùng 23/23 và AI 13/13 pass; 11 ca chung khớp kỳ vọng. FineCalculator branch đạt 10/10 với bộ người dùng, 8/10 với riêng CSV AI. Xem mục 9.2 và [kết quả AI-4](../gia-an/AI4_KetQua.md); tính độc lập dựa vào ghi chú người dùng, không được hash tự chứng minh.
+AI-1 sinh bản nháp 3 test FineCalculator; test pass nhưng chỉ phủ 70% nhánh. AI-2 đọc JSON trích từ JaCoCo cùng source, nhận ra thiếu null, ngày âm và nhánh tính phí VIP; sinh 3 test bổ sung. Profile `ai-improved` kiểm riêng bộ 3 → 6 test, không trộn bộ chuẩn vào số đo. Prompt và nhận xét ở `ai/prompts/`, `ai/results/`; hướng dẫn lệnh ở `HuongDan_Demo.md` mục 9.
 
-Tất cả nội dung AI cần được review theo checklist: đúng nghiệp vụ, assertion cụ thể, không bịa API, không mock logic thuần, đọc số đo thực tế. Nhóm sẽ bổ sung người xác nhận; chưa quy đóng góp thực tế cho TV1–TV5 từ sản phẩm do trợ lý chuẩn bị.
+### 6.2. AI-3 — Review diff bằng Gemini
+
+Script `scripts/ai_review.py` ghép diff với prompt. Mặc định chỉ chuẩn bị và ghi `api_called=false`; có `--live`, GEMINI_API_KEY và AI_MODEL mới gọi API. Lượt live đã lưu ngày 23/10 dùng `gemini-3.6-flash` trên fixture có vấn đề cài sẵn, sau HTTP 503 đã retry thành công. Đối chiếu đạt 4 đúng, 0 thừa, 0 bỏ sót; đây là demo fixture, không phải benchmark độc lập hay review toàn repo. [Metadata và kết quả](../../evidence/tuan-06/ai-review/metadata.json).
+
+Gemini nhận xét code; JUnit chạy code thật để kiểm pass/fail. Workflow AI hiện lưu artifact, chưa tự đăng comment PR hay tự tạo commit sửa code. Các demo AI-1/2/4/5 chạy lại output đã có không tự gọi Gemini.
+
+### 6.3. AI-4 — Đối chứng dữ liệu biên
+
+Gia An cung cấp CSV **23 ca (16 hợp lệ, 7 lỗi)** cùng bảng ghi chú đủ 23 dòng. Ghi chú tuyên bố chỉ dựa vào đặc tả, chưa xem AI/test tham chiếu; Codex chép nguyên byte, khóa SHA-256 và commit `0e58f5f` trước khi so sánh. Receipt ghi rõ Codex thực hiện theo yêu cầu đồng bộ, không phải Gia An trực tiếp chạy lệnh. Giữ nguyên ghi chú gốc và không tự chứng minh quá trình viết độc lập.
+
+So với CSV AI 13 ca, có **11 đầu vào chung, cả 11 khớp kỳ vọng, 0 disagreement**; 12 ca chỉ có trong bộ Gia An (5 hợp lệ, 7 lỗi), 2 ca chỉ có trong AI là Integer.MAX_VALUE cho mỗi hạng. Bộ Gia An kiểm đủ các quy tắc chính nhưng chưa có giá trị int cực lớn. Số đầu vào trùng không phải accuracy mô hình.
+
+Java chạy riêng: `ai-human` **23/23 pass, line 11/11, branch 10/10** của FineCalculator; `ai-data` **13/13 pass, line 9/11, branch 8/10**. Hai profile skip gate theo cấu hình demo; không suy ra coverage toàn project từ CSV AI. [Kết quả, nguồn và giới hạn](../../evidence/tuan-06/ai-4/README.md), [bằng chứng](../../evidence/tuan-06/README.md). Gia An còn cần tự review/chạy lại; video chưa quay.
+
+### 6.4. AI-5 — Tái sử dụng quy trình trên LoanService
+
+Giữ nguyên nghiệp vụ production. Profile `ai-loan-draft`: 2 test pass, line 14/17 và branch 3/6. Trích gap và đối chiếu source rồi dùng profile `ai-loan-improved`: 10 test pass, line 17/17, branch 6/6. Bộ bổ sung kiểm sách unavailable, member missing, hạn mức 2/3/4, nợ dương 0.01/1000, không ghi khi từ chối, ID sách/thành viên và Clock.fixed bằng ArgumentCaptor. PIT trên bộ này diệt 9/9 mutant trong cấu hình hiện tại; không chứng minh mọi lỗi đều được tìm thấy. Bộ chuẩn repo vẫn 39/39, gate pass trên JDK 25.0.5.
+
+Profile `ai-loan-mistake` cố ý cài kỳ vọng sai “đang giữ 3 sách vẫn mượn được”, fail đúng một assertion. Fixture dùng để dạy kiểm oracle, không phải lỗi quan sát từ API hay kết quả paper. Prompt/source/log: [AI-5 review](../../ai/results/AI-5-loan-review.md), [evidence](../../evidence/tuan-06/README.md).
+
+### 6.5. Giới hạn và câu hỏi thảo luận
+
+Tất cả output AI cần được kiểm theo đặc tả, assertion cụ thể, chạy test và đối chiếu số đo. Không tự gán lượt Codex chạy là thành viên tự chạy lại; không nhận fixture cài sẵn là lỗi quan sát từ model.
+
+| Câu hỏi | Ý cần trả lời |
+|---|---|
+| Vì sao AI test xanh vẫn thiếu? | Nháp LoanService 2 test chỉ 3/6 nhánh; mở gap và source |
+| 100% branch có đủ? | Cần oracle/assertion, mutation; 9/9 chỉ trên tập mutant đã chạy |
+| AI-4 đã có đối chứng chưa? | Đã khóa 23 ca Gia An cung cấp trước so sánh; ghi chú tuyên bố chỉ dựa đặc tả. Độc lập không được hash tự chứng minh |
+| Hash chứng minh tác giả người? | Không; chỉ phát hiện dữ liệu thay đổi, vẫn cần xác nhận trung thực |
+| Fixture sai có phải lỗi model thật? | Không; cài sẵn để minh họa, đã ghi nhãn |
+| CoverUp có test Java không? | Tool gốc dùng Python; thử trên coverage_gaps.py, không dịch nghiệp vụ Java |
+| 89,0% là kết quả nhóm tự sinh? | Là replay phân tích dữ liệu tác giả trên 163 module MT |
+| ChatUniTest đã tái lập chưa? | Chưa; nêu đúng preflight/parse và kết quả thực tế, không gán AI-5 cho paper |
+| Hạng của bài là gì? | FSE CORE2023 A* là venue; P2 demo track cần GV xác nhận |
+| Ai tự review phần mới? | Chờ tên/ngày thật trong khai báo cá nhân, không điền thay |
 
 ## 7. Bài tập áp dụng
 
@@ -314,32 +349,17 @@ Bộ bài tập và đáp án gợi ý được chuẩn hóa tại [BaiTap_Tuan_
 
 ## 8. Gói seminar và trạng thái hoàn thiện
 
-Gói có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, báo cáo chi tiết, slide, bài tập và hướng dẫn tái hiện. Ba video theo từng chủ đề có kịch bản trong `KichBan_QuayVideo_Tuan_06.md`; chưa có video đã quay. Bảng `BangCongViec.md` ghi giới hạn còn lại của GitHub, video và xác nhận của thành viên.
+Gói có source, bộ test, log trước/sau, HTML/XML coverage, PIT, replay TDD, script AI, báo cáo chi tiết, slide, bài tập và hướng dẫn tái hiện. Các video theo từng chủ đề có kịch bản trong `KichBan_QuayVideo_Tuan_06.md`; chưa có video đã quay. Bảng `BangCongViec.md` ghi giới hạn còn lại của GitHub, video và xác nhận của thành viên.
 
 Số đo và đường dẫn: xem [minh chứng](../../evidence/tuan-05/README.md) và [minh chứng Tuần 06](../../evidence/tuan-06/README.md). Hướng dẫn tái hiện: [HuongDan_Demo.md](HuongDan_Demo.md).
 
 Nguồn chính thức dùng đối chiếu: [JUnit guide](https://docs.junit.org/6.0.3/user-guide/), [Mockito](https://github.com/mockito/mockito), [JaCoCo](https://www.jacoco.org/jacoco/trunk/doc/), [PIT Maven](https://pitest.org/quickstart/maven/), [Spring Boot requirements](https://docs.spring.io/spring-boot/4.1/system-requirements.html), [GitHub Maven CI](https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven), [Gemini API](https://ai.google.dev/api/generate-content).
 
+## 9. Nghiên cứu về unit testing
 
-## 9. Phần AI, paper và trình bày — Ngô Gia An (23120205)
+**Phụ trách:** Ngô Gia An (23120205), điều phối chia lượt chạy paper cho nhóm. Source tác giả, cấu hình, thí nghiệm công bố và lần thử source nhóm phải được ghi riêng.
 
-Phạm vi theo `PhanCong_NhiemVu.md` hiện tại, triển khai với Codex hỗ trợ ngày 28/10/2026. Trưởng nhóm hiện tại là Ngô Gia An; Nguyễn Bảo An phụ trách Unit Test. Các bằng chứng lịch sử ở phần trước không trở thành lượt chạy mới.
-
-### 9.1. Khả năng tái sử dụng AI trên LoanService
-
-Giữ nguyên nghiệp vụ production. Profile `ai-loan-draft`: 2 test pass, line 14/17 và branch 3/6. Trích gap và đối chiếu source rồi dùng profile `ai-loan-improved`: 10 test pass, line 17/17, branch 6/6. Bộ bổ sung kiểm sách unavailable, member missing, hạn mức 2/3/4, nợ dương 0.01/1000, không ghi khi từ chối, ID sách/thành viên và Clock.fixed bằng ArgumentCaptor. PIT trên bộ này diệt 9/9 mutant trong cấu hình hiện tại; không chứng minh mọi lỗi đều được tìm thấy. Bộ chuẩn repo vẫn 39/39, gate pass trên JDK 25.0.5.
-
-Profile `ai-loan-mistake` cố ý cài kỳ vọng sai “đang giữ 3 sách vẫn mượn được”, fail đúng một assertion. Fixture dùng để dạy kiểm oracle, không phải lỗi quan sát từ API hay kết quả paper. Prompt/source/log: [AI-5 review](../../ai/results/AI-5-loan-review.md), [evidence](../../evidence/gia-an/README.md).
-
-### 9.2. AI-4 đối chứng độc lập
-
-Gia An cung cấp CSV **23 ca (16 hợp lệ, 7 lỗi)** cùng bảng ghi chú đủ 23 dòng. Ghi chú tuyên bố chỉ dựa vào đặc tả, chưa xem AI/test tham chiếu; Codex chép nguyên byte, khóa SHA-256 và commit `0e58f5f` trước khi so sánh. Receipt ghi rõ Codex thực hiện theo yêu cầu đồng bộ, không phải Gia An trực tiếp chạy lệnh. Giữ nguyên ghi chú gốc và không tự chứng minh quá trình viết độc lập.
-
-So với CSV AI 13 ca, có **11 đầu vào chung, cả 11 khớp kỳ vọng, 0 disagreement**; 12 ca chỉ có trong bộ Gia An (5 hợp lệ, 7 lỗi), 2 ca chỉ có trong AI là Integer.MAX_VALUE cho mỗi hạng. Bộ Gia An kiểm đủ các quy tắc chính nhưng chưa có giá trị int cực lớn. Số đầu vào trùng không phải accuracy mô hình.
-
-Java chạy riêng: `ai-human` **23/23 pass, line 11/11, branch 10/10** của FineCalculator; `ai-data` **13/13 pass, line 9/11, branch 8/10**. Hai profile skip gate theo cấu hình demo; không suy ra coverage toàn project từ CSV AI. [Kết quả, nguồn và giới hạn](../gia-an/AI4_KetQua.md), [bằng chứng](../../evidence/gia-an/README.md). Gia An còn cần tự review/chạy lại; video chưa quay.
-
-### 9.3. Hai paper có source và kiểm hạng
+### 9.1. Paper, kết quả đã chạy và giới hạn
 
 Danh mục có DOI, năm, source, revision, nguồn hạng và giới hạn: [research/papers.json](../../research/papers.json); [phân tích và lệnh chạy](../../research/README.md).
 
@@ -356,8 +376,6 @@ Danh mục có DOI, năm, source, revision, nguồn hạng và giới hạn: [re
 
 Không tự implement lại thuật toán paper. Còn thiếu lượt model thật/benchmark và thử test sinh ra trên source nhóm cho cả hai bài; không đánh dấu mục E hoàn thành. Chia lượt chạy cho thành viên là kế hoạch đề xuất trong research, chưa khẳng định họ đã nhận/chạy.
 
-### 9.4. Slide, khai báo AI và video
+### 9.2. Cách tái hiện và điều kiện hoàn thành
 
-Đã hợp nhất nội dung phần Gia An vào slide nền trắng/chữ đen; nguồn JSON sinh HTML và Markdown đồng bộ. [Danh mục video](../gia-an/Video_Artifacts.md) ghi từng GA-01..07, nội dung, input/output và tình trạng. Slide nhắc video Unit Test/Coverage/CI/Case study theo người phụ trách; chờ URL thật. Video bắt buộc theo phân công hiện tại, nếu gộp phải có timestamp thật; chưa quay/đăng, không điền link giả.
-
-[Khai báo Gia An](../../ai-usage-declaration/01_NgoGiaAn.md) ghi đúng phần Codex tạo và chạy; phần người tự review/ký còn chờ. [Điều phối](../gia-an/DieuPhoi.md) chờ ngày hạn thật để tính mốc gửi slide/gặp GV trước 3–4 ngày, hai buổi tập và các mục nộp. Chưa thực hiện cuộc họp, liên hệ GV, điền Google Sheet hay nộp bài thay người dùng.
+Hướng dẫn cài/chạy tool tác giả ở [research/README.md](../../research/README.md); chỉ mục số liệu ở [evidence paper](../../evidence/tuan-06/papers/README.md). Hoàn thành yêu cầu paper cần chạy thí nghiệm generation bằng tool gốc, đối chiếu kết quả công bố và thử trên source nhóm; replay phân tích, dry-run và parse không thay cho các bước đó. Chưa đánh dấu hoàn tất, chưa có generation mới trong các lượt đã ghi.

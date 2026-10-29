@@ -2,7 +2,7 @@
 
 **Mục đích:** hướng dẫn quay demo Unit Test, Code Coverage và luồng ứng dụng. Đây là kịch bản quay, không phải video đã ghi. Chỉ đưa video vào gói nộp sau khi quay thật và kiểm tra file phát được.
 
-## Video A — Unit Test (5–7 phút) — Người thực hiện: Ngô Gia An (23120205)
+## Video A — Unit Test (5–7 phút) — Người thực hiện: Nguyễn Bảo An (23120207)
 
 **Yêu cầu sư phạm:** Đầy đủ 5 phân đoạn chuẩn theo yêu cầu của GV: Setup môi trường, Khái niệm cơ bản (UT-1), Data-driven & Biên (UT-2), Mockito nâng cao (UT-3), và Trường hợp công cụ không xử lý tốt / Anti-patterns.
 
@@ -46,6 +46,22 @@
 3. Gửi lại cùng sách; giải thích 409 `BOOK_UNAVAILABLE`.
 4. Thử một request sai và một tình huống dữ liệu mẫu không đủ quyền mượn.
 5. Nhắc rằng dữ liệu là H2 in-memory và reset khi khởi động lại.
+
+## Video E — AI và paper — Người thực hiện: Ngô Gia An (23120205)
+
+**Trạng thái:** mới chuẩn bị artifact, chưa quay/đăng YouTube. Timestamp thực tế điền sau khi quay; chưa ấn định thời lượng. Slide/HTML phần Gia An hoãn đến cuối; chưa đưa nội dung mới vào slide chung.
+
+| Phân đoạn | Timestamp | Nội dung cần minh họa | Lệnh / File minh chứng |
+|---|---|---|---|
+| **GA-01: Setup** | Chưa quay | Java 25, Maven Wrapper, script collector; phân biệt Codex tương tác và Gemini API | `run_ai_demo.py full`; evidence source verify |
+| **GA-02: Nháp và gap** | Chưa quay | LoanService nháp 2 test pass nhưng chỉ 3/6 branch; đọc gap/source | `run_ai_demo.py draft`; `evidence/tuan-06/ai-loan/draft/` |
+| **GA-03: Phức tạp** | Chưa quay | Bổ sung 10 test, 6/6 branch; assertion/captor và PIT 9/9 | `run_ai_demo.py improved`, `mutation`; `ai-loan/improved/`, `pit-strong/` |
+| **GA-04: Oracle sai** | Chưa quay | Fixture kỳ vọng mượn được khi giữ 3 sách; đúng một assertion fail | `run_ai_demo.py mistake`; fixture cài sẵn, không gọi là lỗi model thật |
+| **GA-05: Data driven / AI-4** | Chưa quay | Notes/CSV người dùng → hash và commit khóa → đối chiếu → Java; 23/23 vs 13/13 pass, branch 100% vs 80% | `HuongDan_Demo.md` mục 9.3; `evidence/tuan-06/ai-4/README.md` |
+| **GA-06: CoverUp** | Chưa quay | Nguồn/rank, script tác giả trên 163 module, 89,0% vs 76,8%; dry-run không sinh test | `research/README.md`; `evidence/tuan-06/papers/` |
+| **GA-07: ChatUniTest** | Chưa quay | Generation–validation–repair; parse case study 20 class/28 method; generation và tái lập gốc còn chờ | `research/chatunitest/`; `evidence/tuan-06/papers/` |
+
+Mọi lệnh đầy đủ ở `HuongDan_Demo.md` mục 9; mỗi lượt lưu output mới trước khi chạy clean tiếp theo. Không dùng số liệu cũ để nói là vừa chạy. Chỉ quay như một thí nghiệm thành công khi có kết quả thật; phần generation paper còn chờ model/môi trường. URL YouTube và timestamp GA-01..07 chưa có, ghi sau khi thực sự quay/xem lại. Hướng dẫn thao tác quay chi tiết làm ở bước sau.
 
 ## Checklist quay và bàn giao
 

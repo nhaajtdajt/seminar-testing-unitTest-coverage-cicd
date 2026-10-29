@@ -44,18 +44,19 @@ Lần đầu trả 201; mượn lại sách 1 trả 409. Tắt và khởi độn
 
 ## Trạng thái và giới hạn tái hiện
 
-Mã nguồn, test, demo coverage/mutation/TDD và tài liệu seminar đã được triển khai với AI hỗ trợ. Workflow GitHub Actions đã được viết. Trạng thái hiện tại và các giới hạn được ghi trong báo cáo Tuần 05; lịch sử Git không bị sửa để nhận công của tuần khác.
+Mã nguồn, test, demo coverage/mutation/TDD và tài liệu seminar được triển khai với AI hỗ trợ. Đã tích hợp core mới: workflow CI tự chạy trên PR và push master/seminar-core; bằng chứng GitHub đỏ/xanh và required checks theo snapshot nằm ở [github-actions](evidence/tuan-06/github-actions/README.md). Lượt local sau tích hợp ngày 29/10 đạt 39/39 test và gate pass. Trạng thái còn chờ ở bảng công việc; không suy ra cấu hình live từ snapshot hoặc sửa tác giả lịch sử.
 
 Phần còn thiếu và trạng thái từng hạng mục: xem [Bảng công việc](docs/thuc-hanh/BangCongViec.md). Repo đã dọn các file build/cache và bằng chứng của cấu hình cũ (Java 21 + Spring Boot 3.5). Chạy Maven sẽ tạo lại `case-study/target/`. Các tài liệu đề xuất cũ (`nop-lan-1/`, `docs/00-…`, `docs/superpowers/`, `require.md`) nằm ở nhánh `noplan01`.
 
-Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả bản thực hành hiện tại. Lượt xác minh source, HTTP và Gemini API cho gói tuần này nằm trong `evidence/tuan-06/`. Theo phạm vi nộp mới nhất, video, kịch bản và ảnh demo không thuộc checklist Tuần 05; các tệp đã có được giữ làm tài liệu tùy chọn.
+Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả bản thực hành hiện tại. Lượt xác minh source, HTTP và Gemini API cho gói tuần này nằm trong `evidence/tuan-06/`. Video là yêu cầu seminar theo `PhanCong_NhiemVu.md`; kịch bản/ảnh chỉ là chuẩn bị, không thay video đã quay. Phần slide/HTML riêng của Gia An được hoãn đến cuối.
 
 
-## Phần Ngô Gia An (23120205), cập nhật 28/10/2026
+## AI và paper — Ngô Gia An (23120205)
 
-- [Phạm vi và kết quả](docs/gia-an/README.md), [artifact video](docs/gia-an/Video_Artifacts.md), [paper](research/README.md).
-- AI LoanService: `python3 scripts/run_ai_demo.py draft --output /tmp/ga-draft`, đổi `draft` thành `improved`, `mistake`, `mutation` hoặc `full` cho từng lượt. Mỗi output phải mới; chạy tuần tự.
-- [AI-4 đối chứng người viết](ai/human/README.md): đã nhận và khóa 23 ca + ghi chú Gia An cung cấp; cả 23 ca pass. Xem [kết quả AI-4](docs/gia-an/AI4_KetQua.md); độc lập theo ghi chú, Codex chạy lệnh.
-- [Evidence mới](evidence/gia-an/README.md): 39 test chuẩn; nháp/bổ sung 2→10 test, branch 50→100%, PIT 9/9. Paper mới đạt replay phân tích/dry-run/parse, chưa generation.
-- Slide nguồn `slides/slides.json` sinh HTML/Markdown bằng `python3 scripts/render_slides.py`; bản PDF nằm ở `output/pdf/`. Export bằng `scripts/render_artifacts.mjs` với Node + marked + playwright và Chrome (chi tiết trong source script).
-- Chưa quay video, chưa có URL YouTube/timestamp; chưa xác nhận review cá nhân, gặp GV hoặc nộp bài.
+- Nội dung AI ở [báo cáo mục 6](docs/thuc-hanh/BaoCao_ChiTiet.md); paper ở mục 9 và [research/README.md](research/README.md).
+- Lệnh chạy theo cùng format nhóm tại [hướng dẫn mục 9](docs/thuc-hanh/HuongDan_Demo.md). AI LoanService dùng `run_ai_demo.py draft/improved/mistake/mutation`; AI-4 dùng `human/data`. Chọn output mới và chạy tuần tự.
+- [AI-4](evidence/tuan-06/ai-4/README.md): đã khóa CSV/notes 23 ca Gia An cung cấp trước so; 23/23 người dùng và 13/13 AI pass. Độc lập theo notes, Codex chạy lệnh.
+- [AI Loan](evidence/tuan-06/ai-loan/README.md): 2 → 10 test, branch 50% → 100%, PIT 9/9. [Paper evidence](evidence/tuan-06/papers/README.md): mới reanalysis/dry-run/parse, chưa generation.
+- Bằng chứng dùng chung `evidence/tuan-06/<chu-de>/<luot>/`: `run.json`, `output.log`, `site/jacoco/`, `pit-reports/`. Không để docs/evidence theo thư mục tên cá nhân.
+- [Video E](docs/thuc-hanh/KichBan_QuayVideo_Tuan_06.md) mới có artifact GA-01..07; chưa quay, chưa URL/timestamp. [Bảng công việc](docs/thuc-hanh/BangCongViec.md) theo dõi phần còn chờ.
+- Theo yêu cầu ngày 29/10, phần slide/HTML của Gia An làm sau cùng. Giữ nguyên slide/source renderer từ core, đã gỡ các PDF/Markdown slide tự xuất trước đó; không còn bản xuất riêng để nộp nhầm.

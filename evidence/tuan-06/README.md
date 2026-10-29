@@ -34,7 +34,38 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 - [Metadata](ai-review/metadata.json), [prompt](ai-review/prompt.md), [review JSON](ai-review/review.json). API key không được lưu.
 - [Đối chiếu fixture](ai-review/evaluation.json): 4 true positives, 0 false positives, 0 false negatives. Kết quả này chỉ đo độ khớp với fixture seed, không phải benchmark độc lập.
 
-## Phần chưa có minh chứng trong tuần
+## Source verify ngày 28/10 và sau tích hợp core
 
-- Video/kịch bản/ảnh demo hiện nằm ngoài checklist nộp tuần 6 theo chỉ đạo mới nhất; không tính là mục thiếu. Ảnh JaCoCo và app/API vẫn được giữ tùy chọn.
-- Run GitHub Actions/Jenkins không thuộc checklist tuần 6; đó là trạng thái scope toàn dự án. Gemini API thật đã chạy và đối chiếu fixture đạt 4/4; kết quả lưu trong `ai-review/`.
+- [Snapshot 28/10](source-verify-2026-10-28/run.json): 39 test chuẩn, không failure/error/skipped, gate pass; JDK 25.0.5. Lượt 33 test ở `source-verify/` phía trên là snapshot 23/10, giữ nguyên.
+- [Lượt sau tích hợp core và chuẩn hóa 29/10](source-verify-2026-10-29/run.json): 39/39 test pass, 0 failure/error/skipped, coverage gate pass; log và `site/jacoco/jacoco.xml` nằm cùng lượt. Không ghi đè snapshot trước.
+
+## AI-4 — Đối chứng dữ liệu biên (Ngô Gia An)
+
+[Chỉ mục, nguồn và kết quả](ai-4/README.md): Gia An cung cấp 23 ca + notes; Codex khóa ở commit `0e58f5f` trước so sánh và chạy Java. Bộ người dùng 23/23 pass, FineCalculator branch 10/10; CSV AI 13/13 pass, branch 8/10. Có 11 đầu vào chung, cả 11 khớp kỳ vọng. Độc lập dựa trên tuyên bố trong notes, không do hash tự chứng minh.
+
+- `ai-4/human/`, `ai-4/ai/`: `run.json`, `output.log`, `site/jacoco/jacoco.xml` của mỗi lượt.
+- [comparison.json](ai-4/comparison.json): số ca trùng/thiếu/thêm và kỳ vọng khác nhau.
+- `ai-4/tooling/`: snapshot synthetic kiểm công cụ trước khi nhận dữ liệu thật; không dùng làm bộ người viết.
+
+## AI-5 — Tái sử dụng trên LoanService (Ngô Gia An)
+
+[Chỉ mục và lệnh](ai-loan/README.md): nháp 2 test, branch 3/6 → bổ sung 10 test, branch 6/6; fixture sai fail đúng một assertion; PIT 9/9 KILLED. Lượt lỗi quyền và HTTP 502 giữ riêng. Đây là demo Codex tương tác, không phải output Gemini/paper; chưa có xác nhận người tự review/chạy lại.
+
+## Paper — Artifact tác giả (Ngô Gia An điều phối)
+
+[Chỉ mục kết quả và giới hạn](papers/README.md): CoverUp replay phân tích MT 163 module (overall line+branch 89,0% vs 76,8%), dry-run source Python nhóm; ChatUniTest plugin parse 20 class/28 method. Chưa chạy generation hoặc tái lập đầy đủ thí nghiệm gốc. Source/revision/cách chạy: `research/`.
+
+## Quy ước lưu minh chứng
+
+- Cùng cấu trúc theo tuần/chủ đề với Coverage/CI: `evidence/tuan-06/<chu-de>/<luot>/`.
+- Lượt local có `run.json` và `output.log`; báo cáo Java ở `site/jacoco/` hoặc `pit-reports/`. Phân tích không chạy Maven có JSON kết quả riêng; GitHub evidence giữ link run/PR.
+- Ngày 29/10 chỉ chuyển vị trí 46 tệp evidence từ `evidence/gia-an/`; nội dung gốc không đổi. Đường dẫn cũ nằm bên trong metadata/log phản ánh thời điểm chạy, không sửa lại lịch sử hoặc số liệu. Markdown và lệnh tái hiện dùng đường dẫn mới.
+- Dataset đã khóa `ai/human/frozen/`, CSV/notes gốc và receipt giữ nguyên. Chuyển nơi lưu không phải chạy lại thí nghiệm.
+
+## Phần còn chờ
+
+- Gia An tự đọc, chạy lại và xác nhận khai báo AI; reviewer chéo chưa xác nhận.
+- Paper còn generation thật, chạy benchmark gốc và thử test sinh ra trên source nhóm.
+- Video là yêu cầu seminar, chưa có file video/URL/timestamp thật; script/ảnh không thay cho video.
+- Phần slide/HTML Gia An hoãn đến cuối theo yêu cầu ngày 29/10, dùng nguyên nguồn core. Chưa xuất lại PDF riêng.
+- CI GitHub và required checks có evidence ở `github-actions/`; trạng thái quyền/nhánh là snapshot, không tự suy ra cấu hình live hôm nay. Nhóm đã bỏ Jenkins.
