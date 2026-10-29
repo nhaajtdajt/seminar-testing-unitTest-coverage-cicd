@@ -101,6 +101,8 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           AI_MODEL: ${{ vars.AI_MODEL || 'gemini-3.6-flash' }}
+          GEMINI_MAX_ATTEMPTS: ${{ vars.GEMINI_MAX_ATTEMPTS || '6' }}
+          GEMINI_API_TIMEOUT: ${{ vars.GEMINI_API_TIMEOUT || '90' }}
         run: python3 scripts/ci_ai_review.py review
       - uses: actions/upload-artifact@v7
         if: always()

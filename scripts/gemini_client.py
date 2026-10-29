@@ -99,6 +99,8 @@ def generate(prompt, destination, model=None, keep_payloads=False):
                     raw = json.load(response)
                 metadata.pop("error_type", None)
                 metadata.pop("http_status", None)
+                metadata.pop('error_category', None)
+                metadata.pop('retry_after_seconds', None)
                 serialized = json.dumps(raw, ensure_ascii=False, indent=2).replace(key, "<redacted>")
                 if keep_payloads:
                     (destination / "response.json").write_text(serialized + "\n", encoding="utf-8")
@@ -118,10 +120,28 @@ def generate(prompt, destination, model=None, keep_payloads=False):
             except (urllib.error.URLError, TimeoutError) as error:
                 status = getattr(error, "code", None)
                 metadata.update(error_type=type(error).__name__, http_status=status)
+                if isinstance(error, urllib.error.HTTPError) and status == 429:
+                    # Inspect only quota classification, never persist error bodies/credentials.
+                    try:
+                        detail = json.loads(error.read(65536)).get('error', {})
+                    except (ValueError, OSError):
+                        detail = {}
+                    description = json.dumps(detail).lower()
+                    daily = any(token in description for token in ('requests per day', 'perday', 'tokens per day'))
+                    metadata.update(error_category='daily_quota' if daily else 'rate_limit')
+                    for info in detail.get('details', []):
+                        if isinstance(info, dict) and str(info.get('@type','')).endswith('RetryInfo'):
+                            delay = re.fullmatch(r'(\d+)(?:\.\d+)?s', str(info.get('retryDelay','')))
+                            if delay:
+                                metadata['retry_after_seconds'] = int(delay.group(1))
+                    if daily:
+                        raise RuntimeError('Gemini daily project quota exhausted; retry later or use an authorized project with available quota. Details in api.json') from None
+                    if metadata.get('retry_after_seconds', 0) > 30:
+                        raise RuntimeError('Gemini rate limit requests a wait longer than the retry budget; retry later. Details in api.json') from None
                 if attempt == attempts - 1 or (status is not None and status not in (408, 429, 500, 502, 503, 504)):
                     raise RuntimeError(f"Gemini HTTP {status or 'network/timeout'}; details in api.json") from None
                 print(f"Temporary Gemini failure; retry {attempt + 2}/{attempts}", flush=True)
-                time.sleep(min(2 ** (attempt + 1), 30))
+                time.sleep(max(min(2 ** (attempt + 1), 30), metadata.pop('retry_after_seconds', 0)))
     except (KeyError, IndexError, TypeError, ValueError) as error:
         metadata["error_type"] = type(error).__name__
         raise ValueError("Invalid/incomplete Gemini output; see api.json; use --keep-payloads for payload debugging") from None

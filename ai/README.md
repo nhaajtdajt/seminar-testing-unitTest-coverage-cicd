@@ -360,6 +360,9 @@ Trong GitHub → repository → **Settings → Secrets and variables → Actions
 
 - **Secrets**: thêm `GEMINI_API_KEY` (cùng key bạn đang dùng local).
 - **Variables**: `AI_MODEL=gemini-3.6-flash`, hoặc model tài khoản có quyền.
+- **Variables tùy chọn**: `GEMINI_MAX_ATTEMPTS` từ 1–10 (CI mặc định 6),
+  `GEMINI_API_TIMEOUT` từ 10–180 giây (CI mặc định 90). Retry tuần tự có backoff;
+  hết quota ngày thì dừng ngay, rate limit ngắn chờ theo RetryInfo nếu trong ngân sách.
 - `AI_REVIEW_REF` mặc định `seminar-core`: nhánh tin cậy chứa automation đã push.
   Chỉ đổi khi nhóm đã chuyển automation sang nhánh khác được kiểm soát.
 
@@ -368,6 +371,8 @@ Trong GitHub → repository → **Settings → Secrets and variables → Actions
 Nếu tổ chức chặn quyền ghi, người quản trị cần cho phép workflow dùng quyền này.
 Không cần token cá nhân cho workflow. Giữ các required checks hiện có; AI là nhận xét
 tham khảo, không thêm điều kiện vào job đóng gói.
+Các thiết lập retry mới chỉ có hiệu lực khi nhánh automation tin cậy `AI_REVIEW_REF`
+đã chứa phiên bản `gemini_client.py` hỗ trợ chúng; mặc định hiện trỏ `seminar-core`.
 
 AI jobs checkout automation ở nhánh tin cậy, đọc diff PR bằng Git, không chạy code PR
 với Gemini key/quyền comment. PR từ fork vẫn chạy test/coverage nhưng bỏ qua AI jobs

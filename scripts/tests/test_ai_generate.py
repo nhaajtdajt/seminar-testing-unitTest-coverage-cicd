@@ -111,6 +111,34 @@ class GenerationWorkflowTests(unittest.TestCase):
                 client.generate('fixture',Path(temporary))
             api.assert_not_called()
 
+    def test_daily_quota_stops_without_wasting_retry_budget(self):
+        body={'error':{'message':'Generate content requests per day limit exceeded',
+              'details':[{'@type':'type.googleapis.com/google.rpc.RetryInfo','retryDelay':'600s'}]}}
+        error=client.urllib.error.HTTPError('https://example.invalid',429,'Quota',{},io.BytesIO(json.dumps(body).encode()))
+        with tempfile.TemporaryDirectory() as temporary:
+            out=Path(temporary)
+            with patch.object(client,'configured',return_value=('dummy-key','test-model')), \
+                    patch.object(client.urllib.request,'urlopen',side_effect=error) as api, \
+                    patch.object(client.time,'sleep') as sleep, self.assertRaisesRegex(RuntimeError,'daily project quota'):
+                client.generate('fixture',out)
+            self.assertEqual(api.call_count,1)
+            sleep.assert_not_called()
+            data=json.loads((out/'api.json').read_text())
+            self.assertEqual(data['error_category'],'daily_quota')
+            self.assertEqual(data['retry_after_seconds'],600)
+        error.close()
+
+    def test_per_minute_rate_limit_retries_after_provider_delay(self):
+        body={'error':{'details':[{'@type':'type.googleapis.com/google.rpc.RetryInfo','retryDelay':'5s'}]}}
+        error=client.urllib.error.HTTPError('https://example.invalid',429,'Rate',{},io.BytesIO(json.dumps(body).encode()))
+        with tempfile.TemporaryDirectory() as temporary:
+            with patch.object(client,'configured',return_value=('dummy-key','test-model')), \
+                    patch.object(client.urllib.request,'urlopen',side_effect=[error,model_response({'ok':True})]), \
+                    patch.object(client.time,'sleep') as sleep:
+                self.assertTrue(client.generate('fixture',Path(temporary))['ok'])
+            sleep.assert_called_once_with(5)
+        error.close()
+
     def test_default_client_does_not_persist_source_or_response_payloads(self):
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary)
