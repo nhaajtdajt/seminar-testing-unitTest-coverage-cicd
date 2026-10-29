@@ -1,4 +1,4 @@
-# Chạy demo Gemini AI-1, AI-2 và AI-4
+# Chạy Gemini AI-1, AI-2, AI-3 và AI-4
 
 Ngô Gia An (23120205). Hướng dẫn cho người tự chạy demo; không cần lưu/nộp evidence.
 Source, prompt và script được giữ trong Git. Output sinh ra chỉ dùng local, được Git bỏ qua.
@@ -225,3 +225,73 @@ Không clean giữa AI-1 và AI-2, hoặc trước khi AI-4 chạy xong: baselin
 
 Cả hai thư mục output đã được `.gitignore` bỏ qua, kể cả quên clean rồi `git add .`.
 Không force-add chúng. Runner/cleaner không tự commit, push, merge hoặc triển khai server.
+
+## 10. AI-3 tự động trong CI và comment PR
+
+Sau khi đã commit/push phần tích hợp trên `seminar-core`, PR trong cùng repository
+tự chạy workflow **Seminar CI** (`.github/workflows/ci.yml`):
+
+```text
+PR opened / synchronize / reopened
+    ├── test (JDK 25) → coverage-gate → package (JAR)
+    └── ai-review: Gemini đọc diff source/test/POM
+                         ↓ đợi các job kết thúc, kể cả failure/skipped
+                    ai-comment: cập nhật một comment trên PR
+```
+
+Bạn không cần gọi AI-3 local. AI-1/2/4 vẫn là các công cụ riêng ở những phần trước;
+AI-3 không tự gọi chúng, sinh/sửa test hoặc merge PR. Gemini review chất lượng diff,
+không quyết định JUnit pass/fail. JUnit/JaCoCo và Maven quyết định test/coverage gate.
+Comment ghép **kết quả CI đo được** với **nhận xét Gemini chạy song song**; Gemini
+không nhận các báo cáo sinh ra sau lượt review đó. Coverage job đỏ không luôn có nghĩa
+thiếu coverage: cần xem log để phân biệt lỗi build/test/môi trường với vi phạm ngưỡng.
+
+### Cấu hình GitHub một lần
+
+Trong GitHub → repository → **Settings → Secrets and variables → Actions**:
+
+- **Secrets**: thêm `GEMINI_API_KEY` (cùng key bạn đang dùng local).
+- **Variables**: `AI_MODEL=gemini-3.6-flash`, hoặc model tài khoản có quyền.
+- `AI_REVIEW_REF` mặc định `seminar-core`: nhánh tin cậy chứa automation đã push.
+  Chỉ đổi khi nhóm đã chuyển automation sang nhánh khác được kiểm soát.
+
+`.env.gemini` local không tự xuất hiện trên GitHub runner. Không commit file key.
+`GITHUB_TOKEN` được GitHub tự cấp; job comment có `pull-requests: write`.
+Nếu tổ chức chặn quyền ghi, người quản trị cần cho phép workflow dùng quyền này.
+Không cần token cá nhân cho workflow. Giữ các required checks hiện có; AI là nhận xét
+tham khảo, không thêm điều kiện vào job đóng gói.
+
+AI jobs checkout automation ở nhánh tin cậy, đọc diff PR bằng Git, không chạy code PR
+với Gemini key/quyền comment. PR từ fork vẫn chạy test/coverage nhưng bỏ qua AI jobs
+để không cấp secret cho nguồn ngoài. Chỉ các file đổi trong `case-study/src/` và
+`case-study/pom.xml` được gửi; service mới trong cây source này tự được nhận diện.
+Diff quá 80 KB sẽ báo không review được, không cắt bớt rồi kết luận không có lỗi.
+
+### Chạy thử và expected
+
+1. Tạo nhánh tính năng, thay đổi source/test, commit và push; mở PR vào nhánh tích hợp.
+2. Vào tab **Checks**: thấy lane test/gate/package và **Gemini diff review (advisory)**
+   chạy độc lập. Mở job để biết API có hoàn thành hay không.
+3. Đợi **AI review and CI summary**: bot tạo comment chứa SHA, link Actions,
+   trạng thái ba job, tổng JUnit và line/branch từ JaCoCo nếu report có sẵn,
+   cùng finding Gemini và vị trí file/dòng. Có bảng coverage từng class production đổi
+   trong PR khi JaCoCo có dữ liệu của class đó.
+4. Push commit mới lên cùng PR: bot cập nhật comment của nó. Lượt chạy cũ không
+   ghi đè comment khi head PR đã đổi. Người review vẫn tự đánh giá finding.
+
+Test lỗi → coverage/package có thể `skipped`, nhưng comment vẫn xuất hiện.
+Coverage lỗi → package `skipped`, comment giữ trạng thái đỏ và số đo nếu có.
+Gemini 503/quota/lỗi JSON → comment báo chưa có AI review hoàn chỉnh, vẫn hiển thị CI.
+PR chỉ sửa docs/automation ngoài cây case study → không gọi Gemini, comment ghi rõ.
+Lượt bị hủy chủ động không đăng comment. Xem artifact `ai-review` khi cần chẩn đoán;
+nó chỉ chứa kết quả/context/hash API metadata, không lưu full source/prompt/key,
+được tự xóa sau 1 ngày trên Actions và không được commit vào Git.
+
+Workflow **AI fixture review (manual)** trong `ai-review.yml` chỉ dành cho diff mẫu
+khi chạy tay, không comment PR; không cần bật thêm trigger PR ở workflow này.
+
+Kiểm tra automation offline (không gọi API, không đăng comment):
+
+```bash
+python3 -m unittest discover -s scripts/tests -v
+```
