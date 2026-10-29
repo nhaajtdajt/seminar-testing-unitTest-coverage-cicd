@@ -13,6 +13,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 
 import ai_context as context_builder
+import ai_candidates as candidates
 import ai_csv
 import coverage_gaps
 import gemini_client as client
@@ -109,7 +110,7 @@ def run_java(source, tests, destination, target, csv_path=None, expected_manifes
         if csv_path:
             result["csv_sha256"] = context_builder.sha(csv_path)
         result["passed"] = (exit_code == 0 and expected <= seen and totals["tests"] > 0
-                            and totals["failures"] == totals["errors"] == 0 and bool(coverage))
+                            and totals["failures"] == totals["errors"] == totals["skipped"] == 0 and bool(coverage))
         if not coverage:
             result["coverage_note"] = "Target not observed/instrumentable; no coverage success is claimed"
         xml = project / "target/site/jacoco/jacoco.xml"
@@ -124,7 +125,73 @@ def run_java(source, tests, destination, target, csv_path=None, expected_manifes
         return result
 
 
-def ai1(destination, target, model=None, prepare=False, requirements=None, schema=None, keep_payloads=False):
+def unit_candidate(project, context, text, name, destination, target, model, max_repairs,
+                   keep_payloads=False, fixed=(), allow_no_additions=False):
+    history, previous_code, feedback, kind = [], None, '', None
+    for index in range(max_repairs + 1):
+        attempt = destination / 'attempts' / f'{index + 1:02d}'
+        attempt.mkdir(parents=True)
+        prompt = text if index == 0 else render('AI-repair-test.md', {
+            'ORIGINAL_PROMPT': text, 'CANDIDATE': previous_code or '',
+            'FAILURE_KIND': kind, 'FAILURE_LOG': feedback[-18000:]})
+        answer = client.generate(prompt, attempt / 'model', model, keep_payloads=keep_payloads)
+        measured = {'target_class': target['fqcn'], 'passed': False, 'exit_code': None,
+                    'tests': 0, 'failures': 0, 'errors': 0, 'skipped': 0, 'target_coverage': {}}
+        code = answer.get('test_source', '')
+        validated = False
+        try:
+            no_additions = answer.get('decision') == 'no_additions_needed'
+            if no_additions:
+                if not allow_no_additions or not fixed or code not in ('', None) or not isinstance(answer.get('analysis'), str):
+                    raise ValueError('no_additions_needed requires a fully covered baseline, empty test_source and analysis')
+                (attempt / 'analysis.md').write_text(answer['analysis'])
+                (attempt / 'generated').mkdir()
+                current = []
+            else:
+                if not isinstance(code, str):
+                    raise ValueError('test_source must be a string')
+                candidates.validate_unit(code)
+                if previous_code and not candidates.assertions(previous_code) <= candidates.assertions(code):
+                    kind = 'assertion_changed_needs_review'
+                    raise ValueError('Repair changed or removed an assertion; automatic repair stopped')
+                current = [java_answer(answer, name, attempt, target)]
+            for path in fixed:
+                copied = attempt / 'generated' / path.name
+                shutil.copy2(path, copied)
+                current.append(copied)
+            validated = True
+            measured = run_java(project, current, attempt / 'build', target,
+                                expected_manifest=json.loads((destination / 'inputs/manifest.json').read_text()))
+            measured['model_decision'] = 'no_additions_needed' if no_additions else 'add_tests'
+            client.save(attempt / 'build/run.json', measured)
+            feedback = (attempt / 'build/output.log').read_text()
+            kind = candidates.repair_kind(measured, feedback)
+        except ValueError as error:
+            if validated:
+                raise  # Source drift/report errors are not model response repairs.
+            feedback = str(error)
+            kind = kind if kind == 'assertion_changed_needs_review' else 'response_contract'
+            (attempt / 'output.log').write_text(feedback + '\n')
+        history.append({'attempt': index + 1, 'passed': measured['passed'], 'failure_kind': kind})
+        client.save(destination / 'attempts.json', history)
+        if measured['passed'] or kind not in ('compilation', 'mock_setup', 'response_contract') or index == max_repairs:
+            for directory in ('model', 'generated'):
+                if (attempt / directory).exists():
+                    shutil.copytree(attempt / directory, destination / directory)
+            for filename in ('analysis.md', 'output.log'):
+                if (attempt / filename).exists():
+                    shutil.copy2(attempt / filename, destination / filename)
+            if (attempt / 'build').exists():
+                shutil.copytree(attempt / 'build', destination, dirs_exist_ok=True)
+            measured.update(failure_kind=kind, code_generation_attempts=index + 1)
+            client.save(destination / 'run.json', measured)
+            return measured
+        previous_code = code
+        print(f'Test setup repair {index + 1}/{max_repairs}: {kind}', flush=True)
+    raise AssertionError('Unreachable repair loop')
+
+
+def ai1(destination, target, model=None, prepare=False, requirements=None, schema=None, keep_payloads=False, max_repairs=2):
     fresh(destination, "AI-1", target)
     try:
         project, context = context_builder.snapshot(destination, target, requirements=requirements, schema=schema)
@@ -134,17 +201,16 @@ def ai1(destination, target, model=None, prepare=False, requirements=None, schem
             (destination / "prompt.md").write_text(text)
         if prepare:
             return finish(destination, status="prepared_only", api_called=False)
-        answer = client.generate(text, destination / "model", model, keep_payloads=keep_payloads)
-        test = java_answer(answer, name, destination, target)
-        measured = run_java(project, [test], destination, target,
-                            expected_manifest=json.loads((destination / "inputs/manifest.json").read_text()))
-        return finish(destination, completed=measured["passed"], status="tested", new_model_generation=True)
+        measured = unit_candidate(project, context, text, name, destination, target, model, max_repairs, keep_payloads)
+        result = finish(destination, completed=measured['passed'], status='tested', new_model_generation=True)
+        candidates.review_report(destination, measured, 'draft_passed_needs_review' if measured['passed'] else 'tests_failed')
+        return result
     except Exception as error:
         finish(destination, status="failed", error_type=type(error).__name__)
         raise
 
 
-def ai2(destination, previous, model=None, prepare=False, keep_payloads=False):
+def ai2(destination, previous, model=None, prepare=False, keep_payloads=False, max_repairs=2):
     before = json.loads((previous / "run.json").read_text())
     context = json.loads((previous / "inputs/context.json").read_text())
     target = context["target"]
@@ -165,17 +231,21 @@ def ai2(destination, previous, model=None, prepare=False, keep_payloads=False):
             (destination / "prompt.md").write_text(text)
         if prepare:
             return finish(destination, status="prepared_only", api_called=False)
-        additional = java_answer(client.generate(text, destination / "model", model, keep_payloads=keep_payloads), name, destination, target)
-        shutil.copy2(draft, additional.parent / draft.name)
-        after = run_java(project, [additional.parent / draft.name, additional], destination, target,
-                         expected_manifest=json.loads((destination / "inputs/manifest.json").read_text()))
+        after = unit_candidate(project, context, text, name, destination, target, model, max_repairs, keep_payloads,
+                               fixed=[draft], allow_no_additions=candidates.fully_covered(before))
+        assessment = candidates.compare(before, after)
+        if after.get('model_decision') == 'no_additions_needed' and after.get('passed'):
+            assessment = 'no_additions_proposed_needs_review'
         comparison = {"target_class": target["fqcn"], "before": before, "after": after,
                       "limitation": "Coverage/green tests do not certify business rules or assertions"}
         if "BRANCH" in before["target_coverage"] and "BRANCH" in after["target_coverage"]:
             comparison["branch_covered_delta"] = (after["target_coverage"]["BRANCH"]["covered"]
                                                    - before["target_coverage"]["BRANCH"]["covered"])
         client.save(destination / "comparison.json", comparison)
-        return finish(destination, completed=after["passed"], status="tested", new_model_generation=True)
+        result = finish(destination, completed=after['passed'] and assessment not in ('coverage_regressed', 'coverage_not_comparable'),
+                        status='tested', new_model_generation=True, assessment=assessment, baseline_directory=str(previous.resolve()))
+        candidates.review_report(destination, after, assessment, before)
+        return result
     except Exception as error:
         finish(destination, status="failed", error_type=type(error).__name__)
         raise
@@ -300,7 +370,7 @@ def ai4(destination, target, human, model=None, prepare=False, schema_from=None,
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=("list-classes", "ai1", "ai2", "schema", "freeze", "ai4", "all"))
+    parser.add_argument("stage", choices=("list-classes", "ai1", "ai2", "pipeline", "schema", "freeze", "ai4", "all"))
     parser.add_argument("--class", dest="class_name", help="Simple or fully qualified top-level Java class")
     parser.add_argument("--from-ai1", type=Path)
     parser.add_argument("--schema-from", type=Path, help="Saved AI-4 schema stage, not a database schema")
@@ -314,11 +384,20 @@ def main():
     parser.add_argument("--model")
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--keep-payloads", action="store_true", help="Debug only: retain full prompts and model payloads")
+    parser.add_argument('--max-repairs', type=int, choices=(0, 1, 2), default=2,
+                        help='At most 2 technical repairs; assertion failures are left for review')
     args = parser.parse_args()
     if args.stage == "list-classes":
         print(json.dumps(context_builder.discover(), ensure_ascii=False, indent=2))
         return 0
-    if args.stage in ("ai1", "schema", "ai4", "all") and not args.class_name:
+    if args.stage in ("ai1", "ai2", "pipeline", "all") and args.output:
+        # Apply has to be able to delete the output safely after syncing reviewed tests.
+        import ai_apply
+        try:
+            ai_apply.managed_directory(args.output)
+        except ValueError as error:
+            parser.error(str(error))
+    if args.stage in ("ai1", "pipeline", "schema", "ai4", "all") and not args.class_name:
         parser.error("Provide --class; business class selection is no longer hard-coded")
     if args.stage == "ai2" and not args.from_ai1:
         parser.error("ai2 needs --from-ai1")
@@ -345,10 +424,18 @@ def main():
         common = {"model": args.model, "prepare": args.prepare_only, "keep_payloads": args.keep_payloads}
         inputs = {"requirements": args.requirements, "schema": args.schema}
         print(f"Output: {output}", flush=True)
-        if args.stage == "ai1":
-            result = ai1(output, target, **common, **inputs)
+        repairs = {'max_repairs': args.max_repairs}
+        if args.stage == 'pipeline':
+            output.mkdir(parents=True, exist_ok=False)
+            client.save(output / 'session.json', {'kind': 'ai12', 'stages': ['ai1', 'ai2']})
+            first = ai1(output / 'ai1', target, **common, **inputs, **repairs)
+            result = ai2(output / 'ai2', output / 'ai1', **common, **repairs) if first.get('completed') else first
+            if not first.get('completed'):
+                print('AI-2 not run: AI-1 is not a passing measured baseline.', flush=True)
+        elif args.stage == "ai1":
+            result = ai1(output, target, **common, **inputs, **repairs)
         elif args.stage == "ai2":
-            result = ai2(output, args.from_ai1.resolve(), **common)
+            result = ai2(output, args.from_ai1.resolve(), **common, **repairs)
         elif args.stage == "schema":
             result = build_schema(output, target, **common, requirements=args.requirements, domain_schema=args.schema)
         elif args.stage == "ai4":
@@ -365,9 +452,9 @@ def main():
                 else:
                     try:
                         if stage == "ai1":
-                            results[stage] = ai1(output / stage, target, **common, **inputs)
+                            results[stage] = ai1(output / stage, target, **common, **inputs, **repairs)
                         elif stage == "ai2":
-                            results[stage] = ai2(output / stage, output / "ai1", **common)
+                            results[stage] = ai2(output / stage, output / "ai1", **common, **repairs)
                         else:
                             results[stage] = ai4(output / stage, target, args.human_frozen.resolve(), **common,
                                 schema_from=args.schema_from.resolve() if args.schema_from else None,

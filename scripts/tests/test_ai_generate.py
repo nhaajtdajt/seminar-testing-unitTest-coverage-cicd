@@ -17,8 +17,8 @@ import reconcile_ai4
 
 
 def java(target, name, csv=False):
-    annotations = '@ParameterizedTest @CsvFileSource(resources="/cases.csv")' if csv else ""
-    return f"package {target['package']}; class {name} {{ {annotations} void example() {{}} }}"
+    annotations = '@ParameterizedTest @CsvFileSource(resources="/cases.csv")' if csv else '@Test'
+    return f"package {target['package']}; class {name} {{ {annotations} void example() {{ assertThat(1).isEqualTo(1); }} }}"
 
 
 def model_response(value, finish="STOP"):
@@ -86,6 +86,57 @@ class GenerationWorkflowTests(unittest.TestCase):
                     patch.object(client.time, "sleep"):
                 self.assertEqual(client.generate("prompt", output), {"ok": True})
             self.assertEqual(json.loads((output / "api.json").read_text())["attempts"], 2)
+        error.close()
+
+    def test_extended_retry_budget_has_capped_backoff_and_configured_timeout(self):
+        error = client.urllib.error.HTTPError('https://example.invalid', 503, 'Unavailable', {}, io.BytesIO(b''))
+        with tempfile.TemporaryDirectory() as temporary:
+            output=Path(temporary)
+            with patch.dict(client.os.environ, {'GEMINI_MAX_ATTEMPTS':'8', 'GEMINI_API_TIMEOUT':'20'}), \
+                    patch.object(client,'configured',return_value=('dummy-key','test-model')), \
+                    patch.object(client.urllib.request,'urlopen',side_effect=[error]*7+[model_response({'ok':True})]) as api, \
+                    patch.object(client.time,'sleep') as sleep:
+                self.assertTrue(client.generate('fixture',output)['ok'])
+            self.assertEqual(api.call_count,8)
+            self.assertEqual(api.call_args.kwargs['timeout'],20)
+            self.assertEqual([c.args[0] for c in sleep.call_args_list],[2,4,8,16,30,30,30])
+            self.assertEqual(json.loads((output/'api.json').read_text())['max_attempts'],8)
+        error.close()
+
+    def test_invalid_retry_budget_never_calls_api(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            with patch.dict(client.os.environ,{'GEMINI_MAX_ATTEMPTS':'99'}), \
+                    patch.object(client,'configured',return_value=('dummy-key','test-model')), \
+                    patch.object(client.urllib.request,'urlopen') as api, self.assertRaises(ValueError):
+                client.generate('fixture',Path(temporary))
+            api.assert_not_called()
+
+    def test_daily_quota_stops_without_wasting_retry_budget(self):
+        body={'error':{'message':'Generate content requests per day limit exceeded',
+              'details':[{'@type':'type.googleapis.com/google.rpc.RetryInfo','retryDelay':'600s'}]}}
+        error=client.urllib.error.HTTPError('https://example.invalid',429,'Quota',{},io.BytesIO(json.dumps(body).encode()))
+        with tempfile.TemporaryDirectory() as temporary:
+            out=Path(temporary)
+            with patch.object(client,'configured',return_value=('dummy-key','test-model')), \
+                    patch.object(client.urllib.request,'urlopen',side_effect=error) as api, \
+                    patch.object(client.time,'sleep') as sleep, self.assertRaisesRegex(RuntimeError,'daily project quota'):
+                client.generate('fixture',out)
+            self.assertEqual(api.call_count,1)
+            sleep.assert_not_called()
+            data=json.loads((out/'api.json').read_text())
+            self.assertEqual(data['error_category'],'daily_quota')
+            self.assertEqual(data['retry_after_seconds'],600)
+        error.close()
+
+    def test_per_minute_rate_limit_retries_after_provider_delay(self):
+        body={'error':{'details':[{'@type':'type.googleapis.com/google.rpc.RetryInfo','retryDelay':'5s'}]}}
+        error=client.urllib.error.HTTPError('https://example.invalid',429,'Rate',{},io.BytesIO(json.dumps(body).encode()))
+        with tempfile.TemporaryDirectory() as temporary:
+            with patch.object(client,'configured',return_value=('dummy-key','test-model')), \
+                    patch.object(client.urllib.request,'urlopen',side_effect=[error,model_response({'ok':True})]), \
+                    patch.object(client.time,'sleep') as sleep:
+                self.assertTrue(client.generate('fixture',Path(temporary))['ok'])
+            sleep.assert_called_once_with(5)
         error.close()
 
     def test_default_client_does_not_persist_source_or_response_payloads(self):
