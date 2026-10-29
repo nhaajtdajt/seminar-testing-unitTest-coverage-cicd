@@ -11,6 +11,8 @@
 ## 1. Đề bài và cách nhóm thực hiện
 
 ### Đề bài của nhóm
+Bản gốc yêu cầu của thầy: [`require.md`](require.md).
+
 Chủ đề **Unit Test · Code Coverage · CI/CD**. Thầy yêu cầu:
 1. Trình bày **khái niệm tổng quan về unit testing**.
 2. Dùng **một ví dụ và một bộ test case** để giải thích **các loại coverage**.
