@@ -1,0 +1,227 @@
+# Chạy demo Gemini AI-1, AI-2 và AI-4
+
+Ngô Gia An (23120205). Hướng dẫn cho người tự chạy demo; không cần lưu/nộp evidence.
+Source, prompt và script được giữ trong Git. Output sinh ra chỉ dùng local, được Git bỏ qua.
+
+## Luồng hoạt động
+
+```text
+Bạn chọn class trong src/main/java
+    ↓
+Script đọc trực tiếp source + dependency/domain/schema liên quan
+    ├── AI-1: Gemini sinh Java test → tự chạy JUnit/JaCoCo
+    ├── AI-2: đọc test nháp + kết quả thật → bổ sung → chạy lại
+    └── AI-4: CSV người viết đã có trước
+              → Gemini suy ra schema/harness theo src và header
+              → Gemini sinh CSV riêng, không xem dữ liệu người
+              → chạy hai CSV → đối chiếu JUnit/JaCoCo → report.md
+```
+
+Gemini API không tự mở filesystem trên máy. Script đọc file rồi gửi nội dung cần thiết.
+Không lưu bản copy source trong output. Khi chạy test, source được copy vào thư mục tạm
+hệ thống để không trộn với test chuẩn; thư mục build tạm được dọn khi kết thúc.
+Chỉ hash/context nhỏ được giữ để phát hiện source thay đổi giữa AI-1 và AI-2.
+
+Không có mức phí, hạn mức hoặc schema nghiệp vụ mặc định trong runner/prompt.
+Class/service mới được tự phát hiện. Có thể thêm `--requirements <file.md>` và
+`--schema <schema.sql/json>` để đưa yêu cầu độc lập hoặc schema domain riêng.
+Nếu chỉ có source, AI đang kiểm hành vi implementation; không tự chứng minh đúng nghiệp vụ.
+
+## 1. Chuẩn bị môi trường và key một lần
+
+Mở Terminal tại gốc repo; các lệnh sau dùng cùng Terminal:
+
+```bash
+cd "/Users/ngogiaan1103/Documents/ChatGPT/seminar-testing 2"
+java -version
+case-study/mvnw -v
+```
+
+Cần Java 25 và Python 3.10+. Maven Wrapper nằm sẵn trong repo. Nếu Java chưa đúng,
+chọn JAVA_HOME theo README chính trước khi tiếp tục.
+
+Mở `.env.gemini` ở gốc repo và điền key tại máy:
+
+```dotenv
+GEMINI_API_KEY=KEY_CUA_BAN
+AI_MODEL=gemini-3.6-flash
+```
+
+Model trên là model bạn đã chạy thành công; có thể đổi sang model tài khoản có quyền.
+Không gửi key vào chat. Script tự đọc file, không cần nhập lại hoặc `source`.
+Trên máy mới, chỉ copy example nếu chưa có cấu hình:
+
+```bash
+if [ ! -f .env.gemini ]; then
+  cp ai/gemini.env.example .env.gemini
+fi
+chmod 600 .env.gemini
+python3 scripts/gemini_client.py status
+```
+
+Expected: `key_configured: true`; status không hiển thị key, không gọi API.
+Biến môi trường nếu có được ưu tiên hơn file; `--model` ghi đè model cho riêng lệnh đó.
+
+## 2. AI-4: phải tự thiết kế CSV trước
+
+Làm bước này trước khi xem test/data AI của class cần đối chứng. CSV chứa **input và
+expected output/exception**, không chỉ input. Tên/thứ tự cột do bạn thiết kế dựa trên API,
+đặc tả và trạng thái dependency của class; runner không bắt mọi lớp dùng schema tính phí.
+
+Ví dụ LoanService có thể cần cột tham số mượn, trạng thái sách/thành viên, số sách đang giữ,
+nợ phí và kết quả mong đợi. Bạn tự chọn ca và tính expected; không nhờ AI viết bộ human.
+Không cần gọi model để lấy schema trước: script có thể khóa CSV ngay khi bạn tự viết xong.
+
+Lưu input bền vững ngoài output tạm, ví dụ `ai/human/loan-service/cases.csv`, rồi khóa offline:
+
+```bash
+python3 scripts/ai_generate.py freeze \
+  --class LoanService --csv ai/human/loan-service/cases.csv \
+  --author "Ngô Gia An - 23120205" --attest-independent \
+  --output ai/human/loan-service/frozen
+```
+
+Lệnh này không gọi Gemini. Nó kiểm cấu trúc CSV, lưu bản nguyên vẹn và receipt/hash;
+schema về ý nghĩa cột được suy ra sau từ source và header. Không dùng lại output frozen đã có.
+Nếu đã xem test/data AI thì không tuyên bố bộ mới là đối chứng độc lập; nhờ người chưa xem
+thiết kế hoặc ghi đúng nguồn tham khảo.
+
+**FineCalculator:** bạn đã có CSV/notes và bản khóa ở `ai/human/frozen`; dùng luôn, không freeze lại.
+
+## 3. Chọn class và thư mục local
+
+```bash
+python3 scripts/ai_generate.py list-classes
+```
+
+Không gọi API. Có thể dùng simple name nếu duy nhất, hoặc tên đầy đủ. Hỗ trợ top-level
+Java types trong Maven module; dependency local được tìm theo type/import. Nên chọn
+concrete class có hành vi; interface trừu tượng không tự tạo thành bài test nghiệp vụ.
+
+Ví dụ chạy cả ba phần với CSV FineCalculator đã chuẩn bị:
+
+```bash
+AI_CLASS="FineCalculator"
+AI_HUMAN="ai/human/frozen"
+GA_RUN=".ai-work/${AI_CLASS}-$(date +%Y%m%d-%H%M%S)"
+```
+
+Với LoanService, đổi `AI_CLASS="LoanService"`, `AI_HUMAN="ai/human/loan-service/frozen"`
+sau khi đã tự thiết kế/khóa đúng bộ CSV của LoanService. Không đưa CSV FineCalculator vào LoanService.
+
+`.ai-work/` là output local mặc định, không phải evidence cần commit. Lệnh luôn dùng thư mục
+mới để không ghi đè test/baseline đang xem. Không cần tự tạo `$GA_RUN` trước.
+
+## 4. AI-1: sinh test nháp và tự chạy
+
+```bash
+python3 scripts/ai_generate.py ai1 \
+  --class "$AI_CLASS" --output "$GA_RUN/ai1"
+open "$GA_RUN/ai1"
+```
+
+Gemini nhận source class và dependency liên quan, suy ra constructor/API/mock state/biên,
+trả code. Script tự lưu `generated/<Class>GeminiDraftTest.java`, rồi chạy JUnit và JaCoCo.
+Bạn không cần copy-paste code hoặc sửa test chuẩn.
+
+Xem `analysis.md`, file Java mới, `run.json` và `output.log`. Expected kỹ thuật:
+`run.json.passed: true`, có test thực sự chạy, không failures/errors và có counter target.
+Số test và coverage phụ thuộc kết quả thật, không có số cố định phải đạt trong demo.
+
+## 5. AI-2: bổ sung từ đúng test/coverage vừa chạy
+
+Chỉ chạy khi AI-1 pass:
+
+```bash
+python3 scripts/ai_generate.py ai2 \
+  --from-ai1 "$GA_RUN/ai1" --output "$GA_RUN/ai2"
+open "$GA_RUN/ai2"
+```
+
+AI-2 tự lấy target, đọc source hiện tại và kiểm hash với baseline. Nếu production/build
+input đã đổi hoặc test nháp bị sửa sau khi đo, script dừng để không dùng coverage cũ.
+Không cần bản source copy trong output; không cần truyền lại dữ liệu bằng tay.
+
+Output có `generated/<Class>GeminiAdditionalTest.java`, bản nháp giữ nguyên và
+`comparison.json` so before/after. Test nháp và bổ sung được chạy chung trong thư mục tạm.
+Nếu AI-1 đã đạt 100% branch, AI-2 có thể thêm ca/assertion hữu ích mà coverage không tăng.
+
+## 6. AI-4: sinh CSV AI riêng và đối chiếu báo cáo
+
+```bash
+python3 scripts/ai_generate.py ai4 --class "$AI_CLASS" \
+  --human-frozen "$AI_HUMAN" --output "$GA_RUN/ai4"
+open "$GA_RUN/ai4/report.md"
+```
+
+Script kiểm hash bộ human, chỉ gửi **header**, source/domain và yêu cầu cho bước schema.
+Gemini tự suy ra kiểu/cột/expected và sinh harness theo class. Request riêng sinh CSV AI mới,
+không có dòng dữ liệu human hoặc test AI-1/AI-2. Sau đó script:
+
+1. So input/expected của hai bộ theo schema tương ứng.
+2. Chạy từng CSV qua cùng harness, cùng phiên bản source.
+3. Đối chiếu lại CSV, Surefire XML, JaCoCo XML và hash.
+4. Xuất bảng tổng hợp `report.md` ngay tại output local.
+
+Xem số ca, pass/fail/skipped, line/branch, input chung, ca thiếu/thêm và expected khác nhau.
+Schema có thể khai báo alias Java tường minh để tên exception ngắn và đầy đủ không bị báo
+mâu thuẫn giả; không tự gộp hai type khác package. Báo cáo tách khác biểu diễn với khác expected.
+
+Nguồn chi tiết nếu cần xem tại chỗ: `schema.json`, `generated/cases.csv`, `comparison.json`,
+`human/`, `ai/`, `reconciliation.json`. Không cần commit/export các file đó.
+Test xanh/coverage cao không bảo đảm mọi ca biên đầy đủ; đây là giới hạn để giải thích trong demo.
+
+## 7. Chạy cả ba bằng một lệnh
+
+Sau khi hiểu từng bước và đã có CSV human đúng class:
+
+```bash
+python3 scripts/ai_generate.py all \
+  --class "$AI_CLASS" --human-frozen "$AI_HUMAN"
+```
+
+Output tự nằm trong `.ai-work/<timestamp>-all/`. AI-2 bỏ qua nếu AI-1 không pass;
+AI-4 vẫn được thử riêng. Đây là các lệnh live, dùng API quota. Không tự sửa nghiệp vụ hoặc
+dùng kết quả cũ để làm lượt lỗi thành xanh. API có retry giới hạn cho lỗi tạm thời.
+
+## 8. Đọc lỗi và bật debug khi cần
+
+- API 503/timeout: lỗi dịch vụ tạm thời; thử lượt mới sau hoặc đổi model được phép.
+- API 400/401/403/404/429: xem model/key/quyền/quota trong `model/api.json`.
+- Java compile/assertion fail: xem `output.log`, file test mới và Surefire.
+- Source đổi: chạy AI-1/schema mới, không sửa hash để ép dùng kết quả cũ.
+- Class không có nhánh: BRANCH có thể N/A; không tự coi là thiếu test.
+- Cửa sổ Terminal hiện `bquote>`: Ctrl+C; chỉ copy lệnh, không copy dấu ba backtick.
+
+Mặc định không giữ full prompt/request/response chứa source. Khi thật sự cần debug,
+thêm `--keep-payloads` vào lệnh; chúng vẫn nằm trong thư mục bị Git bỏ qua.
+`--prepare-only` chủ động lưu prompt để bạn xem nhưng không gọi API hoặc Maven.
+
+## 9. Clean sau khi xem xong demo
+
+Xem trước danh sách và dung lượng:
+
+```bash
+python3 scripts/clean_ai.py
+```
+
+Dọn thật:
+
+```bash
+python3 scripts/clean_ai.py --apply
+```
+
+Hoặc chỉ dọn phiên đang xem:
+
+```bash
+python3 scripts/clean_ai.py --root "$GA_RUN" --apply
+```
+
+Cleaner chỉ hoạt động trong `.ai-work/` và output cũ `evidence/tuan-06/gemini-live/`.
+Nó dọn Java sinh ra, bản copy `inputs/project` cũ và prompt/response debug chứa source.
+Giữ nguyên source thật, `.env.gemini`, CSV human gốc, CSV output, receipt và báo cáo local.
+Không clean giữa AI-1 và AI-2, hoặc trước khi AI-4 chạy xong: baseline/harness Java còn cần.
+Đã clean thì tạo phiên mới để sinh/chạy lại khi demo lần sau.
+
+Cả hai thư mục output đã được `.gitignore` bỏ qua, kể cả quên clean rồi `git add .`.
+Không force-add chúng. Runner/cleaner không tự commit, push, merge hoặc triển khai server.
