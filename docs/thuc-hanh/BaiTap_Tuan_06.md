@@ -54,7 +54,7 @@ JaCoCo đo phần mã/nhánh đã được thực thi; nó không xác nhận as
 
 ### Đáp án gợi ý
 
-Gate phải giữ nguyên ngưỡng đã chốt. Khi gate thất bại, truy ngược nhánh thiếu và bổ sung test/logic theo đặc tả; không giảm ngưỡng chỉ để pipeline xanh. Bằng chứng local không được mô tả như một lần chạy GitHub Actions/Jenkins.
+Gate phải giữ nguyên ngưỡng đã chốt. Khi gate thất bại, truy ngược nhánh thiếu và bổ sung test/logic theo đặc tả; không giảm ngưỡng chỉ để pipeline xanh. Bằng chứng local không được mô tả như một lần chạy GitHub Actions.
 
 ## Bài 4 — Phân biệt unit, web và integration test
 

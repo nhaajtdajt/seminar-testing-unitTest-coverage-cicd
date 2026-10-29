@@ -4,19 +4,19 @@
     "title": "Một lần mượn sách, ba lớp kiểm chứng",
     "bullets": [
       "Unit Test → Code Coverage → CI/CD",
-      "Seminar Kiểm thử phần mềm · Nhóm 09",
-      "Cập nhật 28/10/2026 · phần Gia An (23120205)"
+      "Seminar Kiểm thử phần mềm · Nhóm [mã nhóm]",
+      "Tuần 06 · cập nhật 23/10/2026"
     ]
   },
   {
     "stage": "Nhóm thực hiện",
     "title": "Thành viên và phân công",
     "bullets": [
-      "Nguyễn Bảo An · 23120207: Unit Test, JUnit/Mockito.",
+      "Nguyễn Bảo An · 23120207: Trưởng nhóm, Unit Test, JUnit/Mockito và tổng hợp báo cáo.",
       "Phạm Quang Vinh · 23120202: CI/CD, Build Java 25 & Benchmark.",
       "Trương Nhật Đạt · 23120231: Code Coverage, JaCoCo, coverage gate và mutation testing.",
       "Nguyễn Lê Thế Vinh · 23120190: Case study, REST API, persistence và demo tích hợp.",
-      "Ngô Gia An · 23120205: AI, paper, hợp nhất slide/báo cáo, trưởng nhóm."
+      "Ngô Gia An · 23120205: AI, slide, báo cáo chi tiết và điều phối video."
     ]
   },
   {
@@ -63,9 +63,9 @@
     "title": "UT-1: chạy và đọc kết quả",
     "code": "case-study/mvnw -B -ntp -f case-study/pom.xml clean test",
     "bullets": [
-      "39 lượt trong bộ chuẩn hiện tại: 18 tính phí, 7 LoanService, 4 LoanPeriodPolicy, 5 web, 2 integration, 3 persistence.",
-      "JDK 25.0.5: 0 failure/error; coverage gate pass.",
-      "GA-01: setup Maven Wrapper + agent Mockito; các suite AI chạy bằng profile riêng."
+      "33 lượt trong bộ chuẩn: 17 tính phí, 6 nghiệp vụ, 5 web, 2 integration, 3 persistence.",
+      "Đọc Tests / Failures / Errors / Skipped trong Surefire.",
+      "Đã chạy bộ chuẩn trên Java 25 và Java 21 tại máy."
     ]
   },
   {
@@ -86,8 +86,7 @@
       "Thành viên không tồn tại; đạt hạn mức 3 sách.",
       "Còn phí chưa trả; mượn thành công.",
       "verify(never()) kiểm nhánh lỗi không lưu phiếu.",
-      "ArgumentCaptor kiểm phiếu đã lưu, không chỉ kiểm giá trị trả về.",
-      "UT-3 hiện có thêm 1 ca thành viên mới; video do Bảo An phụ trách, chờ URL."
+      "ArgumentCaptor kiểm phiếu đã lưu, không chỉ kiểm giá trị trả về."
     ]
   },
   {
@@ -141,6 +140,27 @@
   },
   {
     "stage": "CI/CD",
+    "title": "CI, Continuous Delivery, Continuous Deployment",
+    "code": "Commit → Build + Test → Artifact → Duyệt → Triển khai\n        |______ CI ______|\n        |________ Continuous Delivery ________|\n        |_______________ Continuous Deployment ___________|",
+    "bullets": [
+      "CI (tích hợp liên tục): mỗi lần đẩy code, tự build và chạy test; lỗi phát hiện ngay.",
+      "Continuous Delivery: sau CI luôn có bản (artifact) sẵn sàng phát hành; việc triển khai do người bấm duyệt.",
+      "Continuous Deployment: bản đạt mọi kiểm tra tự động được triển khai lên môi trường chạy thật, không cần người duyệt.",
+      "Mỗi mức đòi hỏi bộ test và gate tin cậy hơn mức trước."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "Nhóm làm đến mức nào?",
+    "bullets": [
+      "CI: có. Mỗi pull request tự chạy test và coverage gate trên GitHub Actions.",
+      "Delivery: ở mức tạo JAR (job package) và lưu làm artifact; chưa có bước duyệt phát hành.",
+      "Deployment: không làm. Chủ đề là kiểm thử nên không triển khai lên máy chủ.",
+      "Nếu cần: thêm job deploy chạy sau package, có điều kiện nhánh master và bước duyệt."
+    ]
+  },
+  {
+    "stage": "CI/CD",
     "title": "Từ lệnh tại máy đến pipeline",
     "code": "test [JDK 25]\n        ↓\ncoverage-gate [branch >= 90%]\n        ↓\npackage [JAR + artifact]",
     "bullets": [
@@ -152,20 +172,50 @@
     "stage": "CI/CD",
     "title": "CI-1/2/3: workflow và minh chứng",
     "bullets": [
-      "CI-1: checkout, setup Java, chạy Maven.",
-      "CI-2: cache dependency, upload report và summary.",
-      "CI-3: test → gate → package; workflow hiện chỉ workflow_dispatch.",
-      "Video CI do Quang Vinh phụ trách: cần PR đỏ→xanh và required checks thật; chờ URL."
+      "CI-1: checkout, setup JDK 25, chạy Maven. CI-2: cache dependency, upload báo cáo, step summary.",
+      "CI-3: ba job nối bằng needs; chạy khi có pull request, push vào master/seminar-core, hoặc chạy tay.",
+      "Đã chạy thật trên GitHub: PR #1 xanh; PR #2 đỏ vì coverage-gate (branch 0,00 < 0,90) rồi xanh lại.",
+      "Required checks bật trên master: PR đỏ #6 có trạng thái BLOCKED, không merge được."
     ]
   },
   {
     "stage": "CI/CD",
-    "title": "GitHub Actions và Jenkins",
+    "title": "GitHub Actions: cấu trúc workflow",
     "bullets": [
-      "GitHub Actions dùng YAML và hosted runner.",
-      "Jenkinsfile mô tả cùng thứ tự test → gate → package.",
-      "Mỗi hệ có cú pháp và cách cấp môi trường riêng.",
-      "Jenkinsfile chưa chạy trên Jenkins; chưa kết luận về tốc độ hoặc độ dễ vận hành."
+      "Workflow viết bằng YAML trong .github/workflows, chạy trên runner do GitHub cấp.",
+      "Ba job nối nhau bằng needs: test → coverage-gate → package.",
+      "Job trước đỏ thì job sau không chạy.",
+      "Cache Maven và artifact giúp chạy nhanh và lưu báo cáo."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "Khi test xanh mà vẫn bị chặn",
+    "bullets": [
+      "Xóa FineCalculatorTest: job test vẫn xanh (không test nào fail).",
+      "Job coverage-gate đỏ: FineCalculator phủ 0,00 nhánh, yêu cầu 0,90.",
+      "Job package bị bỏ qua vì needs: code thiếu test không được đóng gói.",
+      "Test pass chưa đủ; cần gate về coverage và PIT cho chất lượng assertion."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "CI gặp vấn đề: điểm yếu quan sát được",
+    "bullets": [
+      "Đổi pom.xml (dù chỉ một dòng comment) làm khóa cache đổi: log ghi maven cache is not found.",
+      "coverage-gate chạy lại toàn bộ test; thời gian runner dao động (cùng bước: 29 s đến 70 s).",
+      "Required check làm PR kẹt nếu workflow trên master chưa có trigger (PR #4).",
+      "Gate chỉ kiểm cái được cấu hình; chưa đo được lộ secret hay flaky test."
+    ]
+  },
+  {
+    "stage": "CI/CD",
+    "title": "Video D: CI/CD với GitHub Actions (8–9 phút)",
+    "bullets": [
+      "00:00 Setup: ci.yml, trigger, JDK 25.  01:00 Khái niệm: CI/CD, needs, jacoco:check.",
+      "02:15 Demo đơn giản: run xanh, log, artifact, cache.",
+      "04:00 Demo phức tạp: PR đỏ rồi xanh; PR vào master bị BLOCKED.",
+      "06:30 Điểm yếu: cache miss, test chạy hai lần, thời gian dao động, PR kẹt."
     ]
   },
   {
@@ -194,148 +244,8 @@
     "bullets": [
       "AI-3 đã gọi live Gemini 3.6 Flash trên diff fixture; kết quả đối chiếu: 4 đúng, 0 thừa, 0 bỏ sót.",
       "Đây là kiểm tra fixture có lỗi seed, không phải benchmark độc lập hay review toàn bộ repository.",
-      "AI-4: bộ Gia An 23/23 ca pass; CSV AI 13/13 ca pass.",
-      "Có 11 đầu vào chung, cả 11 khớp kỳ vọng; độc lập theo ghi chú Gia An gửi."
-    ]
-  },
-  {
-    "stage": "AI · GA-02/03",
-    "title": "Tái sử dụng AI trên LoanService",
-    "bullets": [
-      "Nháp: 2 test pass, line 14/17, branch 3/6.",
-      "Bổ sung: 10 test pass, line 17/17, branch 6/6.",
-      "PIT: 9/9 mutant bị diệt trong cấu hình đã chạy.",
-      "Video mở gap, assertion/captor và log trước/sau; chờ quay."
-    ],
-    "links": [
-      {
-        "label": "AI-5 và giới hạn",
-        "href": "../ai/results/AI-5-loan-review.md"
-      }
-    ]
-  },
-  {
-    "stage": "AI · GA-04",
-    "title": "Một test oracle sai phải làm build đỏ",
-    "bullets": [
-      "Fixture cố ý kỳ vọng được mượn khi đang giữ 3 sách.",
-      "Đặc tả chặn từ >=3; test fail đúng 1 assertion.",
-      "Đây là fixture cài sẵn, không phải lỗi ghi nhận từ API.",
-      "Video giải thích lỗi kỳ vọng; không sửa nghiệp vụ để chiều test."
-    ],
-    "links": [
-      {
-        "label": "Kết quả fixture",
-        "href": "../evidence/gia-an/loan-mistake/run.json"
-      }
-    ]
-  },
-  {
-    "stage": "AI · GA-05",
-    "title": "AI-4: đối chứng trước, so sánh sau",
-    "bullets": [
-      "Gia An cung cấp 23 ca và ghi chú tuyên bố chỉ dựa trên đặc tả.",
-      "Khóa dữ liệu, hash và commit 0e58f5f trước khi so sánh.",
-      "Java: Gia An 23/23 pass, branch 100%; AI 13/13 pass, branch 80%.",
-      "11 ca chung khớp; 12 ca chỉ người dùng, 2 chỉ AI. Codex chạy; GA-05 chờ quay."
-    ],
-    "links": [
-      {
-        "label": "Kết quả và giới hạn",
-        "href": "../docs/gia-an/AI4_KetQua.md"
-      },
-      {
-        "label": "Ghi chú thiết kế gốc",
-        "href": "../ai/human/cases-notes.md"
-      }
-    ]
-  },
-  {
-    "stage": "Paper · GA-06",
-    "title": "CoverUp: dùng coverage để hướng sinh test",
-    "bullets": [
-      "Pizzorno, Berger · FSE 2025 Research Papers / PACMSE.",
-      "Vòng lặp: đo coverage → chọn gap/ngữ cảnh → LLM → chạy và sửa.",
-      "Tool gốc cho Python; target nhóm là coverage_gaps.py.",
-      "Video mở paper/source/rank và giải thích quy trình."
-    ],
-    "links": [
-      {
-        "label": "Paper v4",
-        "href": "https://arxiv.org/html/2403.16218v4"
-      },
-      {
-        "label": "Source tác giả",
-        "href": "https://github.com/plasma-umass/coverup-eval"
-      }
-    ]
-  },
-  {
-    "stage": "Paper · GA-06",
-    "title": "CoverUp: mức tái hiện thực sự đã đạt",
-    "bullets": [
-      "Chạy script tác giả trên 163 module MT: line+branch 89,0%.",
-      "MuTAP gpt4o_zero: 76,8%; khớp số 89% vs 77% làm tròn ở v4.",
-      "Đây là replay phân tích dữ liệu tác giả; không phải sinh lại test.",
-      "Source nhóm đã dry-run thành công; chưa có lượt gọi model mới."
-    ],
-    "links": [
-      {
-        "label": "Log và số liệu",
-        "href": "../evidence/gia-an/papers/coverup-mt/run.json"
-      }
-    ]
-  },
-  {
-    "stage": "Paper · GA-07",
-    "title": "ChatUniTest: sinh, kiểm tra, sửa test Java",
-    "bullets": [
-      "Chen và cộng sự · FSE 2024 Demonstrations.",
-      "Adaptive focal context và generation–validation–repair.",
-      "Source gốc có công bố; chuẩn bị trial LoanService#borrow.",
-      "Chưa tái lập generation: còn model/API và môi trường gốc; video không được trình bày như đã thành công."
-    ],
-    "links": [
-      {
-        "label": "Nguồn công bố",
-        "href": "https://2024.esec-fse.org/details/fse-2024-demonstrations/6/ChatUniTest-A-Framework-for-LLM-based-Test-Generation"
-      },
-      {
-        "label": "Kế hoạch thực nghiệm",
-        "href": "../research/README.md"
-      }
-    ]
-  },
-  {
-    "stage": "Paper · kiểm hạng",
-    "title": "Hạng venue và giới hạn kết luận",
-    "bullets": [
-      "CORE2023: FSE A*; hai bài xuất bản 2024–2025.",
-      "Hạng thuộc hội nghị, không gán trực tiếp cho từng bài.",
-      "ChatUniTest thuộc demo track; nhóm cần xác nhận GV chấp nhận.",
-      "AI-5 Codex của nhóm không thay cho chạy artifact ChatUniTest."
-    ],
-    "links": [
-      {
-        "label": "CORE2023 chính thức",
-        "href": "https://portal.core.edu.au/conf-ranks/?by=all&search=&source=CORE2023"
-      }
-    ]
-  },
-  {
-    "stage": "Video · toàn nhóm",
-    "title": "Mỗi phần có video và kết quả cần thấy",
-    "bullets": [
-      "Bảo An: UT setup, CSV, mock, giới hạn; Thế Vinh: app/integration.",
-      "Đạt: coverage, gate, công cụ đối chiếu và điểm mù của tool.",
-      "Quang Vinh: CI, cache/artifact, PR đỏ→xanh và lỗi CI.",
-      "Gia An: GA-01..07, AI và paper; tất cả URL/timestamp còn chờ."
-    ],
-    "links": [
-      {
-        "label": "Danh mục và trạng thái từng video",
-        "href": "../docs/gia-an/Video_Artifacts.md"
-      }
+      "AI-4 có 13 ca CSV chạy pass, trùng 13/15 ca tham chiếu.",
+      "Chưa có bộ test do người viết độc lập để so sánh công bằng."
     ]
   },
   {
@@ -349,33 +259,22 @@
     ]
   },
   {
-    "stage": "Video bắt buộc",
-    "title": "Video và gói nộp cần hoàn thiện",
+    "stage": "Tuần 6",
+    "title": "Gói tuần 6: các đầu ra cần chốt",
     "bullets": [
-      "Video phải có setup, cơ bản, phức tạp, giới hạn và data driven.",
-      "GA-01..07: artifact đã lập danh mục; chưa quay hoặc đăng YouTube.",
-      "Mỗi video có slide tóm tắt; nếu gộp clip, ghi timestamp thực tế.",
-      "Hạn nộp chờ xác nhận; gửi slide/gặp GV trước hạn 3–4 ngày."
-    ],
-    "links": [
-      {
-        "label": "Danh mục video",
-        "href": "../docs/gia-an/Video_Artifacts.md"
-      },
-      {
-        "label": "Điều phối",
-        "href": "../docs/gia-an/DieuPhoi.md"
-      }
+      "Gói nộp: slide, báo cáo, link video, source, seminar contribution (Google Sheet), git commit log, AI usage declaration.",
+      "Video là bắt buộc: setup, khái niệm cơ bản, đơn giản, phức tạp, trường hợp không xử lý được, data driven.",
+      "Đối chiếu tác giả commit và minh chứng trước khi kết luận đóng góp thành viên."
     ]
   },
   {
     "stage": "Tài liệu",
     "title": "Nguồn và cách tái hiện",
     "bullets": [
-      "README.md: điểm vào thực hành.",
-      "docs/gia-an/: phạm vi, artifact video và phần còn chờ.",
-      "research/: paper, nguồn hạng, revision và cách thử tool tác giả.",
-      "evidence/gia-an/: log và JSON/XML của các lượt mới ngày 28/10."
+      "README.md: điểm vào cho gói thực hành.",
+      "docs/thuc-hanh/HuongDan_Demo.md: lệnh cho từng demo.",
+      "evidence/tuan-05/: log, XML/HTML và số liệu gốc.",
+      "Tài liệu chính thức: JUnit, Mockito, JaCoCo, PIT, Spring Boot, GitHub Actions, Gemini API (link trong báo cáo)."
     ]
   }
 ]

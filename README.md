@@ -32,7 +32,7 @@ case-study/mvnw -B -ntp -f case-study/pom.xml clean verify
 java -jar case-study/target/library-case-study-0.1.0.jar --server.port=8081
 ```
 
-Ứng dụng chạy ở cổng **8081** vì cổng 8080 mặc định hay bị chiếm (ví dụ Jenkins cài sẵn trên máy này). Muốn dùng cổng khác thì đổi `--server.port` và cổng trong lệnh `curl` bên dưới.
+Ứng dụng chạy ở cổng **8081** vì cổng 8080 mặc định hay bị chiếm (ví dụ một dịch vụ khác trên máy). Muốn dùng cổng khác thì đổi `--server.port` và cổng trong lệnh `curl` bên dưới.
 
 ```bash
 curl -i http://localhost:8081/api/loans \
@@ -44,7 +44,7 @@ Lần đầu trả 201; mượn lại sách 1 trả 409. Tắt và khởi độn
 
 ## Trạng thái và giới hạn tái hiện
 
-Mã nguồn, test, demo coverage/mutation/TDD và tài liệu seminar đã được triển khai với AI hỗ trợ. Workflow GitHub Actions và Jenkinsfile đã được viết. Trạng thái hiện tại và các giới hạn được ghi trong báo cáo Tuần 05; lịch sử Git không bị sửa để nhận công của tuần khác.
+Mã nguồn, test, demo coverage/mutation/TDD và tài liệu seminar đã được triển khai với AI hỗ trợ. Workflow GitHub Actions đã được viết. Trạng thái hiện tại và các giới hạn được ghi trong báo cáo Tuần 05; lịch sử Git không bị sửa để nhận công của tuần khác.
 
 Phần còn thiếu và trạng thái từng hạng mục: xem [Bảng công việc](docs/thuc-hanh/BangCongViec.md). Repo đã dọn các file build/cache và bằng chứng của cấu hình cũ (Java 21 + Spring Boot 3.5). Chạy Maven sẽ tạo lại `case-study/target/`. Các tài liệu đề xuất cũ (`nop-lan-1/`, `docs/00-…`, `docs/superpowers/`, `require.md`) nằm ở nhánh `noplan01`.
 

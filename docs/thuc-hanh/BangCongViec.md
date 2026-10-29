@@ -43,7 +43,6 @@ Các dòng W05 ghi trạng thái và minh chứng của kỳ trước; không g�
 |---|---|---|---|---|
 | W05-01 | TV1 | Tổng hợp đề xuất, kế hoạch tuần | Có tài liệu | `nop-lan-1/`, `KeHoach_BaoCao_HangTuan.md` |
 | W05-02 | TV1 | Workflow 3 job, JDK 25, cache/artifact | Viết xong, kiểm tra tĩnh; chưa chạy GitHub | `.github/workflows/ci.yml`, `evidence/tuan-05/workflow-lint/` |
-| W05-03 | TV1 | Jenkins đối chiếu | Có cấu hình; chưa chạy Jenkins | `Jenkinsfile` |
 | W05-04 | TV1 | PR đỏ/xanh, required checks, GitHub board | Chưa làm trên dịch vụ: quyền hiện tại READ | `evidence/tuan-05/github-access.json` |
 | W05-05 | TV2 | UT-1, UT-2, UT-3 | Đã chạy tại máy | `FineCalculatorTest`, `LoanServiceTest`, log `final/` |
 | W05-06 | TV2 | 4 vòng TDD | Có replay chạy thật; chưa có lịch sử commit nhóm | `evidence/tuan-05/tdd-replay/` |
@@ -73,4 +72,4 @@ Theo chỉ đạo hiện tại của Ngô Gia An (23120205), các hạng mục c
 | W06-05 | TV5: slide, báo cáo chi tiết, AI, bài tập, link | Ngô Gia An (23120205) | Slide/báo cáo/AI declaration/bài tập có; Gemini API live và evaluation fixture đạt 4/4; demo ngoài checklist nộp tuần 6 | `slides/`, `docs/thuc-hanh/BaoCao_ChiTiet.md`, `BaiTap_Tuan_06.md`, `evidence/tuan-06/ai-review/` |
 | W06-06 | TV3: các loại coverage, JaCoCo đo gì, công cụ thứ hai, điểm yếu công cụ, kịch bản video | Trương Nhật Đạt (23120231), AI hỗ trợ (Claude Code) | Ví dụ `LoanPeriodPolicy` + bộ T1–T4 và bảng 6 loại coverage; bảng JaCoCo đo/không đo; OpenClover chạy thật, so 6 tiêu chí; demo mức trần ẩn trong `Math.min`, mutant tương đương, chi phí PIT; kịch bản Video B có timestamp. **Chưa quay video.** | `BaoCao_ChiTiet.md` mục 3.1–3.4, 5.2; `HuongDan_Demo.md` CC-0, CC-0b, CC-5, CC-6; `evidence/tuan-06/coverage-types/`, `openclover/`, `coverage-blindspot/`, `pit-cost/` |
 
-**Giới hạn ghi nhận:** lượt kiểm tra đầy đủ và smoke API là chạy local, không phải GitHub Actions/Jenkins hoặc triển khai production. Gemini API đã được gọi live trên diff fixture; evaluation 4/4 chỉ xác nhận phát hiện được lỗi seed trong fixture, không đánh giá độc lập/toàn diện source. Video/kịch bản/ảnh demo nằm ngoài checklist nộp tuần 6 theo chỉ đạo mới nhất; các ảnh đã có được giữ làm minh chứng phụ.
+**Giới hạn ghi nhận:** lượt kiểm tra đầy đủ và smoke API là chạy local, không phải GitHub Actions hoặc triển khai production. Gemini API đã được gọi live trên diff fixture; evaluation 4/4 chỉ xác nhận phát hiện được lỗi seed trong fixture, không đánh giá độc lập/toàn diện source. Video/kịch bản/ảnh demo nằm ngoài checklist nộp tuần 6 theo chỉ đạo mới nhất; các ảnh đã có được giữ làm minh chứng phụ.

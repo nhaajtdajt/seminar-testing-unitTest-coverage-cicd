@@ -27,7 +27,7 @@ Dùng **một ứng dụng quản lý thư viện** làm ví dụ duy nhất, đ
 |---|---|---|
 | 1. Unit test | Viết test cho tính phí trả sách trễ và mượn sách | JUnit, Mockito |
 | 2. Coverage | Đo test phủ bao nhiêu code, test có kiểm đúng không | JaCoCo, PIT |
-| 3. CI/CD | Tự động chạy test và chặn code thiếu test mỗi lần đẩy code | GitHub Actions (so với Jenkins) |
+| 3. CI/CD | Tự động chạy test và chặn code thiếu test mỗi lần đẩy code | GitHub Actions |
 
 AI hỗ trợ ở cả ba bước (sinh test, đọc coverage, review code). Mỗi bước có demo từ cài đặt, cơ bản đến phức tạp, kèm điểm yếu của công cụ. Câu hỏi xuyên suốt: **"Test xanh và coverage 100% đã chắc code đúng chưa?"**
 
@@ -50,7 +50,7 @@ Cần hoàn thiện **khoảng 90% nội dung seminar** rồi nộp qua link c�
 | **Slide** (thầy đọc đầu tiên) | Markdown + PDF hoặc PowerPoint | `slides/` (xuất PDF), thêm phần tóm tắt từng video | Bảo An |
 | **Báo cáo** | Markdown + PDF | `docs/thuc-hanh/BaoCao_ChiTiet.md`, xuất PDF | Bảo An (mỗi người viết phần mình) |
 | **Link video demo** | Markdown (file liệt kê link + tóm tắt + timestamp) | Video đăng YouTube | Bảo An tổng hợp, mỗi người quay phần mình |
-| **Scripts / source code** | Nén (ZipTool nếu >20 MB) | `case-study/`, `ai/`, `scripts/`, `.github/`, `Jenkinsfile` | Thế Vinh |
+| **Scripts / source code** | Nén (ZipTool nếu >20 MB) | `case-study/`, `ai/`, `scripts/`, `.github/` | Thế Vinh |
 | **Seminar contribution** | **Google Sheet của thầy** (điền trực tiếp) | Mỗi người tự điền phần việc của mình | Cả nhóm |
 | **Git commit log** | Markdown | Xuất **từ `git log` thật** của repo | Quang Vinh |
 | **AI usage declaration** | Markdown + PDF | Thư mục `ai-usage-declaration/`: **mỗi người tự điền file của mình**, Bảo An gộp | Bảo An, cả nhóm xác nhận |
@@ -69,7 +69,7 @@ Dùng **một ứng dụng nhỏ quản lý thư viện** làm ví dụ duy nh�
 
 ```
 Viết unit test  →  Đo test phủ được bao nhiêu code  →  Tự động hóa bằng CI/CD
- (JUnit, Mockito)        (JaCoCo, PIT)                     (GitHub Actions, Jenkins)
+ (JUnit, Mockito)        (JaCoCo, PIT)                     (GitHub Actions)
                          + AI hỗ trợ ở mọi tầng
 ```
 
@@ -87,7 +87,7 @@ Câu hỏi dẫn dắt cả bài: **"Test chạy xanh và coverage 100% có ngh�
 |---|---|---|
 | Unit test | JUnit Jupiter 6, Mockito 5, AssertJ | TestNG, Spock, JUnit 4 |
 | Coverage | JaCoCo (line, branch, gate), PIT (mutation) | Cobertura, OpenClover |
-| CI/CD | GitHub Actions | Jenkins (Jenkinsfile đã viết), GitLab CI |
+| CI/CD | GitHub Actions | Không dựng công cụ khác; chỉ nêu GitLab CI/Jenkins ở mức khái niệm nếu cần |
 | AI | Gemini API, trợ lý AI trong IDE | Các mô hình khác (nêu trong phần nghiên cứu) |
 
 ### 2.4. Các kịch bản demo (mã số dùng xuyên suốt tài liệu)
@@ -108,7 +108,7 @@ Câu hỏi dẫn dắt cả bài: **"Test chạy xanh và coverage 100% có ngh�
 1. Mở đầu: vấn đề "coverage cao có an toàn không".
 2. Tổng quan unit testing + demo UT-1/2/3.
 3. Coverage: **một ví dụ, một bộ test, bảng các loại coverage** + CC-1..4.
-4. CI/CD: khái niệm, pipeline, demo CI-1/2/3, so sánh Jenkins.
+4. CI/CD: khái niệm, pipeline, demo CI-1/2/3.
 5. AI: AI-1..4 và nguyên tắc review.
 6. Nghiên cứu: các bài báo hạng ≥B, điểm yếu công cụ, bài tập.
 
@@ -158,9 +158,9 @@ Câu hỏi dẫn dắt cả bài: **"Test chạy xanh và coverage 100% có ngh�
 ### 3.3. CI/CD
 - `.github/workflows/ci.yml`: 3 job nối nhau (test → coverage-gate → package), cache Maven, upload artifact, summary.
 - `.github/workflows/ai-review.yml`: job review diff bằng AI.
-- `Jenkinsfile` mô tả cùng pipeline, chỉ để so sánh.
+- Nhóm **không dùng Jenkins** (không dựng server); CI/CD chỉ dùng GitHub Actions.
 - Đã kiểm cú pháp bằng actionlint.
-- **Chưa chạy trên GitHub/Jenkins.** Trigger tự động đang tắt, chỉ chạy tay.
+- **Chưa chạy trên GitHub.** Trigger tự động đang tắt, chỉ chạy tay.
 
 ### 3.4. AI
 | Demo | Kết quả |
@@ -219,11 +219,11 @@ Mỗi việc = 1 issue = 1 nhánh = 1 PR, commit bằng tài khoản của chín
 5. Quay video: **setup, cơ bản, phức tạp, trường hợp không xử lý được** cho Coverage.
 
 ### Phạm Quang Vinh (23120202): CI/CD
-**Đã có để đọc và chạy lại:** `ci.yml`, `ai-review.yml`, `Jenkinsfile`, benchmark.
+**Đã có để đọc và chạy lại:** `ci.yml`, `ai-review.yml`, benchmark.
 **Cần làm:**
 1. **Việc ưu tiên số 1:** bật lại trigger, **chạy CI thật trên GitHub**, tạo **PR đỏ rồi xanh**, bật **required checks** để không merge được khi đỏ.
 2. Tạo **GitHub Issues/Projects** theo bảng phân công này; mời thành viên vào repo; hướng dẫn mọi người tạo nhánh và PR.
-3. **So sánh GitHub Actions với Jenkins** (≥4 tiêu chí), chạy thử Jenkinsfile.
+3. Viết phần **tích hợp unit test và coverage gate vào workflow**: giải thích từng job, `needs`, cache, artifact, summary.
 4. Làm demo **trường hợp CI gặp vấn đề** (cache hỏng, lộ secret giả, job chậm, test flaky).
 5. Quay video: **setup, cơ bản, phức tạp (PR đỏ→xanh), trường hợp không xử lý được** cho CI/CD.
 

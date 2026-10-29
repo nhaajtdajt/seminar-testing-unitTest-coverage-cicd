@@ -116,11 +116,11 @@ case-study/mvnw -B -ntp -f case-study/pom.xml clean test-compile org.pitest:pite
 
 ## 8. CI-1/CI-2/CI-3 — Đọc cấu hình và chạy trên GitHub
 
-`.github/workflows/ci.yml` có ba job: `test` (JDK 25) → `coverage-gate` → `package`. Mỗi job dùng runner mới; không giả định `target/` của job trước còn tồn tại. Cache Maven khớp `pom.xml`; test report, coverage và JAR được upload thành artifact. Jenkinsfile làm ba bước tương ứng trên agent có JDK/Maven sẵn. Pipeline dừng ở kiểm tra/đóng gói, chưa triển khai ứng dụng lên server.
+`.github/workflows/ci.yml` có ba job: `test` (JDK 25) → `coverage-gate` → `package`. Mỗi job dùng runner mới; không giả định `target/` của job trước còn tồn tại. Cache Maven khớp `pom.xml`; test report, coverage và JAR được upload thành artifact. Pipeline dừng ở kiểm tra/đóng gói, chưa triển khai ứng dụng lên server.
 
-Phần chuẩn bị tại máy đã có. Người có quyền ghi cần đưa workflow lên nhánh riêng của repo, mở PR, bật required status checks và thu link run thực tế. Để demo PR đỏ → xanh: dùng thay đổi tạm làm bộ test tính phí thiếu nhánh, giữ gate 90%; kiểm job gate đỏ, rồi khôi phục test và kiểm xanh. Không giảm ngưỡng gate để làm xanh.
+Workflow đã chạy thật trên GitHub: PR xanh, PR đỏ (xóa `FineCalculatorTest`) rồi xanh lại, và PR đỏ vào `master` bị chặn bởi required checks. Link từng run, điểm yếu quan sát được và giới hạn nằm ở `evidence/tuan-06/github-actions/`. Để tự làm lại: mở PR xóa `case-study/src/test/java/vn/edu/seminar/fine/FineCalculatorTest.java`, xem `coverage-gate` đỏ, khôi phục file rồi xem xanh.
 
-Tài khoản được kiểm trong phiên hiện tại có `viewerPermission=READ`, nên chưa tạo run/PR hoặc thay cấu hình repo. Không có link chạy CI/Jenkins trong minh chứng. `scripts/benchmark_maven.py cache` đo ba cặp Maven repo lạnh/ấm **tại máy**; không phải số đo cache của GitHub Actions.
+`scripts/benchmark_maven.py cache` đo ba cặp Maven repo lạnh/ấm **tại máy**; không phải số đo cache của GitHub Actions.
 
 Script cache dùng một kho dependency trống cho mỗi cặp nên phải tải lại nhiều file từ Maven Central, khác với build thông thường tái sử dụng `~/.m2`. Các lượt lỗi tải được giữ ở `evidence/tuan-05/benchmark-cache/failed-attempts/`. Script hỗ trợ `--resume` để bổ sung cặp còn thiếu và giữ nguyên các cặp đã hoàn thành. Mỗi cặp mới bắt đầu với kho dependency trống; lượt ấm dùng lại đúng kho của lượt lạnh vừa thành công.
 
