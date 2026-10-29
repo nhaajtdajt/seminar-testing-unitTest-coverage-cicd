@@ -1,0 +1,76 @@
+{
+  "started_at_utc": "2026-10-29T14:13:00.836972+00:00",
+  "finished_at_utc": "2026-10-29T14:16:20.654145+00:00",
+  "command": [
+    "/tmp/seminar-coverup-venv/bin/python",
+    "-m",
+    "coverup",
+    "--model",
+    "gemini/gemini-3.6-flash",
+    "--tests-dir",
+    "tests",
+    "--package-dir",
+    "scripts",
+    "--checkpoint",
+    "checkpoint.json",
+    "--max-attempts",
+    "2",
+    "--max-concurrency",
+    "1",
+    "--max-backoff",
+    "8",
+    "--repeat-tests",
+    "1",
+    "--log-file",
+    "model-private.log",
+    "scripts/coverage_gaps.py"
+  ],
+  "exit_code": 0,
+  "scope": "fresh-author-tool-generation-on-group-source",
+  "executed_by": "Codex, authorized by Ngô Gia An (23120205)",
+  "new_model_generation": true,
+  "model": "gemini/gemini-3.6-flash",
+  "tool_version": "CoverUp 0.6.0",
+  "source": {
+    "file": "scripts/coverage_gaps.py",
+    "git_revision": "e86509e8169376be4b199931f44e484f3431d8f1",
+    "sha256": "34398dc41c36864642d841d92ae6f5420202a2ad92bd6f6acc239e06a92089c3",
+    "identical_to_group_source": true
+  },
+  "counters": {
+    "G": 2,
+    "F": 0,
+    "U": 0,
+    "R": 2
+  },
+  "estimated_cost_usd": 0.03324,
+  "cost_note": "Tool estimate, not billing receipt.",
+  "junit": {
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "coverage": {
+    "before": {
+      "covered_lines": 11,
+      "missing_lines": 28,
+      "covered_branches": 2,
+      "missing_branches": 14,
+      "percent_covered": 23.636363636363637,
+      "percent_covered_display": "24"
+    },
+    "after": {
+      "covered_lines": 38,
+      "missing_lines": 1,
+      "covered_branches": 15,
+      "missing_branches": 1,
+      "percent_covered": 96.36363636363636,
+      "percent_covered_display": "96"
+    }
+  },
+  "baseline_test_functions": 1,
+  "generated_test_functions": 6,
+  "validation_exit_code": 0,
+  "limitation": "Python tooling source, not JUnit/LoanService; no new business oracle. Remaining gap is __main__ entrypoint; no coverage gate was weakened."
+}

@@ -1,0 +1,1 @@
+<testsuites><testsuite name="pytest" errors="0" failures="0" skipped="1" tests="1" time="0.021" timestamp="2026-10-29T21:42:04.838863"><testcase classname="test_scripts_coverage_gaps" name="test_case_0" time="0.000"><skipped type="pytest.xfail" message="" /></testcase></testsuite></testsuites>

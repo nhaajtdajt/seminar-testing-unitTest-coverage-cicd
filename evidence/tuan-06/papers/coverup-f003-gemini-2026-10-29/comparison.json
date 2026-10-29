@@ -1,0 +1,48 @@
+{
+  "metrics": {
+    "before": {
+      "covered_lines": 5,
+      "missing_lines": 3,
+      "covered_branches": 1,
+      "missing_branches": 3,
+      "percent_covered": 50.0
+    },
+    "after_user": {
+      "covered_lines": 8,
+      "missing_lines": 0,
+      "covered_branches": 4,
+      "missing_branches": 0,
+      "percent_covered": 100.0
+    },
+    "after_tool": {
+      "covered_lines": 8,
+      "missing_lines": 0,
+      "covered_branches": 4,
+      "missing_branches": 0,
+      "percent_covered": 100.0
+    },
+    "author_reference": {
+      "covered_lines": 8,
+      "missing_lines": 0,
+      "covered_branches": 4,
+      "missing_branches": 0,
+      "percent_covered": 100.0
+    },
+    "offline_verification": {
+      "covered_lines": 8,
+      "missing_lines": 0,
+      "covered_branches": 4,
+      "missing_branches": 0,
+      "percent_covered": 100.0
+    }
+  },
+  "offline_junit": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "after_reports_agree": true,
+  "same_module_as_author_reference": true,
+  "note": "One benchmark module; different model, seed suite, versions and run budget. Not a full reproduction."
+}

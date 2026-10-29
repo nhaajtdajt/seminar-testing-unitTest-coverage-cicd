@@ -7,6 +7,7 @@ Case study quản lý thư viện, dùng chung từ unit test đến coverage v�
 - [Phân công nhiệm vụ hiện tại](PhanCong_NhiemVu.md) · [Bảng công việc](docs/thuc-hanh/BangCongViec.md).
 - [Hướng dẫn chạy và kịch bản demo](docs/thuc-hanh/HuongDan_Demo.md).
 - [Bài làm thử từ ứng dụng đến paper, kèm expected](docs/thuc-hanh/ThucHanh_App_Paper.md).
+- [Gemini AI-1/AI-2: sinh → review/apply → dọn output; AI-3 review PR và AI-4 đối chứng CSV](ai/README.md).
 - [Báo cáo chi tiết](docs/thuc-hanh/BaoCao_ChiTiet.md).
 - [Bài tập áp dụng](docs/thuc-hanh/BaiTap_Tuan_06.md) · [Kịch bản quay video](docs/thuc-hanh/KichBan_QuayVideo_Tuan_06.md) (kịch bản, chưa có video).
 - Minh chứng: [Tuần 06 (mới nhất)](evidence/tuan-06/README.md) · [Các lượt chạy chính](evidence/tuan-05/README.md).
@@ -58,7 +59,7 @@ Mã nguồn, test, demo coverage/mutation/TDD và tài liệu seminar được t
 
 Phần còn thiếu và trạng thái từng hạng mục: xem [Bảng công việc](docs/thuc-hanh/BangCongViec.md). Repo đã dọn các file build/cache và bằng chứng của cấu hình cũ (Java 21 + Spring Boot 3.5). Chạy Maven sẽ tạo lại `case-study/target/`. Các tài liệu đề xuất cũ (`nop-lan-1/`, `docs/00-…`, `docs/superpowers/`) nằm ở nhánh `noplan01`. Đề bài gốc của thầy: [require.md](require.md).
 
-Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả bản thực hành hiện tại. Lượt xác minh source, HTTP và Gemini API cho gói tuần này nằm trong `evidence/tuan-06/`. Video là yêu cầu seminar theo `PhanCong_NhiemVu.md`; kịch bản/ảnh chỉ là chuẩn bị, không thay video đã quay. Phần slide/HTML riêng của Gia An được hoãn đến cuối.
+Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả bản thực hành hiện tại. Lượt xác minh source, HTTP và Gemini API cho gói tuần này nằm trong `evidence/tuan-06/`. Video là yêu cầu seminar theo `PhanCong_NhiemVu.md`; kịch bản/ảnh chỉ là chuẩn bị, không thay video đã quay. Slide/HTML đã hợp nhất kết quả AI và paper ngày 29/10.
 
 
 ## AI và paper — Ngô Gia An (23120205)
@@ -66,7 +67,8 @@ Cấu hình và hướng dẫn tại `case-study/`, `docs/thuc-hanh/` mô tả b
 - Nội dung AI ở [báo cáo mục 6](docs/thuc-hanh/BaoCao_ChiTiet.md); paper ở mục 9 và [research/README.md](research/README.md).
 - Lệnh chạy theo cùng format nhóm tại [hướng dẫn mục 9](docs/thuc-hanh/HuongDan_Demo.md). AI LoanService dùng `run_ai_demo.py draft/improved/mistake/mutation`; AI-4 dùng `human/data`. Chọn output mới và chạy tuần tự.
 - [AI-4](evidence/tuan-06/ai-4/README.md): đã khóa CSV/notes 23 ca Gia An cung cấp trước so; 23/23 người dùng và 13/13 AI pass. Độc lập theo notes, Codex chạy lệnh.
-- [AI Loan](evidence/tuan-06/ai-loan/README.md): 2 → 10 test, branch 50% → 100%, PIT 9/9. [Paper evidence](evidence/tuan-06/papers/README.md): mới reanalysis/dry-run/parse, chưa generation.
+- [AI Loan](evidence/tuan-06/ai-loan/README.md): 2 → 10 test, branch 50% → 100%, PIT 9/9. [Paper evidence](evidence/tuan-06/papers/README.md): CoverUp/Pynguin đã có phân tích công bố, generation benchmark và thử source nhóm; xem phạm vi/giới hạn trong chỉ mục.
 - Bằng chứng dùng chung `evidence/tuan-06/<chu-de>/<luot>/`: `run.json`, `output.log`, `site/jacoco/`, `pit-reports/`. Không để docs/evidence theo thư mục tên cá nhân.
 - [Video E](docs/thuc-hanh/KichBan_QuayVideo_Tuan_06.md) mới có artifact GA-01..07; chưa quay, chưa URL/timestamp. [Bảng công việc](docs/thuc-hanh/BangCongViec.md) theo dõi phần còn chờ.
-- Theo yêu cầu ngày 29/10, phần slide/HTML của Gia An làm sau cùng. Giữ nguyên slide/source renderer từ core, đã gỡ các PDF/Markdown slide tự xuất trước đó; không còn bản xuất riêng để nộp nhầm.
+- [Slide HTML](slides/index.html) được render từ `slides/slides.json`, đã có AI-1..4, hai paper và tóm tắt Video E. URL/timestamp vẫn để trống đến khi quay thật.
+- [Bản contribution của Gia An](docs/thuc-hanh/SeminarContribution_NgoGiaAn.md) và [git log đối chiếu](docs/thuc-hanh/GitCommitLog_NgoGiaAn.md) đã chuẩn bị để nhập vào biểu mẫu nộp.

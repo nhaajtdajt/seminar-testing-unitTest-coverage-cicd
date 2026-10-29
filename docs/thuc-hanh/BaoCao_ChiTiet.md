@@ -1,6 +1,6 @@
 # Báo cáo chi tiết seminar — cập nhật đến Tuần 06
 
-**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần nằm ở `BangCongViec.md` và `evidence/tuan-06/README.md`. **Cập nhật tài liệu:** 29/10/2026 (tích hợp core, thống nhất cấu trúc docs/evidence; hoãn phần slide/HTML của Gia An). Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
+**Nhóm:** Group09. **Phạm vi:** tổng hợp nội dung seminar và minh chứng tích lũy; báo cáo tiến độ theo tuần nằm ở `BangCongViec.md` và `evidence/tuan-06/README.md`. **Cập nhật tài liệu:** 29/10/2026 (tích hợp nội dung AI/paper vào báo cáo và slide chung). Tài liệu được biên tập với Codex hỗ trợ và cần nhóm review trước khi trình bày.
 
 **Thành viên:** TV1: Nguyễn Bảo An (23120207); TV2: Phạm Quang Vinh (23120202); TV3: Trương Nhật Đạt (23120231); TV4: Nguyễn Lê Thế Vinh (23120190); TV5: Ngô Gia An (23120205)
 
@@ -300,17 +300,19 @@ Các bảng khảo sát ở gói đề xuất là dữ liệu tham khảo ban đ
 
 ## 6. Áp dụng AI
 
-**Phụ trách:** Ngô Gia An (23120205). **Phạm vi:** sinh/đọc gap/review test, đối chứng dữ liệu và tái sử dụng quy trình trên lớp khác. Các lượt đã lưu do Codex hỗ trợ chạy local; thành viên tự review và xác nhận riêng. Slide/HTML của phần này được hoãn đến bước cuối theo yêu cầu ngày 29/10/2026, giữ bản chung từ `seminar-core`.
+**Phụ trách:** Ngô Gia An (23120205). **Phạm vi:** sinh/đọc gap/review test, đối chứng dữ liệu và tái sử dụng quy trình trên lớp khác. Gia An xác nhận đã thực hiện/review phần AI và paper ngày 29/10/2026; khai báo AI phân biệt lượt Gia An tự chạy với lượt Codex thực thi theo ủy quyền. Slide/HTML đã được hợp nhất với kết quả thật của AI và paper.
 
 ### 6.1. AI-1/AI-2 — Sinh test và bổ sung từ coverage
 
-AI-1 sinh bản nháp 3 test FineCalculator; test pass nhưng chỉ phủ 70% nhánh. AI-2 đọc JSON trích từ JaCoCo cùng source, nhận ra thiếu null, ngày âm và nhánh tính phí VIP; sinh 3 test bổ sung. Profile `ai-improved` kiểm riêng bộ 3 → 6 test, không trộn bộ chuẩn vào số đo. Prompt và nhận xét ở `ai/prompts/`, `ai/results/`; hướng dẫn lệnh ở `HuongDan_Demo.md` mục 9.
+Demo ban đầu trên FineCalculator cho thấy bản nháp 3 test chỉ phủ 70% nhánh; AI-2 đọc JaCoCo và source để bổ sung null, ngày âm và nhánh VIP, đưa bộ demo lên 100% nhánh.
+
+Luồng triển khai thật trên PR #13 dùng class được chọn động. Runner gửi source/schema tương ứng cho Gemini 3.6 Flash, chạy JUnit/JaCoCo và chỉ cho repair kỹ thuật trong ngân sách hữu hạn. AI-1 sinh 7 test LoanService; AI-2 đọc coverage cùng bản nháp rồi bổ sung 3 test. Sau khi Gia An review, bước apply kiểm full suite trước khi tạo hai file test thật và xóa session output tạm. Kết quả: 49 test pass, LoanService line 17/17 và branch 6/6. Assertion failure dừng để người review, không tự sửa oracle.
 
 ### 6.2. AI-3 — Review diff bằng Gemini
 
-Script `scripts/ai_review.py` ghép diff với prompt. Mặc định chỉ chuẩn bị và ghi `api_called=false`; có `--live`, GEMINI_API_KEY và AI_MODEL mới gọi API. Lượt live đã lưu ngày 23/10 dùng `gemini-3.6-flash` trên fixture có vấn đề cài sẵn, sau HTTP 503 đã retry thành công. Đối chiếu đạt 4 đúng, 0 thừa, 0 bỏ sót; đây là demo fixture, không phải benchmark độc lập hay review toàn repo. [Metadata và kết quả](../../evidence/tuan-06/ai-review/metadata.json).
+Script CI chỉ lấy diff trong vùng test của PR và ghép với prompt. Lượt fixture ngày 23/10 đạt 4 đúng, 0 thừa, 0 bỏ sót; đây là demo có lỗi cài sẵn, không phải benchmark độc lập. [Metadata fixture](../../evidence/tuan-06/ai-review/metadata.json).
 
-Gemini nhận xét code; JUnit chạy code thật để kiểm pass/fail. Workflow AI hiện lưu artifact, chưa tự đăng comment PR hay tự tạo commit sửa code. Các demo AI-1/2/4/5 chạy lại output đã có không tự gọi Gemini.
+Workflow thật trên PR #13 chạy Gemini 3.6 Flash song song với JUnit/JaCoCo. Cả sáu job xanh: 49 test pass, project line 76/83, branch 24/24; bot cập nhật một comment gồm trạng thái CI và nhận xét AI. Gemini không có finding trong lượt hoàn tất. AI review không tự sinh/sửa/merge test và không thay required checks. [PR #13](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/13), [run 40889189664](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/actions/runs/40889189664).
 
 ### 6.3. AI-4 — Đối chứng dữ liệu biên
 
@@ -318,11 +320,13 @@ Gia An cung cấp CSV **23 ca (16 hợp lệ, 7 lỗi)** cùng bảng ghi chú �
 
 So với CSV AI 13 ca, có **11 đầu vào chung, cả 11 khớp kỳ vọng, 0 disagreement**; 12 ca chỉ có trong bộ Gia An (5 hợp lệ, 7 lỗi), 2 ca chỉ có trong AI là Integer.MAX_VALUE cho mỗi hạng. Bộ Gia An kiểm đủ các quy tắc chính nhưng chưa có giá trị int cực lớn. Số đầu vào trùng không phải accuracy mô hình.
 
-Java chạy riêng: `ai-human` **23/23 pass, line 11/11, branch 10/10** của FineCalculator; `ai-data` **13/13 pass, line 9/11, branch 8/10**. Hai profile skip gate theo cấu hình demo; không suy ra coverage toàn project từ CSV AI. [Kết quả, nguồn và giới hạn](../../evidence/tuan-06/ai-4/README.md), [bằng chứng](../../evidence/tuan-06/README.md). Gia An còn cần tự review/chạy lại; video chưa quay.
+Java chạy riêng: `ai-human` **23/23 pass, line 11/11, branch 10/10** của FineCalculator; `ai-data` **13/13 pass, line 9/11, branch 8/10**. Hai profile skip gate theo cấu hình demo; không suy ra coverage toàn project từ CSV AI. Gia An đã review kết quả và xác nhận khai báo AI ngày 29/10; video chưa quay. [Kết quả, nguồn và giới hạn](../../evidence/tuan-06/ai-4/README.md), [bằng chứng](../../evidence/tuan-06/README.md).
 
 ### 6.4. AI-5 — Tái sử dụng quy trình trên LoanService
 
-Giữ nguyên nghiệp vụ production. Profile `ai-loan-draft`: 2 test pass, line 14/17 và branch 3/6. Trích gap và đối chiếu source rồi dùng profile `ai-loan-improved`: 10 test pass, line 17/17, branch 6/6. Bộ bổ sung kiểm sách unavailable, member missing, hạn mức 2/3/4, nợ dương 0.01/1000, không ghi khi từ chối, ID sách/thành viên và Clock.fixed bằng ArgumentCaptor. PIT trên bộ này diệt 9/9 mutant trong cấu hình hiện tại; không chứng minh mọi lỗi đều được tìm thấy. Bộ chuẩn repo vẫn 39/39, gate pass trên JDK 25.0.5.
+Giữ nguyên nghiệp vụ production. Snapshot Codex ban đầu có 2 test, line 14/17 và branch 3/6; bộ cải thiện tương tác có 10 test, line 17/17, branch 6/6 và diệt 9/9 mutant trong cấu hình hiện tại. Snapshot này dùng để minh họa coverage/oracle, không gán là output Gemini.
+
+Luồng Gemini 3.6 thật trên PR #13 cũng tạo 10 test LoanService rồi áp dụng vào hai file mới. Full suite tăng từ 39 lên 49 test và gate pass. Các test kiểm hạn mức mượn, số tiền nợ có scale khác nhau và trường dữ liệu của phiếu đã lưu. Coverage không tăng thêm vì source đã được suite hiện tại phủ hết; AI-2 ghi đúng trạng thái “không tăng coverage, cần review” thay vì nhận là cải thiện giả.
 
 Profile `ai-loan-mistake` cố ý cài kỳ vọng sai “đang giữ 3 sách vẫn mượn được”, fail đúng một assertion. Fixture dùng để dạy kiểm oracle, không phải lỗi quan sát từ API hay kết quả paper. Prompt/source/log: [AI-5 review](../../ai/results/AI-5-loan-review.md), [evidence](../../evidence/tuan-06/README.md).
 
@@ -339,7 +343,7 @@ Tất cả output AI cần được kiểm theo đặc tả, assertion cụ th�
 | Fixture sai có phải lỗi model thật? | Không; cài sẵn để minh họa, đã ghi nhãn |
 | CoverUp có test Java không? | Tool gốc dùng Python; thử trên coverage_gaps.py, không dịch nghiệp vụ Java |
 | 89,0% là kết quả nhóm tự sinh? | Là replay phân tích dữ liệu tác giả trên 163 module MT |
-| ChatUniTest đã tái lập chưa? | Chưa; nêu đúng preflight/parse và kết quả thực tế, không gán AI-5 cho paper |
+| Paper đã được chạy ở phạm vi nào? | Mỗi bài đã có phân tích dữ liệu công bố, generation mới trên một benchmark và thử source Python nhóm; chưa chạy lại toàn benchmark nhiều seed |
 | Hạng của bài là gì? | FSE CORE2023 A* là venue; P2 demo track cần GV xác nhận |
 | Ai tự review phần mới? | Chờ tên/ngày thật trong khai báo cá nhân, không điền thay |
 
@@ -361,21 +365,26 @@ Nguồn chính thức dùng đối chiếu: [JUnit guide](https://docs.junit.org
 
 ### 9.1. Paper, kết quả đã chạy và giới hạn
 
-Danh mục có DOI, năm, source, revision, nguồn hạng và giới hạn: [research/papers.json](../../research/papers.json); [phân tích và lệnh chạy](../../research/README.md).
+Danh mục DOI/nguồn/hạng/phiên bản: [papers.json](../../research/papers.json); [lệnh chạy lại và phân tích](../../research/README.md).
 
-- **CoverUp: Effective High Coverage Test Generation for Python**, Pizzorno và Berger, FSE 2025 Research Papers / PACMSE, DOI 10.1145/3729398. Kết hợp coverage với ngữ cảnh và vòng phản hồi cho LLM; dùng tool Python gốc.
-- **ChatUniTest: A Framework for LLM-Based Test Generation**, Chen và cộng sự, FSE 2024 Demonstrations, DOI 10.1145/3663529.3663801. Dùng adaptive focal context và generation–validation–repair cho Java; giữ source gốc và trial plugin hiện tại tách riêng.
+- **CoverUp: Effective High Coverage Test Generation for Python**, Pizzorno và Berger, FSE 2025 Research Papers / PACMSE, DOI 10.1145/3729398. Vòng coverage → ngữ cảnh → LLM → chạy/sửa test. FSE A*, CORE2023.
+- **An empirical study of automated unit test generation for Python**, Lukasczyk, Kroiß và Fraser, Empirical Software Engineering 2023, 28:36, DOI 10.1007/s10664-022-10248-w. Tool Pynguin dùng tìm kiếm tiến hóa và type hints để sinh pytest, không cần LLM. Venue A theo CORE2020 journal ranking; bảng journal đã ngừng cập nhật từ 2022.
 
-[CORE2023 chính thức](https://portal.core.edu.au/conf-ranks/?by=all&search=&source=CORE2023) ghi FSE A*. Đây là hạng venue; ChatUniTest thuộc demo track cần xác nhận GV chấp nhận. Hai năm xuất bản 2024–2025 nằm trong yêu cầu 2021–2026.
+Hai năm xuất bản 2023/2025 thuộc 2021–2026. Hạng là của venue theo nguồn chính thức trong research, không gán hạng trực tiếp cho từng paper.
 
-| Thử nghiệm | Kết quả thật | Giới hạn |
+| Thí nghiệm | Kết quả thực tế | Giới hạn |
 |---|---|---|
-| CoverUp script gốc phân tích 163 module MT | overall line+branch 89,0%, MuTAP gpt4o_zero 76,8%; khớp 89% vs 77% làm tròn ở abstract v4 | Dữ liệu tác giả công bố, không sinh lại test; dependencies phân tích mới có khóa phiên bản |
-| CoverUp 0.6.0 trên `scripts/coverage_gaps.py` | dry-run pass, coverage smoke ban đầu 23,6%, sau dry-run vẫn 23,6% | Không gọi model, không tạo test mới, không dùng làm kết quả generation |
-| ChatUniTest plugin 2.1.1 trên bản sao case study | parse pass: 20 class, 28 method | Chỉ phân tích source, endpoint localhost không có model; chưa generation hoặc tái lập experiment gốc |
+| CoverUp: script tác giả trên dữ liệu MT | 163 module; overall line+branch 89,0% vs MuTAP 76,8% | Reanalysis dữ liệu công bố |
+| CoverUp + Gemini 3.6: f003, Gia An tự chạy | Thêm 2 hàm; 3 pass; line 8/8, branch 4/4, bằng reference cùng module | Đổi model/baseline/môi trường/ngân sách |
+| CoverUp + Gemini 3.6: source nhóm | Thêm 6 hàm; 7 pass; line 38/39, branch 15/16; kết hợp 23,6% → 96,4% | Còn entrypoint; Python script, không phải Java business layer |
+| Pynguin: numeric cells notebook tác giả | 134 module sau lọc; 40.200 dòng; 30 lượt/config/module; 8 cột thống kê × 10 cấu hình khớp; median DynaMOSA-TypeHints 80,72% | Không sinh lại toàn bộ dữ liệu |
+| Pynguin 0.25.2: codetiming._timers | DYNAMOSA 600s/seed 23120205; coverage nội bộ 81,48%, bằng median 30 lượt cùng module/config; 10 pass, 5 xfail. SlipCover target line 42/42, branch 4/4 | Một seed; reference module trước lọc completeness. Metric bytecode khác metric source |
+| Pynguin: scripts/coverage_gaps.py | 0.25.2: 1 xfail không gọi SUT. 0.48.0: 1 xfail, kết hợp 20%; thêm seed XML: 2 pass, 23,6%, không assertion, bằng smoke baseline | Kết quả yếu trên module này; bản 0.48.0 là thử thích nghi riêng |
 
-Không tự implement lại thuật toán paper. Còn thiếu lượt model thật/benchmark và thử test sinh ra trên source nhóm cho cả hai bài; không đánh dấu mục E hoàn thành. Chia lượt chạy cho thành viên là kế hoạch đề xuất trong research, chưa khẳng định họ đã nhận/chạy.
+Dùng tool và mã phân tích của tác giả, không implement lại thuật toán. Cả hai paper được thử trên source Python thật của nhóm, không dịch LoanService sang Python. Gia An tự chạy f003; Codex thực hiện các lượt bổ sung theo ủy quyền. Không nhận thành viên khác đã tự chạy. `xfail` không tính là pass; không tự đưa test paper vào suite chuẩn.
 
-### 9.2. Cách tái hiện và điều kiện hoàn thành
+### 9.2. Kết luận và bàn giao
 
-Hướng dẫn cài/chạy tool tác giả ở [research/README.md](../../research/README.md); chỉ mục số liệu ở [evidence paper](../../evidence/tuan-06/papers/README.md). Hoàn thành yêu cầu paper cần chạy thí nghiệm generation bằng tool gốc, đối chiếu kết quả công bố và thử trên source nhóm; replay phân tích, dry-run và parse không thay cho các bước đó. Chưa đánh dấu hoàn tất, chưa có generation mới trong các lượt đã ghi.
+Đã có nguồn/hạng, phân tích kết quả công bố, generation mới trên một benchmark và áp dụng source nhóm cho mỗi paper; xem [output tối thiểu](../../evidence/tuan-06/papers/README.md). CoverUp tăng coverage rõ ở script nhóm; Pynguin gặp giới hạn tạo input filesystem/XML và assertion. Đây là ví dụ thực tế về điểm yếu công cụ.
+
+Phạm vi là tái hiện có giới hạn; chưa chạy lại toàn bộ benchmark nhiều seed, mutation RQ3 hoặc thiết lập đúng mọi phiên bản/môi trường gốc. Không suy ra test đúng nghiệp vụ chỉ vì pass/coverage cao. Slide/HTML đã hợp nhất; video, review chéo và trình bày với GV làm ở bước bàn giao tiếp theo.

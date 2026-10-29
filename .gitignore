@@ -6,6 +6,9 @@ __pycache__/
 !.env.example
 *.log
 !evidence/**/*.log
+# Local AI demo output (including legacy output paths), never submission evidence.
+/.ai-work/
+/evidence/tuan-06/gemini-live/
 .playwright-cli/
 output/playwright/
 .DS_Store
@@ -15,6 +18,8 @@ report/*.toc
 report/*.out
 report/*.synctex.gz
 bai-nop/
+# Local contribution log is regenerated after the remaining work is finished.
+/docs/thuc-hanh/GitCommitLog_NgoGiaAn.md
 report/*.fls
 report/*.fdb_latexmk
 report/*.xdv

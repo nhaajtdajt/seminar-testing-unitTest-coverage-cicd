@@ -1,0 +1,148 @@
+{
+  "started_at_utc": "2026-10-29T12:39:47+00:00",
+  "finished_at_utc": "2026-10-29T12:39:57+00:00",
+  "timestamp_source": "Original local log; timezone Asia/Ho_Chi_Minh supplied by user session",
+  "executed_by": "Ngô Gia An (23120205), self-run in Terminal",
+  "evidence_prepared_by": "Codex",
+  "scope": "fresh-generation-single-author-benchmark-module-with-gemini",
+  "new_model_generation": true,
+  "status": "completed-and-offline-verified",
+  "exit_code": null,
+  "exit_code_note": "Generation process exit status was not captured in a machine log; not reconstructed as 0. Separate offline replay has a recorded exit code.",
+  "command": [
+    "<coverup-venv>/bin/python",
+    "-m",
+    "coverup",
+    "--model",
+    "gemini/gemini-3.6-flash",
+    "--tests-dir",
+    "tests",
+    "--package-dir",
+    "f003",
+    "--checkpoint",
+    "coverup-checkpoint-retry.json",
+    "--max-attempts",
+    "1",
+    "--max-concurrency",
+    "1",
+    "--max-backoff",
+    "4",
+    "--repeat-tests",
+    "1",
+    "--log-file",
+    "coverup-live-retry.log",
+    "f003/__init__.py"
+  ],
+  "working_directory": "<benchmark-run>",
+  "outer_timeout_seconds": 120,
+  "model": "gemini/gemini-3.6-flash",
+  "counters": {
+    "G": 1,
+    "F": 0,
+    "U": 0,
+    "R": 0
+  },
+  "estimated_cost_usd": 0.0058147500000000005,
+  "cost_note": "CoverUp/LiteLLM estimate, not provider billing.",
+  "source": {
+    "url": "https://github.com/plasma-umass/coverup-eval",
+    "revision": "f3173196b90181974b0b684600ffde42ac36672c",
+    "file": "MuTAP-benchmarks/f003/f003/__init__.py",
+    "sha256": "bb383d5c22152b2b81aeeb6273d9578b1a6162ff42a36e6901f6213e238d986b",
+    "identical_to_author_file": true
+  },
+  "tool": {
+    "name": "CoverUp",
+    "version": "0.6.0"
+  },
+  "baseline": {
+    "test_functions": 1,
+    "origin": "Codex supplied seed test; user created and ran it"
+  },
+  "generated": {
+    "file": "generated/test_coverup_1.py",
+    "test_functions": 2,
+    "accepted_candidates": 1
+  },
+  "offline_junit": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "human_review_attested": false,
+  "limitations": [
+    "Only f003, not the 163-module suite.",
+    "Gemini replaces the published GPT-4o configuration.",
+    "Added baseline test and a reduced prompt/repeat budget.",
+    "Current tool/SlipCover/Python dependencies differ from the original experiment.",
+    "Author reference is published coverage data; author tests were not rerun here.",
+    "Coverage equality does not prove equal test quality or full behavioral correctness."
+  ],
+  "command_source": "Invocation from user wrapper; CLI parameters from the original CoverUp log.",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "macOS-26.6-arm64-arm-64bit",
+    "packages": {
+      "CoverUp": "0.6.0",
+      "litellm": "1.106.5",
+      "mcp": "2.3.0",
+      "httpx2": "2.16.0",
+      "pytest": "8.3.5",
+      "slipcover": "1.1.0",
+      "pydantic": "2.14.1"
+    }
+  },
+  "api_summary": {
+    "requested_model": "gemini/gemini-3.6-flash",
+    "logged_response_count": 2,
+    "responses": [
+      {
+        "id": "lT7jatGYB8D9694P6s_V6QI",
+        "model": "gemini-3.6-flash",
+        "created": 1793277588,
+        "usage": {
+          "completion_tokens": 84,
+          "prompt_tokens": 365,
+          "total_tokens": 449,
+          "completion_tokens_details": {
+            "reasoning_tokens": 66,
+            "text_tokens": 18
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": null,
+            "cached_tokens": null,
+            "text_tokens": 365,
+            "image_tokens": null,
+            "video_tokens": null
+          },
+          "cache_read_input_tokens": null
+        }
+      },
+      {
+        "id": "lz7jaoqbEoyl694Ps6uMyQ4",
+        "model": "gemini-3.6-flash",
+        "created": 1793277590,
+        "usage": {
+          "completion_tokens": 1288,
+          "prompt_tokens": 528,
+          "total_tokens": 1816,
+          "completion_tokens_details": {
+            "reasoning_tokens": 1132,
+            "text_tokens": 156
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": null,
+            "cached_tokens": null,
+            "text_tokens": 528,
+            "image_tokens": null,
+            "video_tokens": null
+          },
+          "cache_read_input_tokens": null
+        }
+      }
+    ],
+    "note": "Observed responses, not a billing receipt or a guarantee of total HTTP request count."
+  },
+  "retained_outputs": "before.json, after.json, comparison.json, generated test, final pytest log and JUnit XML"
+}

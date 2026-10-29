@@ -1,15 +1,26 @@
 # AI-1 — Sinh test từ source
 
-Đọc đặc tả và mã nguồn, liệt kê từng nhánh trước khi viết test JUnit Jupiter + AssertJ.
-Mỗi test phải kiểm giá trị hoặc ngoại lệ cụ thể; không mock lớp chỉ có logic thuần.
-Bao gồm dữ liệu hợp lệ, dữ liệu sai, giá trị biên và trường hợp tiền chạm/vượt mức trần.
-Không tự thêm API không có trong mã nguồn. Phân biệt giả định với quy tắc đã được cung cấp.
+Class cần kiểm thử: {{TARGET_CLASS}}
+Yêu cầu nghiệp vụ (nếu có): {{REQUIREMENTS}}
+Schema/domain: {{SCHEMA}}
+Source class và dependency production: {{SOURCE}}
 
-Đặc tả: {{SPEC}}
+Suy ra API, constructor, dependency, điều kiện, kiểu dữ liệu và giá trị biên từ input trên.
+Không có quy tắc hoặc giá trị nghiệp vụ mặc định. Nêu giả định và khác biệt giữa
+kiểm hành vi implementation với kiểm yêu cầu độc lập. Không đọc test/CSV tham chiếu.
+Nếu class có dependency, dùng Mockito stub theo đường đi cần kiểm; không stub dư.
+Với clock/random ID, kiểm ổn định theo API thật, không đoán ID hoặc thời gian hiện tại.
+Không cố ý bỏ ca để làm coverage thấp. Mỗi test phải kiểm hành vi cụ thể.
 
-```java
-{{SOURCE}}
-```
+Hợp đồng đầu ra có thể chạy:
+- Java 25, JUnit Jupiter 6 và AssertJ đã có trong Maven; dùng @Test thông thường.
+- Một lớp tên {{CLASS_NAME}}, package {{PACKAGE}} (nếu package trống thì không khai báo package).
+- Không mock chính class được kiểm. Không CSV, file, mạng/process, database/server thật.
+- Không Spring context; controller/repository được kiểm ở mức unit với dependency mock.
+- Nêu rõ unit test trực tiếp không kiểm được HTTP validation, ORM mapping hoặc wiring thật.
+- Không kế thừa lớp test khác, không @Tag, @Disabled, assumption hoặc test rỗng.
+- So sánh BigDecimal bằng isEqualByComparingTo; không sửa production code.
+- Không tự tuyên bố test đã pass hoặc đoán coverage khi chưa chạy.
 
-Đầu ra: danh sách nhánh, file test, dữ liệu CSV, các giả định cần con người xác nhận.
-Sau khi sinh, người sử dụng chạy test, đọc từng assertion và lưu coverage trước/sau.
+Chỉ trả JSON object, không Markdown fence:
+{"analysis": "Các tình huống, lý do và giả định", "test_source": "Toàn bộ file Java"}

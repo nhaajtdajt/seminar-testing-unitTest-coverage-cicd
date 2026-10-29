@@ -35,3 +35,9 @@ class IndependentOracleTest(unittest.TestCase):
             (frozen/"cases.csv").write_text("changed")
             with self.assertRaisesRegex(ValueError, "changed"):
                 ai4.compare(frozen, ai)
+
+    def test_new_ai_csv_can_express_exceptions_without_breaking_legacy_csv(self):
+        mixed = b"daysLate,tier,expected,expectedException\n1,NORMAL,2000,\n-1,VIP,,IllegalArgumentException\n"
+        cases = ai4.read_cases(mixed, ai=True)
+        self.assertEqual(cases[(-1, "VIP")], "IllegalArgumentException")
+        self.assertEqual(ai4.read_cases(b"daysLate,tier,expected\n1,NORMAL,2000\n", ai=True)[(1, "NORMAL")], "2000")

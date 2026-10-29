@@ -51,7 +51,7 @@
 
 ## Video E — AI và paper — Người thực hiện: Ngô Gia An (23120205)
 
-**Trạng thái:** mới chuẩn bị artifact, chưa quay/đăng YouTube. Timestamp thực tế điền sau khi quay; chưa ấn định thời lượng. Slide/HTML phần Gia An hoãn đến cuối; chưa đưa nội dung mới vào slide chung.
+**Trạng thái:** artifact và slide tóm tắt đã hoàn tất; chưa quay/đăng YouTube. Timestamp thực tế điền sau khi quay; chưa ấn định thời lượng. Slide 24–29 trình bày AI-1..4, hai paper và các đoạn GA-01..07.
 
 | Phân đoạn | Timestamp | Nội dung cần minh họa | Lệnh / File minh chứng |
 |---|---|---|---|
@@ -60,10 +60,10 @@
 | **GA-03: Phức tạp** | Chưa quay | Bổ sung 10 test, 6/6 branch; assertion/captor và PIT 9/9 | `run_ai_demo.py improved`, `mutation`; `ai-loan/improved/`, `pit-strong/` |
 | **GA-04: Oracle sai** | Chưa quay | Fixture kỳ vọng mượn được khi giữ 3 sách; đúng một assertion fail | `run_ai_demo.py mistake`; fixture cài sẵn, không gọi là lỗi model thật |
 | **GA-05: Data driven / AI-4** | Chưa quay | Notes/CSV người dùng → hash và commit khóa → đối chiếu → Java; 23/23 vs 13/13 pass, branch 100% vs 80% | `HuongDan_Demo.md` mục 9.3; `evidence/tuan-06/ai-4/README.md` |
-| **GA-06: CoverUp** | Chưa quay | Nguồn/rank, script tác giả trên 163 module, 89,0% vs 76,8%; dry-run không sinh test | `research/README.md`; `evidence/tuan-06/papers/` |
-| **GA-07: ChatUniTest** | Chưa quay | Generation–validation–repair; parse case study 20 class/28 method; generation và tái lập gốc còn chờ | `research/chatunitest/`; `evidence/tuan-06/papers/` |
+| **GA-06: CoverUp** | Chưa quay | Nguồn/rank, phân tích 163 module; f003 3 pass/100%; source nhóm 7 pass, coverage kết hợp 23,6% → 96,4% | `research/README.md`; `evidence/tuan-06/papers/` |
+| **GA-07: Pynguin** | Chưa quay | Chạy lại số liệu công bố và sinh test bằng DynaMOSA; so với CoverUp trên source nhóm | `research/pynguin/`; `evidence/tuan-06/papers/` |
 
-Mọi lệnh đầy đủ ở `HuongDan_Demo.md` mục 9; mỗi lượt lưu output mới trước khi chạy clean tiếp theo. Không dùng số liệu cũ để nói là vừa chạy. Chỉ quay như một thí nghiệm thành công khi có kết quả thật; phần generation paper còn chờ model/môi trường. URL YouTube và timestamp GA-01..07 chưa có, ghi sau khi thực sự quay/xem lại. Hướng dẫn thao tác quay chi tiết làm ở bước sau.
+Mọi lệnh đầy đủ ở `HuongDan_Demo.md` mục 9; mỗi lượt lưu output mới trước khi chạy clean tiếp theo. Không dùng số liệu cũ để nói là vừa chạy. Chỉ quay như một thí nghiệm thành công khi có kết quả thật; paper đã có output generation thật, gồm kết quả yếu của Pynguin trên source nhóm để demo giới hạn. URL YouTube và timestamp GA-01..07 chưa có, ghi sau khi thực sự quay/xem lại. Hướng dẫn thao tác quay chi tiết làm ở bước sau.
 
 ## Checklist quay và bàn giao
 

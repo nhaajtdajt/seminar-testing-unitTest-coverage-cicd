@@ -163,7 +163,7 @@ python3 scripts/evaluate_review.py ai/fixtures/review-expected.json \
   evidence/tuan-06/ai-review/review.json --output /tmp/ai3-evaluation.json
 ```
 
-Lệnh đầu chỉ chuẩn bị prompt; lệnh thứ hai đánh giá response đã lưu. Có GEMINI_API_KEY/AI_MODEL thì thêm `--live` vào lệnh review để gọi Gemini mới. Client retry tối đa ba request cho timeout/HTTP tạm thời; không lưu key. Xem metadata để phân biệt prepare/live. `ai/results/AI-3-session-review.json` là output Codex, khác response Gemini tại `evidence/tuan-06/ai-review/`. Workflow lưu artifact; chưa tự comment PR. Kết quả 4/4 chỉ trên fixture cài sẵn.
+Lệnh đầu chỉ chuẩn bị prompt; lệnh thứ hai đánh giá response đã lưu. Có GEMINI_API_KEY/AI_MODEL thì thêm `--live` vào lệnh review để gọi Gemini mới. Client retry tối đa ba request cho timeout/HTTP tạm thời; không lưu key. Xem metadata để phân biệt prepare/live. `ai/results/AI-3-session-review.json` là output Codex, khác response Gemini tại `evidence/tuan-06/ai-review/`. Kết quả 4/4 chỉ trên fixture cài sẵn. AI-3 tự động trên PR hiện được tích hợp trong **Seminar CI**, chạy song song với test/coverage rồi comment kết quả kể cả gate lỗi; xem [cấu hình và luồng hiện tại](../../ai/README.md#10-ai-3-tự-động-trong-ci-và-comment-pr). Workflow fixture chạy tay không comment PR.
 
 ### 9.3. AI-4 — Đối chứng CSV người dùng và AI
 
@@ -193,7 +193,7 @@ Mỗi output phải là thư mục mới; chạy tuần tự. Cấu trúc kết 
 
 ### 9.5. Paper
 
-Thực hiện theo [research/README.md](../../research/README.md); [evidence](../../evidence/tuan-06/papers/README.md) phân biệt reanalysis/dry-run/parse/generation. Chưa có bằng chứng generation mới; không gọi replay phân tích là tái lập toàn bộ paper.
+Thực hiện theo [research/README.md](../../research/README.md); [evidence](../../evidence/tuan-06/papers/README.md) có reanalysis, generation mới trên benchmark và thử source Python của nhóm cho CoverUp/Pynguin. Không gọi các lượt có giới hạn này là tái lập toàn bộ benchmark nhiều seed.
 
 ## 10. Lỗi thường gặp
 

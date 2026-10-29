@@ -1,39 +1,38 @@
 # Paper: nguồn, kết quả và cách chạy lại
 
-Ngô Gia An (23120205), AI hỗ trợ: Codex, 28/10/2026. Danh mục máy đọc được: [papers.json](papers.json). Không tự viết lại thuật toán của paper.
+Ngô Gia An (23120205), Codex hỗ trợ thực nghiệm và tổng hợp, cập nhật 29/10/2026.
+Danh mục DOI, phiên bản và nguồn kiểm hạng: [papers.json](papers.json).
+Output cần trình bày: [chỉ mục evidence](../evidence/tuan-06/papers/README.md).
 
-Bài làm thử từng bước, có expected: [Ứng dụng → CoverUp với Gemini](../docs/thuc-hanh/ThucHanh_App_Paper.md). Ngày 29/10 đã kiểm baseline/dry-run offline với route Gemini; chưa gọi model sinh test. Lock pin pytest 8.3.5 để tương thích SlipCover; khác snapshot dependencies lúc thử ngày 28/10, không thay số liệu cũ.
+## 1. Hai bài được chọn
 
-## Hai bài được chọn
-
-| Bài | Xuất bản / hạng hội nghị | Source tác giả | Áp dụng cho nhóm |
-|---|---|---|---|
-| P1 — CoverUp (Pizzorno, Berger, 2025) | [FSE 2025 Research Papers](https://conf.researchr.org/details/fse-2025/fse-2025-research-papers/112/CoverUp-Effective-High-Coverage-Test-Generation-for-Python), DOI 10.1145/3729398 | [coverup-eval](https://github.com/plasma-umass/coverup-eval), [tool](https://github.com/plasma-umass/coverup) | Python: dùng `scripts/coverage_gaps.py` thật của repo, không dịch LoanService sang Python |
-| P2 — ChatUniTest (Chen và cộng sự, 2024) | [FSE 2024 Demonstrations](https://2024.esec-fse.org/details/fse-2024-demonstrations/6/ChatUniTest-A-Framework-for-LLM-based-Test-Generation), DOI 10.1145/3663529.3663801 | [nhánh python gốc](https://github.com/ZJU-ACES-ISE/ChatUniTest/tree/python), [plugin Java của tác giả](https://github.com/ZJU-ACES-ISE/chatunitest-maven-plugin) | Java: `LoanService#borrow`, so với suite hiện tại |
-
-Đã kiểm trực tiếp [CORE2023](https://portal.core.edu.au/conf-ranks/?by=all&search=&source=CORE2023): FSE A*. Đây là hạng của **venue**; không gán hạng A* cho từng bài. P2 thuộc demo track, cần nhóm xác nhận GV chấp nhận track này. Khoảng năm 2024–2025 nằm trong yêu cầu 2021–2026. Năm 2023 trên preprint ChatUniTest không phải năm xuất bản proceedings.
-
-## Phương pháp và liên hệ với case study
-
-**P1.** CoverUp dùng coverage hiện có để chọn phần mã cần test, đưa ngữ cảnh vào prompt rồi chạy test mới. Nếu test lỗi hoặc không tăng coverage, công cụ gửi phản hồi để sửa. Điểm phù hợp với seminar là vòng đo → sinh → kiểm lại; phạm vi của tool là Python regression testing, không phải tự suy ra đúng đặc tả. [Paper, bản v4](https://arxiv.org/html/2403.16218v4).
-
-**P2.** ChatUniTest tổ chức ngữ cảnh của phương thức Java và vòng generation–validation–repair. Nhóm cần theo dõi test sinh ra có biên dịch được, chạy được và có assertion đúng hay không. Dùng plugin hiện nay để thử case study phải ghi riêng với môi trường bài báo năm 2024. [Nguồn công bố](https://2024.esec-fse.org/details/fse-2024-demonstrations/6/ChatUniTest-A-Framework-for-LLM-based-Test-Generation), [hướng dẫn tác giả](https://github.com/ZJU-ACES-ISE/ChatUniTest).
-
-## Kết quả thực sự đã có
-
-| Thí nghiệm | Kết quả | Được phép kết luận |
+| Bài | Xuất bản / hạng venue đã kiểm | Source tác giả |
 |---|---|---|
-| P1: chạy nguyên `scripts/compare.py` trên dữ liệu MT công bố, 163 module | CoverUp overall line 89,2%; branch 88,7%; line+branch 89,0%. MuTAP `gpt4o_zero`: 78,0%; 74,5%; 76,8% | Tái hiện **bước phân tích dữ liệu công bố**, khớp số 89% vs 77% đã làm tròn ở abstract v4. Không phải sinh lại tất cả test bằng LLM |
-| P1: chạy tool gốc trên source Python nhóm với `--dry-run` | Xem `evidence/tuan-06/papers/coverup-group-dry*/run.json` và log | Chỉ kiểm môi trường/coverage/chuẩn bị prompt. Không có model output hay kết quả test mới |
-| P2: kiểm điều kiện chạy artifact gốc | Chưa có config, API key, thư viện và môi trường MySQL/grammar gốc | Chưa chạy tái lập P2; không điền coverage/số test giả |
-| P2: plugin tác giả 2.1.1 parse bản sao case study | 20 class, 28 method; build success, endpoint localhost không có model | Thử tương thích parser hiện tại, chưa sinh test và chưa tái lập thí nghiệm gốc |
-| AI-5: Codex tương tác trên LoanService | 2 → 10 test; 3/6 → 6/6 branch | Đây là demo AI của nhóm, **không** thay cho thí nghiệm của P2 |
+| CoverUp: Effective High Coverage Test Generation for Python — Pizzorno, Berger | FSE 2025 / PACMSE, [DOI 10.1145/3729398](https://doi.org/10.1145/3729398); FSE A*, CORE2023 | [Tool](https://github.com/plasma-umass/coverup), [artifact](https://github.com/plasma-umass/coverup-eval) |
+| An empirical study of automated unit test generation for Python — Lukasczyk, Kroiß, Fraser | Empirical Software Engineering 2023, 28:36, [DOI 10.1007/s10664-022-10248-w](https://doi.org/10.1007/s10664-022-10248-w); A, CORE2020 journal ranking | [Pynguin](https://github.com/se2p/pynguin), [artifact và notebook gốc](https://doi.org/10.5281/zenodo.6838658) |
 
-File log, lệnh, revision và giới hạn: [evidence paper](../evidence/tuan-06/papers). Dùng dependencies phân tích hiện tại đã khóa trong `requirements-analysis.lock.txt`; khác pins cũ của tác giả nên không coi đây là tái lập nguyên môi trường. Script/dữ liệu MT dùng trong phép so được kiểm không sửa; checkout macOS báo một tên file CM khác biệt do hoa/thường, không nằm trong dữ liệu MT đã dùng.
+Hai bài xuất bản trong 2021–2026. Đã kiểm trên [CORE conference portal](https://portal.core.edu.au/conf-ranks/?by=all&search=&source=CORE2023) và [CORE journal portal](https://portal.core.edu.au/jnl-ranks/?search=Empirical+Software+Engineering&by=all&source=CORE2020). Đây là hạng venue; bảng journal dừng cập nhật năm 2020, không nhận là hạng mới năm 2026 của từng paper.
 
-## Chạy lại P1 không gọi model
+## 2. Phương pháp và kết quả
 
-Chọn thư mục ngoài repo cho artifact và môi trường. Artifact đầy đủ có thể chiếm nhiều GB; không chép nó vào source nộp.
+CoverUp dùng coverage để chọn đoạn source, gọi LLM sinh pytest rồi chạy/đo/sửa theo phản hồi. Lượt mới dùng Gemini **3.6 Flash**, khác GPT-4o của kết quả công bố. Pynguin dùng tìm kiếm tiến hóa DynaMOSA, type hints và thực thi để sinh test; lượt này **không gọi Gemini hoặc LLM**. Dùng trực tiếp tool và mã phân tích của tác giả, không tự implement lại thuật toán.
+
+| Thí nghiệm đã chạy | Kết quả | Giới hạn |
+|---|---|---|
+| CoverUp: script `compare.py` gốc trên dữ liệu MT | 163 module; overall line+branch 89,0% vs MuTAP 76,8%, khớp abstract đã làm tròn 89% vs 77% | Phân tích dữ liệu công bố |
+| CoverUp: Gia An tự sinh test mới trên benchmark f003 | Thêm 2 hàm; cả bộ 3 pass; line 8/8, branch 4/4, bằng reference cùng module | Một module, khác model/baseline/versions/budget |
+| CoverUp: sinh trên `scripts/coverage_gaps.py` của nhóm | Thêm 6 hàm, tổng 7 pass; line 11/39 → 38/39, branch 2/16 → 15/16; kết hợp 23,6% → 96,4% | Còn entrypoint `__main__`; source Python, không phải JUnit Java |
+| Pynguin: chạy nguyên numeric cells notebook tác giả | 134 module sau lọc, 40.200 dòng dữ liệu, 30 lượt/config/module; cả 8 cột `describe()` của 10 cấu hình khớp output gốc trong 1e-6; DynaMOSA-TypeHints median 80,72% | Không chạy mới 40.200 thí nghiệm |
+| Pynguin 0.25.2: benchmark `codetiming._timers`, DYNAMOSA 600s, seed 23120205 | Coverage nội bộ 81,48%, bằng median 30 lượt công bố cùng module/config; pytest **10 pass, 5 xfail**; SlipCover target line 42/42, branch 4/4 | Một seed; metric bytecode khác metric source SlipCover. Reference module lấy trước bộ lọc completeness, không thuộc 134 module so toàn cấu hình |
+| Pynguin: source nhóm, 60s/lượt | 0.25.2: 1 xfail, không gọi source. 0.48.0: 1 xfail, kết hợp 20%. 0.48.0 có seed XML: 2 pass nhưng không assertion, kết hợp 23,6%, bằng smoke baseline | Kết quả yếu trên module filesystem/XML này; không kết luận mọi module đều yếu. Bản 0.48.0 là thử thích nghi riêng |
+
+`xfail` là lỗi dự kiến được tool đánh dấu, **không tính là test pass**. Coverage nội bộ Pynguin tính cả nhánh bytecode, không đối chiếu trực tiếp 81,48% với 100% SlipCover hoặc JaCoCo. Cả hai tool được thử trên script Python thật của nhóm; không dịch LoanService sang Python. Các lượt mới trên source nhóm và Pynguin do Codex chạy theo ủy quyền Gia An; f003 do Gia An tự chạy.
+
+## 3. Chạy lại phân tích dữ liệu công bố
+
+Đặt artifact/venv ngoài repo. Không commit bản sao benchmark, dependency dump, API key hoặc full model log.
+
+### CoverUp
 
 ```bash
 git clone https://github.com/plasma-umass/coverup-eval.git /tmp/coverup-eval
@@ -44,32 +43,59 @@ python3 scripts/paper_experiments.py coverup-reanalyse /tmp/coverup-eval \
   --python /tmp/paper-analysis/bin/python --output /tmp/paper-reanalysis
 ```
 
-Lệnh này dùng trực tiếp script gốc, không dùng submodule CodaMosa. Muốn thử dry-run trên source nhóm, dùng **Python 3.12**, tạo venv rồi cài `research/requirements-coverup.lock.txt`:
+Expected: script gốc phân tích 163 module, 89,0% vs 76,8%. Output phải là thư mục mới.
+
+### Pynguin
+
+Tải [artifact Zenodo](https://zenodo.org/records/6838658), giải nén `emse2022-experiments/` vào `/tmp/pynguin-artifact/`. ZIP khoảng 1,4 GB; chỉ cần `data/{results.csv.xz,results-assertions.csv.xz,loc_data.csv,types.csv,types_per_project.csv}`, `notebooks/project-analysis.ipynb` và project `projects/codetiming/`. Phiên này dùng HTTP range để lấy riêng các thành phần đó, không đưa vào Git.
 
 ```bash
-python3 scripts/paper_experiments.py coverup-dry-run \
-  --python /tmp/coverup-env/bin/python --output /tmp/coverup-group-check
+/tmp/paper-analysis/bin/pip install -r research/pynguin/requirements-analysis.txt
+/tmp/paper-analysis/bin/python research/pynguin/reanalyse.py \
+  /tmp/pynguin-artifact/emse2022-experiments > /tmp/pynguin-analysis.json
 ```
 
-Runner tạo bản sao tạm cô lập gồm source `coverage_gaps.py` và một smoke test, giữ smoke test trong `inputs/` rồi dọn bản sao. Tool có thể cần mạng lần đầu để tải tokenizer; sentinel trong dry-run không phải API key. Khi cần sinh test thật, trên bản sao đó bỏ `--dry-run`, chọn model đang truy cập được, giới hạn `--max-concurrency 1 --max-attempts 1`, giữ output model/test/coverage và ghi chi phí thật. Chưa thực hiện bước gọi model trong phiên này.
+Expected: `matches_author_stored_describe_output: true`, `retained_modules: 134`, `retained_rows: 40200`. Wrapper thực thi nguyên cell số học của notebook; chỉ thêm serialize/check output. Chạy notebook từ artifact có hash trong evidence; các cell plot/TeX và mutation RQ3 không chạy ở đây.
 
-## P2: artifact gốc và lần thử hiện tại
+## 4. Chạy mới tool tác giả
 
-Artifact gốc cần MySQL, Java grammar native, Python dependencies cũ, model/API. Làm theo README ở revision trong `papers.json`; chạy `python run.py` tại `src/` sau khi thiết lập config riêng. Chưa có các điều kiện đó ở máy hiện tại; [preflight](../evidence/tuan-06/papers/chatunitest-preflight/run.json) lưu trạng thái. Không thay thuật toán bằng code tự viết hoặc response model giả để nhận là tái lập.
+### CoverUp + Gemini
 
-Đã chuẩn bị [plugin fragment](chatunitest/pom.fragment.xml) cho **bản sao** case study. Không sửa `pom.xml` chính bằng plugin này. Chèn plugin vào `<build><plugins>` của bản sao; chọn `CHATUNITEST_MODEL` và key bằng biến môi trường, không lưu giá trị vào repo/video. Fragment đặt endpoint chính thức rõ ràng vì source plugin hiện tại mặc định dùng một proxy bên thứ ba. Lệnh thử sau khi có môi trường:
+[Bài thực hành từng bước](../docs/thuc-hanh/ThucHanh_App_Paper.md) có baseline XML, đọc key từ `.env.gemini`, lệnh sinh test và đo trước/sau. Python 3.12, CoverUp 0.6.0; cài `research/requirements-coverup.lock.txt`. Lượt mới dùng quota và không bảo đảm số test/coverage giống output đã lưu.
+
+### Pynguin gốc trên benchmark
+
+Pynguin **0.25.2 cần Python 3.10**; pin `bytecode==0.13.0` để tương thích instrumentation của phiên bản này.
 
 ```bash
-# Chạy trong thư mục case-study BẢN SAO, sau khi chèn plugin fragment.
-./mvnw -B -ntp -DskipTests package
-./mvnw -B -ntp io.github.zju-aces-ise:chatunitest-maven-plugin:2.1.1:method \
-  '-DselectMethod=vn.edu.seminar.loan.LoanService#borrow'
+python3.10 -m venv /tmp/pynguin025
+/tmp/pynguin025/bin/pip install -r research/pynguin/requirements-original.txt
+GA_PY_PROJECT=/tmp/pynguin-artifact/emse2022-experiments/projects/codetiming
+GA_PY_RUN="$(mktemp -d /tmp/pynguin-run.XXXXXX)"
+PYNGUIN_DANGER_AWARE=1 /tmp/pynguin025/bin/pynguin \
+  --project-path "$GA_PY_PROJECT" --module-name codetiming._timers \
+  --output-path "$GA_PY_RUN/generated" --report-dir "$GA_PY_RUN/report" \
+  --algorithm DYNAMOSA --maximum-search-time 600 --seed 23120205 \
+  --assertion-generation SIMPLE --statistics-backend CSV
+cd "$GA_PY_PROJECT"
+PYTHONPATH="$GA_PY_PROJECT" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+  /tmp/pynguin025/bin/python -m slipcover --branch --source codetiming \
+  --json --out "$GA_PY_RUN/coverage.json" -m pytest -q \
+  --junitxml "$GA_PY_RUN/junit.xml" "$GA_PY_RUN/generated"
 ```
 
-Bước `package` và `:parse` đã chạy được trên bản sao Java 25: **20 class, 28 method**. Bước `:method` và test sinh ra trên JUnit 6 vẫn **chưa kiểm chứng**. Tạo bản sao bằng `python3 research/chatunitest/prepare_trial.py /tmp/chatunitest-case` trước khi thử. Giữ lỗi compile/parser/assertion nếu gặp, sau đó đánh giá khả năng tương thích. Không dùng `prune` để xóa test lỗi rồi báo tất cả thành công. Chỉ chép test được review vào nguồn chính bằng commit riêng. Dùng fixture AI-5 hiện tại để giải thích workflow trong khi chờ thí nghiệm P2 thật.
+Expected của **lượt đã lưu**: CSV 0,8148148, pytest 10 pass/5 xfail; đọc riêng `coverage.json → files → codetiming/_timers.py`. Seed cố định vẫn có thể khác do môi trường/thời gian tìm kiếm. `PYNGUIN_DANGER_AWARE` là xác nhận của tool vì nó thực thi source; dùng project đã chọn trong môi trường tạm.
 
-## Phân chia lượt chạy và tiêu chí hoàn tất
+### Pynguin trên source nhóm
 
-Đề xuất để Gia An điều phối, chưa xác nhận người khác đã nhận/chạy: Gia An giữ P1 và tổng hợp; Bảo An chạy P2 Java; Thế Vinh thử môi trường sạch và dữ liệu; Đạt review coverage/mutation; Quang Vinh review khả năng đưa lệnh vào CI. Mỗi người lưu lệnh, ngày, revision, model, seed/tham số, số test build/pass, coverage và giới hạn rồi commit bằng tài khoản thật.
+Tạo thư mục tạm có `scripts/coverage_gaps.py` nguyên vẹn. Đổi `--project-path` sang thư mục này, `--module-name scripts.coverage_gaps`, ngân sách 60s. Lượt 0.25.2 kết thúc mã 120 và xuất một test xfail không gọi source.
 
-P1 còn thiếu sinh test mới trên benchmark và trên source nhóm. P2 còn thiếu chạy artifact gốc, thí nghiệm LoanService và kết quả định lượng. Chỉ đánh dấu mục paper hoàn thành sau các bước này; việc xác nhận track/hạng với GV nằm trong việc điều phối của trưởng nhóm.
+Để thử khả năng thích nghi, tạo venv Python 3.12 khác, cài `research/pynguin/requirements-current.txt`, thêm `--subprocess True --filesystem-isolation True`. Bản có seed thêm `--initial-population-seeding True --initial-population-data <seed-tests>`; [seed và XML](../evidence/tuan-06/papers/pynguin-group-2026-10-29/seeded/) được lưu cùng output. Test xuất ra chứa đường dẫn XML tạm gốc; khi replay ở thư mục mới, thay đường dẫn **trên bản sao test replay**, giữ nguyên output lưu trữ.
+
+Đo pytest/SlipCover với source `scripts`. Đọc assertion và xfail, không chỉ exit code. Không tự đồng bộ test paper vào suite chính: lượt có seed chỉ gọi hàm, chưa giữ assertion của baseline.
+
+## 5. Phạm vi hoàn thành và bàn giao
+
+Đã có cho mỗi paper: nguồn/hạng, chạy lại phân tích công bố, sinh test mới trên một benchmark gốc, thử trên source nhóm và đối chiếu kết quả/giới hạn. Evidence chỉ giữ test sinh, số đo, JUnit và output cuối cần kiểm; đã bỏ trial cũ và log lỗi khởi tạo.
+
+Đây là **tái hiện có giới hạn**, không phải chạy lại toàn bộ benchmark, 30 seed/config hay mutation experiment. Không nhận các lượt Codex chạy là từng thành viên tự chạy. Gia An phụ trách tổng hợp/review; thành viên khác xác nhận riêng phần họ thực sự thực hiện. Video, hợp nhất slide/HTML và trình bày với GV làm sau theo yêu cầu.
