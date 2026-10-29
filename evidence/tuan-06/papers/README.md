@@ -1,25 +1,28 @@
-# Minh chứng paper — Artifact tác giả (cập nhật 29/10/2026)
+# Minh chứng paper — output thực nghiệm ngày 29/10/2026
 
-**Phụ trách:** Ngô Gia An (23120205), Codex hỗ trợ chạy/thu kết quả local. Source, revision và dependencies ở [research/papers.json](../../../research/papers.json) và [hướng dẫn](../../../research/README.md). Không tự implement lại phương pháp của paper.
+**Phụ trách:** Ngô Gia An (23120205). Gia An tự chạy CoverUp f003; Codex chạy phân tích, xác minh và các lượt bổ sung theo ủy quyền. Nguồn/hạng/phiên bản và lệnh chạy lại: [research](../../../research/README.md), [danh mục](../../../research/papers.json).
 
-| Lượt | Kết quả | Mức được phép kết luận | Minh chứng |
-|---|---|---|---|
-| CoverUp reanalysis MT | 163 module; overall line+branch 89,0% vs MuTAP 76,8% | Chạy script tác giả phân tích dữ liệu công bố, không sinh test mới | [coverup-mt/run.json](coverup-mt/run.json), log cùng thư mục |
-| CoverUp + Gemini, benchmark f003 | 1 → 3 hàm test; line 5/8 → 8/8; branch 1/4 → 4/4; xác minh offline 3/3 pass | Generation mới trên một module tác giả; khác model/baseline/môi trường, chưa tái lập đầy đủ benchmark | [Kết quả và giới hạn](coverup-f003-gemini-2026-10-29/README.md), [metadata](coverup-f003-gemini-2026-10-29/run.json) |
-| CoverUp dry-run | 23,6% coverage smoke trước/sau; exit 0 | Chạy tool gốc ở dry-run trên script nhóm, không gọi model | [coverup-group-dry-retry/run.json](coverup-group-dry-retry/run.json) |
-| CoverUp dry-run lỗi mạng | Lỗi tải tokenizer, exit 1 | Lượt chưa thành công, giữ riêng | [coverup-group-dry/run.json](coverup-group-dry/run.json) |
-| ChatUniTest gốc preflight | Thiếu config/MySQL/API/thư viện | Chỉ kiểm prerequisites, chưa tái lập | [chatunitest-preflight-final/run.json](chatunitest-preflight-final/run.json) |
-| ChatUniTest plugin parse | 20 class/28 method, exit 0; endpoint localhost không có model | Thử parser bản plugin hiện tại trên bản sao case study, chưa generation | [chatunitest-parse/run.json](chatunitest-parse/run.json), [context LoanService](chatunitest-parse/LoanService/class.json) |
-| ChatUniTest parse lỗi | Thiếu JAR, exit 1 | Đóng gói rồi thử lại ở lượt riêng | [chatunitest-parse-failed/run.json](chatunitest-parse-failed/run.json) |
+## 1. Kết quả cần trình bày
 
-## Cách tái hiện
+| Lượt | Output thực tế | Minh chứng |
+|---|---|---|
+| CoverUp: phân tích dữ liệu công bố | 163 module MT; overall line+branch 89,0% vs MuTAP 76,8% | [Metadata](coverup-mt/run.json), [output](coverup-mt/output.log) |
+| CoverUp + Gemini 3.6: benchmark f003 | 1 → 3 test pass; line 5/8 → 8/8, branch 1/4 → 4/4, bằng reference đúng module | [Kết quả](coverup-f003-gemini-2026-10-29/README.md), [test sinh](coverup-f003-gemini-2026-10-29/generated/test_coverup_1.py) |
+| CoverUp + Gemini 3.6: source nhóm | Thêm 6 hàm; 7 pass; kết hợp 23,6% → 96,4%; line 38/39, branch 15/16 | [Kết quả](coverup-group-gemini-2026-10-29/README.md), [test sinh](coverup-group-gemini-2026-10-29/generated/) |
+| Pynguin: notebook dữ liệu công bố | 134 module sau lọc, 40.200 dòng, 30 lượt/config/module; 8 cột thống kê × 10 cấu hình khớp output tác giả; median DynaMOSA-TypeHints 80,72% | [Metadata](pynguin-reanalysis-2026-10-29/run.json), [output](pynguin-reanalysis-2026-10-29/output.log) |
+| Pynguin 0.25.2: benchmark codetiming._timers | 600s, seed 23120205; nội bộ 81,48%, bằng median 30 lượt công bố cùng module/config. **10 pass, 5 xfail**; SlipCover target line 42/42, branch 4/4 | [Metadata/đối chiếu](pynguin-benchmark-2026-10-29/run.json), [pytest](pynguin-benchmark-2026-10-29/output.log), [test sinh](pynguin-benchmark-2026-10-29/generated/test_codetiming__timers.py) |
+| Pynguin: source nhóm | 0.25.2: 1 xfail, không gọi SUT. 0.48.0 không seed: 1 xfail, 20% kết hợp. Có seed: 2 pass, 23,6%, thiếu assertion và không hơn smoke baseline | [Tổng hợp ba lượt](pynguin-group-2026-10-29/run.json), [test/coverage có seed](pynguin-group-2026-10-29/seeded/) |
 
-Dùng `scripts/paper_experiments.py` và `research/chatunitest/prepare_trial.py` theo `research/README.md`. Các lệnh phải chỉ định output mới. Đọc cả `scope` và `new_model_generation` trong metadata; exit 0 của reanalysis/dry-run/parse không đồng nghĩa tái lập generation.
+## 2. Cách đọc kết quả
 
-## Phần chưa làm
+- Phân tích dữ liệu công bố khác với chạy mới tool. Mỗi paper đã có cả hai loại kết quả.
+- Source nhóm là `scripts/coverage_gaps.py` nguyên vẹn, không phải LoanService hoặc toàn bộ ứng dụng Java.
+- Pynguin bytecode coverage, SlipCover source line/branch và JaCoCo Java là các metric khác nhau. 81,48% nội bộ và 100% SlipCover trên cùng benchmark không mâu thuẫn.
+- `xfail` là lỗi dự kiến, không tính vào pass. Bản có seed chỉ gọi hàm, chưa có assertion nên chưa đủ làm regression suite.
+- Reference `codetiming._timers` lấy từ 30 lượt DynaMOSA-TypeHints công bố trước lọc completeness; module này không nằm trong bảng 134 module đủ mọi cấu hình.
 
-- Mở rộng generation benchmark ngoài module f003; chạy generation trên source nhóm. ChatUniTest chưa generation hoặc tái lập thí nghiệm gốc.
-- Đối chiếu phạm vi benchmark rộng hơn với paper; f003 đã có so đúng module, ghi rõ khác model/baseline/dependencies.
-- Xác nhận GV chấp nhận demo track của ChatUniTest. FSE A* là hạng venue, không gán trực tiếp cho từng bài.
+## 3. Phạm vi và lưu trữ
 
-Ngày 29/10 các tệp được chuyển từ thư mục cá nhân sang chủ đề paper; giữ nguyên byte của log/metadata/output. Không dùng AI-5 Codex thay kết quả ChatUniTest.
+Đã chạy phân tích công bố, một benchmark generation mới và thử source nhóm cho từng paper. Đây là tái hiện có giới hạn; không chạy lại toàn bộ benchmark nhiều seed hoặc mutation RQ3, không khẳng định chất lượng test chỉ từ coverage.
+
+Chỉ giữ test xuất ra, số đo, JUnit/pytest output và metadata cần đối chiếu. Đã bỏ dry-run/log lỗi cũ, full prompt/response, source copy và dependency dump. Source/artifact gốc ở ngoài Git; không thêm test paper vào suite chính của thành viên khác.

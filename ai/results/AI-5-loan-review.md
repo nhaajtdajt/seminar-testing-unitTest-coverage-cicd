@@ -14,6 +14,6 @@ Bằng chứng theo cấu trúc chung: [AI Loan](../../evidence/tuan-06/ai-loan/
 
 Gap của nháp gồm nhánh sách unavailable, số sách đạt giới hạn và phí còn nợ; test missing member cũng cần để kiểm lambda ném lỗi (JaCoCo không tính exception handling thành một nhánh điều kiện riêng). Bộ bổ sung kiểm count 0/2/3/4, phí 0.00/0.01/1000, mã lỗi cụ thể và side effect không lưu khi bị từ chối. `ArgumentCaptor` và `Clock.fixed` kiểm phiếu lưu thay vì chỉ xác nhận mock trả đúng giá trị đã stub.
 
-Fixture sai cố ý dùng điều kiện tưởng tượng “chỉ chặn khi >3” trong khi source/đặc tả chặn từ >=3. Đây là lỗi **cài sẵn để minh họa**, không phải lỗi quan sát từ một lời gọi Gemini hay từ ChatUniTest. Không sửa source nghiệp vụ để làm test sai pass.
+Fixture sai cố ý dùng điều kiện tưởng tượng “chỉ chặn khi >3” trong khi source/đặc tả chặn từ >=3. Đây là lỗi **cài sẵn để minh họa**, không phải lỗi quan sát từ một lời gọi Gemini hay từ tool paper. Không sửa source nghiệp vụ để làm test sai pass.
 
 100% branch và 9/9 mutant chỉ mô tả bộ test/mutator được chạy; không chứng minh an toàn đồng thời nhiều instance, transaction rollback hoặc mọi yêu cầu nghiệp vụ. Không đổi logic production trong demo này. [Prompt](../prompts/AI-5-loan-service.md) dùng được cho lớp khác khi thay source/spec và report đầu vào, nhưng mỗi lần phải review oracle.

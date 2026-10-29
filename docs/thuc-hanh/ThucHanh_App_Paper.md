@@ -2,7 +2,7 @@
 
 **Người thực hành:** Ngô Gia An (23120205). **Ngày chuẩn bị:** 29/10/2026. Chạy lần lượt A rồi B; mỗi bước có kết quả mong đợi và ý nghĩa. Phần này là bài làm thử, không đánh dấu bạn đã tự chạy/xác nhận trước khi thực sự thực hiện.
 
-**Đã kiểm tra khi chuẩn bị:** Java 25/Maven Wrapper; bốn HTTP response 201/409/409/404 trên app local; baseline Python một test; CoverUp dry-run với route Gemini. **Chưa gọi Gemini sinh test thật** vì key do bạn nhập ở máy. Kết quả generation không cố định và chưa được hứa trước.
+**Đã kiểm tra:** luồng HTTP/test Java; CoverUp + Gemini 3.6 sinh test thật trên f003 và script nhóm; Pynguin chạy benchmark gốc và thử source nhóm. Kết quả/lệnh paper tại [research](../../research/README.md); output mới có thể khác lượt đã lưu.
 
 ## A. Hiểu ứng dụng thư viện qua HTTP và test
 
@@ -22,7 +22,7 @@ case-study/mvnw -v
 case-study/mvnw -B -ntp -f case-study/pom.xml clean verify
 ```
 
-**Expected trên phiên bản hiện tại:** 39 tests, failures/errors/skipped đều 0; `All coverage checks have been met`; `BUILD SUCCESS`. Có JAR `case-study/target/library-case-study-0.1.0.jar` và report `case-study/target/site/jacoco/index.html`.
+**Expected ở core dùng chuẩn bị bài này:** 39 tests (nhánh có thêm test sẽ có số khác), failures/errors/skipped đều 0; `All coverage checks have been met`; `BUILD SUCCESS`. Có JAR `case-study/target/library-case-study-0.1.0.jar` và report `case-study/target/site/jacoco/index.html`.
 
 **Ý nghĩa:** Java đã chạy các bộ test chuẩn và JaCoCo gate trước khi tạo bản ứng dụng. Lệnh này không gọi Gemini. Mở report JaCoCo để xem số đo nếu muốn; đây là report runtime trong target, không phải chỉnh slide/HTML trình bày.
 
@@ -108,7 +108,7 @@ Hai profile CSV skip coverage gate để quan sát riêng từng bộ. Bạn kh�
 
 ## B. Thử CoverUp với Gemini — tool của paper thực sự làm gì?
 
-CoverUp là công cụ Python, nên bài này dùng script Python thật của nhóm `scripts/coverage_gaps.py`. Công cụ này đọc JaCoCo XML để trích gap; ta sẽ nhờ CoverUp sinh pytest để kiểm chính script đó. Đây là thử tool paper trên source nhóm; không phải sinh JUnit cho ứng dụng Java. ChatUniTest là hướng thử Java riêng, làm sau.
+CoverUp là công cụ Python, nên bài này dùng script Python thật của nhóm `scripts/coverage_gaps.py`. Công cụ này đọc JaCoCo XML để trích gap; ta sẽ nhờ CoverUp sinh pytest để kiểm chính script đó. Đây là thử tool paper trên source nhóm; không phải sinh JUnit cho ứng dụng Java. Paper thứ hai dùng Pynguin để đối chiếu cách sinh test không gọi LLM, xem research/README.md.
 
 Luồng bạn quan sát:
 
@@ -132,7 +132,7 @@ cd "/Users/ngogiaan1103/Documents/ChatGPT/seminar-testing 2"
 /tmp/seminar-coverup-venv/bin/python -m coverup --version
 ```
 
-**Expected:** Python 3.12.x, CoverUp 0.6.0. Môi trường nằm ở thư mục tạm, không nằm trong repo. Nếu thư mục này đã bị hệ thống dọn, tạo lại venv Python 3.12 và cài `research/requirements-coverup.lock.txt` trước khi tiếp tục. Lock hiện pin pytest 8.3.5 để tương thích SlipCover; dry-run đã kiểm tra sau khi pin.
+**Expected:** Python 3.12.x, CoverUp 0.6.0. Môi trường nằm ở thư mục tạm, không nằm trong repo. Nếu thư mục này đã bị hệ thống dọn, tạo lại venv Python 3.12 và cài `research/requirements-coverup.lock.txt` trước khi tiếp tục. Lock pin pytest 8.3.5 và bổ sung MCP 2.3.0/httpx2 2.16.0 cho lượt live.
 
 ### B2. Tạo bản sao source và test ban đầu
 
@@ -140,8 +140,14 @@ cd "/Users/ngogiaan1103/Documents/ChatGPT/seminar-testing 2"
 GA_PAPER_RUN="$(mktemp -d /tmp/ga-coverup-practice.XXXXXX)"
 mkdir -p "$GA_PAPER_RUN/scripts" "$GA_PAPER_RUN/tests"
 cp scripts/coverage_gaps.py "$GA_PAPER_RUN/scripts/"
-cp evidence/tuan-06/papers/coverup-group-dry-retry/inputs/test_smoke.py \
-  "$GA_PAPER_RUN/tests/"
+cat > "$GA_PAPER_RUN/tests/test_smoke.py" <<'TEST'
+from scripts.coverage_gaps import extract
+
+def test_empty_report(tmp_path):
+    report = tmp_path / "jacoco.xml"
+    report.write_text("<report/>")
+    assert extract(report)["gaps"] == []
+TEST
 cd "$GA_PAPER_RUN"
 ```
 
@@ -158,24 +164,47 @@ cd "$GA_PAPER_RUN"
 
 Smoke test chỉ thử report rỗng, nên nhiều xử lý XML/nhánh còn chưa được kiểm. Cảnh báo pytest rằng module slipcover đã được import trước có thể xuất hiện; đọc cùng dòng kết quả test. Nếu có error hoặc cảnh báo không kích hoạt được branch coverage, dừng để xử lý môi trường thay vì dùng số đo đó.
 
-### B4. Nhập Gemini key trong Terminal, không đưa key vào chat/file Git
+### B4. Đọc key local đã thiết lập
 
-Với zsh trên macOS:
+Trong cùng Terminal B, thay `<repo>` bằng thư mục clone của bạn rồi chạy wrapper Python từ repo để đọc `.env.gemini` như AI-1/2/4; không cần nhập lại và không in key:
 
 ```bash
-read -s "GEMINI_API_KEY?Nhập Gemini API key (sẽ ẩn): "
-export GEMINI_API_KEY
-printf '\n'
-export GA_COVERUP_MODEL='gemini/gemini-3.6-flash'
+# Cùng Terminal B: thay <repo> bằng thư mục clone thực tế.
+cd "<repo>"
+GA_REPO="$PWD"
+# Biến GA_PAPER_RUN đã được đặt ở B2, giữ nguyên.
+python3 - "$GA_REPO" "$GA_PAPER_RUN" <<'PYTHON'
+import os, subprocess, sys
+from pathlib import Path
+sys.path.insert(0, str(Path(sys.argv[1]) / "scripts"))
+from gemini_client import settings
+key, _ = settings()
+if not key:
+    raise SystemExit("Thiếu GEMINI_API_KEY trong .env.gemini")
+command = ["/tmp/seminar-coverup-venv/bin/python", "-m", "coverup",
+    "--model", "gemini/gemini-3.6-flash", "--tests-dir", "tests",
+    "--package-dir", "scripts", "--checkpoint", "coverup-checkpoint.json",
+    "--max-attempts", "2", "--max-concurrency", "1", "--max-backoff", "8",
+    "--repeat-tests", "1", "--log-file", "coverup-live.log", "scripts/coverage_gaps.py"]
+try:
+    result = subprocess.run(command, cwd=sys.argv[2],
+        env=dict(os.environ, GEMINI_API_KEY=key), timeout=240)
+    raise SystemExit(result.returncode)
+except subprocess.TimeoutExpired:
+    raise SystemExit("Dừng sau 240 giây; đọc output trước khi thử lại.")
+PYTHON
+cd "$GA_PAPER_RUN"
 ```
 
-Key được nhập ở prompt ẩn. Không dùng lệnh echo để in giá trị. Route `gemini/` và biến GEMINI_API_KEY là cách LiteLLM gọi Gemini API; không phải Vertex AI. Model được chọn phải là model key của bạn có quyền truy cập. Nguồn: [LiteLLM Gemini](https://docs.litellm.ai/docs/providers/gemini), [Google models](https://ai.google.dev/gemini-api/docs/models).
+Lệnh trên **gọi Gemini thật** và dùng quota; không fallback model khác. B5–B6 dưới đây giải thích chế độ tool, không cần chạy thêm sau wrapper này. Không đưa `.env.gemini` hoặc full model log vào Git/video.
 
 ### B5. Chạy dry-run để hiểu phần chuẩn bị
 
+Chỉ tham khảo trên baseline trước khi sinh test; nếu đã chạy B4 thì bỏ qua B5–B6. Sentinel dưới đây là chuỗi giả cho dry-run, không gọi API.
+
 ```bash
-/tmp/seminar-coverup-venv/bin/python -m coverup \
-  --model "$GA_COVERUP_MODEL" --dry-run \
+GEMINI_API_KEY=dry-run-sentinel-no-api-call /tmp/seminar-coverup-venv/bin/python -m coverup \
+  --model gemini/gemini-3.6-flash --dry-run \
   --tests-dir tests --package-dir scripts --no-checkpoint \
   --max-attempts 1 --max-concurrency 1 \
   --log-file coverup-dry.log scripts/coverage_gaps.py
@@ -183,18 +212,18 @@ Key được nhập ở prompt ẩn. Không dùng lệnh echo để in giá tr�
 
 **Expected đã kiểm offline:** tool đo khoảng 23,6%, xử lý 2 đoạn source; cuối lượt vẫn khoảng 23,6%, chưa có test sinh mới. Dòng “Prompting ...” vẫn được tool in ở dry-run; không dùng riêng dòng này để khẳng định đã gọi Gemini. Source tool kiểm tra cấu hình/key rồi bỏ qua lời gọi model ở chế độ này.
 
-### B6. Sinh test thật — đây mới là bước gọi Gemini
+### B6. Lệnh tương đương khi key đã có trong môi trường
 
 ```bash
 /tmp/seminar-coverup-venv/bin/python -m coverup \
-  --model "$GA_COVERUP_MODEL" \
+  --model gemini/gemini-3.6-flash \
   --tests-dir tests --package-dir scripts \
   --checkpoint coverup-checkpoint.json \
-  --max-attempts 1 --max-concurrency 1 --max-backoff 4 --repeat-tests 1 \
+  --max-attempts 2 --max-concurrency 1 --max-backoff 8 --repeat-tests 1 \
   --log-file coverup-live.log scripts/coverage_gaps.py
 ```
 
-**Expected về quy trình:** đo baseline → gửi source/gap cho Gemini → nhận pytest → chạy/đánh giá test → đo lại coverage. Chỉ một segment hoạt động cùng lúc và một vòng thử/segment, nhưng tool call/retry bên trong vẫn có thể tạo nhiều request; đây không phải giới hạn tổng chi phí. Bước này dùng API quota của bạn.
+**Expected về quy trình:** đo baseline → gửi source/gap cho Gemini → nhận pytest → chạy/đánh giá test → đo lại coverage. Chỉ một segment hoạt động cùng lúc và tối đa hai vòng thử/segment, nhưng tool call/retry bên trong vẫn có thể tạo nhiều request; đây không phải giới hạn tổng chi phí. Bước này dùng API quota của bạn.
 
 **Kết quả không cố định:**
 
@@ -238,9 +267,9 @@ PY
 unset GEMINI_API_KEY
 ```
 
-Giữ thư mục `$GA_PAPER_RUN` gồm `before.json`, `after.json`, `coverup-live.log`, checkpoint và test mới. Ghi lại model đã dùng, thời điểm, số test trước/sau, pass/fail và coverage. Không tự chép test sinh vào source chính trước khi đọc/review. Thư mục /tmp có thể bị dọn, nên khi đã review cần lưu các artifact cần thiết vào evidence theo format chung, loại bỏ key/đường dẫn cá nhân.
+Giữ test mới, `before.json`, `after.json` và output pytest cần đối chiếu; full model log/checkpoint có thể bỏ sau khi kiểm. Ghi lại model đã dùng, thời điểm, số test trước/sau, pass/fail và coverage. Không tự chép test sinh vào source chính trước khi đọc/review. Thư mục /tmp có thể bị dọn, nên khi đã review cần lưu các artifact cần thiết vào evidence theo format chung, loại bỏ key/đường dẫn cá nhân.
 
-**Hoàn thành lần thử B khi:** bạn chỉ được source đầu vào, test ban đầu, lời gọi model, test mới hoặc lý do thất bại, và số đo trước/sau. Đây là một lần áp dụng tool của paper trên source nhóm; vẫn chưa hoàn thành yêu cầu tái lập đầy đủ benchmark gốc của hai paper.
+**Hoàn thành lần thử B khi:** bạn chỉ được source đầu vào, test ban đầu, lời gọi model, test mới hoặc lý do thất bại, và số đo trước/sau. Lượt đã lưu đạt 7 pass, line 38/39, branch 15/16, kết hợp 96,4%. Đây là lần áp dụng trên source nhóm; không nhận là tái lập toàn benchmark. Phần Pynguin có hướng dẫn và giới hạn tại [research](../../research/README.md).
 
 ## Nếu muốn xem bước phân tích dữ liệu công bố của CoverUp
 

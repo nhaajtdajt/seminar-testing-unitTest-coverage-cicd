@@ -47,9 +47,6 @@ def main():
     dry = sub.add_parser("coverup-dry-run")
     dry.add_argument("--python", required=True)
     dry.add_argument("--output", type=Path, required=True)
-    check = sub.add_parser("chatunitest-preflight")
-    check.add_argument("artifact", type=Path)
-    check.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     try:
         if args.mode == "coverup-reanalyse":
@@ -84,12 +81,6 @@ def main():
             shutil.copytree(work/"tests", out/"inputs", ignore=shutil.ignore_patterns("__pycache__"))
             shutil.rmtree(work)
             return result
-        artifact = args.artifact.resolve()
-        revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=artifact, text=True).strip()
-        source = {"url": "https://github.com/ZJU-ACES-ISE/ChatUniTest/tree/python", "revision": revision}
-        # Inspect actual prerequisites without consuming keys or manufacturing model output.
-        probe = "import importlib.util,json,os,shutil; from pathlib import Path; checks={'python_modules':{m:importlib.util.find_spec(m) is not None for m in ['openai','tree_sitter']},'mysql_cli':shutil.which('mysql') is not None,'config_ini_present':Path('../config/config.ini').exists(),'api_key_present':bool(os.environ.get('OPENAI_API_KEY'))}; print(json.dumps(checks)); ready=all(checks['python_modules'].values()) and all(checks[k] for k in ['mysql_cli','config_ini_present','api_key_present']); raise SystemExit(0 if ready else 2)"
-        return save(args.output, [sys.executable, "-c", probe], artifact/"src", "prerequisite-check-only-not-reproduction", source=source)
     except (ValueError, OSError, subprocess.CalledProcessError) as exc:
         parser.exit(1, f"{exc}\n")
 

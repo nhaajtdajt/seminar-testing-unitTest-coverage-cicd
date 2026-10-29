@@ -1,0 +1,5 @@
+# Python 3.10; original paper tool with compatible bytecode instrumentation.
+pynguin==0.25.2
+bytecode==0.13.0
+pytest==7.4.4
+slipcover==1.1.0

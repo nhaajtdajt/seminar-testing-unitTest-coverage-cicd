@@ -6,7 +6,7 @@
     "venue": "FSE",
     "rank": "A*",
     "source": "https://portal.core.edu.au/conf-ranks/?by=all&search=&source=CORE2023",
-    "qualification": "Venue ranking, not a ranking assigned to an individual paper. ChatUniTest is a demonstration-track paper. Confirm the lecturer accepts that track."
+    "qualification": "Venue ranking, not a ranking assigned to an individual paper."
   },
   "papers": [
     {
@@ -28,33 +28,37 @@
       "tool_version": "0.6.0",
       "tool_revision": "6474814f28408ddee4cc01662215ad4eae6a3302",
       "group_target": "scripts/coverage_gaps.py",
-      "status": "Published MT data reanalysed with original compare.py. User ran fresh CoverUp 0.6.0 + Gemini generation on author benchmark f003: 2 added test functions, 3 passing in offline verification, 8/8 lines and 4/4 branches. Different model, seed suite, tool/dependencies and budget; not a full reproduction. Broader benchmark and group-source generation remain pending.",
-      "fresh_generation_evidence": "evidence/tuan-06/papers/coverup-f003-gemini-2026-10-29/README.md"
+      "status": "Published MT analysis reproduced (163 modules, 89.0% vs 76.8%). Fresh Gemini 3.6 generation on author f003: 3 passing tests, full source line/branch coverage. Group-source generation: 7 passing tests, 38/39 lines, 15/16 branches. Bounded replication, not a full benchmark rerun.",
+      "fresh_generation_evidence": "evidence/tuan-06/papers/coverup-f003-gemini-2026-10-29/README.md",
+      "group_evidence": "evidence/tuan-06/papers/coverup-group-gemini-2026-10-29/README.md"
     },
     {
       "id": "P2",
-      "title": "ChatUniTest: A Framework for LLM-Based Test Generation",
+      "title": "An empirical study of automated unit test generation for Python",
       "authors": [
-        "Yinghao Chen",
-        "Zehao Hu",
-        "Chen Zhi",
-        "Junxiao Han",
-        "Shuiguang Deng",
-        "Jianwei Yin"
+        "Stephan Lukasczyk",
+        "Florian Kroiß",
+        "Gordon Fraser"
       ],
-      "year": 2024,
-      "venue": "FSE",
-      "track": "Demonstrations, Companion Proceedings, pp. 572-576",
-      "doi": "10.1145/3663529.3663801",
-      "paper": "https://arxiv.org/abs/2305.04764",
-      "publication": "https://2024.esec-fse.org/details/fse-2024-demonstrations/6/ChatUniTest-A-Framework-for-LLM-based-Test-Generation",
-      "artifact": "https://github.com/ZJU-ACES-ISE/ChatUniTest/tree/python",
-      "artifact_revision": "e7c18b5f4b9fcc66c4585e35af7ea99017674073",
-      "current_tool": "https://github.com/ZJU-ACES-ISE/chatunitest-maven-plugin",
-      "current_tool_revision": "38f152ce9186bc42f2b08b73a07dce8af54b1378",
-      "current_tool_version": "2.1.1",
-      "group_target": "vn.edu.seminar.loan.LoanService#borrow",
-      "status": "Original prerequisites checked. Current author plugin 2.1.1 parsed the disposable group case study (20 classes, 28 methods). No model generation; original experiment and group generated-test evaluation pending."
+      "year": 2023,
+      "venue": "Empirical Software Engineering",
+      "track": "Research article, volume 28, article 36",
+      "doi": "10.1007/s10664-022-10248-w",
+      "paper": "https://link.springer.com/article/10.1007/s10664-022-10248-w",
+      "artifact": "https://doi.org/10.5281/zenodo.6838658",
+      "tool": "https://github.com/se2p/pynguin",
+      "tool_version": "0.25.2",
+      "group_trial_version": "0.48.0",
+      "ranking": {
+        "system": "CORE2020 journal ranking",
+        "rank": "A",
+        "verified_on": "2026-10-29",
+        "source": "https://portal.core.edu.au/jnl-ranks/?search=Empirical+Software+Engineering&by=all&source=CORE2020",
+        "qualification": "Historical venue ranking (CORE2020), not a rank assigned to the individual paper or a claim of a new 2026 ranking. CORE journal rankings were discontinued in February 2022; 2020 is the last edition."
+      },
+      "group_target": "scripts/coverage_gaps.py",
+      "status": "Original numeric notebook analysis reproduced: 134 modules, 40200 rows, all 8 summary columns match. Fresh original-version codetiming._timers DYNAMOSA run: internal coverage 81.48%, matching published same-module/config median; 10 pass, 5 xfail. Group trials produced no useful improvement, including a separately labeled 0.48.0 adaptation with XML seed. No full multi-seed benchmark/mutation rerun.",
+      "evidence": "evidence/tuan-06/papers/pynguin-benchmark-2026-10-29/run.json"
     }
   ]
 }

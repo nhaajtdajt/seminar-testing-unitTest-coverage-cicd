@@ -1,0 +1,15 @@
+Original author notebook numeric cells re-executed.
+Retained modules: 134; rows: 40200; repetitions/config/module: 30.
+All 8 describe() columns match the stored author output within 1e-6.
+DynaMOSA-NoTypeHints: median branch = 76.4706%
+DynaMOSA-TypeHints: median branch = 80.7207%
+MIO-NoTypeHints: median branch = 75.0000%
+MIO-TypeHints: median branch = 80.0000%
+MOSA-NoTypeHints: median branch = 76.7442%
+MOSA-TypeHints: median branch = 80.0000%
+Random-NoTypeHints: median branch = 66.6667%
+Random-TypeHints: median branch = 71.4286%
+WS-NoTypeHints: median branch = 71.4286%
+WS-TypeHints: median branch = 80.0000%
+Selected module codetiming._timers, DynaMOSA-TypeHints: published 30-run median = 81.481481%.
+This module reference precedes the cross-configuration completeness filter.

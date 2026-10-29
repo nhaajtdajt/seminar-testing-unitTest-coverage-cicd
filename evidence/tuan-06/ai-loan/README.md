@@ -1,6 +1,6 @@
 # Minh chứng AI-5 — LoanService (28/10/2026)
 
-**Phụ trách:** Ngô Gia An (23120205). **Thực hiện lượt chạy:** Codex, local JDK 25.0.5. Test sinh trong phiên tương tác; chưa có reviewer/người dùng tự xác nhận. Đây không phải kết quả gọi Gemini hoặc artifact paper.
+**Phụ trách:** Ngô Gia An (23120205). **Thực hiện lượt chạy:** Codex, local JDK 25.0.5. Đây là snapshot tương tác trước luồng Gemini thật, không phải output Gemini hoặc artifact paper. Gia An đã review phạm vi AI/paper ngày 29/10; kết quả Gemini 3.6 mới nằm trên PR #13 và được khai báo riêng.
 
 | Lượt | Test / kết quả | LoanService line / branch | Minh chứng |
 |---|---|---|---|

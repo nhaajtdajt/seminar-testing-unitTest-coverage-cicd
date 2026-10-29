@@ -49,11 +49,11 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 
 ## AI-5 — Tái sử dụng trên LoanService (Ngô Gia An)
 
-[Chỉ mục và lệnh](ai-loan/README.md): nháp 2 test, branch 3/6 → bổ sung 10 test, branch 6/6; fixture sai fail đúng một assertion; PIT 9/9 KILLED. Lượt lỗi quyền và HTTP 502 giữ riêng. Đây là demo Codex tương tác, không phải output Gemini/paper; chưa có xác nhận người tự review/chạy lại.
+[Chỉ mục và lệnh](ai-loan/README.md): nháp 2 test, branch 3/6 → bổ sung 10 test, branch 6/6; fixture sai fail đúng một assertion; PIT 9/9 KILLED. Lượt lỗi quyền và HTTP 502 giữ riêng. Đây là snapshot demo Codex tương tác, không phải output Gemini/paper. Gia An xác nhận review phần AI/paper ngày 29/10; lượt Gemini live mới trên PR #13 được kê riêng trong AI declaration, không đổi nguồn của snapshot này.
 
 ## Paper — Artifact tác giả (Ngô Gia An điều phối)
 
-[Chỉ mục kết quả và giới hạn](papers/README.md): CoverUp replay phân tích MT 163 module (overall line+branch 89,0% vs 76,8%), dry-run source Python nhóm; ChatUniTest plugin parse 20 class/28 method. [Lượt Gia An tự chạy CoverUp + Gemini trên benchmark f003](papers/coverup-f003-gemini-2026-10-29/README.md): sinh hai hàm test, xác minh offline cả bộ 3/3 pass; line 5/8 → 8/8, branch 1/4 → 4/4, khớp số đo tác giả của đúng module. Khác model/baseline/môi trường; chưa tái lập đầy đủ benchmark hoặc generation trên source nhóm. Source/revision/cách chạy: `research/`.
+[Chỉ mục kết quả và giới hạn](papers/README.md): CoverUp phân tích 163 module; f003 3 pass/100%; source nhóm 7 pass, kết hợp 23,6% → 96,4%. Pynguin tái chạy notebook 134 module/40.200 dòng, generation benchmark 81,48% nội bộ (10 pass, 5 xfail); thử source nhóm có seed 2 pass nhưng không assertion/coverage bằng smoke baseline. Mỗi bài có đối chiếu công bố; không nhận là rerun toàn benchmark. Lệnh và giới hạn ở `research/`.
 
 ## Quy ước lưu minh chứng
 
@@ -64,8 +64,8 @@ Các minh chứng mới của Tuần 06 được tách riêng khỏi `evidence/t
 
 ## Phần còn chờ
 
-- Gia An tự đọc, chạy lại và xác nhận khai báo AI; reviewer chéo chưa xác nhận.
-- Paper đã có generation thật trên một module CoverUp (f003); còn mở rộng benchmark, thử trên source nhóm và generation/tái lập ChatUniTest.
+- Gia An đã xác nhận thực hiện/review AI và paper ngày 29/10; reviewer chéo của thành viên khác chưa xác nhận.
+- Paper đã có đủ các loại lượt chạy ở phạm vi đã ghi; không nhận là tái lập toàn bộ benchmark nhiều seed. Slide/HTML đã hợp nhất; review chéo còn chờ.
 - Video là yêu cầu seminar, chưa có file video/URL/timestamp thật; script/ảnh không thay cho video.
-- Phần slide/HTML Gia An hoãn đến cuối theo yêu cầu ngày 29/10, dùng nguyên nguồn core. Chưa xuất lại PDF riêng.
+- Nguồn slide JSON và HTML đã cập nhật kết quả AI-1..4, CoverUp, Pynguin và nội dung Video E. Chưa có URL/timestamp thật vì video chưa quay.
 - CI GitHub và required checks có evidence ở `github-actions/`; trạng thái quyền/nhánh là snapshot, không tự suy ra cấu hình live hôm nay. Nhóm đã bỏ Jenkins.
