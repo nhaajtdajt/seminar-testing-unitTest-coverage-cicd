@@ -20,6 +20,9 @@ Với mỗi đề xuất, ghi file/dòng, quy tắc nghiệp vụ, đầu vào, 
 Sinh test bổ sung JUnit chạy được; không xóa assertion hoặc giảm ngưỡng gate.
 Nếu coverage đã đầy đủ, nói rõ và xem xét biên/assertion chưa kiểm; không hứa tăng coverage.
 Test bổ sung phải có ích, không chỉ lặp lại cùng input/assertion của bản nháp.
+Nếu đã phủ đầy đủ và không tìm được ca/assertion mới có ích, được trả
+{"decision":"no_additions_needed", "analysis":"Bằng chứng và giới hạn", "test_source":""}.
+Không tạo test trùng chỉ để luôn có file bổ sung. Nếu còn gap thì phải đề xuất test.
 
 Hợp đồng đầu ra:
 - Java 25, JUnit Jupiter 6 + AssertJ; @Test thông thường.
