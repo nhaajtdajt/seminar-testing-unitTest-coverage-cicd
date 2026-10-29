@@ -47,6 +47,8 @@
 4. Thử một request sai và một tình huống dữ liệu mẫu không đủ quyền mượn.
 5. Nhắc rằng dữ liệu là H2 in-memory và reset khi khởi động lại.
 
+**Người thực hiện:** Nguyễn Lê Thế Vinh (23120190). Chạy `PAUSE=1 scripts/demo_case_study.sh` để đi lần lượt 7 request (201, 409 `BOOK_UNAVAILABLE`, 404 `BOOK_NOT_FOUND`, 404 `MEMBER_NOT_FOUND`, 400, 409 `UNPAID_FINE`, 201), dừng chờ Enter giữa các bước. Mở đầu video bằng sơ đồ luồng trong `MoTa_NghiepVu_CaseStudy.md`; cuối video chạy `LoanFlowEdgeCaseTest` để cho thấy cùng tình huống được test tự động. **Chưa quay.**
+
 ## Video E — AI và paper — Người thực hiện: Ngô Gia An (23120205)
 
 **Trạng thái:** artifact và slide tóm tắt đã hoàn tất; chưa quay/đăng YouTube. Timestamp thực tế điền sau khi quay; chưa ấn định thời lượng. Slide 24–29 trình bày AI-1..4, hai paper và các đoạn GA-01..07.
