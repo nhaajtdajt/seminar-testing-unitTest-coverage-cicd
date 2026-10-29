@@ -9,13 +9,14 @@ import static org.assertj.core.api.Assertions.*;
 class FineCalculatorCsvTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/cases.csv", numLinesToSkip = 1, nullValues = "NULL")
-    void cases(int days, MemberTier tier, BigDecimal expected, String expectedException) {
+    void cases(int days, MemberTier tier, String expected, String expectedException) {
         var calculator = new FineCalculator();
-        if (expectedException == null) {
-            assertThat(expected).isNotNull();
-            assertThat(calculator.calculate(days, tier)).isEqualByComparingTo(expected);
+        // CSV can represent a blank field as either an unquoted null or quoted "".
+        if (expectedException == null || expectedException.isEmpty()) {
+            assertThat(expected).isNotEmpty();
+            assertThat(calculator.calculate(days, tier)).isEqualByComparingTo(new BigDecimal(expected));
         } else {
-            assertThat(expected).isNull();
+            assertThat(expected).isNullOrEmpty();
             assertThat(expectedException).isEqualTo("IllegalArgumentException");
             assertThatIllegalArgumentException().isThrownBy(() -> calculator.calculate(days, tier));
         }
