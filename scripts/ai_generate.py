@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Real Gemini AI-1/AI-2/AI-4 demo for FineCalculator. No production/test source overwrite."""
+"""Source-driven Gemini unit tests and independent CSV experiments for Java classes."""
 import argparse
-import hashlib
+import csv
 import json
 import os
 from pathlib import Path
@@ -12,142 +12,80 @@ import sys
 import tempfile
 import xml.etree.ElementTree as ET
 
-import ai4_compare
+import ai_context as context_builder
+import ai_csv
 import coverage_gaps
 import gemini_client as client
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = Path("vn/edu/seminar/fine")
-TARGET = "vn/edu/seminar/fine/FineCalculator"
-DRAFT = "FineCalculatorGeminiDraftTest"
-ADDITIONAL = "FineCalculatorGeminiAdditionalTest"
-SPEC = (
-    "FineCalculator.calculate(int daysLate, MemberTier tier) returns BigDecimal VND. "
-    "NORMAL: grace=0 days, then 2000 VND per late day. VIP: grace=2 days, then "
-    "1000 VND per day beyond grace. Within grace, including zero, the fee is zero. "
-    "Both tiers have a 50000 VND cap. A null tier or negative days throws "
-    "IllegalArgumentException. daysLate uses the full Java int range. "
-    "The API has MemberTier.NORMAL and MemberTier.VIP; null is Java null."
-)
 
 
-def digest(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def fresh(destination, stage):
+def fresh(destination, stage, target):
     destination.mkdir(parents=True, exist_ok=False)
-    client.save(destination / "stage.json", {"stage": stage, "started_at_utc": client.utc(),
-                "completed": False, "environment": "local isolated Maven copy; not CI or paper reproduction",
-                "operator": "invoking person/process; not independently verified", "human_review": "pending"})
+    client.save(destination / "stage.json", {"stage": stage, "target_class": target["fqcn"],
+        "started_at_utc": client.utc(), "completed": False, "human_review": "pending",
+        "environment": "local isolated Maven copy; not CI or paper reproduction"})
 
 
 def finish(destination, **fields):
-    path = destination / "stage.json"
-    data = json.loads(path.read_text())
+    data = json.loads((destination / "stage.json").read_text())
     data.update(fields, finished_at_utc=client.utc())
-    client.save(path, data)
+    client.save(destination / "stage.json", data)
     return data
 
 
-def snapshot(destination, previous=None):
-    project = destination / "inputs/project"
-    if previous:
-        source = previous / "inputs/project"
-        manifest = json.loads((previous / "inputs/manifest.json").read_text())
-        actual = {p.relative_to(source).as_posix(): digest(p) for p in source.rglob("*") if p.is_file()}
-        if actual != manifest:
-            raise ValueError("AI-1 source snapshot changed; refuse an invalid before/after comparison")
-        shutil.copytree(source, project)
-    else:
-        source = ROOT / "case-study"
-        project.mkdir(parents=True)
-        for name in ("pom.xml", "mvnw"):
-            shutil.copy2(source / name, project / name)
-        shutil.copytree(source / ".mvn", project / ".mvn")
-        main = project / "src/main/java" / PACKAGE
-        main.mkdir(parents=True)
-        for name in ("FineCalculator.java", "MemberTier.java"):
-            shutil.copy2(source / "src/main/java" / PACKAGE / name, main / name)
-        manifest = {p.relative_to(project).as_posix(): digest(p) for p in project.rglob("*") if p.is_file()}
-    client.save(destination / "inputs/manifest.json", manifest)
-    return project
-
-
-def source_text(project):
-    return "\n".join(f"File {name}:\n" + (project / "src/main/java" / PACKAGE / name).read_text()
-                     for name in ("FineCalculator.java", "MemberTier.java"))
-
-
-def prompt(name, **values):
+def render(name, values):
     text = (ROOT / "ai/prompts" / name).read_text()
-    for key, value in values.items():
-        text = text.replace("{{" + key + "}}", value)
-    if re.search(r"\{\{[A-Z_]+\}\}", text):
-        raise ValueError("Unfilled prompt placeholder")
+    required = set(re.findall(r"\{\{([A-Z_]+)\}\}", text))
+    if required - values.keys():
+        raise ValueError("Unfilled prompt placeholders: " + str(required - values.keys()))
+    for key in required:
+        text = text.replace("{{" + key + "}}", values[key])
     return text
 
 
-def java_answer(answer, class_name, destination):
-    code = answer.get("test_source")
-    analysis = answer.get("analysis")
+def java_answer(answer, name, destination, target):
+    code, analysis = answer.get("test_source"), answer.get("analysis")
     if not isinstance(code, str) or not isinstance(analysis, str):
         raise ValueError("Expected test_source and analysis strings; raw response retained")
-    if (not re.search(r"\bpackage\s+vn\.edu\.seminar\.fine\s*;", code)
-            or not re.search(r"\bclass\s+" + re.escape(class_name) + r"\b", code)
+    package = re.search(r"\bpackage\s+([\w.]+)\s*;", code)
+    if ((package.group(1) if package else "") != target["package"]
+            or not re.search(r"\bclass\s+" + re.escape(name) + r"\b", code)
             or "```" in code or re.search(r"@(?:Disabled\w*|Ignore|Tag)\b", code)):
         raise ValueError("Wrong package/class, disabled/tagged tests or Markdown in Java response")
     directory = destination / "generated"
-    directory.mkdir()
-    path = directory / f"{class_name}.java"
+    directory.mkdir(exist_ok=True)
+    path = directory / f"{name}.java"
     path.write_text(code)
     (destination / "analysis.md").write_text(analysis)
     return path
 
 
-def summarize(project):
-    suites = []
-    for path in sorted((project / "target/surefire-reports").glob("TEST-*.xml")):
-        element = ET.parse(path).getroot()
-        suites.append({"name": element.get("name"), **{k: int(element.get(k, "0"))
-                       for k in ("tests", "failures", "errors", "skipped")}})
-    result = {"suites": suites, **{k: sum(s[k] for s in suites)
-              for k in ("tests", "failures", "errors", "skipped")}}
-    report = project / "target/site/jacoco/jacoco.xml"
-    if report.exists():
-        target = ET.parse(report).getroot().find(f".//class[@name='{TARGET}']")
-        if target is not None:
-            result["fine_coverage"] = {c.get("type"): {"covered": int(c.get("covered")),
-                "missed": int(c.get("missed"))} for c in target.findall("counter")}
-    return result
-
-
-def run_java(source, tests, destination, csv=None):
+def run_java(source, tests, destination, target, csv_path=None):
     destination.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="seminar-ai-java-") as temporary:
         project = Path(temporary) / "case-study"
         shutil.copytree(source, project)
-        test_directory = project / "src/test/java" / PACKAGE
+        test_directory = project / "src/test/java" / Path(*target["package"].split("."))
         test_directory.mkdir(parents=True)
         for path in tests:
             shutil.copy2(path, test_directory / path.name)
-        command = ["./mvnw", "-B", "-ntp", "-Dtest.pattern=**/*Test.java", "-Dtest.excludedTags="]
-        if csv:
+        if csv_path:
             resources = project / "src/test/resources"
             resources.mkdir(parents=True)
-            shutil.copy2(csv, resources / "cases.csv")
-        command += ["clean", "test", "jacoco:report"]
+            shutil.copy2(csv_path, resources / "cases.csv")
+        command = ["./mvnw", "-B", "-ntp", "-Dtest.pattern=**/*Test.java", "-Dtest.excludedTags=",
+                   "clean", "test", "jacoco:report"]
         environment = {k: v for k, v in os.environ.items() if k not in ("GEMINI_API_KEY", "AI_MODEL")}
         started = client.utc()
-        print(f"JUnit/JaCoCo: {destination.name}", flush=True)
+        print(f"JUnit/JaCoCo: {target['fqcn']} / {destination.name}", flush=True)
         try:
-            process = subprocess.run(command, cwd=project, env=environment,
-                                     capture_output=True, text=True, timeout=300)
-            code, output = process.returncode, process.stdout + process.stderr
+            process = subprocess.run(command, cwd=project, env=environment, capture_output=True, text=True, timeout=300)
+            exit_code, output = process.returncode, process.stdout + process.stderr
         except subprocess.TimeoutExpired as error:
             def text(value):
                 return value.decode(errors="replace") if isinstance(value, bytes) else (value or "")
-            code, output = 124, text(error.stdout) + text(error.stderr) + "\nMaven timeout (300s).\n"
+            exit_code, output = 124, text(error.stdout) + text(error.stderr) + "\nMaven timeout (300s).\n"
         key, _ = client.settings()
         if key:
             output = output.replace(key, "<redacted>")
@@ -156,40 +94,48 @@ def run_java(source, tests, destination, csv=None):
         for relative in ("surefire-reports", "site/jacoco"):
             if (project / "target" / relative).exists():
                 shutil.copytree(project / "target" / relative, destination / relative)
-        result = {"command": [part.replace(str(project), "<project>") for part in command],
-                  "started_at_utc": started, "finished_at_utc": client.utc(), "exit_code": code,
-                  "test_sha256": {path.name: digest(path) for path in tests},
-                  "quality_gate_executed": False, **summarize(project)}
-        if csv:
-            result["csv_sha256"] = digest(csv)
-        expected = {"vn.edu.seminar.fine." + path.stem for path in tests}
-        seen = {s["name"] for s in result["suites"] if s["tests"] > s["skipped"]}
-        result["passed"] = (code == 0 and expected <= seen and result["tests"] > 0
-                            and result["failures"] == result["errors"] == 0 and "fine_coverage" in result)
-        report = project / "target/site/jacoco/jacoco.xml"
-        if report.exists():
-            gaps = coverage_gaps.extract(report, project / "src/main/java")
+        totals, coverage = ai_csv.raw_metrics(destination, target["fqcn"])
+        seen = set()
+        for path in (destination / "surefire-reports").glob("TEST-*.xml"):
+            node = ET.parse(path).getroot()
+            if int(node.get("tests", "0")) > int(node.get("skipped", "0")):
+                seen.add(node.get("name"))
+        expected = {(target["package"] + "." if target["package"] else "") + p.stem for p in tests}
+        result = {"target_class": target["fqcn"], "command": command, "started_at_utc": started,
+                  "finished_at_utc": client.utc(), "exit_code": exit_code, "quality_gate_executed": False,
+                  "test_sha256": {p.name: context_builder.sha(p) for p in tests},
+                  "target_coverage": coverage, **totals}
+        if csv_path:
+            result["csv_sha256"] = context_builder.sha(csv_path)
+        result["passed"] = (exit_code == 0 and expected <= seen and totals["tests"] > 0
+                            and totals["failures"] == totals["errors"] == 0 and bool(coverage))
+        if not coverage:
+            result["coverage_note"] = "Target not observed/instrumentable; no coverage success is claimed"
+        xml = project / "target/site/jacoco/jacoco.xml"
+        if xml.exists():
+            gaps = coverage_gaps.extract(xml, project / "src/main/java")
             gaps["report"] = "site/jacoco/jacoco.xml"
-            gaps["gaps"] = [g for g in gaps["gaps"] if g["file"] == str(PACKAGE / "FineCalculator.java")]
+            source = target["source"].removeprefix("src/main/java/")
+            gaps["gaps"] = [item for item in gaps["gaps"] if item["file"] == source]
             client.save(destination / "gaps.json", gaps)
         client.save(destination / "run.json", result)
         print(f"Tests={result['tests']}, failures={result['failures']}, errors={result['errors']}; passed={result['passed']}", flush=True)
         return result
 
 
-def ai1(destination, model=None, prepare=False):
-    fresh(destination, "AI-1")
+def ai1(destination, target, model=None, prepare=False, requirements=None, schema=None):
+    fresh(destination, "AI-1", target)
     try:
-        project = snapshot(destination)
-        text = prompt("AI-1-generate-tests.md", SPEC=SPEC, SOURCE=source_text(project), CLASS_NAME=DRAFT)
+        project, context = context_builder.snapshot(destination, target, requirements=requirements, schema=schema)
+        name = target["name"] + "GeminiDraftTest"
+        text = render("AI-1-generate-tests.md", context_builder.substitutions(project, context, name))
         (destination / "prompt.md").write_text(text)
         if prepare:
             return finish(destination, status="prepared_only", api_called=False)
-        print("AI-1: generating a fresh Gemini draft...", flush=True)
         answer = client.generate(text, destination / "model", model)
-        test = java_answer(answer, DRAFT, destination)
-        result = run_java(project, [test], destination)
-        return finish(destination, completed=result["passed"], status="tested", new_model_generation=True)
+        test = java_answer(answer, name, destination, target)
+        measured = run_java(project, [test], destination, target)
+        return finish(destination, completed=measured["passed"], status="tested", new_model_generation=True)
     except Exception as error:
         finish(destination, status="failed", error_type=type(error).__name__)
         raise
@@ -197,85 +143,134 @@ def ai1(destination, model=None, prepare=False):
 
 def ai2(destination, previous, model=None, prepare=False):
     before = json.loads((previous / "run.json").read_text())
+    context = json.loads((previous / "inputs/context.json").read_text())
+    target = context["target"]
     if not before.get("passed") or not json.loads((previous / "model/api.json").read_text()).get("completed"):
-        raise ValueError("AI-2 needs a successful AI-1 model response and JUnit/JaCoCo run")
-    draft = previous / "generated" / f"{DRAFT}.java"
-    if before.get("test_sha256", {}).get(draft.name) != digest(draft):
-        raise ValueError("AI-1 draft changed after measurement; rerun AI-1 rather than compare stale coverage")
-    fresh(destination, "AI-2")
+        raise ValueError("AI-2 requires a successful AI-1 model response and measured target coverage")
+    draft = previous / "generated" / (target["name"] + "GeminiDraftTest.java")
+    if before.get("test_sha256", {}).get(draft.name) != context_builder.sha(draft):
+        raise ValueError("AI-1 draft changed after measurement")
+    fresh(destination, "AI-2", target)
     try:
-        project = snapshot(destination, previous)
-        text = prompt("AI-2-coverage.md", SPEC=SPEC, SOURCE=source_text(project), CLASS_NAME=ADDITIONAL,
-                      DRAFT_TEST=draft.read_text(), TEST_RESULT=json.dumps(before, ensure_ascii=False),
+        project, context = context_builder.snapshot(destination, previous=previous)
+        name = target["name"] + "GeminiAdditionalTest"
+        values = context_builder.substitutions(project, context, name)
+        values.update(DRAFT_TEST=draft.read_text(), TEST_RESULT=json.dumps(before, ensure_ascii=False),
                       GAPS_JSON=(previous / "gaps.json").read_text())
+        text = render("AI-2-coverage.md", values)
         (destination / "prompt.md").write_text(text)
         if prepare:
             return finish(destination, status="prepared_only", api_called=False)
-        print("AI-2: sending the measured draft and coverage gaps to Gemini...", flush=True)
-        answer = client.generate(text, destination / "model", model)
-        additional = java_answer(answer, ADDITIONAL, destination)
+        additional = java_answer(client.generate(text, destination / "model", model), name, destination, target)
         shutil.copy2(draft, additional.parent / draft.name)
-        after = run_java(project, [additional.parent / draft.name, additional], destination)
-        comparison = {"before": before, "after": after,
-                      "limitation": "Coverage/green tests do not prove assertions or business rules are correct."}
-        if "fine_coverage" in after:
-            comparison["branch_covered_delta"] = (after["fine_coverage"]["BRANCH"]["covered"]
-                                                   - before["fine_coverage"]["BRANCH"]["covered"])
+        after = run_java(project, [additional.parent / draft.name, additional], destination, target)
+        comparison = {"target_class": target["fqcn"], "before": before, "after": after,
+                      "limitation": "Coverage/green tests do not certify business rules or assertions"}
+        if "BRANCH" in before["target_coverage"] and "BRANCH" in after["target_coverage"]:
+            comparison["branch_covered_delta"] = (after["target_coverage"]["BRANCH"]["covered"]
+                                                   - before["target_coverage"]["BRANCH"]["covered"])
         client.save(destination / "comparison.json", comparison)
-        return finish(destination, completed=after["passed"], status="tested", new_model_generation=True,
-                      baseline=str(previous.relative_to(ROOT)) if previous.is_relative_to(ROOT) else previous.name)
+        return finish(destination, completed=after["passed"], status="tested", new_model_generation=True)
     except Exception as error:
         finish(destination, status="failed", error_type=type(error).__name__)
         raise
 
 
-def check_human():
-    frozen = ROOT / "ai/human/frozen"
-    receipt = json.loads((frozen / "receipt.json").read_text())
-    if digest(frozen / "cases.csv") != receipt["sha256"]:
-        raise ValueError("Frozen human CSV changed; refusing the comparison")
-    ai4_compare.read_cases((frozen / "cases.csv").read_bytes())
-    return frozen, receipt
-
-
-def ai4(destination, model=None, prepare=False):
-    frozen, receipt = check_human()  # Validate before paying for a request.
-    fresh(destination, "AI-4")
+def build_schema(destination, target, model=None, prepare=False, header=None, requirements=None, domain_schema=None):
+    fresh(destination, "AI-4-schema", target)
     try:
-        project = snapshot(destination)
-        text = prompt("AI-4-boundary-data.md", SPEC=SPEC)
+        project, context = context_builder.snapshot(destination, target, requirements=requirements, schema=domain_schema)
+        name = target["name"] + "GeminiCsvTest"
+        values = context_builder.substitutions(project, context, name)
+        values["CSV_HEADER"] = json.dumps(header) if header is not None else "Not provided; derive it from the API and dependency state."
+        text = render("AI-4-schema.md", values)
         (destination / "prompt.md").write_text(text)
         if prepare:
-            return finish(destination, status="prepared_only", api_called=False,
-                          human_sent_to_model=False, human_sha256=receipt["sha256"])
-        print("AI-4: generating new data from specification only (no human CSV sent)...", flush=True)
+            return finish(destination, status="prepared_only", api_called=False, human_rows_sent_to_model=False)
+        answer = client.generate(text, destination / "model", model)
+        columns = ai_csv.validate_schema(answer, header)
+        harness = java_answer(answer, name, destination, target)
+        code = harness.read_text()
+        if len(re.findall(r"@ParameterizedTest\b", code)) != 1 or "@CsvFileSource" not in code or '"/cases.csv"' not in code:
+            raise ValueError("Schema harness must use one parameterized CSV test with /cases.csv")
+        schema = {"target_class": target["fqcn"], "columns": columns,
+                  "harness_file": harness.name, "harness_sha256": context_builder.sha(harness),
+                  "human_rows_sent_to_model": False, "human_header_sent_to_model": header is not None}
+        client.save(destination / "schema.json", schema)
+        with (destination / "cases.template.csv").open("w", newline="") as stream:
+            csv.writer(stream).writerow([column["name"] for column in columns])
+        return finish(destination, completed=True, status="schema_generated_not_runtime_verified", human_rows_sent_to_model=False)
+    except Exception as error:
+        finish(destination, status="failed", error_type=type(error).__name__)
+        raise
+
+
+def freeze_data(destination, schema_from, csv_path, author):
+    schema = json.loads((schema_from / "schema.json").read_text())
+    cases = ai_csv.read(csv_path, schema)
+    if not author.strip():
+        raise ValueError("Provide the actual human author")
+    destination.mkdir(parents=True, exist_ok=False)
+    shutil.copy2(csv_path, destination / "cases.csv")
+    client.save(destination / "receipt.json", {"author": author, "target_class": schema["target_class"],
+        "sha256": context_builder.sha(csv_path), "frozen_at_utc": client.utc(), "case_count": len(cases),
+        "attestation": "Author declares cases written before viewing AI data; schema/harness may be AI-assisted",
+        "limitation": "Self-attestation and hash do not prove independent authorship"})
+
+
+def ai4(destination, target, human, model=None, prepare=False, schema_from=None, requirements=None, domain_schema=None):
+    receipt = ai_csv.check_frozen(human, target["fqcn"])
+    fresh(destination, "AI-4", target)
+    try:
+        if not schema_from:
+            schema_from = destination / "schema-stage"
+            built = build_schema(schema_from, target, model, prepare, ai_csv.header(human / "cases.csv"),
+                                 requirements, domain_schema)
+            if prepare:
+                return finish(destination, status="schema_prompt_prepared_only", api_called=False, human_rows_sent_to_model=False)
+            if not built["completed"]:
+                raise ValueError("Schema generation failed")
+        schema = json.loads((schema_from / "schema.json").read_text())
+        if schema["target_class"] != target["fqcn"]:
+            raise ValueError("Schema belongs to another class")
+        ai_csv.read(human / "cases.csv", schema)
+        harness = schema_from / "generated" / schema["harness_file"]
+        if harness.name != target["name"] + "GeminiCsvTest.java" or context_builder.sha(harness) != schema["harness_sha256"]:
+            raise ValueError("Schema harness changed after generation")
+        project, context = context_builder.snapshot(destination, target, previous=schema_from)
+        values = context_builder.substitutions(project, context, harness.stem)
+        values["CSV_SCHEMA"] = json.dumps(schema, ensure_ascii=False)
+        text = render("AI-4-boundary-data.md", values)
+        (destination / "prompt.md").write_text(text)
+        if prepare:
+            return finish(destination, status="prepared_only", api_called=False, human_rows_sent_to_model=False)
         answer = client.generate(text, destination / "model", model)
         if not isinstance(answer.get("csv"), str) or not isinstance(answer.get("analysis"), str):
-            raise ValueError("AI-4 response needs csv and analysis strings")
+            raise ValueError("AI-4 needs csv and analysis strings")
         generated = destination / "generated"
         generated.mkdir()
-        csv = generated / "cases.csv"
-        csv.write_text(answer["csv"])
+        ai_data = generated / "cases.csv"
+        ai_data.write_text(answer["csv"])
         (destination / "analysis.md").write_text(answer["analysis"])
-        ai4_compare.read_cases(csv.read_bytes(), ai=True)
-        if not csv.read_text().splitlines()[0] == ",".join(ai4_compare.FIELDS):
-            raise ValueError("New AI-4 CSV must include expectedException, even for valid cases")
-        _, current_receipt = check_human()
-        if current_receipt["sha256"] != receipt["sha256"]:
-            raise ValueError("Human data changed during generation; comparison stopped")
-        comparison = ai4_compare.compare(frozen, csv)
+        ai_csv.read(ai_data, schema)
+        if ai_csv.check_frozen(human, target["fqcn"])["sha256"] != receipt["sha256"]:
+            raise ValueError("Human data changed during generation")
+        saved_human = destination / "inputs/human"
+        shutil.copytree(human, saved_human)
+        shutil.copy2(harness, generated / harness.name)
+        harness = generated / harness.name
+        client.save(destination / "schema.json", schema)
+        comparison = ai_csv.compare(saved_human / "cases.csv", ai_data, schema)
         client.save(destination / "comparison.json", comparison)
-        human = destination / "inputs/human"
-        shutil.copytree(frozen, human)
-        harness = destination / "generated/FineCalculatorCsvTest.java"
-        shutil.copy2(ROOT / "ai/harness/FineCalculatorCsvTest.java", harness)
-        before = run_java(project, [harness], destination / "human", human / "cases.csv")
-        after = run_java(project, [harness], destination / "ai", csv)
-        client.save(destination / "execution-comparison.json", {"human": before, "ai": after,
-                    "human_independence": "Self-declared in supplied notes, not proven by hash",
-                    "agreement_is_not_model_accuracy": True})
-        return finish(destination, completed=before["passed"] and after["passed"], status="compared_and_tested",
-                      new_model_generation=True, human_sent_to_model=False, human_sha256=receipt["sha256"])
+        before = run_java(project, [harness], destination / "human", target, saved_human / "cases.csv")
+        after = run_java(project, [harness], destination / "ai", target, ai_data)
+        client.save(destination / "execution-comparison.json", {"human": before, "ai": after})
+        reconciled = ai_csv.reconcile(destination, target["fqcn"], saved_human / "cases.csv", ai_data, schema, comparison, harness)
+        client.save(destination / "reconciliation.json", reconciled)
+        (destination / "report.md").write_text(ai_csv.report(reconciled))
+        return finish(destination, completed=before["passed"] and after["passed"] and reconciled["consistent"],
+                      status="compared_executed_and_reconciled", human_rows_sent_to_model=False,
+                      human_sha256=receipt["sha256"], new_model_generation=True)
     except Exception as error:
         finish(destination, status="failed", error_type=type(error).__name__)
         raise
@@ -283,46 +278,82 @@ def ai4(destination, model=None, prepare=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=("ai1", "ai2", "ai4", "all"))
-    parser.add_argument("--from-ai1", type=Path, help="AI-1 result directory, required for standalone ai2")
-    parser.add_argument("--output", type=Path, help="New result directory; existing runs are never overwritten")
-    parser.add_argument("--model", help="Override the saved Gemini model")
-    parser.add_argument("--prepare-only", action="store_true", help="Save inputs/prompts, no API or Maven execution")
+    parser.add_argument("stage", choices=("list-classes", "ai1", "ai2", "schema", "freeze", "ai4", "all"))
+    parser.add_argument("--class", dest="class_name", help="Simple or fully qualified top-level Java class")
+    parser.add_argument("--from-ai1", type=Path)
+    parser.add_argument("--schema-from", type=Path, help="Saved AI-4 schema stage, not a database schema")
+    parser.add_argument("--human-frozen", type=Path, help="Directory with human cases.csv and receipt.json")
+    parser.add_argument("--requirements", type=Path, help="Optional independent business requirements document")
+    parser.add_argument("--schema", type=Path, help="Optional SQL/JSON/domain schema document")
+    parser.add_argument("--csv", type=Path, help="Human CSV for freeze; not sent to Gemini")
+    parser.add_argument("--author")
+    parser.add_argument("--attest-independent", action="store_true")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--model")
+    parser.add_argument("--prepare-only", action="store_true")
     args = parser.parse_args()
+    if args.stage == "list-classes":
+        print(json.dumps(context_builder.discover(), ensure_ascii=False, indent=2))
+        return 0
+    if args.stage in ("ai1", "schema", "ai4", "all") and not args.class_name:
+        parser.error("Provide --class; business class selection is no longer hard-coded")
     if args.stage == "ai2" and not args.from_ai1:
-        parser.error("ai2 requires --from-ai1 pointing to a successful AI-1 directory")
+        parser.error("ai2 needs --from-ai1")
+    if args.stage in ("ai4", "all") and not args.human_frozen:
+        parser.error("AI-4 needs --human-frozen; never reuse another class's human data")
+    if args.stage == "freeze" and not (args.schema_from and args.csv and args.author and args.attest_independent):
+        parser.error("freeze needs --schema-from, --csv, --author and --attest-independent")
     try:
-        if not args.prepare_only:
+        if args.stage != "freeze" and not args.prepare_only:
             client.configured(args.model)
         stamp = client.utc().replace(":", "").replace(".", "").replace("+0000", "Z")
         output = (args.output or ROOT / "evidence/tuan-06/gemini-live" / f"{stamp}-{args.stage}").resolve()
+        if args.stage == "freeze":
+            freeze_data(output, args.schema_from.resolve(), args.csv.resolve(), args.author)
+            print(f"Human data frozen: {output}")
+            return 0
+        target = context_builder.select(args.class_name) if args.class_name else None
+        if args.stage == "ai2" and target:
+            baseline_target = json.loads((args.from_ai1 / "inputs/context.json").read_text())["target"]
+            if baseline_target["fqcn"] != target["fqcn"]:
+                raise ValueError("--class differs from the AI-1 baseline target")
+        common = {"model": args.model, "prepare": args.prepare_only}
+        inputs = {"requirements": args.requirements, "schema": args.schema}
         print(f"Output: {output}", flush=True)
         if args.stage == "ai1":
-            result = ai1(output, args.model, args.prepare_only)
+            result = ai1(output, target, **common, **inputs)
         elif args.stage == "ai2":
-            result = ai2(output, args.from_ai1.resolve(), args.model, args.prepare_only)
+            result = ai2(output, args.from_ai1.resolve(), **common)
+        elif args.stage == "schema":
+            result = build_schema(output, target, **common, requirements=args.requirements, domain_schema=args.schema)
         elif args.stage == "ai4":
-            result = ai4(output, args.model, args.prepare_only)
+            result = ai4(output, target, args.human_frozen.resolve(), **common,
+                         schema_from=args.schema_from.resolve() if args.schema_from else None,
+                         requirements=args.requirements, domain_schema=args.schema)
         else:
+            ai_csv.check_frozen(args.human_frozen.resolve(), target["fqcn"])
             output.mkdir(parents=True, exist_ok=False)
             results = {}
-            # AI-4 remains independent of the AI-1/2 conversation and can run even if tests fail.
             for stage in ("ai1", "ai2", "ai4"):
                 if stage == "ai2" and (args.prepare_only or not results.get("ai1", {}).get("completed")):
                     results[stage] = {"completed": False, "status": "skipped_without_passing_baseline"}
-                    continue
-                try:
-                    if stage == "ai2":
-                        results[stage] = ai2(output / stage, output / "ai1", args.model)
-                    else:
-                        results[stage] = globals()[stage](output / stage, args.model, args.prepare_only)
-                except (ValueError, RuntimeError, OSError, subprocess.SubprocessError) as error:
-                    results[stage] = {"completed": False, "error_type": type(error).__name__}
-                    print(f"{stage} stopped: {error}", file=sys.stderr)
+                else:
+                    try:
+                        if stage == "ai1":
+                            results[stage] = ai1(output / stage, target, **common, **inputs)
+                        elif stage == "ai2":
+                            results[stage] = ai2(output / stage, output / "ai1", **common)
+                        else:
+                            results[stage] = ai4(output / stage, target, args.human_frozen.resolve(), **common,
+                                schema_from=args.schema_from.resolve() if args.schema_from else None,
+                                requirements=args.requirements, domain_schema=args.schema)
+                    except (ValueError, RuntimeError, OSError, KeyError, subprocess.SubprocessError) as error:
+                        results[stage] = {"completed": False, "error_type": type(error).__name__}
+                        print(f"{stage} stopped: {error}", file=sys.stderr)
                 client.save(output / "summary.json", results)
             result = {"completed": all(item.get("completed") for item in results.values())}
         return 0 if args.prepare_only or result["completed"] else 1
-    except (ValueError, RuntimeError, OSError, subprocess.SubprocessError, KeyError) as error:
+    except (ValueError, RuntimeError, OSError, KeyError, subprocess.SubprocessError) as error:
         print(f"Stopped: {error}", file=sys.stderr)
         return 1
 

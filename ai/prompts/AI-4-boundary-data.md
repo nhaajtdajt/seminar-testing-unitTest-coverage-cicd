@@ -1,23 +1,20 @@
-# AI-4 — Sinh dữ liệu biên
+# AI-4 — Sinh dữ liệu từ source và schema tương ứng
 
-Đặc tả duy nhất dùng để thiết kế dữ liệu: {{SPEC}}
+Class cần kiểm thử: {{TARGET_CLASS}}
+Yêu cầu nghiệp vụ: {{REQUIREMENTS}}
+Schema/domain: {{SCHEMA}}
+Source production: {{SOURCE}}
+Schema CSV đã được xác định cho class này: {{CSV_SCHEMA}}
 
-Sinh dữ liệu biên độc lập từ đặc tả. Không được xem hoặc yêu cầu CSV người viết,
-test tham chiếu, bộ AI cũ hoặc kết quả AI-1/AI-2. Bước đối chiếu được chương trình
-thực hiện SAU khi nhận xong bộ dữ liệu mới này; không điều chỉnh bộ sinh theo đối chứng.
+Sinh dữ liệu mới theo schema, suy ra điều kiện, biên, expected và exception từ input trên.
+Không dùng quy tắc hoặc giá trị nghiệp vụ mặc định. Không có CSV người viết, test tham chiếu
+hoặc output AI-1/AI-2 trong request này. Không yêu cầu xem bộ đối chứng; bước so sánh chỉ
+diễn ra sau khi bạn trả lời. Xét trạng thái dependency khi API cần mock.
 
-Xét trước/đúng/sau grace period; trước/đúng/sau mức trần; 0, ngày âm,
-Integer.MAX_VALUE, Integer.MIN_VALUE và hạng null. Không tự thay đổi đặc tả.
-
-CSV phải có đúng header: daysLate,tier,expected,expectedException
-- daysLate là số nguyên Java int.
-- tier là NORMAL, VIP hoặc NULL (NULL biểu diễn Java null).
-- Ca hợp lệ: expected là số tiền không âm, expectedException để trống.
-- Ca lỗi: expected để trống, expectedException là IllegalArgumentException.
-- Mỗi cặp daysLate,tier xuất hiện một lần; có cả ca hợp lệ lẫn ca lỗi.
-- Kết thúc mỗi dòng bằng newline. Không ghi comment trong CSV.
+Mỗi tổ hợp input xuất hiện một lần, expected cụ thể để harness kiểm được. Không thêm cột
+hoặc comment. Tuân thủ thứ tự header, null token và kiểu dữ liệu trong schema.
 
 Chỉ trả JSON object, không Markdown fence:
-{"analysis": "Lý do chọn các ca và phép tính expected", "csv": "Nội dung CSV hoàn chỉnh"}
+{"analysis": "Lý do chọn ca, cách suy ra expected và giả định", "csv": "CSV hoàn chỉnh gồm header"}
 
-Không tự tuyên bố dữ liệu đã pass hoặc bộ người viết sai; chưa có lượt chạy/đối chiếu.
+Không tự tuyên bố đã chạy test, coverage tăng hoặc bộ người viết sai.
