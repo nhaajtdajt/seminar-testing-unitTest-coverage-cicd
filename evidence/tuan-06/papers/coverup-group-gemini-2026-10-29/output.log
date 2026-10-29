@@ -1,9 +1,9 @@
-...                                                                      [100%]
+.......                                                                  [100%]
 =============================== warnings summary ===============================
-../../../../../../../tmp/seminar-coverup-venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1277
+../../../tmp/seminar-coverup-venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1277
   /tmp/seminar-coverup-venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1277: PytestAssertRewriteWarning: Module already imported so cannot be rewritten: slipcover
     self._mark_plugins_for_rewrite(hook)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-- generated xml file: <repo>/evidence/tuan-06/papers/coverup-f003-gemini-2026-10-29/verification/junit.xml -
-3 passed, 1 warning in 0.01s
+- generated xml file: <run>/junit.xml -
+7 passed, 1 warning in 0.01s
