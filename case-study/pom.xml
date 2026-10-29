@@ -11,6 +11,7 @@
   <artifactId>library-case-study</artifactId>
   <version>0.1.0</version>
   <properties>
+    <!-- demo: đổi pom.xml làm khóa cache Maven đổi -->
     <java.version>25</java.version>
     <test.pattern>**/*Test.java</test.pattern>
     <test.excludedTags>baseline,antipattern,ai-draft,ai-gaps,ai-data</test.excludedTags>
