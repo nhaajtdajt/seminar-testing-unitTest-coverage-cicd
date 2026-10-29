@@ -28,3 +28,9 @@ Chỉ trả JSON:
 }
 Phải có input và expected. Tên cột là identifier, không trùng. Schema/harness cần người review;
 không tự tuyên bố đã kiểm đúng yêu cầu hoặc đã chạy test.
+
+Nếu cột expected là tên kiểu Java (ví dụ exception), có thể thêm normalization:
+{"kind": "java_type", "aliases": {"SimpleName": "actual.package.SimpleName"}}.
+Chỉ khai báo alias đã xác định từ source/import/package hoặc java.lang; không đoán nếu
+tên ngắn mơ hồ. Không đồng nhất hai tên đầy đủ khác package dù cùng simple name.
+Harness phải xử lý tên ngắn/đầy đủ theo cùng quy tắc. Không áp quy tắc này cho chuỗi nghiệp vụ thường.

@@ -13,6 +13,7 @@ import ai_generate as demo
 import ai_context as context
 import ai_csv
 import gemini_client as client
+import reconcile_ai4
 
 
 def java(target, name, csv=False):
@@ -215,6 +216,51 @@ class GenerationWorkflowTests(unittest.TestCase):
             with patch.object(client, "generate") as api, self.assertRaisesRegex(ValueError, "snapshot changed"):
                 demo.ai2(root / "ai2-source-changed", root / "ai1")
             api.assert_not_called()
+
+    def test_saved_report_correction_preserves_raw_evidence_and_previous_view(self):
+        target = context.select("FineCalculator")
+        data = "daysLate,tier,expected,expectedException\n1,NORMAL,2000,\n-1,VIP,,java.lang.IllegalArgumentException\n"
+        calls = []
+        def generated(text, directory, model):
+            calls.append(text)
+            if len(calls) == 1:
+                return {**fixture_schema(), "analysis": "fixture", "test_source": java(target, "FineCalculatorGeminiCsvTest", True)}
+            return {"analysis": "fixture", "csv": data}
+        with tempfile.TemporaryDirectory() as temporary:
+            run = Path(temporary) / "run"
+            with patch.object(client, "generate", side_effect=generated), patch.object(demo.subprocess, "run", side_effect=fake_maven):
+                demo.ai4(run, target, demo.ROOT / "ai/human/frozen")
+            raw = {p: p.read_bytes() for p in run.rglob("*") if p.is_file() and p.name not in
+                   ("comparison.json", "reconciliation.json", "report.md")}
+            reviewed = json.loads((run / "schema.json").read_text())
+            reviewed["columns"][-1]["normalization"] = {"kind": "java_type", "aliases": {
+                "IllegalArgumentException": "java.lang.IllegalArgumentException"}}
+            schema_path = Path(temporary) / "reviewed-schema.json"
+            client.save(schema_path, reviewed)
+            with patch.object(client, "generate") as api, patch.object(demo.subprocess, "run") as execute:
+                result = reconcile_ai4.reconcile_saved(run, run / "reviews/first", schema_path, update=True)
+                self.assertTrue(result["consistent"])
+                self.assertEqual(result["comparison"]["matching_outcomes"], 2)
+                self.assertFalse(result["comparison"]["disagreements"])
+                self.assertEqual(len(result["comparison"]["representation_differences"]), 1)
+                repeated = reconcile_ai4.reconcile_saved(run, run / "reviews/second")
+                self.assertEqual(result["comparison"], repeated["comparison"])
+            api.assert_not_called()
+            execute.assert_not_called()
+            self.assertEqual(len(json.loads((run / "reviews/first/previous/comparison.json").read_text())["disagreements"]), 1)
+            self.assertTrue(all(path.read_bytes() == before for path, before in raw.items()))
+
+    def test_review_schema_cannot_reclassify_data_to_hide_actual_differences(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run = Path(temporary) / "run"
+            original = fixture_schema()
+            client.save(run / "schema.json", original)
+            changed = json.loads(json.dumps(original))
+            changed["columns"][0]["type"] = "string"
+            path = Path(temporary) / "changed.json"
+            client.save(path, changed)
+            with self.assertRaisesRegex(ValueError, "only add/change normalization"):
+                reconcile_ai4.reconcile_saved(run, run / "review", path)
 
     def test_arbitrary_schema_compares_decimal_values_without_domain_constants(self):
         schema = {"columns": [{"name": "customer", "type": "string", "role": "input"},

@@ -35,6 +35,17 @@ def validate_schema(value, header=None):
         tokens = column.get("null_tokens", [])
         if not isinstance(tokens, list) or not all(isinstance(token, str) for token in tokens):
             raise ValueError("null_tokens must be a list of strings")
+        normalization = column.get("normalization")
+        if normalization is not None:
+            if (column["type"] != "string" or column["role"] != "expected" or not isinstance(normalization, dict)
+                    or normalization.get("kind") != "java_type"
+                    or not isinstance(normalization.get("aliases"), dict)):
+                raise ValueError("Java type normalization requires a string column and explicit aliases")
+            for alias, qualified in normalization["aliases"].items():
+                if (not isinstance(alias, str) or not isinstance(qualified, str)
+                        or not re.fullmatch(r"(?:[A-Za-z_$][\w$]*\.)+[A-Za-z_$][\w$]*", qualified)
+                        or alias not in (qualified, qualified.rsplit(".", 1)[-1])):
+                    raise ValueError("Only a simple Java name may alias its explicit fully qualified type")
         names.append(name)
     if {c["role"] for c in columns} != {"input", "expected"}:
         raise ValueError("Schema must contain both input and expected columns")
@@ -47,7 +58,7 @@ def header(path):
     return next(csv.reader(io.StringIO(path.read_text(encoding="utf-8-sig"))), [])
 
 
-def canonical(value, column):
+def canonical(value, column, normalize=True):
     if column.get("nullable") and value in column.get("null_tokens", []):
         return None
     kind = column["type"]
@@ -65,12 +76,14 @@ def canonical(value, column):
             if value.lower() not in ("true", "false"):
                 raise ValueError("Boolean must be true or false")
             return value.lower()
+        if normalize and column.get("normalization"):
+            return column["normalization"]["aliases"].get(value, value)
         return value
     except (InvalidOperation, ValueError):
         raise ValueError(f"Invalid {kind} value in column {column['name']}") from None
 
 
-def read(path, schema):
+def read(path, schema, normalize=True):
     columns = validate_schema(schema)
     reader = csv.DictReader(io.StringIO(path.read_text(encoding="utf-8-sig")))
     if reader.fieldnames != [column["name"] for column in columns]:
@@ -81,7 +94,7 @@ def read(path, schema):
     for row in reader:
         if None in row or any(value is None for value in row.values()):
             raise ValueError("Malformed CSV row")
-        parsed = {c["name"]: canonical(row[c["name"]], c) for c in columns}
+        parsed = {c["name"]: canonical(row[c["name"]], c, normalize) for c in columns}
         key = tuple(parsed[name] for name in inputs)
         if key in result:
             raise ValueError("Duplicate input combination in CSV")
@@ -102,6 +115,7 @@ def check_frozen(directory, target=None):
 
 def compare(human, ai, schema):
     left, right = read(human, schema), read(ai, schema)
+    original_left, original_right = read(human, schema, False), read(ai, schema, False)
     inputs = [c["name"] for c in schema["columns"] if c["role"] == "input"]
     shared = left.keys() & right.keys()
     encode = lambda key: dict(zip(inputs, key))
@@ -113,6 +127,10 @@ def compare(human, ai, schema):
                               for key in ordered(shared) if left[key] != right[key]],
             "missing_from_ai": [encode(key) for key in ordered(left.keys() - right.keys())],
             "extra_in_ai": [encode(key) for key in ordered(right.keys() - left.keys())],
+            "normalization_rules": {c["name"]: c["normalization"] for c in schema["columns"] if c.get("normalization")},
+            "representation_differences": [
+                {"input": encode(key), "human": original_left[key], "ai": original_right[key], "normalized": left[key]}
+                for key in ordered(shared) if left[key] == right[key] and original_left[key] != original_right[key]],
             "limitation": "Input agreement is not model accuracy; inspect requirements, assertions and execution."}
 
 
@@ -171,11 +189,15 @@ def report(result):
         lines.append(f"| {metric} | {coverage(human, metric)} | {coverage(ai, metric)} |")
     lines += ["", f"Input chung: {comparison['matching_inputs']}; expected khớp: {comparison['matching_outcomes']}; "
               f"mâu thuẫn: {len(comparison['disagreements'])}.", "",
+              f"Khác cách biểu diễn nhưng cùng expected sau chuẩn hóa: {len(comparison.get('representation_differences', []))}.", "",
               f"Chỉ có ở người viết: {len(comparison['missing_from_ai'])}; chỉ có ở AI: {len(comparison['extra_in_ai'])}.", "",
               f"Lượt Java: người viết={'PASS' if human.get('execution_passed') else 'FAIL'}; "
               f"AI={'PASS' if ai.get('execution_passed') else 'FAIL'}.", "",
               f"Đối chiếu CSV/Surefire/JaCoCo/hash: {'PASS' if result['consistent'] else 'FAIL'}.", ""]
     lines += [f"- {'PASS' if c['passed'] else 'FAIL'}: {c['check']}" for c in result["checks"]]
+    if comparison.get("normalization_rules"):
+        lines += ["", "Quy tắc chuẩn hóa được khai báo rõ trong schema/normalization_rules; "
+                  "chỉ ánh xạ tên Java ngắn sang đúng class đầy đủ, không bỏ package một cách tổng quát."]
     lines += ["", "Nguồn chi tiết: `comparison.json`, `reconciliation.json`, `human/`, `ai/`.", "",
               "Độc lập của dữ liệu người dựa trên khai báo. Schema/harness do AI hỗ trợ và cần người review.",
               "Khớp input không phải accuracy; coverage cao/test xanh không chứng minh đặc tả hoặc assertion đúng.", ""]

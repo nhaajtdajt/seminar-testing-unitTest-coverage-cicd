@@ -222,6 +222,24 @@ Nếu summary nói 20 test mà XML chỉ có 18, hoặc số test không bằng 
 Đồng thuận không phải accuracy. Nếu expected mâu thuẫn, đối chiếu yêu cầu/Java/analysis;
 không sửa hai bộ cho giống nhau. Tính độc lập người viết dựa trên khai báo, không do hash.
 
+Với expected là tên kiểu Java, schema có thể khai báo `normalization` gồm `kind: java_type`
+và alias từ tên ngắn sang đúng tên đầy đủ. Comparator chỉ áp dụng ở cột expected được khai báo,
+không tự bỏ package của mọi chuỗi hoặc gộp hai class khác package. Báo cáo tách khác cách
+biểu diễn với mâu thuẫn ngữ nghĩa. Alias phải được đối chiếu source/import/harness khi review.
+
+Nếu cần tính lại báo cáo từ kết quả đã chạy, không gọi API/Maven:
+
+```bash
+python3 scripts/reconcile_ai4.py --run "$GA_FINE" \
+  --output "$GA_FINE/reviews/recheck-$(date +%Y%m%d-%H%M%S)" --update-reports
+```
+
+Lệnh lưu bản báo cáo trước trong `previous/`, ghi lại revision, chỉ cập nhật comparison,
+reconciliation và report. CSV, response, schema model gốc, Java và XML không bị sửa.
+Nếu đã có bản schema so sánh được review, lệnh tự dùng lại qua `report-revision.json`.
+Lần sửa đầu có thể truyền `--comparison-schema <schema-reviewed.json>` và `--notes <review.md>`;
+schema review chỉ được đổi quy tắc chuẩn hóa, không đổi input/type/role/header để che lỗi.
+
 ## 7. Chạy cả ba hoặc chuẩn bị offline
 
 Ví dụ dữ liệu người của FineCalculator đã sẵn:
