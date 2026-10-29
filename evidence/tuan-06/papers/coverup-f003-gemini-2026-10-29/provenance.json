@@ -1,0 +1,68 @@
+{
+  "files": [
+    {
+      "file": "before.json",
+      "origin": "user-local-session/before.json",
+      "original_sha256": "f938b2d33adf5a376a970ee0602bc77d00ba09f0429b074646dcbecbab56ce30",
+      "stored_sha256": "f938b2d33adf5a376a970ee0602bc77d00ba09f0429b074646dcbecbab56ce30",
+      "sanitized": false
+    },
+    {
+      "file": "after.json",
+      "origin": "user-local-session/after.json",
+      "original_sha256": "cb3036f7baa0a6670c3083a1a1c082cee11be7d4dbab71cc89a0ab8806c5217f",
+      "stored_sha256": "cb3036f7baa0a6670c3083a1a1c082cee11be7d4dbab71cc89a0ab8806c5217f",
+      "sanitized": false
+    },
+    {
+      "file": "checkpoint.json",
+      "origin": "user-local-session/coverup-checkpoint-retry.json",
+      "original_sha256": "7a6f88c4c60c65c13581e247cac70914040d98e9d89aafc5707758f0e7e93268",
+      "stored_sha256": "00b5685bcf47dbb97f853b4ce19e5279e91242d5cbf860526e34511d44e4e9a7",
+      "sanitized": true
+    },
+    {
+      "file": "output.log",
+      "origin": "user-local-session/coverup-live-retry.log",
+      "original_sha256": "5ad0a0e5b3a96661ecdd0d74effcc5ed5ace332f567d90566b4673a9267d295c",
+      "stored_sha256": "13015e093d97fb43e9ca2f30d05119770c28e1d6e00b10fa092ba185fa47b911",
+      "sanitized": true
+    },
+    {
+      "file": "inputs/f003/__init__.py",
+      "origin": "user-local-session/f003/__init__.py",
+      "original_sha256": "bb383d5c22152b2b81aeeb6273d9578b1a6162ff42a36e6901f6213e238d986b",
+      "stored_sha256": "bb383d5c22152b2b81aeeb6273d9578b1a6162ff42a36e6901f6213e238d986b",
+      "sanitized": false
+    },
+    {
+      "file": "inputs/tests/test_baseline.py",
+      "origin": "user-local-session/tests/test_baseline.py",
+      "original_sha256": "199fb3220564ae80f8e54ce37519abefe542d60a7ba9ce69ff812fb117cd3404",
+      "stored_sha256": "199fb3220564ae80f8e54ce37519abefe542d60a7ba9ce69ff812fb117cd3404",
+      "sanitized": false
+    },
+    {
+      "file": "inputs/tests/test_coverup_1.py",
+      "origin": "user-local-session/tests/test_coverup_1.py",
+      "original_sha256": "12718ab75811057c649827aedcce3f170104a8e7356d76d80f2b33ad765f9835",
+      "stored_sha256": "12718ab75811057c649827aedcce3f170104a8e7356d76d80f2b33ad765f9835",
+      "sanitized": false
+    },
+    {
+      "file": "reference/author-f003.json",
+      "origin": "coverup-eval/output/mutap.gpt4o-v2/f003/final.json",
+      "original_sha256": "9a2235046a342a26a965d3df084f982356f4659187bda84da3f0421f94eb8952",
+      "stored_sha256": "9a2235046a342a26a965d3df084f982356f4659187bda84da3f0421f94eb8952",
+      "sanitized": false
+    },
+    {
+      "file": "reference/ARTIFACT-LICENSE.txt",
+      "origin": "coverup-eval/LICENSE",
+      "original_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "stored_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "sanitized": false
+    }
+  ],
+  "note": "SHA256 recorded before sanitization; only secrets and personal paths redacted. Original local files left unchanged."
+}

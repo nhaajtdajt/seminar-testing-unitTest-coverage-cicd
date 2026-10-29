@@ -1,0 +1,110 @@
+{
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 5554,
+      "sha256": "40f945d3c6d383d9920b62fb4fb01a13418e314244d8dd1ae5dbe03dd599b433"
+    },
+    {
+      "file": "after.json",
+      "bytes": 616,
+      "sha256": "cb3036f7baa0a6670c3083a1a1c082cee11be7d4dbab71cc89a0ab8806c5217f"
+    },
+    {
+      "file": "api-summary.json",
+      "bytes": 1385,
+      "sha256": "de55ada75625754fe1a93e349653e9a3dab3f032854ee54af0cba797fd8e1173"
+    },
+    {
+      "file": "before.json",
+      "bytes": 609,
+      "sha256": "f938b2d33adf5a376a970ee0602bc77d00ba09f0429b074646dcbecbab56ce30"
+    },
+    {
+      "file": "checkpoint.json",
+      "bytes": 1405,
+      "sha256": "00b5685bcf47dbb97f853b4ce19e5279e91242d5cbf860526e34511d44e4e9a7"
+    },
+    {
+      "file": "comparison.json",
+      "bytes": 1156,
+      "sha256": "42d3ae57c04b741320705c465e8df626c16345467ca5cb9943ed007c1591b3b3"
+    },
+    {
+      "file": "environment/pip-check.log",
+      "bytes": 30,
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "file": "environment/requirements.lock.txt",
+      "bytes": 1528,
+      "sha256": "407e7625fb3ff194972592b3be4bcd264f8c0ed28e58f012cbb606c4843b1d69"
+    },
+    {
+      "file": "environment/versions.json",
+      "bytes": 259,
+      "sha256": "1e4e88f1cdfa42033175975bd2b78c0c9c1a7b0050e84d553ac3cdcc7fa8d73c"
+    },
+    {
+      "file": "inputs/f003/__init__.py",
+      "bytes": 211,
+      "sha256": "bb383d5c22152b2b81aeeb6273d9578b1a6162ff42a36e6901f6213e238d986b"
+    },
+    {
+      "file": "inputs/tests/test_baseline.py",
+      "bytes": 93,
+      "sha256": "199fb3220564ae80f8e54ce37519abefe542d60a7ba9ce69ff812fb117cd3404"
+    },
+    {
+      "file": "inputs/tests/test_coverup_1.py",
+      "bytes": 597,
+      "sha256": "12718ab75811057c649827aedcce3f170104a8e7356d76d80f2b33ad765f9835"
+    },
+    {
+      "file": "output.log",
+      "bytes": 16932,
+      "sha256": "13015e093d97fb43e9ca2f30d05119770c28e1d6e00b10fa092ba185fa47b911"
+    },
+    {
+      "file": "provenance.json",
+      "bytes": 3007,
+      "sha256": "634b21fe3b65966c6cba42fa6d91badc871291c6524f09a171e942ef3b49bb10"
+    },
+    {
+      "file": "reference/ARTIFACT-LICENSE.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "file": "reference/author-f003.json",
+      "bytes": 583,
+      "sha256": "9a2235046a342a26a965d3df084f982356f4659187bda84da3f0421f94eb8952"
+    },
+    {
+      "file": "run.json",
+      "bytes": 2659,
+      "sha256": "88529c4a0d0fb97d2f31aa9c5cb6450bb75c903539ed89629491d58c24a22b70"
+    },
+    {
+      "file": "verification/coverage.json",
+      "bytes": 616,
+      "sha256": "30185a162f832092e954e2f3a00a2d35f0fd687b8300569862d8e10bf0897049"
+    },
+    {
+      "file": "verification/junit.xml",
+      "bytes": 544,
+      "sha256": "1fbd8aee1a77176af9335d5d2c3b17c2f41fa16485583019d621b4f8fd712917"
+    },
+    {
+      "file": "verification/output.log",
+      "bytes": 696,
+      "sha256": "5a4e32e4bad039b0ee393784e59254a426f6f75359cdb55da5cd3dbe640d54b3"
+    },
+    {
+      "file": "verification/run.json",
+      "bytes": 570,
+      "sha256": "4054f758a15880ac523e77e90448a0af5828b21617597a7882210c1b371e0708"
+    }
+  ],
+  "note": "Manifest excludes itself; hashes cover sanitized evidence files."
+}

@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="3" time="0.011" timestamp="2026-10-29T19:48:57.062924+07:00"><testcase classname="tests.test_baseline" name="test_empty_operations" time="0.000" /><testcase classname="tests.test_coverup_1" name="test_below_zero_returns_true_when_balance_drops_below_zero" time="0.000" /><testcase classname="tests.test_coverup_1" name="test_below_zero_returns_false_when_balance_remains_non_negative" time="0.000" /></testsuite></testsuites>
