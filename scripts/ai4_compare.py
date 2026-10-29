@@ -18,7 +18,8 @@ def digest(data):
 
 def read_cases(data, ai=False):
     reader = csv.DictReader(io.StringIO(data.decode("utf-8-sig")))
-    if reader.fieldnames != (FIELDS[:3] if ai else FIELDS):
+    allowed_headers = [FIELDS[:3], FIELDS] if ai else [FIELDS]
+    if reader.fieldnames not in allowed_headers:
         raise ValueError("Unexpected CSV header")
     cases = {}
     for row in reader:
