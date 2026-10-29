@@ -9,6 +9,15 @@ on:
 permissions:
   contents: read
 jobs:
+  ai-tools:
+    name: AI tooling offline checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s scripts/tests -v
   test:
     name: test (JDK ${{ matrix.java }})
     runs-on: ubuntu-latest
@@ -99,6 +108,7 @@ jobs:
           name: ai-review
           path: .ai-work/ci-review
           retention-days: 1
+          overwrite: true
   ai-comment:
     name: AI review and CI summary
     needs: [test, coverage-gate, package, ai-review]

@@ -66,6 +66,7 @@ def manifest(project):
     files = [project / "pom.xml", project / "mvnw"]
     files += [p for p in (project / ".mvn").rglob("*") if p.is_file()]
     files += list((project / "src/main/java").rglob("*.java"))
+    files += [p for p in (project / "src/main/resources").rglob("*") if p.is_file()]
     return {p.relative_to(project).as_posix(): sha(p) for p in files}
 
 
@@ -82,6 +83,8 @@ def copy_project(source, destination, expected):
         shutil.copy2(source / name, destination / name)
     shutil.copytree(source / ".mvn", destination / ".mvn")
     shutil.copytree(source / "src/main/java", destination / "src/main/java")
+    if (source / "src/main/resources").exists():
+        shutil.copytree(source / "src/main/resources", destination / "src/main/resources")
     check_project(destination, expected)
 
 
