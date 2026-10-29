@@ -6,6 +6,7 @@ Case study quản lý thư viện, dùng chung từ unit test đến coverage v�
 
 - [Phân công nhiệm vụ hiện tại](PhanCong_NhiemVu.md) · [Bảng công việc](docs/thuc-hanh/BangCongViec.md).
 - [Hướng dẫn chạy và kịch bản demo](docs/thuc-hanh/HuongDan_Demo.md).
+- [Bài làm thử từ ứng dụng đến paper, kèm expected](docs/thuc-hanh/ThucHanh_App_Paper.md).
 - [Báo cáo chi tiết](docs/thuc-hanh/BaoCao_ChiTiet.md).
 - [Bài tập áp dụng](docs/thuc-hanh/BaiTap_Tuan_06.md) · [Kịch bản quay video](docs/thuc-hanh/KichBan_QuayVideo_Tuan_06.md) (kịch bản, chưa có video).
 - Minh chứng: [Tuần 06 (mới nhất)](evidence/tuan-06/README.md) · [Các lượt chạy chính](evidence/tuan-05/README.md).

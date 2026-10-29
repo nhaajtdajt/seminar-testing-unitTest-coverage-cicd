@@ -2,6 +2,8 @@
 
 Ngô Gia An (23120205), AI hỗ trợ: Codex, 28/10/2026. Danh mục máy đọc được: [papers.json](papers.json). Không tự viết lại thuật toán của paper.
 
+Bài làm thử từng bước, có expected: [Ứng dụng → CoverUp với Gemini](../docs/thuc-hanh/ThucHanh_App_Paper.md). Ngày 29/10 đã kiểm baseline/dry-run offline với route Gemini; chưa gọi model sinh test. Lock pin pytest 8.3.5 để tương thích SlipCover; khác snapshot dependencies lúc thử ngày 28/10, không thay số liệu cũ.
+
 ## Hai bài được chọn
 
 | Bài | Xuất bản / hạng hội nghị | Source tác giả | Áp dụng cho nhóm |
