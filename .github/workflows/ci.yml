@@ -70,3 +70,73 @@ jobs:
         with:
           name: library-app
           path: case-study/target/*.jar
+  ai-review:
+    name: Gemini diff review (advisory)
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # No needs: this lane runs alongside test/coverage, including when they fail.
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Run trusted automation, never execute PR scripts with the API key.
+          ref: ${{ vars.AI_REVIEW_REF || 'seminar-core' }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Review PR diff with Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AI_MODEL: ${{ vars.AI_MODEL || 'gemini-3.6-flash' }}
+        run: python3 scripts/ci_ai_review.py review
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ai-review
+          path: .ai-work/ci-review
+          retention-days: 1
+  ai-comment:
+    name: AI review and CI summary
+    needs: [test, coverage-gate, package, ai-review]
+    # Required after failed/skipped dependencies; a red gate must still get a comment.
+    if: always() && !cancelled() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ vars.AI_REVIEW_REF || 'seminar-core' }}
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: ai-review
+          path: .ai-work/ci-artifacts/ai-review
+      - uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: tests-jdk-25
+          path: .ai-work/ci-artifacts/tests-jdk-25
+      - uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: coverage
+          path: .ai-work/ci-artifacts/coverage
+      - name: Update PR comment with measured results and Gemini findings
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEST_RESULT: ${{ needs.test.result }}
+          COVERAGE_RESULT: ${{ needs.coverage-gate.result }}
+          PACKAGE_RESULT: ${{ needs.package.result }}
+        run: python3 scripts/ci_ai_review.py comment

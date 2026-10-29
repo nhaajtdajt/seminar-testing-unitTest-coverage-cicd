@@ -1,10 +1,6 @@
-name: AI test review
-# TẠM TẮT TỰ ĐỘNG: đang trong giai đoạn sửa nhiều, workflow chỉ chạy tay
-# (tab Actions -> AI test review -> Run workflow).
-# TRƯỚC KHI LÀM DEMO AI-3: bỏ dấu '#' ở trigger pull_request dưới để bật lại tự động.
+name: AI fixture review (manual)
+# Manual fixture debugging only. Automatic PR review/comment lives in ci.yml.
 on:
-  # pull_request:
-  #   types: [opened, synchronize, reopened]
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,7 +26,7 @@ jobs:
       - name: Live review when configured; prepare only otherwise
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          AI_MODEL: ${{ vars.AI_MODEL }}
+          AI_MODEL: ${{ vars.AI_MODEL || 'gemini-3.6-flash' }}
         run: |
           if [ -n "$GEMINI_API_KEY" ] && [ -n "$AI_MODEL" ]; then
             python3 scripts/ai_review.py --diff /tmp/review.diff --output ai-output --live
