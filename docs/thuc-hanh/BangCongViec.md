@@ -51,16 +51,17 @@ W06-01..05 là snapshot công việc tích lũy trước khi phân lại vai tr�
 | W06-04 | TV4: đóng gói source và hướng dẫn chạy lại | Ngô Gia An (23120205) | Source và hướng dẫn có; HTTP smoke 5/5 trên JAR Java 25; ảnh request 201/409 được giữ tùy chọn ngoài checklist | `case-study/`, `README.md`, `evidence/tuan-06/http-smoke-java25/`; dữ liệu H2 mẫu xem `case-study/src/main/resources/data.sql` |
 | W06-05 | TV5: slide, báo cáo chi tiết, AI, bài tập, link | Ngô Gia An (23120205) | Slide/báo cáo/AI declaration/bài tập có; Gemini API live và evaluation fixture đạt 4/4; demo ngoài checklist nộp tuần 6 | `slides/`, `docs/thuc-hanh/BaoCao_ChiTiet.md`, `BaiTap_Tuan_06.md`, `evidence/tuan-06/ai-review/` |
 | W06-06 | TV3: các loại coverage, JaCoCo đo gì, công cụ thứ hai, điểm yếu công cụ, kịch bản video | Trương Nhật Đạt (23120231), AI hỗ trợ (Claude Code) | Ví dụ `LoanPeriodPolicy` + bộ T1–T4 và bảng 6 loại coverage; bảng JaCoCo đo/không đo; OpenClover chạy thật, so 6 tiêu chí; demo mức trần ẩn trong `Math.min`, mutant tương đương, chi phí PIT; kịch bản Video B có timestamp. **Chưa quay video.** | `BaoCao_ChiTiet.md` mục 3.1–3.4, 5.2; `HuongDan_Demo.md` CC-0, CC-0b, CC-5, CC-6; `evidence/tuan-06/coverage-types/`, `openclover/`, `coverage-blindspot/`, `pit-cost/` |
-| W06-07 | TV5: AI-4 đối chứng dữ liệu biên | Ngô Gia An (23120205), Codex hỗ trợ chạy | Khóa 23 ca/notes trước so; 11 ca chung khớp; Java 23/23 vs AI 13/13 pass. Độc lập theo notes, chờ người tự review | `ai/human/`; `evidence/tuan-06/ai-4/` |
+| W06-07 | TV5: AI-4 đối chứng dữ liệu biên | Ngô Gia An (23120205), Codex hỗ trợ chạy | Khóa 23 ca/notes trước so; 11 ca chung khớp; Java 23/23 vs AI 13/13 pass. Độc lập theo notes; Gia An xác nhận review 29/10, Codex thực thi đối chiếu | `ai/human/`; `evidence/tuan-06/ai-4/` |
 | W06-08 | TV5: AI trên LoanService | Ngô Gia An (23120205), Codex hỗ trợ | Nháp 2 → bổ sung 10 test; branch 3/6 → 6/6; PIT 9/9; fixture sai đỏ đúng 1 assertion | `HuongDan_Demo.md` mục 9.4; `evidence/tuan-06/ai-loan/` |
-| W06-09 | TV5: paper có source/hạng và thực nghiệm | Ngô Gia An (23120205) điều phối | CoverUp reanalysis/dry-run; Gia An đã tự gọi Gemini sinh test trên benchmark f003 (thêm 2 hàm, xác minh offline 3/3 pass, line/branch 100%). ChatUniTest mới parse; benchmark rộng hơn/source nhóm và tái lập đầy đủ còn chờ | `research/`; báo cáo mục 9; `evidence/tuan-06/papers/coverup-f003-gemini-2026-10-29/` |
-| W06-10 | TV5: khai báo AI, chuẩn hóa docs/evidence | Ngô Gia An (23120205), Codex hỗ trợ | Theo template 6 mục chung; docs vào tài liệu chung, evidence theo tuần/chủ đề; chờ Gia An tự chạy/review/ký | `ai-usage-declaration/01_NgoGiaAn.md`; `evidence/tuan-06/README.md` |
+| W06-09 | TV5: paper có source/hạng và thực nghiệm | Ngô Gia An (23120205), Codex hỗ trợ chạy | CoverUp và Pynguin: phân tích dữ liệu công bố, generation mới trên benchmark và thử source nhóm. CoverUp nhóm 7 pass/96,4%; Pynguin benchmark 10 pass + 5 xfail, group có seed 2 pass nhưng không assertion/không tăng coverage so smoke | `research/`; báo cáo mục 9; `evidence/tuan-06/papers/README.md` |
+| W06-10 | TV5: khai báo AI, chuẩn hóa docs/evidence | Ngô Gia An (23120205), Codex hỗ trợ | Theo 6 mục chung; Gia An xác nhận thực hiện/review ngày 29/10; phân biệt tự chạy và Codex chạy theo ủy quyền. Chưa có review chéo/chữ ký bản nộp | `ai-usage-declaration/01_NgoGiaAn.md`; `evidence/tuan-06/README.md` |
 | W06-11 | TV5: artifact video AI/paper | Ngô Gia An (23120205) | GA-01..07 có đầu vào/bằng chứng; chưa quay/đăng, chưa có URL/timestamp thực tế | `KichBan_QuayVideo_Tuan_06.md`, Video E |
 | W06-12 | TV5: hợp nhất slide/HTML | Ngô Gia An (23120205) | Hoãn đến bước cuối theo yêu cầu 29/10; dùng nguyên slide/HTML trên core, không xuất PDF riêng | `slides/` giữ bản core; không đánh dấu đã hoàn thành phần AI/paper trên slide |
 | W06-13 | TV2: CI thật, required checks và điểm yếu | Phạm Quang Vinh (23120202) | Có evidence PR đỏ → xanh; required checks master theo snapshot; GitHub Actions là công cụ CI duy nhất | `evidence/tuan-06/github-actions/`; báo cáo mục 4.1 |
+| W06-14 | TV5: pipeline AI-1/2 và AI-3 trên PR thật | Ngô Gia An (23120205), Codex hỗ trợ | Gemini 3.6 LoanService 7 → 10 test; apply tạo test thật, xóa output tạm; 49 test/gate pass, 74 offline checks; sáu job CI xanh và comment review hoàn tất | [PR #13](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/13), run 40889189664; code nằm nhánh PR riêng, chưa merge core |
 
 
-**Giới hạn ghi nhận:** bằng chứng local không thay cho GitHub run. AI-3 4/4 chỉ trên fixture. Paper đã có generation mới CoverUp trên một module f003, chưa tái lập đầy đủ hoặc generation trên source nhóm. Từng người phải tự xác nhận review; không tự điền thay. Các mô tả quyền/required checks đọc theo thời điểm evidence, không mặc định là cấu hình live hiện tại.
+**Giới hạn ghi nhận:** paper là tái hiện có giới hạn, không chạy lại toàn bộ benchmark nhiều seed/mutation. Gia An xác nhận phần AI/paper; thành viên khác tự xác nhận review chéo. AI-3 fixture và PR review là hai lượt riêng; [PR #13 CI/AI đã xanh](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/actions/runs/40889189664). Cấu hình required checks phụ thuộc snapshot, không mặc định live.
 
 ## Điều phối chung — Ngô Gia An phụ trách
 
@@ -78,9 +79,9 @@ W06-01..05 là snapshot công việc tích lũy trước khi phân lại vai tr�
 - [x] Chuẩn bị bộ công cụ AI-4 để người tự điền.
 - [x] Kiểm nguồn paper, hạng venue và artifact.
 - [x] Chạy lại phân tích dữ liệu CoverUp và thử dry-run source nhóm.
-- [ ] Chạy sinh test mới của cả hai paper và lưu kết quả thực tế.
+- [x] Cả hai paper có reanalysis, generation mới trên benchmark và thử source nhóm; output/giới hạn trong evidence.
 - [x] Đã nhận CSV/notes Gia An cung cấp; Codex khóa, commit rồi so và chạy Java: 23/23 người dùng, 13/13 AI. Độc lập theo tuyên bố trong notes; chờ Gia An tự review/chạy lại.
-- [ ] Gia An đọc hiểu, chạy lại và xác nhận AI declaration.
+- [x] Gia An xác nhận thực hiện/review AI/paper; declaration ghi rõ ai thao tác từng lượt, chưa ký thay trên bản nộp.
 - [ ] Thành viên khác review chéo và xác nhận phần của họ.
 - [ ] Đủ URL video và timestamp thật; hợp nhất slide/HTML sau cùng.
 - [ ] Gửi slide / gặp GV trước hạn 3–4 ngày.
