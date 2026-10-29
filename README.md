@@ -28,6 +28,15 @@ java -version
 case-study/mvnw -v
 ```
 
+Ubuntu/Debian (đã thử trên Ubuntu 26.04 ngày 29/10): gói có sẵn trong apt, cài xong `java` mặc định tự chuyển sang 25, không cần đặt `JAVA_HOME`. Nếu máy còn JDK khác hoặc `JAVA_HOME` đang trỏ tới bản cũ, chọn lại bằng `sudo update-alternatives --config java` hoặc `export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64`.
+
+```bash
+sudo apt install -y openjdk-25-jdk-headless
+java -version
+```
+
+Gặp `error: release version 25 not supported` khi build nghĩa là Maven đang dùng JDK cũ hơn 25 (ví dụ JDK 17 có sẵn trên Ubuntu): kiểm `case-study/mvnw -v` xem dòng `Java version`, rồi chọn lại JDK như trên.
+
 ```bash
 case-study/mvnw -B -ntp -f case-study/pom.xml clean verify
 java -jar case-study/target/library-case-study-0.1.0.jar --server.port=8081
@@ -41,7 +50,7 @@ curl -i http://localhost:8081/api/loans \
   -d '{"bookId":1,"memberId":1}'
 ```
 
-Lần đầu trả 201; mượn lại sách 1 trả 409. Tắt và khởi động lại để đặt lại dữ liệu. Ứng dụng dùng H2 in-memory (Spring Data JPA, dữ liệu mẫu trong `data.sql`); dữ liệu không được lưu bền khi tắt ứng dụng.
+Lần đầu trả 201; mượn lại sách 1 trả 409. Tắt và khởi động lại để đặt lại dữ liệu. Chạy cả 7 tình huống (201, 409, 404, 400) một lượt, tự bật/tắt ứng dụng: `scripts/demo_case_study.sh` (thêm `PAUSE=1` để dừng giữa các bước khi quay video). Mô tả nghiệp vụ và dữ liệu mẫu: [MoTa_NghiepVu_CaseStudy.md](docs/thuc-hanh/MoTa_NghiepVu_CaseStudy.md). Ứng dụng dùng H2 in-memory (Spring Data JPA, dữ liệu mẫu trong `data.sql`); dữ liệu không được lưu bền khi tắt ứng dụng.
 
 ## Trạng thái và giới hạn tái hiện
 
