@@ -1,6 +1,6 @@
 # Git commit log — Ngô Gia An (23120205)
 
-Snapshot ngày 29/10/2026. Dữ liệu lấy từ Git thật; tài khoản commit `bingsu <ngogiaan11111@gmail.com>`, GitHub `bingsu1103`. Khi nộp sau khi merge, xuất lại log từ `seminar-core` để lấy hash cuối cùng và không bỏ commit merge.
+Snapshot ngày 29/10/2026 sau khi hợp nhất vào `seminar-core`. Dữ liệu lấy từ Git thật; tài khoản commit `bingsu <ngogiaan11111@gmail.com>`, GitHub `bingsu1103`.
 
 ```text
 1bdadf6 | 2026-10-28T22:35:35+07:00 | fix(test): attach Mockito agent at JVM startup on JDK 25
@@ -17,9 +17,13 @@ f351e88 | 2026-10-29T21:12:23+07:00 | fix(ai): configure CI retries and stop on 
 d3841a7 | 2026-10-29T21:46:23+07:00 | research: record CoverUp group generation and trim retained outputs
 7e46b36 | 2026-10-29T21:54:18+07:00 | research: replace retired trial with reproduced Pynguin experiments
 ea4e438 | 2026-10-29T21:55:01+07:00 | docs: confirm Gia An AI review and record completed paper scope
+2c80403 | 2026-10-29T22:07:54+07:00 | docs: finalize Gia An slides report and contribution handoff
+bc067ca | 2026-10-29T22:08:39+07:00 | Merge pull request #13 from nhaajtdajt/codex/ai12-review-apply
+2565d64 | 2026-10-29T22:12:45+07:00 | Merge remote-tracking branch 'origin/seminar-core' into codex/paper-live-results
+6cc44c6 | 2026-10-29T22:15:48+07:00 | Merge pull request #14 from nhaajtdajt/codex/paper-live-results
 ```
 
 PR liên quan:
 
-- [PR #13 — AI generate/review/apply và AI-3 CI](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/13)
-- [PR #14 — CoverUp/Pynguin và evidence](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/14)
+- [PR #13 — AI generate/review/apply và AI-3 CI](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/13) — đã merge vào `seminar-core` tại `bc067ca`.
+- [PR #14 — CoverUp/Pynguin và evidence](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/14) — đã merge vào `seminar-core` tại `6cc44c6`.
