@@ -1,0 +1,13 @@
+{
+  "author": "Gia An (10 ca gốc); Codex (chỉnh theo source theo yêu cầu người dùng)",
+  "target_class": "vn.edu.seminar.loan.LoanService",
+  "sha256": "ebb5232ed7c4730e97fc98196698d05daa0f8fbe951a8150c8438e4bc811d1d3",
+  "frozen_at_utc": "2026-10-30T09:22:57.646534+00:00",
+  "case_count": 10,
+  "validation": "CSV structure/hash; execution preflight verified separately against current Java source",
+  "attestation": "Source-assisted dataset. Codex adapted user-authored cases to implementation with user authorization; no independent-oracle claim.",
+  "provenance": "human inputs with AI-assisted source-based boundary/expected corrections",
+  "source_sha256": "45726224af03a829d873344520efa2b0e4bece20b27ec40d6343116c293305c9",
+  "notes_sha256": "a23b2a2a121b21046247f250222a1bca7b1eb88ae83d65fa4df50f0a450e6a70",
+  "limitation": "Agreement with implementation does not prove independent business requirements or correctness."
+}
