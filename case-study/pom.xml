@@ -67,6 +67,8 @@
         <targetClasses><param>${pit.classes}</param></targetClasses>
         <targetTests><param>${pit.tests}</param></targetTests>
         <threads>2</threads><timestampedReports>false</timestampedReports>
+        <!-- PIT splits the copied surefire argLine on spaces, breaking quoted agent paths; minions do not need the agents. -->
+        <parseSurefireArgLine>false</parseSurefireArgLine>
         <outputFormats><param>HTML</param><param>XML</param></outputFormats>
       </configuration>
     </plugin>
