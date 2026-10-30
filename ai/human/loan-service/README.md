@@ -1,8 +1,11 @@
 # Chuẩn bị CSV người viết — LoanService
 
-Mẫu này chỉ có header, **chưa có ca kiểm thử hay expected**. Gia An tự điền dữ liệu;
-Codex chuẩn bị cấu trúc cột, không viết bộ đối chứng. Không dùng CSV FineCalculator
-ở thư mục cha cho LoanService.
+**Trạng thái 30/10/2026:** Gia An cung cấp 10 ca; theo yêu cầu người dùng, Codex đã
+chỉnh ba ca theo source hiện tại (hạn mức 3, `LIMIT_REACHED`) và khóa tại
+[frozen/cases.csv](frozen/cases.csv), [receipt](frozen/receipt.json).
+Bản hiện tại có AI hỗ trợ đối chiếu/chỉnh theo implementation, **không phải đối chứng
+độc lập**. [Notes nguồn và các thay đổi](cases-notes.md). Không dùng CSV FineCalculator.
+`cases.template.csv` vẫn là mẫu header trống cho lần thiết kế khác.
 
 ## Cách điền
 
@@ -38,24 +41,11 @@ phiếu được lưu và sách chuyển sang unavailable; lỗi không được
 
 ## Nguồn dữ liệu và khóa
 
-Điền [cases-notes.md](cases-notes.md) bằng thông tin thật trước khi khóa. Nếu đã xem
-test/data AI của LoanService từ các lượt trước, bộ mới không thể được gọi là độc lập
-với những dữ liệu đó. Khi cần đối chứng độc lập, nhờ người chưa xem tự viết; ghi đúng
-tên tác giả. Vẫn có thể giữ bộ tham khảo để học nhưng không ký `--attest-independent`
-cho bộ không đáp ứng điều kiện.
+Bản hiện tại đã khóa với khai báo source-assisted đúng nguồn gốc; không cần freeze lại
+và không chạy `--attest-independent` cho bản AI đã hỗ trợ chỉnh này. `receipt.json` ghi
+hash CSV/source/notes và tác giả, không tự chứng minh đúng đặc tả nghiệp vụ.
 
-Chỉ chạy khi `cases.csv` đã có ca và người thực sự viết có thể xác nhận điều kiện trên:
-
-```bash
-python3 scripts/ai_generate.py freeze \
-  --class LoanService --csv ai/human/loan-service/cases.csv \
-  --author "TEN_NGUOI_THUC_SU_TU_VIET" --attest-independent \
-  --output ai/human/loan-service/frozen
-```
-
-Chạy từ gốc repo, thay tên placeholder. Lệnh offline; không sửa bộ frozen đã có.
-Hash ghi nhận dữ liệu tại thời điểm khóa, không tự chứng minh tác giả hay độc lập.
-Sau khi khóa mới sinh test/CSV AI mới cho lượt quay. Các input bền vững và receipt
-có thể commit trước đối chiếu; output `.ai-work/` không commit.
-
-Kịch bản quay và lệnh AI-1/2/3/4: [Preparation Loan](../../../docs/thuc-hanh/Preparation_QuayVideo_AI1_AI4_Loan.md).
+Để quay ngay, dùng [Preparation Loan](../../../docs/thuc-hanh/Preparation_QuayVideo_AI1_AI4_Loan.md).
+AI-4 đọc bộ frozen ở trên và chỉ gửi header cho bước schema; dữ liệu human không được gửi Gemini.
+Nếu sau này cần một bộ độc lập mới, người chưa xem test/data AI phải tự thiết kế input và
+expected dựa trên đặc tả được chấp nhận, ghi nguồn và khóa trước đối chiếu.
