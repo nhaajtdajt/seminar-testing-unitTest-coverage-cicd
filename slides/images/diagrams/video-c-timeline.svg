@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 340" width="100%" height="100%">
+  <rect width="620" height="340" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="620" height="38" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="24" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Video C: Ứng dụng Quản lý Thư viện &amp; HTTP Smoke Test (3–5 phút) · Nguyễn Lê Thế Vinh</text>
+
+  <!-- Player bar -->
+  <g transform="translate(20, 50)">
+    <rect width="580" height="36" rx="4" fill="#111111"/>
+    <rect x="12" y="14" width="556" height="8" rx="3" fill="#444444"/>
+    <rect x="12" y="14" width="220" height="8" rx="3" fill="#ffffff"/>
+    <circle cx="232" cy="18" r="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <text x="525" y="28" font-family="monospace" font-size="10" fill="#ffffff">04:30</text>
+  </g>
+
+  <!-- 4 Segments -->
+  <g transform="translate(20, 98)">
+    <g transform="translate(0, 0)">
+      <rect width="280" height="95" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[00:00 - 01:00] 1. KHỞI CHẠY JAR</text>
+      <text x="12" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Khởi chạy JAR thật trên JDK 25</text>
+      <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Nạp dữ liệu hạt giống (seed data)</text>
+      <text x="12" y="78" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Cơ sở dữ liệu H2 in-memory sạch</text>
+    </g>
+    <g transform="translate(300, 0)">
+      <rect width="280" height="95" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[01:00 - 02:30] 2. 7 KỊCH BẢN HTTP</text>
+      <text x="12" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Chạy demo_case_study.sh tuần tự</text>
+      <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Mượn hợp lệ: HTTP 201 Created</text>
+      <text x="12" y="78" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Mượn lại sách đó: 409 UNAVAILABLE</text>
+    </g>
+    <g transform="translate(0, 105)">
+      <rect width="280" height="110" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[02:30 - 03:30] 3. CÁC TÌNH HUỐNG LỖI</text>
+      <text x="12" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• 404 BOOK_NOT_FOUND (sách ảo)</text>
+      <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• 404 MEMBER_NOT_FOUND (khách ảo)</text>
+      <text x="12" y="78" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• 409 UNPAID_FINE (chưa trả phí)</text>
+      <text x="12" y="96" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Kiểm tra response JSON chuẩn</text>
+    </g>
+    <g transform="translate(300, 105)">
+      <rect width="280" height="110" rx="4" fill="#fafafa" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[03:30 - 04:30] 4. ĐỐI CHIẾU VỚI TEST</text>
+      <text x="12" y="42" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Chạy LoanFlowEdgeCaseTest</text>
+      <text x="12" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Chứng minh kịch bản HTTP curl khớp</text>
+      <text x="12" y="78" font-family="system-ui, sans-serif" font-size="10" fill="#444444">  hoàn toàn với test tích hợp tự động</text>
+      <text x="12" y="96" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Dữ liệu reset sạch khi restart</text>
+    </g>
+  </g>
+</svg>

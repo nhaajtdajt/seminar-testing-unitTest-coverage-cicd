@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#111111"/>
+    </marker>
+  </defs>
+  <!-- Step 1: Prompt Context -->
+  <g transform="translate(15, 35)">
+    <rect width="155" height="145" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="155" height="32" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="77" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">1. ĐỌC CONTEXT</text>
+    <text x="12" y="55" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Source code nghiệp vụ</text>
+    <text x="12" y="75" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Báo cáo JaCoCo gap</text>
+    <text x="12" y="95" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Đặc tả mượn/trả sách</text>
+    <text x="12" y="115" font-family="system-ui, sans-serif" font-size="11" fill="#555555">• Không hard-code prompt</text>
+  </g>
+
+  <line x1="175" y1="105" x2="200" y2="105" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 2: Gemini Generation -->
+  <g transform="translate(205, 35)">
+    <rect width="165" height="145" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="165" height="32" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="82" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">2. GEMINI 3.6 GENERATE</text>
+    <text x="12" y="55" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• AI-1: 7 test LoanService</text>
+    <text x="12" y="75" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• AI-2: 3 test bổ sung</text>
+    <text x="12" y="95" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Dữ liệu biên: MAX_VALUE</text>
+    <text x="12" y="115" font-family="system-ui, sans-serif" font-size="11" fill="#555555">• Sinh test candidate nháp</text>
+  </g>
+
+  <line x1="375" y1="105" x2="400" y2="105" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 3: Human Review & Repair -->
+  <g transform="translate(405, 35)">
+    <rect width="165" height="145" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="165" height="32" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="82" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">3. REVIEW &amp; REPAIR</text>
+    <text x="12" y="55" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Chặn ảo giác assertion</text>
+    <text x="12" y="75" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Chạy thử trên Java 25</text>
+    <text x="12" y="95" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Đối chiếu oracle kết quả</text>
+    <text x="12" y="115" font-family="system-ui, sans-serif" font-size="11" fill="#555555">• Người duyệt trước khi apply</text>
+  </g>
+
+  <line x1="575" y1="105" x2="600" y2="105" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 4: Apply & Merge -->
+  <g transform="translate(605, 35)">
+    <rect width="140" height="145" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="140" height="32" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="70" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">4. APPLY &amp; PASS</text>
+    <text x="12" y="55" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• PR #13: 49 tests pass</text>
+    <text x="12" y="78" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Branch: 24/24 (100%)</text>
+    <text x="12" y="100" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Line: 76/83 (91.6%)</text>
+    <text x="12" y="125" font-family="system-ui, sans-serif" font-size="11" fill="#555555">• Merge an toàn</text>
+  </g>
+</svg>

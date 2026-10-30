@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 230" width="100%" height="100%">
+  <!-- Card 1: CoverUp -->
+  <g transform="translate(20, 20)">
+    <rect width="325" height="190" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect width="325" height="38" rx="8" fill="#f6f8fa" stroke="#111111" stroke-width="2"/>
+    <text x="162" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">CoverUp · FSE 2025 (CORE A*)</text>
+    <text x="15" y="65" font-family="system-ui, sans-serif" font-weight="600" font-size="12" fill="#111111">Cơ chế: Coverage-Guided LLM (Gemini 3.6)</text>
+    <text x="15" y="90" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Dữ liệu công bố: 89,0% vs MuTAP 76,8% (163 module)</text>
+    <text x="15" y="115" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Benchmark f003: 3 test pass, line 8/8, branch 4/4</text>
+    <text x="15" y="140" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Source nhóm: độ phủ tăng từ 23,6% lên 96,4%</text>
+    <rect x="15" y="155" width="295" height="22" rx="3" fill="#ffffff" stroke="#111111" stroke-width="1"/>
+    <text x="162" y="170" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="600" font-size="11" fill="#111111">Ưu điểm: Tận dụng ngữ cảnh &amp; tri thức LLM</text>
+  </g>
+  <!-- Card 2: Pynguin -->
+  <g transform="translate(375, 20)">
+    <rect width="325" height="190" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect width="325" height="38" rx="8" fill="#f6f8fa" stroke="#111111" stroke-width="2"/>
+    <text x="162" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">Pynguin · EMSE 2023 (CORE A)</text>
+    <text x="15" y="65" font-family="system-ui, sans-serif" font-weight="600" font-size="12" fill="#111111">Cơ chế: Tìm kiếm tiến hóa (DynaMOSA - Không LLM)</text>
+    <text x="15" y="90" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Tác giả: 134 module, median coverage 80,72%</text>
+    <text x="15" y="115" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Benchmark codetiming: 10 pass, 5 xfail (SlipCover 100%)</text>
+    <text x="15" y="140" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Điểm yếu trên source nhóm: sinh test thiếu assertion</text>
+    <rect x="15" y="155" width="295" height="22" rx="3" fill="#ffffff" stroke="#111111" stroke-width="1"/>
+    <text x="162" y="170" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="600" font-size="11" fill="#111111">Hạn chế: Thiếu Oracle ngữ nghĩa kiểm đúng/sai</text>
+  </g>
+</svg>

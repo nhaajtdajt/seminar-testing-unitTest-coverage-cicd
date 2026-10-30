@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#111111"/>
+    </marker>
+  </defs>
+  <!-- Layer 1 -->
+  <g transform="translate(20, 20)">
+    <rect width="220" height="200" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="220" height="40" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="110" y="26" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="15" fill="#111111">LỚP 1 · UNIT TEST</text>
+    <text x="20" y="70" font-family="system-ui, sans-serif" font-weight="600" font-size="13" fill="#111111">• JUnit 5 + Mockito</text>
+    <text x="20" y="95" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Kiểm đúng logic nghiệp vụ</text>
+    <text x="20" y="120" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Dữ liệu biên: VIP, trần 50k</text>
+    <text x="20" y="145" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Mock cô lập phụ thuộc</text>
+    <rect x="20" y="165" width="180" height="24" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <text x="110" y="181" text-anchor="middle" font-family="monospace" font-size="11" fill="#111111">Tốc độ: &lt; 0.05s / test</text>
+  </g>
+  <!-- Arrow 1 to 2 -->
+  <line x1="245" y1="120" x2="285" y2="120" stroke="#111111" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <!-- Layer 2 -->
+  <g transform="translate(290, 20)">
+    <rect width="220" height="200" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="220" height="40" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="110" y="26" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="15" fill="#111111">LỚP 2 · COVERAGE GATE</text>
+    <text x="20" y="70" font-family="system-ui, sans-serif" font-weight="600" font-size="13" fill="#111111">• JaCoCo + PIT Mutation</text>
+    <text x="20" y="95" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Branch coverage ≥ 90%</text>
+    <text x="20" y="120" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Phát hiện nhánh bị bỏ quên</text>
+    <text x="20" y="145" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Diệt 10/11 mutant kiểm thử</text>
+    <rect x="20" y="165" width="180" height="24" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <text x="110" y="181" text-anchor="middle" font-family="monospace" font-size="11" fill="#111111">Ngưỡng: 90% Branch Gate</text>
+  </g>
+  <!-- Arrow 2 to 3 -->
+  <line x1="515" y1="120" x2="555" y2="120" stroke="#111111" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <!-- Layer 3 -->
+  <g transform="translate(560, 20)">
+    <rect width="220" height="200" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="220" height="40" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="110" y="26" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="15" fill="#111111">LỚP 3 · CI/CD PIPELINE</text>
+    <text x="20" y="70" font-family="system-ui, sans-serif" font-weight="600" font-size="13" fill="#111111">• GitHub Actions [JDK 25]</text>
+    <text x="20" y="95" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Tự động chạy khi mở PR</text>
+    <text x="20" y="120" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Required checks chặn lỗi</text>
+    <text x="20" y="145" font-family="system-ui, sans-serif" font-size="12" fill="#444444">• Đóng gói artifact JAR</text>
+    <rect x="20" y="165" width="180" height="24" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <text x="110" y="181" text-anchor="middle" font-family="monospace" font-size="11" fill="#111111">Pipeline: Chặn PR hỏng</text>
+  </g>
+</svg>

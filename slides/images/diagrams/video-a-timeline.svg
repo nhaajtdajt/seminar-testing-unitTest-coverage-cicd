@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 340" width="100%" height="100%">
+  <rect width="620" height="340" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="620" height="38" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="24" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Video A: Unit Test với JUnit 5 &amp; Mockito (5–7 phút) · Nguyễn Bảo An</text>
+
+  <!-- Player bar -->
+  <g transform="translate(20, 50)">
+    <rect width="580" height="36" rx="4" fill="#111111"/>
+    <rect x="12" y="14" width="556" height="8" rx="3" fill="#444444"/>
+    <rect x="12" y="14" width="280" height="8" rx="3" fill="#ffffff"/>
+    <circle cx="292" cy="18" r="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <text x="525" y="28" font-family="monospace" font-size="10" fill="#ffffff">06:45</text>
+  </g>
+
+  <!-- 5 Segments -->
+  <g transform="translate(20, 98)">
+    <g transform="translate(0, 0)">
+      <rect width="280" height="68" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[00:00 - 01:00] 1. SETUP MÔI TRƯỜNG</text>
+      <text x="12" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Java 25, cấu trúc case-study, Maven Wrapper</text>
+      <text x="12" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• pom.xml: spring-boot-starter-test</text>
+    </g>
+    <g transform="translate(300, 0)">
+      <rect width="280" height="68" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[01:00 - 02:15] 2. KHÁI NIỆM &amp; UT-1</text>
+      <text x="12" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Quy tắc AAA, chạy FineCalculatorTest</text>
+      <text x="12" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Đọc báo cáo Surefire XML (Pass, Fail, Time)</text>
+    </g>
+    <g transform="translate(0, 78)">
+      <rect width="280" height="68" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[02:15 - 03:45] 3. DATA-DRIVEN (UT-2)</text>
+      <text x="12" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• fine-cases.csv quét ranh giới 0, 2, 25 ngày</text>
+      <text x="12" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• @ParameterizedTest sinh tự động 15 test</text>
+    </g>
+    <g transform="translate(300, 78)">
+      <rect width="280" height="68" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[03:45 - 05:15] 4. MOCKITO (UT-3)</text>
+      <text x="12" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Cô lập 3 repo, test logic mượn LoanService</text>
+      <text x="12" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• verify(never()) chặn lỗi, ArgumentCaptor</text>
+    </g>
+    <g transform="translate(0, 156)">
+      <rect width="580" height="65" rx="4" fill="#fafafa" stroke="#111111" stroke-width="1.5"/>
+      <text x="12" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[05:15 - 06:45] 5. TRƯỜNG HỢP HẠN CHẾ &amp; ANTI-PATTERNS</text>
+      <text x="12" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Train Wreck Mocking (vi phạm Demeter) &amp; Self-fulfilling Prophecy (test lại stub)</text>
+      <text x="12" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Cảnh báo lạm dụng mock logic thuần và JVM warning khi mock static/final</text>
+    </g>
+  </g>
+</svg>

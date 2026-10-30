@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" width="100%" height="100%">
+  <!-- F.I.R.S.T Cards -->
+  <g transform="translate(10, 15)">
+    <g transform="translate(0, 0)">
+      <rect width="112" height="110" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+      <rect width="112" height="30" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+      <text x="56" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">F · FAST</text>
+      <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• &lt; 0.05s/test</text>
+      <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Không chờ I/O</text>
+      <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Phản hồi tức thì</text>
+    </g>
+    <g transform="translate(122, 0)">
+      <rect width="112" height="110" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+      <rect width="112" height="30" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+      <text x="56" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">I · INDEP.</text>
+      <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Độc lập hoàn toàn</text>
+      <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Thứ tự chạy</text>
+      <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#333333">  không ảnh hưởng</text>
+    </g>
+    <g transform="translate(244, 0)">
+      <rect width="112" height="110" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+      <rect width="112" height="30" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+      <text x="56" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">R · REPEAT</text>
+      <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Clock.fixed()</text>
+      <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Chạy 100 lần</text>
+      <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#333333">  kết quả như một</text>
+    </g>
+    <g transform="translate(366, 0)">
+      <rect width="112" height="110" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+      <rect width="112" height="30" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+      <text x="56" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">S · SELF-VAL</text>
+      <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Tự pass/fail</text>
+      <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Không cần người</text>
+      <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#333333">  đọc log terminal</text>
+    </g>
+    <g transform="translate(488, 0)">
+      <rect width="112" height="110" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+      <rect width="112" height="30" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+      <text x="56" y="21" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">T · TIMELY</text>
+      <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Viết cùng mã</text>
+      <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#333333">  hoặc trước (TDD)</text>
+      <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Thiết kế theo test</text>
+    </g>
+  </g>
+
+  <!-- Hazard Alert Box -->
+  <g transform="translate(10, 145)">
+    <rect width="600" height="135" rx="6" fill="#fafafa" stroke="#111111" stroke-width="2"/>
+    <rect width="600" height="30" rx="6" fill="#111111"/>
+    <text x="300" y="20" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#ffffff">⚠ HAI BẪY KIỂM THỬ THƯỜNG GẶP</text>
+    <text x="20" y="58" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">1. Assertionless Test:</text>
+    <text x="180" y="58" font-family="system-ui, sans-serif" font-size="12" fill="#444444">Chỉ gọi hàm mà không assert → Pass xanh giả tạo, không bắt được lỗi!</text>
+    <text x="20" y="88" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">2. Over-mocking:</text>
+    <text x="180" y="88" font-family="system-ui, sans-serif" font-size="12" fill="#444444">Mock quá đà khiến test chỉ đang xác nhận lại chính các dòng stub vừa tạo.</text>
+    <rect x="20" y="105" width="560" height="22" rx="3" fill="#ffffff" stroke="#111111" stroke-width="1"/>
+    <text x="300" y="120" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#111111">Khắc phục: Tiêm Clock.fixed() &amp; Kiểm tra assertion bằng PIT Mutation</text>
+  </g>
+</svg>

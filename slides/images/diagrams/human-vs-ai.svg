@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" width="100%" height="100%">
+  <rect width="600" height="280" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="600" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">AI-4: Đối chiếu thực nghiệm Bộ Người viết vs. Bộ AI sinh</text>
+
+  <!-- Venn / Matrix layout -->
+  <g transform="translate(20, 50)">
+    <!-- Column 1: Human -->
+    <rect width="180" height="150" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <text x="90" y="24" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">BỘ NGƯỜI VIẾT (Gia An)</text>
+    <text x="15" y="52" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• <strong>23 ca test</strong> từ đặc tả</text>
+    <text x="15" y="74" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• 16 ca hợp lệ, 7 ca lỗi</text>
+    <text x="15" y="96" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• 23/23 pass trên Java</text>
+    <text x="15" y="118" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• <strong>Branch: 10/10</strong></text>
+    <rect x="15" y="126" width="150" height="16" rx="2" fill="#f0f0f0" stroke="#111111" stroke-width="1"/>
+    <text x="90" y="138" text-anchor="middle" font-family="monospace" font-size="9" fill="#111111">Giỏi ca ngoại lệ</text>
+
+    <!-- Column 2: Intersection -->
+    <g transform="translate(190, 0)">
+      <rect width="180" height="150" rx="6" fill="#111111"/>
+      <text x="90" y="24" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#ffffff">11 ĐẦU VÀO CHUNG</text>
+      <text x="15" y="52" font-family="system-ui, sans-serif" font-size="11" fill="#ffffff">• 11 ca trùng khớp</text>
+      <text x="15" y="74" font-family="system-ui, sans-serif" font-size="11" fill="#ffffff">• <strong>0 disagreement</strong></text>
+      <text x="15" y="96" font-family="system-ui, sans-serif" font-size="11" fill="#ffffff">• Cùng kết quả kỳ vọng</text>
+      <text x="15" y="118" font-family="system-ui, sans-serif" font-size="11" fill="#ffffff">• Đồng thuận 100%</text>
+      <rect x="15" y="126" width="150" height="16" rx="2" fill="#ffffff"/>
+      <text x="90" y="138" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#111111">Xác thực chéo</text>
+    </g>
+
+    <!-- Column 3: AI -->
+    <g transform="translate(380, 0)">
+      <rect width="180" height="150" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="90" y="24" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">BỘ AI SINH (Gemini)</text>
+      <text x="15" y="52" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• <strong>13 ca test</strong> độc lập</text>
+      <text x="15" y="74" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Tập trung ca hợp lệ</text>
+      <text x="15" y="96" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• 13/13 pass trên Java</text>
+      <text x="15" y="118" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• <strong>Branch: 8/10</strong></text>
+      <rect x="15" y="126" width="150" height="16" rx="2" fill="#f0f0f0" stroke="#111111" stroke-width="1"/>
+      <text x="90" y="138" text-anchor="middle" font-family="monospace" font-size="9" fill="#111111">Có Integer.MAX_VALUE</text>
+    </g>
+  </g>
+
+  <!-- Conclusion -->
+  <g transform="translate(20, 215)">
+    <rect width="560" height="50" rx="4" fill="#f6f8fa" stroke="#111111" stroke-width="1"/>
+    <text x="280" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">KẾT LUẬN: KHÔNG THAY THẾ MÀ BỔ TRỢ CHO NHAU</text>
+    <text x="280" y="42" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#555555">Người nắm sâu logic miền; AI bổ sung các ca biên cực đại mà người hay bỏ quên.</text>
+  </g>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 230" width="100%" height="100%">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#111111"/>
+    </marker>
+  </defs>
+  <!-- Trigger Event -->
+  <g transform="translate(10, 45)">
+    <rect width="130" height="130" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <text x="65" y="45" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">TRIGGER</text>
+    <text x="65" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#444444">• Pull Request</text>
+    <text x="65" y="98" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#444444">• Push to master</text>
+    <text x="65" y="120" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#444444">• Workflow dispatch</text>
+  </g>
+
+  <line x1="145" y1="110" x2="175" y2="110" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Job 1: Test -->
+  <g transform="translate(180, 25)">
+    <rect width="170" height="170" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="170" height="35" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="85" y="23" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">JOB 1: test</text>
+    <text x="15" y="60" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• JDK 25 setup</text>
+    <text x="15" y="82" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Maven dependencies cache</text>
+    <text x="15" y="104" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Run 39 Core Unit Tests</text>
+    <text x="15" y="126" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Upload surefire reports</text>
+    <rect x="15" y="138" width="140" height="20" rx="3" fill="#ffffff" stroke="#111111" stroke-width="1"/>
+    <text x="85" y="152" text-anchor="middle" font-family="monospace" font-size="10" fill="#111111">Output: Exit Code 0</text>
+  </g>
+
+  <line x1="355" y1="110" x2="385" y2="110" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="370" y="100" text-anchor="middle" font-family="monospace" font-size="9" fill="#555555">needs</text>
+
+  <!-- Job 2: Coverage Gate -->
+  <g transform="translate(390, 25)">
+    <rect width="180" height="170" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="180" height="35" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="90" y="23" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">JOB 2: coverage-gate</text>
+    <text x="15" y="60" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• JaCoCo check rule</text>
+    <text x="15" y="82" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Ngưỡng: Branch ≥ 90%</text>
+    <text x="15" y="104" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Chặn thiếu test: PR #2 FAIL</text>
+    <text x="15" y="126" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Step summary báo cáo</text>
+    <rect x="15" y="138" width="150" height="20" rx="3" fill="#ffffff" stroke="#111111" stroke-width="1"/>
+    <text x="90" y="152" text-anchor="middle" font-family="monospace" font-size="10" fill="#111111">Branch Gate: 0.90</text>
+  </g>
+
+  <line x1="575" y1="110" x2="605" y2="110" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="590" y="100" text-anchor="middle" font-family="monospace" font-size="9" fill="#555555">needs</text>
+
+  <!-- Job 3: Package -->
+  <g transform="translate(610, 25)">
+    <rect width="160" height="170" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="160" height="35" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="80" y="23" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">JOB 3: package</text>
+    <text x="15" y="60" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Maven package -DskipTests</text>
+    <text x="15" y="85" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Đóng gói executable JAR</text>
+    <text x="15" y="110" font-family="system-ui, sans-serif" font-size="11" fill="#111111">• Upload artifact</text>
+    <rect x="15" y="138" width="130" height="20" rx="3" fill="#ffffff" stroke="#111111" stroke-width="1"/>
+    <text x="80" y="152" text-anchor="middle" font-family="monospace" font-size="10" fill="#111111">Artifact: Ready</text>
+  </g>
+</svg>

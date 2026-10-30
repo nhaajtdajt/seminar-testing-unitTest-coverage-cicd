@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" width="100%" height="100%">
+  <rect width="600" height="280" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="600" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">CoverUp (FSE 2025 · CORE A*) · Cơ chế Coverage-Guided LLM</text>
+
+  <!-- Architecture flow -->
+  <g transform="translate(20, 50)">
+    <rect width="115" height="130" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <text x="57" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">1. ĐO ĐỘ PHỦ</text>
+    <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Chạy suite sẵn</text>
+    <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Dùng SlipCover</text>
+    <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Tìm missing lines</text>
+
+    <!-- Arrow -->
+    <line x1="120" y1="115" x2="140" y2="115" stroke="#111111" stroke-width="2"/>
+
+    <g transform="translate(145, 0)">
+      <rect width="125" height="130" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="62" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">2. TRÍCH LỖ HỔNG</text>
+      <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Trích đoạn code</text>
+      <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#333333">  chưa được chạy</text>
+      <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Tạo prompt hẹp</text>
+    </g>
+
+    <line x1="275" y1="115" x2="295" y2="115" stroke="#111111" stroke-width="2"/>
+
+    <g transform="translate(300, 0)">
+      <rect width="125" height="130" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="62" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">3. GEMINI SINH</text>
+      <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Sinh test nhắm</text>
+      <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#333333">  trúng missing line</text>
+      <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Viết assertion</text>
+    </g>
+
+    <line x1="430" y1="115" x2="450" y2="115" stroke="#111111" stroke-width="2"/>
+
+    <g transform="translate(455, 0)">
+      <rect width="105" height="130" rx="6" fill="#111111"/>
+      <text x="52" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#ffffff">4. KẾT QUẢ</text>
+      <text x="10" y="55" font-family="system-ui, sans-serif" font-size="10" fill="#ffffff">• 163 module:</text>
+      <text x="10" y="75" font-family="system-ui, sans-serif" font-size="10" fill="#ffffff">  <strong>89.0%</strong> coverage</text>
+      <text x="10" y="95" font-family="system-ui, sans-serif" font-size="10" fill="#ffffff">• Source nhóm:</text>
+      <text x="10" y="115" font-family="system-ui, sans-serif" font-size="10" fill="#ffffff">  <strong>23% → 96.4%</strong></text>
+    </g>
+  </g>
+
+  <!-- Metric highlight -->
+  <g transform="translate(20, 200)">
+    <rect width="560" height="65" rx="4" fill="#f8f8f8" stroke="#111111" stroke-width="1"/>
+    <text x="15" y="26" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">KẾT QUẢ TÁI HIỆN CỦA GIA AN TRÊN BENCHMARK f003 &amp; SOURCE NHÓM:</text>
+    <text x="15" y="45" font-family="system-ui, sans-serif" font-size="11" fill="#444444">• Benchmark f003: 3 test pass, Line 8/8 (100%), Branch 4/4 (100%).</text>
+    <text x="15" y="58" font-family="system-ui, sans-serif" font-size="11" fill="#444444">• scripts/coverage_gaps.py: 7 test pass, độ phủ tăng từ 23.6% lên 96.4% (Line 38/39, Branch 15/16).</text>
+  </g>
+</svg>

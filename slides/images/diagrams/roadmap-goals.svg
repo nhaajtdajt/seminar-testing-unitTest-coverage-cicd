@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <g transform="translate(10, 10)">
+    <!-- Box 1 -->
+    <rect x="0" y="0" width="280" height="150" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="280" height="34" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="15" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">1. VIẾT UNIT TEST CHUẨN</text>
+    <text x="15" y="62" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Cấu trúc AAA, nguyên lý FIRST</text>
+    <text x="15" y="87" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Parameterized test dữ liệu biên</text>
+    <text x="15" y="112" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Dùng Mockito verify hành vi</text>
+    <text x="15" y="134" font-family="monospace" font-size="11" font-weight="700" fill="#111111">Mục tiêu: Độc lập, phản hồi mili-giây</text>
+
+    <!-- Box 2 -->
+    <rect x="300" y="0" width="280" height="150" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="300" y="0" width="280" height="34" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="315" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">2. ĐO ĐỘ PHỦ &amp; PIT</text>
+    <text x="315" y="62" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Phân tích Line vs Branch JaCoCo</text>
+    <text x="315" y="87" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Thoát bẫy '100% độ phủ danh nghĩa'</text>
+    <text x="315" y="112" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Mutation Testing diệt 10/11 mutant</text>
+    <text x="315" y="134" font-family="monospace" font-size="11" font-weight="700" fill="#111111">Mục tiêu: Đánh giá chất lượng assertion</text>
+
+    <!-- Box 3 -->
+    <rect x="0" y="170" width="280" height="150" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="0" y="0" width="280" height="34" rx="6" transform="translate(0, 170)" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="15" y="193" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">3. CHỐT CHẶN CI TỰ ĐỘNG</text>
+    <text x="15" y="232" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Pipeline 3 job: test → gate → package</text>
+    <text x="15" y="257" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Gate branch ≥ 90% chặn PR hỏng</text>
+    <text x="15" y="282" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Required checks bảo vệ master</text>
+    <text x="15" y="304" font-family="monospace" font-size="11" font-weight="700" fill="#111111">Mục tiêu: Fail-fast, an toàn phát hành</text>
+
+    <!-- Box 4 -->
+    <rect x="300" y="170" width="280" height="150" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect x="300" y="0" width="280" height="34" rx="6" transform="translate(0, 170)" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="315" y="193" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">4. ĐÁNH GIÁ KIỂM THỬ AI</text>
+    <text x="315" y="232" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Gemini 3.6 đọc gap &amp; sinh test</text>
+    <text x="315" y="257" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Quy trình Review chặn ảo giác test</text>
+    <text x="315" y="282" font-family="system-ui, sans-serif" font-size="12" fill="#333333">• Tái hiện CoverUp &amp; Pynguin paper</text>
+    <text x="315" y="304" font-family="monospace" font-size="11" font-weight="700" fill="#111111">Mục tiêu: Thực nghiệm &amp; phản biện</text>
+  </g>
+</svg>
