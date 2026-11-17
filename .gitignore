@@ -23,3 +23,12 @@ bai-nop/
 report/*.fls
 report/*.fdb_latexmk
 report/*.xdv
+# Local Claude config; only shared skills are committed.
+.claude/*
+!.claude/skills/
+node_modules/
+settings.local.json
+
+# Slidev deck build output
+slides-slidev/node_modules/
+slides-slidev/dist/

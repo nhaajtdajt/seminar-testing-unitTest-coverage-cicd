@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Test, Code Coverage và CI/CD</title>
+
+    <!-- Fonts: Be Vietnam Pro (full Vietnamese diacritics) + JetBrains Mono for code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap&subset=vietnamese">
+
+    <style>
+        /* ===========================================
+           CSS CUSTOM PROPERTIES (THEME)
+           Swiss Modern, cobalt accent. Change these to restyle the deck.
+           =========================================== */
+        :root {
+            --stage-bg: #0e0f12;          /* letterbox around the 16:9 stage */
+            --slide-bg: #f5f4ef;          /* paper */
+            --ink: #15171c;
+            --muted: #5d6270;
+            --line: #d6d3c9;
+            --card: #ffffff;
+            --accent: #1f4bd1;            /* cobalt */
+            --accent-soft: #e4eafb;
+            --pass: #17803d;
+            --pass-soft: #e2f2e7;
+            --fail: #b42318;
+            --fail-soft: #fbe6e3;
+
+            --font-display: 'Be Vietnam Pro', sans-serif;
+            --font-body: 'Be Vietnam Pro', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --pad-x: 140px;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ===========================================
+           FIXED 16:9 STAGE: MANDATORY BASE STYLES (viewport-base.css, full copy)
+           =========================================== */
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+        .deck-stage {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            transform-origin: 0 0;
+            background: var(--slide-bg, #fff);
+        }
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: block;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            background: var(--slide-bg, #fff);
+        }
+        .slide.active,
+        .slide.visible {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1;
+        }
+        img,
+        video,
+        canvas,
+        svg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .deck-controls {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        @media print {
+            html,
+            body {
+                width: 1920px;
+                height: auto;
+                overflow: visible;
+                background: #fff;
+            }
+            .deck-viewport {
+                position: static;
+                overflow: visible;
+                background: #fff;
+            }
+            .deck-stage {
+                position: static;
+                width: auto;
+                height: auto;
+                transform: none !important;
+                background: none;
+            }
+            .slide {
+                position: relative;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                width: 1920px;
+                height: 1080px;
+                break-after: page;
+                page-break-after: always;
+            }
+            .slide:last-child {
+                break-after: auto;
+                page-break-after: auto;
+            }
+            .deck-controls {
+                display: none !important;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+
+        /* ===========================================
+           SLIDE SHELL: paper + faint Swiss grid, header chrome, page number
+           Chrome is injected by JS from data-sec / data-name.
+           =========================================== */
+        .slide {
+            font-family: var(--font-body);
+            color: var(--ink);
+            background-color: var(--slide-bg);
+            background-image: linear-gradient(to right, rgba(21, 23, 28, 0.035) 1px, transparent 1px);
+            background-size: 136.67px 100%;
+            background-position: var(--pad-x) 0;
+        }
+        .chrome {
+            position: absolute;
+            top: 56px;
+            left: var(--pad-x);
+            right: var(--pad-x);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--ink);
+            font: 500 24px/1 var(--font-mono);
+            color: var(--muted);
+            letter-spacing: 0.02em;
+        }
+        .chrome .sec { display: flex; align-items: center; gap: 16px; color: var(--ink); font-weight: 700; }
+        .chrome .sec::before { content: ""; width: 18px; height: 18px; background: var(--accent); }
+        .slide[data-n]::after {
+            content: attr(data-n);
+            position: absolute;
+            right: var(--pad-x);
+            bottom: 52px;
+            font: 500 24px/1 var(--font-mono);
+            color: var(--muted);
+        }
+        .content {
+            position: absolute;
+            left: var(--pad-x);
+            right: var(--pad-x);
+            top: 176px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+        }
+        .content.center { justify-content: center; }
+
+        /* ===========================================
+           TYPOGRAPHY
+           =========================================== */
+        .title {
+            font: 800 74px/1.1 var(--font-display);
+            letter-spacing: -0.02em;
+            margin-bottom: 52px;
+        }
+        .cite {
+            font: 500 28px/1.3 var(--font-mono);
+            color: var(--muted);
+            margin: -36px 0 44px;
+        }
+        .kicker {
+            font: 700 26px/1 var(--font-mono);
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 36px;
+        }
+        .note { font-size: 32px; color: var(--muted); }
+        .pass { color: var(--pass); }
+        .fail { color: var(--fail); }
+        .acc { color: var(--accent); }
+        code, .mono { font-family: var(--font-mono); }
+        /* JetBrains Mono turns <= and == into ligatures; keep code literal. !important beats later font shorthands. */
+        .slide * { font-variant-ligatures: none !important; }
+
+        /* Bullets: square cobalt markers */
+        .bul { list-style: none; display: flex; flex-direction: column; gap: 34px; }
+        .bul li { position: relative; padding-left: 54px; font: 500 40px/1.25 var(--font-body); }
+        .bul li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.4em;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+        }
+        .bul.x li::before { content: "✕"; background: none; color: var(--fail); font-weight: 800; top: 0; width: auto; height: auto; }
+
+        /* ===========================================
+           COMPONENTS: boxes, flows, tags, code, stats
+           =========================================== */
+        .box { background: var(--card); border: 3px solid var(--ink); padding: 28px 32px; }
+        .box.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .box.accent .step-n { color: #c9d5ff; }
+        .box.passbox { background: var(--pass-soft); border-color: var(--pass); }
+        .box.failbox { background: var(--fail-soft); border-color: var(--fail); }
+        .box.ghost { background: transparent; border-style: dashed; border-color: var(--muted); color: var(--muted); }
+
+        .flow { display: flex; align-items: stretch; }
+        .flow > .box { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .arr {
+            flex: 0 0 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font: 700 46px/1 var(--font-mono);
+            color: var(--accent);
+        }
+        .step-n { font: 700 22px/1 var(--font-mono); color: var(--accent); margin-bottom: 14px; }
+        .step-t { font: 700 32px/1.25 var(--font-display); }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font: 500 26px/1 var(--font-mono);
+            padding: 14px 20px;
+            border: 2px solid var(--ink);
+            background: var(--card);
+        }
+        .tag img { width: 30px; height: 30px; }
+        .tags { display: flex; gap: 18px; flex-wrap: wrap; }
+
+        .pill { display: inline-block; font: 700 24px/1 var(--font-mono); padding: 10px 16px; margin-top: 18px; align-self: flex-start; }
+        .pill.ok { background: var(--pass); color: #fff; }
+        .pill.ko { background: var(--fail); color: #fff; }
+        .pill.info { background: var(--accent); color: #fff; }
+
+        .code {
+            font: 500 22px/1.6 var(--font-mono);
+            background: var(--ink);
+            color: #ecebe6;
+            padding: 28px 34px;
+            white-space: pre;
+        }
+        .code .c { color: #8e96aa; }
+        .code .k { color: #9db4ff; }
+
+        .stat { font: 800 96px/1 var(--font-display); letter-spacing: -0.03em; }
+        .stat-l { font: 500 28px/1.3 var(--font-mono); color: var(--muted); margin-top: 12px; }
+
+        .cols { display: grid; gap: 80px; flex: 1; min-height: 0; }
+        .callout { background: var(--accent-soft); border-left: 10px solid var(--accent); padding: 26px 34px; font: 600 34px/1.3 var(--font-body); }
+
+        /* ===========================================
+           SLIDE-SPECIFIC LAYOUTS
+           =========================================== */
+
+        /* --- Title slide --- */
+        .s-title .title-left { position: absolute; left: var(--pad-x); top: 170px; width: 1060px; }
+        .s-title h1 { font: 800 118px/1.04 var(--font-display); letter-spacing: -0.03em; margin-bottom: 44px; }
+        .s-title .sub { font: 500 38px/1.35 var(--font-body); color: var(--muted); margin-bottom: 56px; }
+        .s-title .foot { position: absolute; left: var(--pad-x); bottom: 80px; font: 500 26px/1 var(--font-mono); color: var(--muted); }
+        .title-panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 600px;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 40px;
+            padding: 0 80px;
+            font: 700 64px/1 var(--font-mono);
+        }
+        .title-panel div { display: flex; justify-content: space-between; border-bottom: 3px solid rgba(255, 255, 255, 0.35); padding-bottom: 28px; }
+        .title-panel div:last-child { border-bottom: none; color: #ffd75e; }
+
+        /* --- Question slide --- */
+        .q { font: 800 96px/1.15 var(--font-display); letter-spacing: -0.02em; max-width: 1560px; }
+        .roadmap { display: flex; align-items: center; gap: 22px; margin-top: 90px; font: 600 30px/1 var(--font-mono); color: var(--muted); }
+        .roadmap b { color: var(--accent); }
+
+        /* --- Nested scope boxes (Unit Test) --- */
+        .nest { align-self: start; border: 3px solid var(--line); padding: 26px; font: 600 28px/1 var(--font-mono); color: var(--muted); background: var(--card); }
+        .nest > div { border: 3px solid var(--muted); padding: 26px; margin-top: 22px; }
+        .nest .unit { border: none; background: var(--accent); color: #fff; padding: 46px 30px; margin-top: 22px; }
+        .nest .unit b { display: block; font: 800 56px/1 var(--font-display); margin-bottom: 14px; }
+
+        /* --- AAA --- */
+        .aaa { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
+        .aaa .box { padding: 40px 36px; }
+        .aaa h3 { font: 800 52px/1 var(--font-display); color: var(--accent); margin-bottom: 22px; }
+        .aaa p { font: 500 34px/1.3 var(--font-body); }
+        .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 44px; }
+        .vs .box { display: flex; align-items: center; gap: 26px; font: 500 30px/1.3 var(--font-body); }
+        .vs code { font-size: 30px; font-weight: 700; }
+        .vs .mark { font: 800 48px/1 var(--font-display); }
+
+        /* --- Boundary number line --- */
+        .chips { display: flex; flex-direction: column; gap: 22px; }
+        .chips .tag { font-size: 32px; padding: 20px 26px; }
+        .nline { position: relative; display: flex; justify-content: space-between; padding: 0 40px; margin-top: 30px; }
+        .nline::before { content: ""; position: absolute; left: 0; right: 0; top: 30px; height: 4px; background: var(--ink); }
+        .pt { position: relative; display: flex; flex-direction: column; align-items: center; width: 200px; }
+        .pt i { width: 28px; height: 28px; border-radius: 50%; background: var(--slide-bg); border: 4px solid var(--ink); margin-top: 18px; }
+        .pt b { font: 800 120px/1 var(--font-display); margin-top: 26px; }
+        .pt span { font: 500 28px/1 var(--font-mono); color: var(--muted); margin-top: 14px; }
+        .pt.edge i { background: var(--accent); border-color: var(--accent); width: 40px; height: 40px; margin-top: 12px; }
+        .pt.edge b, .pt.edge span { color: var(--accent); }
+
+        /* --- Coverage: line vs branch --- */
+        .cov { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+        .cov .box { padding: 36px 40px; }
+        .cov h3 { font: 800 40px/1 var(--font-display); margin-bottom: 30px; }
+        .lines { display: flex; flex-direction: column; gap: 14px; }
+        .lines i { display: block; height: 26px; background: var(--pass); }
+        .lines i.no { background: var(--line); }
+        .lines i:nth-child(2) { width: 80%; margin-left: 8%; }
+        .lines i:nth-child(3) { width: 62%; margin-left: 8%; }
+        .lines i:nth-child(4) { width: 70%; margin-left: 16%; }
+        .lines i:nth-child(5) { width: 40%; }
+        .cov .res { font: 700 30px/1 var(--font-mono); margin-top: 30px; }
+        .branch .cond { font: 700 28px/1 var(--font-mono); text-align: center; border: 3px solid var(--ink); padding: 18px; }
+        .branch .arms { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 34px; }
+        .branch .arms div { text-align: center; padding: 22px 10px; font: 700 28px/1.2 var(--font-mono); border: 3px solid var(--pass); background: var(--pass-soft); color: var(--pass); }
+        .branch .arms div.no { border: 3px dashed var(--muted); background: transparent; color: var(--muted); }
+
+        /* --- Limits 2x2 --- */
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 48px; }
+        .grid2 .box { display: flex; align-items: center; gap: 28px; font: 700 42px/1.2 var(--font-display); padding: 34px 40px; }
+        .grid2 .box span { color: var(--fail); font-size: 48px; }
+
+        /* --- JaCoCo screenshot --- */
+        .shot { border: 3px solid var(--ink); background: #fff; padding: 18px; margin-top: 48px; }
+        .shot img { display: block; width: 100%; }
+        .caption { font: 500 24px/1 var(--font-mono); color: var(--muted); margin-top: 16px; }
+
+        /* --- Gate decision --- */
+        .gate { display: flex; align-items: center; gap: 0; margin-top: 10px; }
+        .gate > .box { width: 360px; }
+        .diamond { position: relative; flex: 0 0 300px; height: 300px; display: flex; align-items: center; justify-content: center; }
+        .diamond::before { content: ""; position: absolute; width: 212px; height: 212px; transform: rotate(45deg); background: var(--card); border: 4px solid var(--accent); }
+        .diamond span { position: relative; text-align: center; font: 800 54px/1 var(--font-display); color: var(--accent); }
+        .diamond small { display: block; font: 600 20px/1.2 var(--font-mono); color: var(--muted); margin-top: 8px; }
+        .outs { display: flex; flex-direction: column; gap: 30px; flex: 1; }
+        .outs .row { display: flex; align-items: center; }
+        .outs .lbl { flex: 0 0 230px; font: 700 26px/1 var(--font-mono); color: var(--muted); text-align: right; padding-right: 20px; }
+        .outs .lbl::after { content: " →"; color: var(--accent); }
+        .outs .box { flex: 1; font: 700 36px/1 var(--font-display); }
+
+        /* --- CI/CD track --- */
+        .track { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 70px; }
+        .track div { padding: 22px 26px; font: 700 28px/1.2 var(--font-display); border: 3px solid var(--accent); }
+        .track .on { background: var(--accent); color: #fff; }
+        .track .on + .on { border-left: 3px solid #fff; }
+        .track .off { border-style: dashed; border-color: var(--muted); color: var(--muted); border-left: none; }
+        .here { display: grid; grid-template-columns: repeat(3, 1fr); font: 700 24px/1 var(--font-mono); color: var(--accent); margin-top: 14px; }
+        .here span:nth-child(2) { text-align: center; }
+        
+        /* --- Fine rule cards --- */
+        .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+        .rules .box { padding: 40px 44px; }
+        .rules .who { font: 700 26px/1 var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; }
+        .rules .v { font: 800 60px/1.1 var(--font-display); letter-spacing: -0.02em; }
+        .rules .v small { font-size: 36px; font-weight: 600; color: var(--muted); }
+
+        /* --- Demo steps --- */
+        .demo .box { padding: 28px 30px; }
+        .demo .step-t { font-size: 30px; }
+
+        /* --- CoverUp loop --- */
+        .loop { align-self: start; display: grid; grid-template-columns: 1fr 64px 1fr; grid-template-rows: auto 72px auto; width: 900px; }
+        .loop .box { display: flex; flex-direction: column; justify-content: center; min-height: 170px; }
+        .loop .arr.v { flex: none; }
+        .results { display: flex; flex-direction: column; gap: 50px; justify-content: center; }
+        .results .stat { font-size: 76px; }
+        .results .stat em { font-style: normal; color: var(--muted); font-weight: 600; }
+
+        /* --- AI workflow --- */
+        .ai .arr { flex-basis: 52px; font-size: 40px; }
+        .ai .box { padding: 26px 22px; min-height: 220px; justify-content: flex-start; }
+        .ai .step-t { font-size: 29px; }
+        .ai-res { display: flex; align-items: center; gap: 70px; margin-top: 60px; }
+        .ai-res .stat { font-size: 120px; }
+
+        /* --- Conclusion --- */
+        .answer { font: 800 150px/1 var(--font-display); letter-spacing: -0.03em; color: var(--accent); margin-bottom: 56px; }
+
+        /* --- Q&A --- */
+        .s-qa .qa { font: 800 220px/1 var(--font-display); letter-spacing: -0.04em; }
+        .s-qa .qa span { color: var(--accent); }
+
+        /* --- References --- */
+        .refs { list-style: none; display: flex; flex-direction: column; gap: 30px; }
+        .refs li { font: 500 30px/1.35 var(--font-body); padding-left: 30px; border-left: 6px solid var(--accent); }
+        .refs li span { display: block; font: 500 22px/1.4 var(--font-mono); color: var(--muted); }
+
+        /* ===========================================
+           ANIMATIONS: subtle fade-up, staggered, on .visible slide
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+        }
+        .slide.visible .reveal { opacity: 1; transform: none; }
+        .reveal:nth-child(2) { transition-delay: 0.08s; }
+        .reveal:nth-child(3) { transition-delay: 0.16s; }
+        .reveal:nth-child(4) { transition-delay: 0.24s; }
+        .reveal:nth-child(5) { transition-delay: 0.32s; }
+        @media print { .reveal { opacity: 1 !important; transform: none !important; } }
+
+        /* ===========================================
+           PROGRESS BAR + INLINE EDIT CHROME (outside the stage)
+           =========================================== */
+        .progress { position: fixed; left: 0; top: 0; height: 4px; background: var(--accent); z-index: 1000; transition: width 0.3s ease; }
+        .edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+        .edit-toggle {
+            position: fixed; top: 16px; left: 16px; z-index: 10001;
+            font: 600 14px/1 var(--font-mono); padding: 10px 14px; border: 0; background: var(--accent); color: #fff; cursor: pointer;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+        body.editing [contenteditable="true"] { outline: 2px dashed rgba(31, 75, 209, 0.5); outline-offset: 4px; }
+        @media print { .progress, .edit-hotzone, .edit-toggle { display: none !important; } }
+    </style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+    <!-- ===== 1. TITLE ===== -->
+    <section class="slide s-title">
+        <!-- Ghi chú: Chào hỏi, giới thiệu nhóm, chủ đề và ba công cụ. -->
+        <div class="title-left">
+            <p class="kicker reveal">Seminar · Kiểm thử phần mềm</p>
+            <h1 class="reveal">Unit Test,<br>Code Coverage<br>&amp; CI/CD</h1>
+            <p class="sub reveal">Coverage gate với JUnit, JaCoCo và GitHub Actions</p>
+            <div class="tags reveal">
+                <span class="tag"><img src="images/junit5.svg" alt="">JUnit</span>
+                <span class="tag">JaCoCo</span>
+                <span class="tag"><img src="images/githubactions.svg" alt="">GitHub Actions</span>
+            </div>
+        </div>
+        <p class="foot">Case study: FineCalculator · 30 phút</p>
+        <div class="title-panel" aria-hidden="true">
+            <div>test <span>✓</span></div>
+            <div>coverage <span>✓</span></div>
+            <div>đúng <span>?</span></div>
+        </div>
+    </section>
+
+    <!-- ===== 2. CENTRAL QUESTION ===== -->
+    <section class="slide" data-sec="01" data-name="Giới thiệu">
+        <!-- Ghi chú: Sửa nhỏ có thể làm hỏng chức năng cũ; kiểm thủ công tốn thời gian. Unit Test tự động hóa kiểm tra, coverage cho biết test đã đi qua đâu, gate chặn build thiếu test. -->
+        <div class="content center">
+            <p class="kicker reveal">Câu hỏi chính</p>
+            <h2 class="q reveal">Test <span class="pass">xanh</span> và coverage <span class="acc">100%</span> có chắc chương trình đã đúng không?</h2>
+            <div class="roadmap reveal">
+                <b>Unit Test</b><span>→</span><b>Code Coverage</b><span>→</span><b>Coverage gate</b><span>→</span><b>CI/CD</b>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 3. UNIT TEST ===== -->
+    <section class="slide" data-sec="02" data-name="Unit Test">
+        <!-- Ghi chú: Phạm vi đủ nhỏ để khi fail tìm nguyên nhân nhanh. Test khởi động cả ứng dụng, dùng DB thật thì không còn là Unit Test thuần. Vẫn cần integration test. -->
+        <div class="content">
+            <h2 class="title reveal">Unit Test là gì?</h2>
+            <div class="cols" style="grid-template-columns: 1.15fr 1fr;">
+                <ul class="bul reveal">
+                    <li>Kiểm tra hàm, phương thức, lớp</li>
+                    <li>Mỗi test một hành vi</li>
+                    <li>Phát hiện lỗi sớm, khoanh vùng nhanh</li>
+                    <li>Không thay integration test</li>
+                </ul>
+                <div class="nest reveal" aria-hidden="true">
+                    Hệ thống
+                    <div>Module
+                        <div class="unit"><b>Unit</b>một hàm · một lớp</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 4. ARRANGE ACT ASSERT ===== -->
+    <section class="slide" data-sec="02" data-name="Unit Test">
+        <!-- Ghi chú: Assertion quyết định test có bắt được sai lệch. "Không rỗng" chưa đủ nếu yêu cầu là đúng 6.000 đồng. -->
+        <div class="content">
+            <h2 class="title reveal">Arrange · Act · Assert</h2>
+            <div class="aaa reveal">
+                <div class="box"><h3>Arrange</h3><p>Chuẩn bị dữ liệu, dependency</p></div>
+                <div class="box"><h3>Act</h3><p>Gọi hành vi cần kiểm tra</p></div>
+                <div class="box"><h3>Assert</h3><p>So với kết quả mong đợi</p></div>
+            </div>
+            <div class="vs reveal">
+                <div class="box failbox"><span class="mark fail">✕</span><code>assertNotNull(fee)</code><span>chưa đủ</span></div>
+                <div class="box passbox"><span class="mark pass">✓</span><code>assertEquals(6000, fee)</code><span>đúng nghiệp vụ</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 5. TEST CASES & BOUNDARIES ===== -->
+    <section class="slide" data-sec="02" data-name="Unit Test">
+        <!-- Ghi chú: Test case xuất phát từ yêu cầu. Quy tắc đổi tại 25 thì kiểm 24, 25, 26. Data-driven: một test chạy với nhiều bộ dữ liệu. -->
+        <div class="content">
+            <h2 class="title reveal">Chọn test case từ yêu cầu</h2>
+            <div class="cols" style="grid-template-columns: 560px 1fr;">
+                <div class="chips reveal">
+                    <span class="tag">Bình thường</span>
+                    <span class="tag">Giá trị biên</span>
+                    <span class="tag">Không hợp lệ / rỗng</span>
+                    <span class="tag">Đạt / vượt giới hạn</span>
+                </div>
+                <div class="reveal">
+                    <div class="nline">
+                        <div class="pt"><i></i><b>24</b><span>trước</span></div>
+                        <div class="pt edge"><i></i><b>25</b><span>ranh giới</span></div>
+                        <div class="pt"><i></i><b>26</b><span>sau</span></div>
+                    </div>
+                    <p class="callout" style="margin-top: 70px;">Bắt lỗi nhầm <code>&lt;</code> và <code>&lt;=</code></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 6. MOCK ===== -->
+    <section class="slide" data-sec="02" data-name="Unit Test">
+        <!-- Ghi chú: Mock thay repository/dịch vụ thật bằng đối tượng test kiểm soát. Nếu mock khác hệ thống thật, test xanh mà app vẫn lỗi. -->
+        <div class="content">
+            <h2 class="title reveal">Mock: thay dependency thật</h2>
+            <div class="flow reveal" style="margin-bottom: 64px;">
+                <div class="box"><div class="step-n">TEST</div><div class="step-t">Unit Test</div></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">ĐANG KIỂM TRA</div><div class="step-t">Service</div></div>
+                <div class="arr">→</div>
+                <div class="box accent"><div class="step-n">DEPENDENCY</div><div class="step-t">Mock repository</div></div>
+                <div class="arr" style="color: var(--muted);">✕</div>
+                <div class="box ghost"><div class="step-n" style="color: var(--muted);">KHÔNG DÙNG</div><div class="step-t"><s>CSDL thật</s></div></div>
+            </div>
+            <ul class="bul reveal">
+                <li>Test tự tạo đúng tình huống</li>
+                <li>Mock khác thực tế → xanh giả</li>
+                <li>Luồng quan trọng: thêm integration test</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ===== 7. JUNIT ===== -->
+    <section class="slide" data-sec="03" data-name="JUnit">
+        <!-- Ghi chú: JUnit đại diện cho bước viết và chạy Unit Test. Chọn vì tích hợp tốt với Maven, Spring Boot. Không đi sâu toàn bộ API. -->
+        <div class="content">
+            <h2 class="title reveal">JUnit: viết và chạy test</h2>
+            <div class="cols" style="grid-template-columns: 1fr 880px; gap: 60px;">
+                <ul class="bul reveal">
+                    <li>Test runner tìm và chạy test</li>
+                    <li>Assertion so sánh kết quả</li>
+                    <li>Parameterized test, dữ liệu CSV</li>
+                    <li>Tích hợp Maven, Spring Boot</li>
+                </ul>
+                <div class="reveal">
+<div class="code"><span class="k">@ParameterizedTest</span>
+<span class="k">@CsvFileSource</span>(resources = <span class="c">"/AI-4-boundaries.csv"</span>,
+               numLinesToSkip = 1)
+void kiemDuLieuAiSinh(int days, MemberTier tier,
+                      BigDecimal expected) {
+    assertThat(new FineCalculator()
+            .calculate(days, tier))
+        .isEqualByComparingTo(expected);
+}</div>
+                    <p class="caption">FineCalculatorAiDataTest.java</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 8. CODE COVERAGE: LINE vs BRANCH ===== -->
+    <section class="slide" data-sec="04" data-name="Code Coverage">
+        <!-- Ghi chú: Coverage trả lời "test đã chạy qua đâu", không xác nhận kết quả đúng. Branch coverage hợp với code nghiệp vụ nhiều điều kiện (thường/VIP, dữ liệu không hợp lệ). -->
+        <div class="content">
+            <h2 class="title reveal">Coverage: test đã chạy qua đâu?</h2>
+            <div class="cov reveal">
+                <div class="box">
+                    <h3>Line coverage</h3>
+                    <div class="lines" aria-hidden="true"><i></i><i></i><i></i><i class="no"></i><i></i></div>
+                    <p class="res"><span class="pass">4</span> / 5 dòng đã chạy</p>
+                </div>
+                <div class="box branch">
+                    <h3>Branch coverage</h3>
+                    <div class="cond">if (tier == VIP)</div>
+                    <div class="arms"><div>đúng ✓</div><div class="no">sai: chưa chạy</div></div>
+                    <p class="res"><span class="pass">1</span> / 2 nhánh</p>
+                </div>
+            </div>
+            <p class="callout reveal" style="margin-top: 44px;">Đã chạy ≠ đã kiểm tra đúng</p>
+        </div>
+    </section>
+
+    <!-- ===== 9. LIMITS OF COVERAGE ===== -->
+    <section class="slide" data-sec="04" data-name="Code Coverage">
+        <!-- Ghi chú: Coverage gap = dòng/nhánh chưa chạy; quay lại yêu cầu để biết tình huống và kết quả đúng. Không thêm test chỉ để tô xanh. Hai bộ test cùng coverage có thể bắt lỗi khác nhau. -->
+        <div class="content">
+            <h2 class="title reveal">Coverage cao không chứng minh…</h2>
+            <div class="grid2 reveal">
+                <div class="box"><span>✕</span>Assertion đã đúng</div>
+                <div class="box"><span>✕</span>Đủ mọi giá trị biên</div>
+                <div class="box"><span>✕</span>Tích hợp đúng với nhau</div>
+                <div class="box"><span>✕</span>Chương trình hết lỗi</div>
+            </div>
+            <p class="callout reveal" style="margin-top: 56px;">Coverage gap → quay lại yêu cầu, không chỉ tô xanh</p>
+        </div>
+    </section>
+
+    <!-- ===== 10. JACOCO ===== -->
+    <section class="slide" data-sec="05" data-name="JaCoCo">
+        <!-- Ghi chú: JaCoCo ghi nhận code được thực thi khi test chạy. Nhóm quan tâm line và branch. Báo cáo HTML tô màu dòng đã chạy, chưa chạy, phủ một phần. Ngưỡng là nền của coverage gate. -->
+        <div class="content">
+            <h2 class="title reveal">JaCoCo: đo coverage cho Java</h2>
+            <div class="tags reveal">
+                <span class="tag">Line + branch coverage</span>
+                <span class="tag">Báo cáo HTML theo màu</span>
+                <span class="tag">Đặt ngưỡng → build fail</span>
+            </div>
+            <div class="reveal">
+                <div class="shot"><img src="images/jacoco-summary-2026-10-23.png" alt="Báo cáo JaCoCo tổng hợp của library-case-study"></div>
+                <p class="caption">Báo cáo JaCoCo của case study (23/10/2026)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 11. COVERAGE GATE ===== -->
+    <section class="slide" data-sec="06" data-name="Coverage gate">
+        <!-- Ghi chú: Gate bắt khi thêm nhánh mới mà không thêm test, hoặc xóa test quan trọng. Không có ngưỡng chung; 100% toàn dự án dễ dẫn đến viết test vì con số. Gate không biết assertion đúng hay sai. -->
+        <div class="content">
+            <h2 class="title reveal">Coverage gate</h2>
+            <div class="gate reveal">
+                <div class="box"><div class="step-n">JACOCO ĐO</div><div class="step-t">Branch coverage<br>FineCalculator</div></div>
+                <div class="arr">→</div>
+                <div class="diamond"><span>≥ 90%<small>đạt ngưỡng?</small></span></div>
+                <div class="outs">
+                    <div class="row"><span class="lbl">Đạt</span><div class="box passbox pass">Build tiếp tục</div></div>
+                    <div class="row"><span class="lbl">Không đạt</span><div class="box failbox fail">Build thất bại</div></div>
+                </div>
+            </div>
+            <div class="tags reveal" style="margin-top: 60px;">
+                <span class="tag">Chặn nhánh mới thiếu test</span>
+                <span class="tag">Không đặt 100% cho mọi lớp</span>
+                <span class="tag">Vẫn cần review assertion</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 12. CI/CD WITH GITHUB ACTIONS ===== -->
+    <section class="slide" data-sec="07" data-name="CI/CD">
+        <!-- Ghi chú: CI chạy kiểm tra tự động khi push/PR. Test lỗi hoặc coverage không đạt thì PR đỏ; sửa và push lại thì workflow tự chạy lại. Dự án dừng ở Continuous Delivery: đóng gói nhưng chưa tự triển khai. -->
+        <div class="content">
+            <h2 class="title reveal">CI với GitHub Actions</h2>
+            <div class="flow reveal">
+                <div class="box"><div class="step-n">01</div><div class="step-t">Pull request</div></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">02</div><div class="step-t">JUnit chạy Unit Test</div></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">03</div><div class="step-t">JaCoCo đo, kiểm tra gate</div></div>
+                <div class="arr">→</div>
+                <div class="box accent"><div class="step-n">04</div><div class="step-t">Báo <span style="color:#9df0b4">✓</span> / <span style="color:#ffb4a8">✕</span> trên PR</div></div>
+            </div>
+            <div class="reveal">
+                <div class="track">
+                    <div class="on">Continuous Integration</div>
+                    <div class="on">Continuous Delivery</div>
+                    <div class="off">Continuous Deployment</div>
+                </div>
+                <div class="here"><span></span><span>▲ Dự án dừng ở đây</span><span></span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 13. CASE STUDY ===== -->
+    <section class="slide" data-sec="08" data-name="Case study">
+        <!-- Ghi chú: Ứng dụng quản lý thư viện; demo tập trung vào tính phí trả sách trễ. -->
+        <div class="content">
+            <h2 class="title reveal">FineCalculator: phí trả sách trễ</h2>
+            <div class="rules reveal">
+                <div class="box"><p class="who">Thành viên thường</p><p class="v">2.000đ <small>/ ngày</small></p></div>
+                <div class="box"><p class="who">Thành viên VIP</p><p class="v">Miễn 2 ngày đầu<br><small>sau đó</small> 1.000đ <small>/ ngày</small></p></div>
+                <div class="box"><p class="who">Phí tối đa</p><p class="v">50.000đ</p></div>
+                <div class="box failbox"><p class="who">Bị từ chối</p><p class="v fail">Ngày âm · hạng rỗng</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 14. DEMO ===== -->
+    <section class="slide" data-sec="08" data-name="Demo">
+        <!-- Ghi chú: Khoảng 4 phút. Mở sẵn code và hai báo cáo trước/sau. Maven chậm thì dùng video quay sẵn. -->
+        <div class="content">
+            <h2 class="title reveal">Demo: test xanh, build vẫn đỏ</h2>
+            <div class="flow demo reveal">
+                <div class="box"><div class="step-n">01</div><div class="step-t">Baseline: 1 test thường</div><span class="pill ok">test ✓</span></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">02</div><div class="step-t">Bật gate 90%</div><span class="pill ko">build ✕</span></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">03</div><div class="step-t">Đọc báo cáo JaCoCo</div><span class="pill info">nhánh thiếu</span></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">04</div><div class="step-t">Bộ đầy đủ: VIP, biên, lỗi</div><span class="pill ok">build ✓</span></div>
+            </div>
+<div class="code reveal" style="margin-top: 56px;"><span class="c"># Baseline: test xanh nhưng gate thất bại</span>
+case-study/mvnw -B -ntp -f case-study/pom.xml -Pbaseline -Dcoverage.gate.skip=false clean verify
+
+<span class="c"># Bộ đầy đủ: test và gate đều thành công</span>
+case-study/mvnw -B -ntp -f case-study/pom.xml clean verify</div>
+        </div>
+    </section>
+
+    <!-- ===== 15. COVERUP ===== -->
+    <section class="slide" data-sec="09" data-name="Research paper">
+        <!-- Ghi chú: Câu hỏi của phần này: coverage còn thiếu nhánh, AI có đề xuất test bổ sung được không? Hai paper 2021–2026, có artifact công khai. CoverUp dùng coverage làm phản hồi cho mô hình ngôn ngữ. -->
+        <div class="content">
+            <h2 class="title reveal">CoverUp: LLM + phản hồi coverage</h2>
+            <p class="cite reveal">Pizzorno &amp; Berger · FSE 2025</p>
+            <div class="cols" style="grid-template-columns: 900px 1fr;">
+                <div class="loop reveal">
+                    <div class="box"><div class="step-n">01</div><div class="step-t">Chạy bộ test hiện tại</div></div>
+                    <div class="arr">→</div>
+                    <div class="box"><div class="step-n">02</div><div class="step-t">Tìm code chưa phủ</div></div>
+                    <div class="arr v">↑</div>
+                    <div></div>
+                    <div class="arr v">↓</div>
+                    <div class="box accent"><div class="step-n">04</div><div class="step-t">Sinh test, đo lại</div></div>
+                    <div class="arr">←</div>
+                    <div class="box"><div class="step-n">03</div><div class="step-t">Gửi source cho LLM</div></div>
+                </div>
+                <div class="results reveal">
+                    <div><p class="stat">11<em>/39 →</em> <span class="pass">38</span><em>/39</em></p><p class="stat-l">line coverage</p></div>
+                    <div><p class="stat">2<em>/16 →</em> <span class="pass">15</span><em>/16</em></p><p class="stat-l">branch coverage</p></div>
+                    <p class="note">Nhóm thử trên source Python của dự án</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 16. PYNGUIN ===== -->
+    <section class="slide" data-sec="09" data-name="Research paper">
+        <!-- Ghi chú: Pynguin dùng thuật toán tìm kiếm, thông tin kiểu và kết quả thực thi. Trên source có filesystem/XML tạo ít test hữu ích, thiếu assertion ý nghĩa. Dùng để đối chiếu với CoverUp. -->
+        <div class="content">
+            <h2 class="title reveal">Pynguin: tìm kiếm, không dùng LLM</h2>
+            <p class="cite reveal">Lukasczyk, Kroiß &amp; Fraser · EMSE 2023</p>
+            <div class="cols" style="grid-template-columns: 1fr 640px;">
+                <ul class="bul reveal">
+                    <li>Thuật toán tìm kiếm sinh input</li>
+                    <li>Dựa vào kiểu dữ liệu, kết quả chạy</li>
+                    <li>Filesystem, XML: ít test hữu ích</li>
+                </ul>
+                <div class="results reveal">
+                    <div><p class="stat acc">81,48%</p><p class="stat-l">coverage, module benchmark</p></div>
+                    <div><p class="stat"><span class="pass">10</span> <em>pass</em> · 5 <em>xfail</em></p></div>
+                </div>
+            </div>
+            <p class="callout reveal">Cả hai công cụ: khó xác định kết quả đúng</p>
+        </div>
+    </section>
+
+    <!-- ===== 17. TEAM AI WORKFLOW ===== -->
+    <section class="slide" data-sec="09" data-name="Demo tích hợp AI">
+        <!-- Ghi chú: Quy trình riêng của nhóm, kế thừa ý tưởng coverage gap làm phản hồi, không cài lại CoverUp cho Java. Demo quay sẵn: AI-1 sinh 3 test nháp đạt 70% branch; AI-2 đọc báo cáo JaCoCo, thêm test ngày âm, hạng rỗng, nhánh VIP; đạt 100%. Người thực hiện đọc lại input, expected, assertion. -->
+        <div class="content">
+            <h2 class="title reveal">Quy trình AI của nhóm</h2>
+            <div class="flow ai reveal">
+                <div class="box"><div class="step-n">01</div><div class="step-t">Source + yêu cầu</div></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">02</div><div class="step-t">AI-1 sinh test nháp</div></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">03</div><div class="step-t">JUnit chạy test</div></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">04</div><div class="step-t">JaCoCo tìm gap</div></div>
+                <div class="arr">→</div>
+                <div class="box"><div class="step-n">05</div><div class="step-t">AI-2 đề xuất test</div></div>
+                <div class="arr">→</div>
+                <div class="box accent"><div class="step-n">06</div><div class="step-t">Con người review</div></div>
+            </div>
+            <div class="ai-res reveal">
+                <div><p class="stat">70% <span class="acc">→</span> <span class="pass">100%</span></p><p class="stat-l">branch coverage · demo FineCalculator</p></div>
+                <ul class="bul" style="gap: 20px;">
+                    <li style="font-size: 32px;">AI-2 thêm: ngày âm, hạng rỗng, VIP</li>
+                    <li style="font-size: 32px;">Kiểm expected và assertion trước khi nhận</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 18. CONCLUSION ===== -->
+    <section class="slide" data-sec="10" data-name="Kết luận">
+        <!-- Ghi chú: Unit Test kiểm hành vi từng phần nhỏ; coverage cho biết test chạy qua đâu; gate + GitHub Actions chặn tự động; AI đề xuất được nhưng người vẫn kiểm. Trả lời câu hỏi đầu bài. -->
+        <div class="content center">
+            <p class="kicker reveal">Test xanh + coverage 100% = chương trình đúng?</p>
+            <p class="answer reveal">Chưa đủ.</p>
+            <ul class="bul reveal">
+                <li>Coverage tìm phần code bị bỏ sót</li>
+                <li>Chất lượng: test case, assertion, nghiệp vụ</li>
+                <li>Gate + CI giữ ngưỡng tự động</li>
+                <li>AI đề xuất, con người kiểm tra</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ===== 19. Q&A ===== -->
+    <section class="slide s-qa" data-sec="11" data-name="Hỏi đáp">
+        <!-- Ghi chú (câu hỏi dự kiến): Có nên 100%? Không nhất thiết. Coverage thay review? Không. Vì sao gate chỉ FineCalculator? Nhiều quy tắc, biên rõ. Công cụ thay người viết test? Chưa. -->
+        <div class="content center">
+            <p class="qa reveal">Hỏi đáp<span>?</span></p>
+            <p class="note reveal" style="margin-top: 40px; font-size: 40px;">Cảm ơn thầy cô và các bạn đã lắng nghe</p>
+        </div>
+    </section>
+
+    <!-- ===== 20. REFERENCES ===== -->
+    <section class="slide" data-sec="12" data-name="Tài liệu tham khảo">
+        <div class="content">
+            <h2 class="title reveal">Tài liệu tham khảo</h2>
+            <ul class="refs reveal">
+                <li>Pizzorno &amp; Berger, “CoverUp: Effective High Coverage Test Generation for Python”, FSE 2025<span>doi.org/10.1145/3729398</span></li>
+                <li>Lukasczyk, Kroiß &amp; Fraser, “An empirical study of automated unit test generation for Python”, EMSE 2023<span>doi.org/10.1007/s10664-022-10248-w</span></li>
+                <li>JUnit User Guide<span>docs.junit.org/6.0.3/user-guide</span></li>
+                <li>JaCoCo Documentation<span>jacoco.org/jacoco/trunk/doc</span></li>
+                <li>GitHub Actions: Java with Maven<span>docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven</span></li>
+            </ul>
+        </div>
+    </section>
+
+</main>
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="edit-hotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Chế độ sửa (E)">Sửa (E)</button>
+
+<script>
+    /* ===========================================
+       SLIDE PRESENTATION CONTROLLER
+       Keyboard (arrows, space, PageUp/Down, Home/End), wheel, swipe,
+       uniform 16:9 stage scaling, header chrome + page numbers.
+       =========================================== */
+    class SlidePresentation {
+        constructor() {
+            this.slides = [...document.querySelectorAll('.slide')];
+            this.stage = document.getElementById('deckStage');
+            this.progress = document.getElementById('progress');
+            this.current = 0;
+            this.decorate();
+            this.setupStageScale();
+            this.setupKeyboardNav();
+            this.setupWheelNav();
+            this.setupTouchNav();
+            const fromHash = parseInt(location.hash.slice(1), 10);
+            this.showSlide(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+        }
+
+        /* Inject the header chrome and "NN / TT" page numbers from data attributes */
+        decorate() {
+            const total = String(this.slides.length).padStart(2, '0');
+            this.slides.forEach((slide, i) => {
+                if (!slide.dataset.sec) return; // title slide has no chrome
+                slide.dataset.n = `${String(i + 1).padStart(2, '0')} / ${total}`;
+                const chrome = document.createElement('div');
+                chrome.className = 'chrome';
+                chrome.innerHTML = `<span class="sec">${slide.dataset.sec} · ${slide.dataset.name}</span><span>Unit Test · Coverage · CI/CD</span>`;
+                slide.prepend(chrome);
+            });
+        }
+
+        setupStageScale() {
+            const scale = () => {
+                const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+                const x = (window.innerWidth - 1920 * factor) / 2;
+                const y = (window.innerHeight - 1080 * factor) / 2;
+                this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+            };
+            scale();
+            window.addEventListener('resize', scale);
+        }
+
+        setupKeyboardNav() {
+            document.addEventListener('keydown', (e) => {
+                if (e.target.isContentEditable) return;
+                if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); this.next(); }
+                else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); this.prev(); }
+                else if (e.key === 'Home') this.showSlide(0);
+                else if (e.key === 'End') this.showSlide(this.slides.length - 1);
+            });
+        }
+
+        setupWheelNav() {
+            let locked = false;
+            window.addEventListener('wheel', (e) => {
+                if (locked || Math.abs(e.deltaY) < 20) return;
+                locked = true;
+                e.deltaY > 0 ? this.next() : this.prev();
+                setTimeout(() => { locked = false; }, 700);
+            }, { passive: true });
+        }
+
+        setupTouchNav() {
+            let startX = null;
+            window.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+            window.addEventListener('touchend', (e) => {
+                if (startX === null) return;
+                const dx = e.changedTouches[0].clientX - startX;
+                if (Math.abs(dx) > 50) dx < 0 ? this.next() : this.prev();
+                startX = null;
+            });
+        }
+
+        next() { this.showSlide(this.current + 1); }
+        prev() { this.showSlide(this.current - 1); }
+
+        showSlide(index) {
+            this.current = Math.max(0, Math.min(index, this.slides.length - 1));
+            this.slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === this.current);
+                slide.classList.toggle('visible', i === this.current);
+            });
+            this.progress.style.width = `${((this.current + 1) / this.slides.length) * 100}%`;
+            history.replaceState(null, '', `#${this.current + 1}`);
+        }
+    }
+
+    const deck = new SlidePresentation();
+
+    /* ===========================================
+       INLINE EDITING
+       E or top-left hotzone toggles edit mode; Ctrl+S downloads the edited HTML.
+       shortcut: no localStorage autosave, so edits are lost on reload unless saved with Ctrl+S.
+       =========================================== */
+    const editor = {
+        isActive: false,
+        targets: () => document.querySelectorAll('.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide .step-t, .slide .tag, .slide .code'),
+        toggleEditMode() {
+            this.isActive = !this.isActive;
+            document.body.classList.toggle('editing', this.isActive);
+            this.targets().forEach((el) => { el.contentEditable = this.isActive ? 'true' : 'false'; });
+            editToggle.classList.toggle('active', this.isActive);
+            if (!this.isActive) editToggle.classList.remove('show');
+        },
+        save() {
+            const wasActive = this.isActive;
+            if (wasActive) this.toggleEditMode();
+            // Strip injected chrome so the saved file re-decorates cleanly on load
+            const clone = document.documentElement.cloneNode(true);
+            clone.querySelectorAll('.chrome').forEach((el) => el.remove());
+            clone.querySelectorAll('.slide').forEach((el) => { el.removeAttribute('data-n'); el.classList.remove('active', 'visible'); el.removeAttribute('contenteditable'); });
+            clone.querySelectorAll('[contenteditable]').forEach((el) => el.removeAttribute('contenteditable'));
+            const blob = new Blob(['<!DOCTYPE html>\n' + clone.outerHTML], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'index.html';
+            a.click();
+            URL.revokeObjectURL(a.href);
+            if (wasActive) this.toggleEditMode();
+        }
+    };
+
+    const editToggle = document.getElementById('editToggle');
+    const hotzone = document.querySelector('.edit-hotzone');
+    let hideTimeout = null;
+    const scheduleHide = () => {
+        hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400);
+    };
+    editToggle.addEventListener('click', () => editor.toggleEditMode());
+    hotzone.addEventListener('click', () => editor.toggleEditMode());
+    hotzone.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); editToggle.classList.add('show'); });
+    hotzone.addEventListener('mouseleave', scheduleHide);
+    editToggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+    editToggle.addEventListener('mouseleave', scheduleHide);
+    document.addEventListener('keydown', (e) => {
+        if ((e.key === 'e' || e.key === 'E') && !e.target.isContentEditable && !e.ctrlKey && !e.metaKey) editor.toggleEditMode();
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); editor.save(); }
+    });
+</script>
+</body>
+</html>
