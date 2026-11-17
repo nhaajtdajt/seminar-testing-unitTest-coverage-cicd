@@ -210,12 +210,12 @@
   },
   {
     "stage": "CI/CD",
-    "title": "Video D: CI/CD với GitHub Actions (8–9 phút)",
+    "title": "Video D: CI/CD với GitHub Actions (17:51)",
     "bullets": [
-      "00:00 Setup: ci.yml, trigger, JDK 25.  01:00 Khái niệm: CI/CD, needs, jacoco:check.",
-      "02:15 Demo đơn giản: run xanh, log, artifact, cache.",
-      "04:00 Demo phức tạp: PR đỏ rồi xanh; PR vào master bị BLOCKED.",
-      "06:30 Điểm yếu: cache miss, test chạy hai lần, thời gian dao động, PR kẹt."
+      "Link: https://www.youtube.com/watch?v=vakw7UD_SvU (người thực hiện: Phạm Quang Vinh).",
+      "00:00 Setup: ci.yml, trigger, JDK 25.  02:17 CI: Continuous Delivery/Deployment, pipeline 3 job, ngưỡng jacoco:check 90%.",
+      "05:55 Demo run xanh: log, artifact, báo cáo JaCoCo.  08:46 PR đỏ rồi xanh; PR vào master bị BLOCKED.",
+      "12:07 Điểm yếu: cache miss, test chạy hai lần, thời gian dao động, PR kẹt, gate chỉ kiểm số bề mặt.  17:11 Tổng kết."
     ]
   },
   {

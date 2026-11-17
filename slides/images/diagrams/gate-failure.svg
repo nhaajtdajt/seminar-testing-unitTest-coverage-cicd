@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" width="100%" height="100%">
+  <rect width="600" height="280" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="600" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Terminal Run · Minh chứng JaCoCo Gate chặn Build</text>
+  <rect x="495" y="7" width="90" height="22" rx="3" fill="#111111"/>
+  <text x="540" y="22" text-anchor="middle" font-family="monospace" font-size="11" font-weight="700" fill="#ffffff">EXIT CODE 1</text>
+
+  <!-- Terminal window -->
+  <g transform="translate(15, 48)">
+    <rect width="570" height="215" rx="6" fill="#f6f8fa" stroke="#111111" stroke-width="1.5"/>
+    <text x="15" y="25" font-family="monospace" font-size="11" fill="#111111">$ ./mvnw -f case-study/pom.xml -Pbaseline -Dcoverage.gate.skip=false clean verify</text>
+    <text x="15" y="48" font-family="monospace" font-size="11" fill="#555555">[INFO] --- jacoco:0.8.12:check (coverage-check) @ library-app ---</text>
+    <rect x="15" y="58" width="540" height="32" rx="3" fill="#111111"/>
+    <text x="25" y="79" font-family="monospace" font-weight="700" font-size="11" fill="#ffffff">[ERROR] Rule violated for FineCalculator: branches ratio is 0.50, min is 0.90</text>
+    <text x="15" y="112" font-family="monospace" font-size="11" fill="#555555">[INFO] ------------------------------------------------------------------------</text>
+    <text x="15" y="132" font-family="monospace" font-weight="700" font-size="13" fill="#111111">[INFO] BUILD FAILURE</text>
+    <text x="15" y="152" font-family="monospace" font-size="11" fill="#555555">[INFO] Total time:  3.284 s</text>
+    <text x="15" y="172" font-family="monospace" font-size="11" fill="#555555">[INFO] Finished at: 2026-10-28T20:15:22+07:00</text>
+    <rect x="15" y="185" width="540" height="20" rx="3" fill="#ffffff" stroke="#111111" stroke-width="1"/>
+    <text x="285" y="199" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#111111">✓ Chặn thành công: Mã nguồn thiếu test không bao giờ được phép đóng gói</text>
+  </g>
+</svg>

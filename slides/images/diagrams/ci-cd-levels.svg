@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 280" width="100%" height="100%">
+  <!-- Level 1: CI -->
+  <g transform="translate(20, 20)">
+    <rect width="580" height="65" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect width="180" height="65" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="90" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">1. CONTINUOUS</text>
+    <text x="90" y="50" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">INTEGRATION (CI)</text>
+    <text x="200" y="28" font-family="system-ui, sans-serif" font-size="12" fill="#111111"><strong>Phạm vi:</strong> Commit code → Build JDK 25 → Chạy Unit Test → Coverage Gate.</text>
+    <text x="200" y="50" font-family="system-ui, sans-serif" font-size="11" fill="#555555">Phát hiện xung đột &amp; lỗi kiểm thử ngay khi tạo Pull Request.</text>
+  </g>
+
+  <!-- Level 2: CD Delivery -->
+  <g transform="translate(20, 100)">
+    <rect width="580" height="75" rx="6" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <rect width="180" height="75" rx="6" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+    <text x="90" y="37" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">2. CONTINUOUS</text>
+    <text x="90" y="55" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">DELIVERY</text>
+    <text x="200" y="28" font-family="system-ui, sans-serif" font-size="12" fill="#111111"><strong>Phạm vi:</strong> Sau CI → Đóng gói Artifact (JAR) sẵn sàng phát hành.</text>
+    <text x="200" y="48" font-family="system-ui, sans-serif" font-size="11" fill="#555555">Bản dựng luôn trong trạng thái sẵn sàng; việc đẩy lên server do con người bấm duyệt.</text>
+    <rect x="200" y="56" width="130" height="15" rx="2" fill="#111111"/>
+    <text x="265" y="67" text-anchor="middle" font-family="monospace" font-size="9" fill="#ffffff">MỨC NHÓM ĐẠT TỚI</text>
+  </g>
+
+  <!-- Level 3: CD Deployment -->
+  <g transform="translate(20, 190)">
+    <rect width="580" height="70" rx="6" fill="#fafafa" stroke="#999999" stroke-width="1.5" stroke-dasharray="4"/>
+    <rect width="180" height="70" rx="6" fill="#f0f0f0" stroke="#999999" stroke-width="1.5"/>
+    <text x="90" y="34" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#777777">3. CONTINUOUS</text>
+    <text x="90" y="52" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#777777">DEPLOYMENT</text>
+    <text x="200" y="28" font-family="system-ui, sans-serif" font-size="12" fill="#777777"><strong>Phạm vi:</strong> Tự động đẩy thẳng bản build lên máy chủ production.</text>
+    <text x="200" y="48" font-family="system-ui, sans-serif" font-size="11" fill="#777777">Không có bước duyệt tay; đòi hỏi bộ test và gate cực kỳ khắt khe.</text>
+    <text x="200" y="63" font-family="system-ui, sans-serif" font-size="10" font-style="italic" fill="#999999">(Ngoài phạm vi seminar môn kiểm thử)</text>
+  </g>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" width="100%" height="100%">
+  <!-- 6 scenarios grid -->
+  <rect width="620" height="300" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="620" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">LoanService · 6 Tình huống nghiệp vụ &amp; Mockito Verification</text>
+
+  <g transform="translate(15, 50)">
+    <!-- 5 error branches -->
+    <rect width="285" height="150" rx="6" fill="#fafafa" stroke="#111111" stroke-width="1.5"/>
+    <text x="15" y="24" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">5 NHÁNH NGOẠI LỆ (FAIL-FAST):</text>
+    <text x="15" y="48" font-family="system-ui, sans-serif" font-size="11" fill="#333333">1. Sách không tồn tại (BookNotFound)</text>
+    <text x="15" y="70" font-family="system-ui, sans-serif" font-size="11" fill="#333333">2. Sách đã bị mượn (AlreadyBorrowed)</text>
+    <text x="15" y="92" font-family="system-ui, sans-serif" font-size="11" fill="#333333">3. Thành viên không tồn tại</text>
+    <text x="15" y="114" font-family="system-ui, sans-serif" font-size="11" fill="#333333">4. Đạt hạn mức tối đa 3 cuốn</text>
+    <text x="15" y="136" font-family="system-ui, sans-serif" font-size="11" fill="#333333">5. Còn nợ phí phạt chưa thanh toán</text>
+
+    <!-- 1 success branch -->
+    <g transform="translate(300, 0)">
+      <rect width="285" height="150" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="24" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">1 NHÁNH THÀNH CÔNG:</text>
+      <text x="15" y="55" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Đủ điều kiện mượn sách</text>
+      <text x="15" y="80" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Thiết lập ngày mượn &amp; hạn trả</text>
+      <text x="15" y="105" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Lưu phiếu mượn xuống repository</text>
+      <rect x="15" y="120" width="255" height="22" rx="3" fill="#f0f0f0" stroke="#111111" stroke-width="1"/>
+      <text x="142" y="135" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#111111">Tạo LoanRecord hợp lệ</text>
+    </g>
+  </g>
+
+  <!-- Mockito code pattern -->
+  <g transform="translate(15, 215)">
+    <rect width="590" height="70" rx="6" fill="#f6f8fa" stroke="#111111" stroke-width="1.5"/>
+    <text x="15" y="25" font-family="monospace" font-weight="700" font-size="12" fill="#111111">verify(loanRepository, never()).save(any());</text>
+    <text x="15" y="45" font-family="system-ui, sans-serif" font-size="11" fill="#555555">✓ Chặn rò rỉ dữ liệu: Đảm bảo 5 nhánh ngoại lệ không bao giờ ghi rác xuống database.</text>
+    <text x="15" y="60" font-family="system-ui, sans-serif" font-size="11" fill="#555555">✓ ArgumentCaptor: Bắt đối tượng LoanRecord để kiểm tra trạng thái mượn chi tiết.</text>
+  </g>
+</svg>

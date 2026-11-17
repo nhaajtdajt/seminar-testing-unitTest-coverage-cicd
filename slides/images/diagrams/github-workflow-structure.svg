@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" width="100%" height="100%">
+  <rect width="600" height="280" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="600" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Cấu trúc phân tầng .github/workflows/ci.yml</text>
+
+  <!-- Flow chart in SVG -->
+  <g transform="translate(20, 50)">
+    <!-- Triggers -->
+    <rect width="160" height="70" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <text x="80" y="25" text-anchor="middle" font-family="monospace" font-weight="700" font-size="12" fill="#111111">on: [pr, push]</text>
+    <text x="80" y="45" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#555555">Kích hoạt tự động</text>
+    <text x="80" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#555555">khi đẩy mã</text>
+
+    <!-- Cache box -->
+    <g transform="translate(190, 0)">
+      <rect width="370" height="70" rx="6" fill="#f6f8fa" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="24" font-family="monospace" font-weight="700" font-size="11" fill="#111111">actions/cache@v4 (Maven ~/.m2)</text>
+      <text x="15" y="44" font-family="monospace" font-size="10" fill="#444444">key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}</text>
+      <text x="15" y="60" font-family="system-ui, sans-serif" font-size="10" fill="#666666">✓ Giảm 74% thời gian build khi hit cache</text>
+    </g>
+
+    <!-- 3 jobs connection -->
+    <g transform="translate(0, 90)">
+      <rect width="170" height="120" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="85" y="26" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">JOB 1: test</text>
+      <text x="12" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Setup JDK 25</text>
+      <text x="12" y="72" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• mvn clean test</text>
+      <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Upload surefire</text>
+      <text x="12" y="108" font-family="monospace" font-size="9" fill="#111111">Exit: 0</text>
+    </g>
+
+    <!-- Arrow 1 -->
+    <line x1="175" y1="150" x2="200" y2="150" stroke="#111111" stroke-width="2"/>
+    <text x="187" y="142" text-anchor="middle" font-family="monospace" font-size="8" fill="#111111">needs</text>
+
+    <!-- Job 2 -->
+    <g transform="translate(205, 90)">
+      <rect width="170" height="120" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="85" y="26" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">JOB 2: coverage-gate</text>
+      <text x="12" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• jaсоco:check</text>
+      <text x="12" y="72" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Branch ≥ 90%</text>
+      <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• GITHUB_STEP_SUMMARY</text>
+      <text x="12" y="108" font-family="monospace" font-size="9" fill="#111111">Fail if &lt; 0.90</text>
+    </g>
+
+    <!-- Arrow 2 -->
+    <line x1="380" y1="150" x2="405" y2="150" stroke="#111111" stroke-width="2"/>
+    <text x="392" y="142" text-anchor="middle" font-family="monospace" font-size="8" fill="#111111">needs</text>
+
+    <!-- Job 3 -->
+    <g transform="translate(410, 90)">
+      <rect width="150" height="120" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="75" y="26" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">JOB 3: package</text>
+      <text x="12" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• mvn package</text>
+      <text x="12" y="72" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• -DskipTests</text>
+      <text x="12" y="92" font-family="system-ui, sans-serif" font-size="10" fill="#333333">• Upload JAR</text>
+      <text x="12" y="108" font-family="monospace" font-size="9" fill="#111111">Ready to ship</text>
+    </g>
+  </g>
+</svg>

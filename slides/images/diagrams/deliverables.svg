@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" width="100%" height="100%">
+  <rect width="600" height="280" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="600" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">7 Đầu ra hoàn chỉnh trong gói nộp Tuần 06</text>
+
+  <g transform="translate(20, 50)">
+    <g transform="translate(0, 0)">
+      <rect width="265" height="45" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="26" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">1. Slide Trình Chiếu</text>
+      <text x="15" y="38" font-family="monospace" font-size="10" fill="#555555">slides/index.html (Reveal.js)</text>
+    </g>
+    <g transform="translate(295, 0)">
+      <rect width="265" height="45" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="26" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">2. Báo Cáo Tổng Hợp</text>
+      <text x="15" y="38" font-family="monospace" font-size="10" fill="#555555">report/main.tex (LaTeX)</text>
+    </g>
+    <g transform="translate(0, 55)">
+      <rect width="265" height="45" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="26" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">3. Video Demo (D &amp; E)</text>
+      <text x="15" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#555555">8-9 phút CI/CD + Demo AI</text>
+    </g>
+    <g transform="translate(295, 55)">
+      <rect width="265" height="45" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="26" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">4. Mã Nguồn Hoàn Chỉnh</text>
+      <text x="15" y="38" font-family="monospace" font-size="10" fill="#555555">case-study/ &amp; scripts/</text>
+    </g>
+    <g transform="translate(0, 110)">
+      <rect width="265" height="45" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="26" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">5. Bảng Phân Công Nhiệm Vụ</text>
+      <text x="15" y="38" font-family="monospace" font-size="10" fill="#555555">PhanCong_NhiemVu.md</text>
+    </g>
+    <g transform="translate(295, 110)">
+      <rect width="265" height="45" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="26" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#111111">6. Git Commit Log Minh Bạch</text>
+      <text x="15" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#555555">Lịch sử commit đối chiếu từng tác giả</text>
+    </g>
+    <g transform="translate(0, 165)">
+      <rect width="560" height="45" rx="4" fill="#111111"/>
+      <text x="280" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#ffffff">7. TUYÊN BỐ SỬ DỤNG AI (ai-usage-declaration/)</text>
+      <text x="280" y="38" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#cccccc">Minh bạch 100% mục đích, prompt, model Gemini và đánh giá phản biện.</text>
+    </g>
+  </g>
+</svg>

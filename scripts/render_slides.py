@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
-"""Render the offline slide deck from editable JSON. No CDN, fonts or network requests."""
+"""Render the offline slide deck from editable JSON or build Reveal.js slides. No CDN, fonts or network requests."""
 import html
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 def main():
+    build_script = ROOT / 'scripts/build_reveal_slides.py'
+    if build_script.exists():
+        subprocess.run([sys.executable, str(build_script)], check=True)
+        return
+
+    # Fallback to legacy generator if build_script is absent
     slides = json.loads((ROOT/'slides/slides.json').read_text())
+
     sections = []
     for number, slide in enumerate(slides, 1):
         bullets = ''.join('<li>'+html.escape(item)+'</li>' for item in slide['bullets'])

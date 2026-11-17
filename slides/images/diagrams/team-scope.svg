@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" width="100%" height="100%">
+  <rect width="600" height="280" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="600" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Bảng nghiệm thu phạm vi CI/CD của Nhóm 09</text>
+
+  <!-- Row 1: CI -->
+  <g transform="translate(20, 50)">
+    <rect width="560" height="60" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <circle cx="30" cy="30" r="14" fill="#111111"/>
+    <path d="M 23 30 L 28 35 L 37 25" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+    <text x="55" y="27" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Continuous Integration (CI) · HOÀN THÀNH 100%</text>
+    <text x="55" y="47" font-family="system-ui, sans-serif" font-size="11" fill="#555555">Mỗi PR tự kích hoạt GitHub Actions: JDK 25, 49 tests pass, Branch Gate ≥ 90%.</text>
+  </g>
+
+  <!-- Row 2: Delivery -->
+  <g transform="translate(20, 120)">
+    <rect width="560" height="60" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <circle cx="30" cy="30" r="14" fill="#111111"/>
+    <path d="M 23 30 L 28 35 L 37 25" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+    <text x="55" y="27" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Continuous Delivery · ĐẠT MỨC ARTIFACT JAR</text>
+    <text x="55" y="47" font-family="system-ui, sans-serif" font-size="11" fill="#555555">Job package tạo file JAR executable + upload surefire reports và jacoco HTML.</text>
+  </g>
+
+  <!-- Row 3: Deployment -->
+  <g transform="translate(20, 190)">
+    <rect width="560" height="70" rx="6" fill="#fafafa" stroke="#888888" stroke-width="1.5" stroke-dasharray="4"/>
+    <circle cx="30" cy="35" r="14" fill="#f0f0f0" stroke="#888888" stroke-width="1.5"/>
+    <path d="M 22 27 L 38 43 M 38 27 L 22 43" stroke="#666666" stroke-width="2"/>
+    <text x="55" y="28" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#777777">Continuous Deployment · KHÔNG THỰC HIỆN</text>
+    <text x="55" y="48" font-family="system-ui, sans-serif" font-size="11" fill="#777777">Đề tài giới hạn trong phạm vi kiểm thử; không phát hành lên server production.</text>
+    <text x="55" y="63" font-family="system-ui, sans-serif" font-size="10" font-style="italic" fill="#999999">Mở rộng: Cần thêm job deploy sau package với điều kiện nhánh master + approval.</text>
+  </g>
+</svg>

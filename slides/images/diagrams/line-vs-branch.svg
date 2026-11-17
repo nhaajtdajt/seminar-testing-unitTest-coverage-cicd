@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" width="100%" height="100%">
+  <rect width="600" height="280" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="600" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Phân biệt: Line Coverage vs. Branch Coverage</text>
+
+  <!-- Code snippet example -->
+  <g transform="translate(20, 50)">
+    <rect width="560" height="60" rx="6" fill="#f6f8fa" stroke="#111111" stroke-width="1.5"/>
+    <text x="15" y="26" font-family="monospace" font-size="12" fill="#111111">// Dòng lệnh chứa toán tử ba ngôi (ternary):</text>
+    <text x="15" y="46" font-family="monospace" font-weight="700" font-size="13" fill="#111111">return (days &gt; 25) ? MAX_FINE : days * rate;</text>
+  </g>
+
+  <!-- Comparison boxes -->
+  <g transform="translate(20, 125)">
+    <!-- Case 1: Line coverage -->
+    <rect width="270" height="135" rx="6" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+    <text x="15" y="25" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">NẾU CHỈ TEST CA: days = 30</text>
+    <text x="15" y="55" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Dòng lệnh trên ĐÃ ĐƯỢC CHẠY QUA</text>
+    <text x="15" y="80" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• <strong>Line Coverage = 100%</strong> (1/1 dòng)</text>
+    <text x="15" y="105" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Nhánh (days &lt;= 25) bị bỏ quên hoàn toàn!</text>
+    <rect x="15" y="112" width="240" height="18" rx="2" fill="#f4f4f4" stroke="#111111" stroke-width="1"/>
+    <text x="135" y="125" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#111111">Nguy cơ: Lọt lỗi nhánh False</text>
+
+    <!-- Case 2: Branch coverage -->
+    <g transform="translate(290, 0)">
+      <rect width="270" height="135" rx="6" fill="#fafafa" stroke="#111111" stroke-width="1.5"/>
+      <text x="15" y="25" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">JACOCO BRANCH COVERAGE:</text>
+      <text x="15" y="55" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Đếm cả 2 hướng: True và False</text>
+      <text x="15" y="80" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Nếu chỉ test days = 30: <strong>Branch = 50%</strong></text>
+      <text x="15" y="105" font-family="system-ui, sans-serif" font-size="11" fill="#333333">• Bắt buộc thêm test days &lt;= 25 → 100%</text>
+      <rect x="15" y="112" width="240" height="18" rx="2" fill="#111111"/>
+      <text x="135" y="125" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#ffffff">Bảo đảm: Phủ trọn mọi ngã rẽ</text>
+    </g>
+  </g>
+</svg>

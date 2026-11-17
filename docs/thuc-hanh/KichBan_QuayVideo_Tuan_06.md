@@ -39,15 +39,22 @@
 | **5. Trường hợp công cụ không xử lý tốt** | `06:30 - 08:30` | - **Cache bị vô hiệu:** [PR #9](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/9) chỉ thêm một dòng comment vào `pom.xml`, log ghi `maven cache is not found`; nêu trung thực chênh lệch thời gian nhỏ hơn dao động.<br>- **Test chạy hai lần** (`clean test` rồi `clean verify`).<br>- **Thời gian runner dao động** (29–70 s cùng bước).<br>- **Required check làm PR kẹt** khi workflow trên master chưa có trigger ([PR #4](https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/pull/4)).<br>- **Gate chỉ kiểm cái được cấu hình**: test bẫy 100% branch vẫn pass gate. | `evidence/tuan-06/github-actions/ci-weaknesses.md` |
 | **6. Kết** | `08:30 - 09:00` | - Tóm tắt: CI chặn code thiếu test nhưng không đo chất lượng assertion; cần PIT và review.<br>- Nhắc video liên quan: A (Unit Test), B (Coverage). | slide CI/CD |
 
-## Video C — Ứng dụng / HTTP (3–5 phút)
+## Video C — Case study / HTTP (5–6 phút) — Người thực hiện: Nguyễn Lê Thế Vinh (23120190)
 
-1. Khởi chạy JAR và chỉ ra dữ liệu mẫu H2 được nạp khi ứng dụng khởi động.
-2. Gửi request mượn hợp lệ; giải thích response 201.
-3. Gửi lại cùng sách; giải thích 409 `BOOK_UNAVAILABLE`.
-4. Thử một request sai và một tình huống dữ liệu mẫu không đủ quyền mượn.
-5. Nhắc rằng dữ liệu là H2 in-memory và reset khi khởi động lại.
+**Trạng thái:** chưa quay. Timestamp điền sau khi quay.
 
-**Người thực hiện:** Nguyễn Lê Thế Vinh (23120190). Chạy `PAUSE=1 scripts/demo_case_study.sh` để đi lần lượt 7 request (201, 409 `BOOK_UNAVAILABLE`, 404 `BOOK_NOT_FOUND`, 404 `MEMBER_NOT_FOUND`, 400, 409 `UNPAID_FINE`, 201), dừng chờ Enter giữa các bước. Mở đầu video bằng sơ đồ luồng trong `MoTa_NghiepVu_CaseStudy.md`; cuối video chạy `LoanFlowEdgeCaseTest` để cho thấy cùng tình huống được test tự động. **Chưa quay.**
+**Chuẩn bị trước khi quay:** build sẵn bằng `case-study/mvnw -B -ntp -f case-study/pom.xml clean verify`; terminal dùng nền trắng chữ đen, cỡ chữ 16–18pt, `PS1='$ '` để không lộ đường dẫn máy; trình duyệt giao diện sáng mở `MoTa_NghiepVu_CaseStudy.md` trên GitHub (sơ đồ Mermaid tự hiển thị); bật Do Not Disturb; chạy thử một lượt script demo trước khi quay.
+
+| Phân đoạn | Timestamp | Nội dung cần minh họa | Lệnh / File minh chứng |
+|---|---|---|---|
+| **C-01: Nghiệp vụ** (~1') | Chưa quay | Mượn sách qua `POST /api/loans`. Hệ thống kiểm tra theo thứ tự: đầu vào hợp lệ → sách tồn tại → sách còn trên kệ → thành viên tồn tại → đang mượn dưới 3 cuốn → không nợ phí. Qua hết thì trả 201; dừng ở bước nào thì trả 400/404/409 | `MoTa_NghiepVu_CaseStudy.md` mục 1–2 |
+| **C-02: Kiến trúc, dữ liệu mẫu** (~45") | Chưa quay | 3 tầng web / nghiệp vụ / lưu trữ (JPA + H2 in-memory), mỗi tầng một loại test. `data.sql`: sách 1 và 3 còn trên kệ, sách 2 đã có người mượn; thành viên 2 nợ 5.000đ | Cùng file, mục 4–5 |
+| **C-03: Setup** (~45") | Chưa quay | JDK 25 và Maven Wrapper. Lỗi `release version 25 not supported` khi máy còn JDK 17, cách sửa đã ghi trong README. Script tự bật ứng dụng ở cổng 8081 rồi tự tắt | `java -version`; `PAUSE=1 scripts/demo_case_study.sh` |
+| **C-04: Demo cơ bản** (~1'30") | Chưa quay | 7 request: 201 → 409 `BOOK_UNAVAILABLE` → 404 `BOOK_NOT_FOUND` → 404 `MEMBER_NOT_FOUND` → 400 → 409 `UNPAID_FINE` → 201. Ý chính: sách 3 bị từ chối ở bước 6 vẫn mượn được ở bước 7, tức là khi từ chối hệ thống không lưu gì. Dữ liệu reset khi khởi động lại | Output của script, dừng 2–3 giây ở mỗi mã HTTP |
+| **C-05: Demo phức tạp, test tích hợp** (~1'15") | Chưa quay | 3 test chạy Spring Boot với H2 thật. Riêng `LIMIT_REACHED` không demo bằng tay được vì dữ liệu mẫu chỉ có 2 cuốn còn trên kệ, nên test tự thêm sách 4 và 5. `@DirtiesContext` giúp mỗi test có dữ liệu sạch. Kết quả 3/3 pass, cả bộ 52/52 | `LoanFlowEdgeCaseTest.java`; `case-study/mvnw -B -ntp -f case-study/pom.xml test -Dtest=LoanFlowEdgeCaseTest` |
+| **C-06: Giới hạn** (~45") | Chưa quay | Chưa có chức năng trả sách, nên phiếu mượn được tính mãi. Dữ liệu mất khi tắt ứng dụng. `synchronized` chỉ có tác dụng khi chạy một instance. `FineCalculator` và `LoanPeriodPolicy` chưa có API, chỉ dùng trong Video A và B | `JpaLoanRepository.java`, `LoanService.java` |
+
+**Sau khi quay:** xem lại toàn bộ để kiểm tra tiếng và mã HTTP có đọc được không; ghi timestamp C-01..06; đăng YouTube ở chế độ Unlisted rồi gửi link cho Bảo An đưa vào slide; ghi `sha256sum` và thời lượng theo checklist bên dưới.
 
 ## Video E — AI và paper — Người thực hiện: Ngô Gia An (23120205)
 

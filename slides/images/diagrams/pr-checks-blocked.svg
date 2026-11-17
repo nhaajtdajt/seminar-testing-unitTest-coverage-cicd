@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 240" width="100%" height="100%">
+  <rect width="700" height="240" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <!-- Header bar -->
+  <rect width="700" height="45" rx="8" fill="#f6f8fa" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="28" font-family="system-ui, sans-serif" font-weight="700" font-size="14" fill="#111111">GitHub Actions · Pull Request #6 Status Checks (master)</text>
+  <rect x="570" y="12" width="110" height="24" rx="4" fill="#111111"/>
+  <text x="625" y="28" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="11" fill="#ffffff">BLOCKED</text>
+
+  <!-- Check 1: test -->
+  <g transform="translate(20, 60)">
+    <circle cx="12" cy="12" r="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <path d="M 7 12 L 10 15 L 17 8" fill="none" stroke="#111111" stroke-width="2"/>
+    <text x="32" y="16" font-family="monospace" font-weight="700" font-size="13" fill="#111111">test (JDK 25)</text>
+    <text x="300" y="16" font-family="system-ui, sans-serif" font-size="12" fill="#555555">39 tests passed in 1m 24s</text>
+    <text x="640" y="16" text-anchor="end" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">Successful</text>
+  </g>
+
+  <line x1="20" y1="100" x2="680" y2="100" stroke="#eeeeee" stroke-width="1"/>
+
+  <!-- Check 2: coverage-gate -->
+  <g transform="translate(20, 115)">
+    <circle cx="12" cy="12" r="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <path d="M 8 8 L 16 16 M 16 8 L 8 16" fill="none" stroke="#111111" stroke-width="2"/>
+    <text x="32" y="16" font-family="monospace" font-weight="700" font-size="13" fill="#111111">coverage-gate (JaCoCo branch &gt;= 90%)</text>
+    <text x="640" y="16" text-anchor="end" font-family="system-ui, sans-serif" font-weight="700" font-size="12" fill="#111111">Failing (Rule Violated)</text>
+    <text x="32" y="36" font-family="monospace" font-size="11" fill="#555555">Branch coverage ratio 0.00 &lt; expected 0.90 (FineCalculator)</text>
+  </g>
+
+  <line x1="20" y1="165" x2="680" y2="165" stroke="#eeeeee" stroke-width="1"/>
+
+  <!-- Check 3: package -->
+  <g transform="translate(20, 180)">
+    <circle cx="12" cy="12" r="10" fill="#f0f0f0" stroke="#999999" stroke-width="1.5"/>
+    <path d="M 8 12 L 16 12" stroke="#999999" stroke-width="2"/>
+    <text x="32" y="16" font-family="monospace" font-size="13" fill="#777777">package (JAR build)</text>
+    <text x="640" y="16" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" fill="#777777">Skipped (needs gate)</text>
+    <text x="32" y="36" font-family="system-ui, sans-serif" font-size="11" fill="#777777">Lệnh 'gh pr merge' bị từ chối: Required status check is failing.</text>
+  </g>
+</svg>

@@ -1,72 +1,951 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Seminar · Unit Test, Coverage, CI/CD</title><link rel="icon" href="data:,">
-<style>
-:root { --paper:#fff; --ink:#101010; --muted:#4c4c4c; --rule:#d4d4d4; --code:#f4f4f4; }
-* { box-sizing:border-box; }
-body { margin:0; background:var(--paper); color:var(--ink); font-family:"Segoe UI",Arial,sans-serif; }
-header { display:flex; justify-content:space-between; gap:1rem; padding:1rem 4vw; border-bottom:1px solid var(--rule); font-size:.9rem; color:var(--muted); }
-header strong { color:var(--ink); }
-main { max-width:1440px; margin:auto; padding:4vh 6vw 7rem; }
-.slide { min-height:70vh; }
-.slide[hidden] { display:none; }
-.stage { font-family:Consolas,"DejaVu Sans Mono",monospace; font-size:clamp(1rem,1.5vw,1.4rem); margin:0 0 2rem; color:var(--muted); }
-h1 { font-family:Georgia,"DejaVu Serif",serif; font-size:clamp(2rem,4vw,4rem); line-height:1.14; letter-spacing:-.025em; margin:0 0 2.5rem; max-width:1100px; font-weight:normal; text-wrap:balance; }
-ul { font-size:clamp(1.2rem,2.1vw,2rem); line-height:1.5; padding-left:1.2em; max-width:1140px; margin:0; }
-li { padding-left:.25em; margin:.65em 0; }
-pre { background:var(--code); border-left:5px solid var(--ink); padding:1.2rem 1.4rem; overflow:auto; font-size:clamp(.95rem,1.65vw,1.45rem); line-height:1.6; margin:0 0 1.7rem; }
-code { font-family:Consolas,"DejaVu Sans Mono",monospace; }
-nav { position:fixed; bottom:0; left:0; right:0; display:flex; align-items:center; gap:.8rem; background:var(--paper); border-top:1px solid var(--rule); padding:.8rem 4vw; }
-button { min-height:44px; padding:.5rem 1rem; border:1px solid var(--ink); background:var(--paper); color:var(--ink); font:inherit; cursor:pointer; }
-button:hover { background:var(--code); }
-button:focus-visible { outline:3px solid var(--ink); outline-offset:3px; }
-button:disabled { color:var(--muted); border-color:var(--rule); cursor:default; }
-output { margin-left:auto; font-variant-numeric:tabular-nums; }
-.hint { color:var(--muted); font-size:.85rem; }
-@media(max-width:650px) { header span,.hint { display:none; } main { padding:2rem 6vw 6rem; } h1 { margin-bottom:1.5rem; } .stage { margin-bottom:1.2rem; } }
-@media print { @page { size:landscape; margin:12mm; } header,nav { display:none; } main { padding:0; max-width:none; } .slide,.slide[hidden] { display:block!important; min-height:0; height:170mm; break-after:page; padding:6mm; } .slide:last-child { break-after:auto; } h1 { font-size:28pt; margin-bottom:12mm; } ul { font-size:19pt; line-height:1.35; } pre { font-size:14pt; white-space:pre-wrap; } .stage { font-size:12pt; margin-bottom:8mm; } }
-</style></head><body>
-<header><strong>Unit Test → Coverage → CI/CD</strong><span>Seminar · Tuần 06</span></header>
-<main><section class="slide" id="slide-1" aria-labelledby="title-1"><p class="stage">Tổng quan</p><h1 id="title-1">Một lần mượn sách, ba lớp kiểm chứng</h1><ul><li>Unit Test → Code Coverage → CI/CD</li><li>Seminar Kiểm thử phần mềm · Nhóm 09</li><li>Tuần 06 · cập nhật 29/10/2026</li></ul></section><section class="slide" id="slide-2" aria-labelledby="title-2" hidden><p class="stage">Nhóm thực hiện</p><h1 id="title-2">Thành viên và phân công</h1><ul><li>Nguyễn Bảo An · 23120207: Unit Test, JUnit/Mockito và tổng hợp nội dung Unit Test.</li><li>Phạm Quang Vinh · 23120202: CI/CD, Build Java 25 &amp; Benchmark.</li><li>Trương Nhật Đạt · 23120231: Code Coverage, JaCoCo, coverage gate và mutation testing.</li><li>Nguyễn Lê Thế Vinh · 23120190: Case study, REST API, persistence và demo tích hợp.</li><li>Ngô Gia An · 23120205: Trưởng nhóm, AI, paper và hợp nhất nội dung trình bày.</li></ul></section><section class="slide" id="slide-3" aria-labelledby="title-3" hidden><p class="stage">Tổng quan</p><h1 id="title-3">Người học sẽ thực hành gì?</h1><ul><li>Viết test kiểm đúng hành vi và dữ liệu biên.</li><li>Đọc báo cáo để tìm mã chưa được chạy qua.</li><li>Dùng gate để làm fail build khi không đạt yêu cầu.</li><li>Review test do AI sinh bằng kết quả chạy thật.</li></ul></section><section class="slide" id="slide-4" aria-labelledby="title-4" hidden><p class="stage">Case study</p><h1 id="title-4">Tính phí và mượn sách</h1><ul><li>NORMAL: 2.000 VND/ngày; VIP: gia hạn 2 ngày, sau đó 1.000 VND/ngày.</li><li>Mức trần 50.000 VND; ngày âm và hạng null bị từ chối.</li><li>Mượn sách: kiểm sách, thành viên, hạn mức 3 sách và phí chưa trả.</li><li>Dữ liệu trong H2 in-memory (Spring Data JPA); restart để đặt lại trạng thái.</li></ul></section><section class="slide" id="slide-5" aria-labelledby="title-5" hidden><p class="stage">Unit Test</p><h1 id="title-5">Arrange → Act → Assert</h1><pre><code>// Đầu vào: VIP trễ 3 ngày
-var calculator = new FineCalculator();
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Seminar · Unit Test, Coverage, CI/CD · Nhóm 09</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="dist/reset.css">
+  <link rel="stylesheet" href="dist/reveal.css">
+  <link rel="stylesheet" href="dist/theme/white.css">
+  <style>
+    /* ============================================================
+       HIGH-CONTRAST MONOCHROME THEME · OPTIMIZED FOR BRIGHT HALLS
+       - Crisp, large, bold typography
+       - Zero empty/sparse space: full, balanced two-column layout
+       - 100% offline & strictly black-on-white
+       ============================================================ */
+    :root {
+      --r-background-color: #ffffff;
+      --r-main-color: #111111;
+      --r-heading-color: #000000;
+      --r-link-color: #111111;
+      --r-selection-background-color: #e5e5e5;
+      --r-selection-color: #000000;
+    }
+
+    body {
+      background: #ffffff !important;
+      color: #111111 !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .reveal {
+      background-color: #ffffff;
+      color: #111111;
+      font-size: 25px; /* Larger base font for clear readability */
+      font-weight: 400;
+    }
+
+    /* Global Slide Container */
+    .reveal .slides {
+      text-align: left;
+    }
+
+    .reveal .slides section {
+      padding: 1.5rem 2.8rem !important;
+      box-sizing: border-box;
+      height: 100% !important;
+      max-height: 100% !important;
+      overflow: hidden !important;
+    }
+
+    /* Stage Pill / Badge */
+    .stage-pill {
+      display: inline-block;
+      font-family: Consolas, "JetBrains Mono", monospace;
+      font-size: 0.62em;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      background: #f0f0f0;
+      color: #111111;
+      border: 1.5px solid #111111;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Headings */
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: Georgia, -apple-system, serif;
+      color: #000000;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: none;
+      margin: 0 0 0.9rem 0 !important;
+      line-height: 1.18;
+    }
+
+    .hero-title {
+      font-size: 2.0em !important;
+      max-width: 1100px;
+      margin-bottom: 1.1rem !important;
+    }
+
+    .reveal h2 {
+      font-size: 1.52em !important;
+      margin-bottom: 0.9rem !important;
+    }
+
+    /* Lists */
+    ul.styled-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0 0 0.6rem 0;
+      font-size: 0.94em;
+      line-height: 1.52;
+    }
+
+    ul.styled-list li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.65rem;
+      color: #222222;
+    }
+
+    ul.styled-list li::before {
+      content: "■";
+      position: absolute;
+      left: 0;
+      top: 1px;
+      font-size: 0.65em;
+      color: #111111;
+    }
+
+    ul.styled-list strong {
+      color: #000000;
+      font-weight: 750;
+    }
+
+    /* Split 2-Column Layout (52% Left, 48% Right) */
+    .split-container {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 2.2rem;
+      align-items: stretch;
+      min-height: 520px;
+    }
+
+    .split-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .split-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Takeaway Anchor Card (Fills empty vertical space cleanly) */
+    .takeaway-card {
+      border: 1.5px solid #111111;
+      border-left: 5px solid #111111;
+      background: #fafafa;
+      padding: 0.7rem 1.1rem;
+      border-radius: 4px;
+      margin-top: 0.7rem;
+      font-size: 0.82em;
+      box-shadow: 3px 3px 0px #111111;
+      box-sizing: border-box;
+    }
+
+    .takeaway-title {
+      font-family: Consolas, monospace;
+      font-weight: 800;
+      font-size: 0.85em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #111111;
+      margin-bottom: 0.25rem;
+    }
+
+    .takeaway-content {
+      color: #333333;
+      line-height: 1.42;
+    }
+
+    /* Visual Media Container */
+    .visual-box {
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      max-height: 540px;
+      border: 2px solid #111111;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      box-shadow: 4px 4px 0px #111111;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .diagram-img {
+      width: 100%;
+      height: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .screenshot-img {
+      width: 100%;
+      height: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
+      filter: grayscale(100%) contrast(105%);
+    }
+
+    /* Code Blocks */
+    .code-wrapper pre {
+      background: #f6f8fa !important;
+      border: 1.5px solid #111111 !important;
+      border-radius: 6px !important;
+      box-shadow: 3px 3px 0px #111111 !important;
+      padding: 0.65rem 0.9rem !important;
+      margin: 0.5rem 0 !important;
+      font-size: 0.74em !important;
+      line-height: 1.4 !important;
+      max-height: 200px !important;
+      overflow: auto !important;
+    }
+
+    .code-wrapper code {
+      font-family: Consolas, "JetBrains Mono", "DejaVu Sans Mono", monospace !important;
+      color: #111111 !important;
+    }
+
+    code {
+      font-family: Consolas, "JetBrains Mono", monospace;
+      background: #f0f0f0;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 0.88em;
+      border: 1px solid #d0d0d0;
+    }
+
+    /* Logo Strip */
+    .logo-strip {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      margin-top: 1.0rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid #ddd;
+    }
+
+    .tech-logo {
+      width: 32px;
+      height: 32px;
+      filter: grayscale(100%);
+      opacity: 0.9;
+    }
+
+    /* Team Slide Grid */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem;
+      margin-top: 0.8rem;
+    }
+
+    .member-card {
+      background: #ffffff;
+      border: 2px solid #111111;
+      border-radius: 6px;
+      padding: 0.9rem 1.1rem;
+      box-shadow: 3px 3px 0px #111111;
+      font-size: 0.82em;
+    }
+
+    .member-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.3rem;
+    }
+
+    .member-name {
+      font-weight: 750;
+      font-size: 1.15em;
+      color: #000000;
+    }
+
+    .member-mssv {
+      font-family: monospace;
+      color: #444444;
+      font-weight: 600;
+    }
+
+    .member-role {
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 0.4rem;
+      font-size: 0.92em;
+      background: #f0f0f0;
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+    }
+
+    .member-task {
+      color: #333333;
+      line-height: 1.4;
+    }
+
+    /* Progress bar and controls */
+    .reveal .progress {
+      color: #111111;
+      height: 4px;
+    }
+    .reveal .controls {
+      color: #111111;
+    }
+    .reveal .slide-number {
+      font-family: monospace;
+      color: #111111;
+      background-color: transparent;
+      font-size: 14px;
+      right: 1.5rem;
+      bottom: 0.9rem;
+    }
+
+    /* Pinned Header Bar */
+    .header-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 2.8rem;
+      font-size: 0.76rem;
+      color: #555555;
+      border-bottom: 1px solid #d5d5d5;
+      background: #ffffff;
+      z-index: 10;
+    }
+    .header-bar strong {
+      color: #111111;
+    }
+
+    /* Print styles */
+    @media print {
+      .header-bar { display: none; }
+      .reveal .slides section {
+        page-break-after: always !important;
+        height: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <span><strong>Seminar KCPM · Nhóm 09</strong> (Tuần 06)</span>
+    <span>Chủ đề: Unit Test → Coverage Gate → CI/CD</span>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <section class="slide-hero" data-transition="fade">
+        <div class="stage-pill">TỔNG QUAN</div>
+        <h1 class="hero-title">Một lần mượn sách, ba lớp kiểm chứng</h1>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Mô hình 3 lớp kiểm chứng:</strong> Unit Test → Coverage Gate → CI/CD Pipeline.</li><li><strong>Case study thực chiến:</strong> Quản lý mượn sách &amp; chính sách phạt trễ hạn thư viện.</li><li><strong>Seminar Kiểm thử phần mềm · Nhóm 09</strong> · Cập nhật báo cáo Tuần 06.</li></ul>
+            <div class="takeaway-card"><div class="takeaway-title">CÂU HỎI XUYÊN SUỐT</div><div class="takeaway-content">Trả lời câu hỏi cốt lõi: &#x27;Test chạy xanh và Coverage 100% đã chắc chắn mã nguồn không còn lỗi?&#x27;</div></div>
+            <div class="logo-strip"><img src="images/logos/openjdk.svg" alt="logo" class="tech-logo" /><img src="images/logos/junit5.svg" alt="logo" class="tech-logo" /><img src="images/logos/githubactions.svg" alt="logo" class="tech-logo" /><img src="images/logos/apachemaven.svg" alt="logo" class="tech-logo" /><img src="images/logos/googlegemini.svg" alt="logo" class="tech-logo" /></div>
+          </div>
+          <div class="split-right">
+            <div class="visual-box">
+              <img src="images/diagrams/three-layers.svg" alt="Three layers architecture" class="diagram-img" />
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Bảo An: Chào thầy và các bạn. Hôm nay Nhóm 09 xin trình bày đề tài &#x27;Một lần mượn sách, ba lớp kiểm chứng&#x27;. Bài thuyết trình giải quyết trọn vẹn câu hỏi: Làm thế nào để đảm bảo chất lượng phần mềm từ Unit Test độc lập, chốt chặn độ phủ đến pipeline CI/CD và ứng dụng AI.</aside>
+      </section>
+
+      <section class="slide-team" data-transition="fade">
+        <div class="stage-pill">NHÓM THỰC HIỆN</div>
+        <h2>Thành viên &amp; Phân công trách nhiệm</h2>
+        <div class="team-grid">
+            <div class="member-card">
+              <div class="member-header">
+                <span class="member-name">Nguyễn Bảo An</span>
+                <span class="member-mssv">23120207</span>
+              </div>
+              <div class="member-role">Unit Test Core</div>
+              <div class="member-task">JUnit 5, Mockito, Parameterized Tests, AAA Pattern &amp; Video A.</div>
+            </div>
+            <div class="member-card">
+              <div class="member-header">
+                <span class="member-name">Phạm Quang Vinh</span>
+                <span class="member-mssv">23120202</span>
+              </div>
+              <div class="member-role">CI/CD &amp; Benchmark</div>
+              <div class="member-task">GitHub Actions, Build JDK 25, Đo cache Maven &amp; Video D.</div>
+            </div>
+            <div class="member-card">
+              <div class="member-header">
+                <span class="member-name">Trương Nhật Đạt</span>
+                <span class="member-mssv">23120231</span>
+              </div>
+              <div class="member-role">Code Coverage</div>
+              <div class="member-task">JaCoCo 90% branch gate, PIT Mutation Testing &amp; Video B.</div>
+            </div>
+            <div class="member-card">
+              <div class="member-header">
+                <span class="member-name">Nguyễn Lê Thế Vinh</span>
+                <span class="member-mssv">23120190</span>
+              </div>
+              <div class="member-role">Case Study &amp; REST</div>
+              <div class="member-task">Spring Data JPA, H2 database, HTTP smoke test &amp; Video C.</div>
+            </div>
+            <div class="member-card">
+              <div class="member-header">
+                <span class="member-name">Ngô Gia An</span>
+                <span class="member-mssv">23120205</span>
+              </div>
+              <div class="member-role">Trưởng nhóm &amp; AI/Paper</div>
+              <div class="member-task">Gemini sinh test, tái hiện CoverUp, Pynguin &amp; Video E.</div>
+            </div></div>
+        <div class="takeaway-card" style="margin-top: 1.2rem;">
+          <div class="takeaway-title">CAM KẾT MINH BẠCH &amp; ĐÓNG GÓP THỰC TẾ</div>
+          <div class="takeaway-content">100% thành viên có commit và Pull Request thật trên Git; mỗi người tự quay và thuyết minh video demo công cụ phụ trách.</div>
+        </div>
+        <aside class="notes">Bảo An: Nhóm gồm 5 thành viên phụ trách 5 mảng chuyên môn khép kín, mỗi thành viên chịu trách nhiệm độc lập một mảng kỹ thuật và tự quay một video demo minh chứng.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">MỤC TIÊU</div>
+        <h2>4 Trụ cột người học sẽ thực hành</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>1. Viết Unit Test chuẩn:</strong> Cấu trúc AAA, nguyên lý FIRST và kỹ thuật quét dữ liệu biên.</li><li><strong>2. Đo lường bản chất:</strong> Phân biệt Line vs Branch; nhận diện bẫy độ phủ bằng PIT Mutation.</li><li><strong>3. Chốt chặn CI tự động:</strong> Cấu hình Gate làm fail build ngay khi Branch &lt; 90% trên GitHub Actions.</li><li><strong>4. Đánh giá kiểm thử AI:</strong> Dùng Gemini 3.6 tìm gap, sinh test và đối chứng kết quả bằng oracle.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Mục tiêu: Giúp người học tự xây dựng được hệ thống kiểm thử tự động, không chạy theo số liệu hình thức.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/roadmap-goals.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Seminar đi từ lý thuyết đến thực hành: viết test, đo độ phủ thật, cấu hình pipeline và đánh giá AI có phản biện.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CASE STUDY</div>
+        <h2>Nghiệp vụ tính phí phạt &amp; mượn sách</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Hạng NORMAL:</strong> Đơn giá 2.000 VND/ngày; không có ngày gia hạn; mức trần tối đa 50.000 VND.</li><li><strong>Hạng VIP:</strong> Miễn phí 2 ngày đầu, sau đó 1.000 VND/ngày; mức trần tối đa 50.000 VND.</li><li><strong>Quy tắc mượn sách:</strong> Tối đa 3 cuốn/thành viên, không nợ phí phạt cũ, sách đang sẵn có.</li><li><strong>Dữ liệu:</strong> H2 in-memory sạch, nạp tự động lúc khởi động và reset khi restart.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Ranh giới kiểm thử: 0, 1, 2 ngày; chạm trần 25 ngày (NORMAL) và 52 ngày (VIP); ngày âm ném ngoại lệ.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/domain-rules.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Thế Vinh: Case study có quy tắc tính phí và điều kiện mượn sách rõ ràng, làm nền tảng kiểm thử xuyên suốt cả seminar.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">VIDEO DEMO C</div>
+        <h2>Video C: Chạy ứng dụng &amp; 7 Kịch bản HTTP Smoke Test</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Người thực hiện:</strong> Nguyễn Lê Thế Vinh (23120190) · <strong>Thời lượng:</strong> 3 – 5 phút.</li><li><strong>00:00 - Setup:</strong> Khởi chạy JAR thật trên JDK 25, kiểm tra dữ liệu mẫu H2 in-memory.</li><li><strong>01:00 - Demo 7 request:</strong> Chạy <code>scripts/demo_case_study.sh</code>: 201 Created, 409 UNAVAILABLE, 404 NOT_FOUND, 409 UNPAID_FINE.</li><li><strong>03:30 - Đối chiếu test:</strong> Chạy <code>LoanFlowEdgeCaseTest</code> chứng minh HTTP curl khớp 100% với test tự động.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Trạng thái: Đã quay xong video · Link YouTube: [Sẽ bổ sung URL sau] · Mã lệnh: scripts/demo_case_study.sh</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/video-c-timeline.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Thế Vinh: Video C demo trực quan ứng dụng Spring Boot chạy thật, gửi 7 request curl kiểm thử các mã trạng thái HTTP.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">UNIT TEST</div>
+        <h2>Cấu trúc Arrange → Act → Assert (AAA)</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Arrange:</strong> Khởi tạo đối tượng &amp; thiết lập dữ liệu giả định (Khách VIP trễ 3 ngày).</li><li><strong>Act:</strong> Kích hoạt duy nhất phương thức nghiệp vụ cần kiểm thử (<code>calculate</code>).</li><li><strong>Assert:</strong> So sánh kết quả thực tế với giá trị kỳ vọng (1.000 VND).</li><li><strong>Lưu ý BigDecimal:</strong> Bắt buộc dùng <code>isEqualByComparingTo</code> để không bị lỗi so sánh scale.</li></ul>
+            <div class="code-wrapper"><pre><code class="language-java">var calculator = new FineCalculator();
 var amount = calculator.calculate(3, MemberTier.VIP);
-assertThat(amount).isEqualByComparingTo(&quot;1000&quot;);</code></pre><ul><li>Kiểm giá trị cụ thể; so tiền không phụ thuộc scale.</li><li>Logic thuần dùng đối tượng thật.</li></ul></section><section class="slide" id="slide-6" aria-labelledby="title-6" hidden><p class="stage">Unit Test</p><h1 id="title-6">Test nhanh, độc lập, lặp lại được</h1><ul><li>FIRST: Fast, Independent, Repeatable, Self-validating, Timely.</li><li>Clock.fixed giữ thời gian test ổn định.</li><li>Một test không có assertion vẫn có thể pass.</li><li>Test mock quá mức có thể xác nhận lại điều đã stub.</li></ul></section><section class="slide" id="slide-7" aria-labelledby="title-7" hidden><p class="stage">Unit Test</p><h1 id="title-7">UT-1: chạy và đọc kết quả</h1><pre><code>case-study/mvnw -B -ntp -f case-study/pom.xml clean test</code></pre><ul><li>Bộ core hiện có 39 lượt; PR AI #13 có 49 lượt sau khi áp dụng 10 test Gemini.</li><li>Đọc Tests / Failures / Errors / Skipped trong Surefire.</li><li>Đã chạy bộ chuẩn trên Java 25 và Java 21 tại máy.</li></ul></section><section class="slide" id="slide-8" aria-labelledby="title-8" hidden><p class="stage">Unit Test</p><h1 id="title-8">UT-2: một test, nhiều bộ dữ liệu</h1><pre><code>daysLate,tier,expected
+assertThat(amount).isEqualByComparingTo(&quot;1000&quot;);</code></pre></div>
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Quy tắc vàng: Mỗi ca test chỉ tập trung kiểm chứng duy nhất một hành vi nghiệp vụ độc lập.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/aaa-pattern.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: AAA là mẫu chuẩn của unit test. Tuyệt đối không dùng isEqualTo của BigDecimal vì &#x27;1000&#x27; và &#x27;1000.00&#x27; sẽ bị coi là khác nhau.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">UNIT TEST</div>
+        <h2>Nguyên lý F.I.R.S.T &amp; Bẫy kiểm thử</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>F - Fast &amp; I - Independent:</strong> Chạy milli-giây, độc lập thứ tự thực thi.</li><li><strong>R - Repeatable:</strong> Tiêm <code>Clock.fixed</code> giữ thời gian bất biến, không phụ thuộc ngày giờ hệ thống.</li><li><strong>S - Self-validating &amp; T - Timely:</strong> Tự động pass/fail; viết đồng thời với mã nguồn.</li><li><strong>2 Bẫy phổ biến:</strong> Test thiếu assert (vẫn xanh vô nghĩa) và Mock quá đà (chỉ test lại stub).</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Giải pháp: Tiêm Clock giả lập và luôn kiểm tra chất lượng câu lệnh assert bằng Mutation Testing.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/first-principles.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Hai bẫy nguy hiểm nhất: viết test gọi hàm nhưng quên assert, và mock tràn lan khiến test không kiểm tra logic thật.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">UNIT TEST</div>
+        <h2>UT-1: Chạy kiểm thử &amp; Đọc báo cáo Surefire</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Lệnh thực thi:</strong> <code>./mvnw -B -ntp clean test</code> (cờ batch mode tối ưu cho CI/terminal).</li><li><strong>Quy mô bộ test:</strong> 39 tests core ban đầu → <strong>49 tests</strong> sau khi tích hợp AI (PR #13).</li><li><strong>Surefire metrics:</strong> Phân biệt rõ Failure (sai assertion logic) vs Error (sập ngoại lệ JVM).</li><li><strong>Tương thích:</strong> Đã chạy pass 100% trên cả JDK 25 mới nhất và JDK 21 LTS.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Kết quả: 49/49 tests passed, 0 failures, 0 errors, thời gian thực thi toàn bộ suite dưới 1.5 giây.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/surefire-report.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Sử dụng cờ -B -ntp giúp log sạch trên terminal và CI. Báo cáo Surefire lưu tại target/surefire-reports.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">UNIT TEST</div>
+        <h2>UT-2: Parameterized Test (@CsvFileSource) &amp; TDD</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>@CsvFileSource:</strong> Tách dữ liệu ra file ngoài, kiểm tra quét ranh giới 24, 25, 26 ngày trễ.</li><li><strong>4 Vòng TDD đỏ – xanh:</strong></li><li>• Vòng 1: Tính phí phạt cơ bản theo ngày trễ.</li><li>• Vòng 2: Áp dụng mức trần tối đa 50.000 VND.</li><li>• Vòng 3: Bổ sung chính sách miễn 2 ngày đầu cho khách VIP.</li><li>• Vòng 4: Xử lý ngoại lệ dữ liệu biên (ngày âm &amp; null).</li></ul>
+            <div class="code-wrapper"><pre><code class="language-java">daysLate,tier,expected
 24,NORMAL,48000
 25,NORMAL,50000
-26,NORMAL,50000</code></pre><ul><li>@CsvFileSource đọc dữ liệu từ CSV ngoài mã test.</li><li>Kiểm trước / đúng / sau ngưỡng.</li><li>Bốn vòng TDD đỏ–xanh được tái hiện; có source và log từng vòng.</li></ul></section><section class="slide" id="slide-9" aria-labelledby="title-9" hidden><p class="stage">Unit Test</p><h1 id="title-9">UT-3: sáu tình huống mượn sách</h1><ul><li>Sách không tồn tại; sách đang được mượn.</li><li>Thành viên không tồn tại; đạt hạn mức 3 sách.</li><li>Còn phí chưa trả; mượn thành công.</li><li>verify(never()) kiểm nhánh lỗi không lưu phiếu.</li><li>ArgumentCaptor kiểm phiếu đã lưu, không chỉ kiểm giá trị trả về.</li></ul></section><section class="slide" id="slide-10" aria-labelledby="title-10" hidden><p class="stage">Unit Test</p><h1 id="title-10">Mock kiểm được đến đâu?</h1><ul><li>Unit test tách phụ thuộc để kiểm quyết định nghiệp vụ.</li><li>Web slice kiểm HTTP và validation với service được mock.</li><li>Integration test nối controller → service → repository thật trên H2 in-memory.</li><li>HTTP smoke khởi động JAR và kiểm 5 tình huống thật.</li></ul></section><section class="slide" id="slide-11" aria-labelledby="title-11" hidden><p class="stage">Code Coverage</p><h1 id="title-11">Dòng được chạy và nhánh được chạy</h1><ul><li>Line coverage đếm dòng thực thi.</li><li>Branch coverage đếm hướng rẽ trong mã.</li><li>Một dòng có thể chứa nhiều nhánh.</li><li>JaCoCo cung cấp HTML để đọc, XML để phân tích tự động.</li></ul></section><section class="slide" id="slide-12" aria-labelledby="title-12" hidden><p class="stage">Code Coverage</p><h1 id="title-12">CC-1/2: đo trước, bổ sung, đo lại</h1><pre><code>case-study/mvnw -f case-study/pom.xml -Pbaseline clean verify
-# Lưu báo cáo trước khi chạy tiếp
-case-study/mvnw -f case-study/pom.xml clean verify</code></pre><ul><li>Riêng FineCalculator: baseline 50% nhánh → bộ đầy đủ 100%.</li><li>Lưu cả hai báo cáo HTML/XML để đối chiếu.</li></ul></section><section class="slide" id="slide-13" aria-labelledby="title-13" hidden><p class="stage">Code Coverage</p><h1 id="title-13">CC-3: gate phải chặn được bản thiếu test</h1><pre><code>case-study/mvnw -f case-study/pom.xml -Pbaseline \
-  -Dcoverage.gate.skip=false clean verify
-# Kỳ vọng: exit 1, vì 50% &lt; 90%</code></pre><ul><li>Giữ gate 90% branch cho FineCalculator.</li><li>Khôi phục bộ test đầy đủ: build pass.</li><li>GitHub Actions đã chạy gate thật; PR đỏ bị chặn và PR xanh được phép merge.</li></ul></section><section class="slide" id="slide-14" aria-labelledby="title-14" hidden><p class="stage">Code Coverage</p><h1 id="title-14">100% branch vẫn có thể kiểm sai rất ít</h1><ul><li>Test bẫy đi đủ nhánh nhưng bỏ assertion tiền ở ca hợp lệ.</li><li>JaCoCo: cả bộ yếu và bộ đầy đủ đều phủ 100% branch.</li><li>PIT: bộ yếu diệt 3/11 mutation; bộ đầy đủ diệt 10/11.</li><li>Mutant còn sống ở bộ đầy đủ tương đương theo đặc tả ngưỡng trả 0.</li></ul></section><section class="slide" id="slide-15" aria-labelledby="title-15" hidden><p class="stage">CI/CD</p><h1 id="title-15">CI, Continuous Delivery, Continuous Deployment</h1><pre><code>Commit → Build + Test → Artifact → Duyệt → Triển khai
-        |______ CI ______|
-        |________ Continuous Delivery ________|
-        |_______________ Continuous Deployment ___________|</code></pre><ul><li>CI (tích hợp liên tục): mỗi lần đẩy code, tự build và chạy test; lỗi phát hiện ngay.</li><li>Continuous Delivery: sau CI luôn có bản (artifact) sẵn sàng phát hành; việc triển khai do người bấm duyệt.</li><li>Continuous Deployment: bản đạt mọi kiểm tra tự động được triển khai lên môi trường chạy thật, không cần người duyệt.</li><li>Mỗi mức đòi hỏi bộ test và gate tin cậy hơn mức trước.</li></ul></section><section class="slide" id="slide-16" aria-labelledby="title-16" hidden><p class="stage">CI/CD</p><h1 id="title-16">Nhóm làm đến mức nào?</h1><ul><li>CI: có. Mỗi pull request tự chạy test và coverage gate trên GitHub Actions.</li><li>Delivery: ở mức tạo JAR (job package) và lưu làm artifact; chưa có bước duyệt phát hành.</li><li>Deployment: không làm. Chủ đề là kiểm thử nên không triển khai lên máy chủ.</li><li>Nếu cần: thêm job deploy chạy sau package, có điều kiện nhánh master và bước duyệt.</li></ul></section><section class="slide" id="slide-17" aria-labelledby="title-17" hidden><p class="stage">CI/CD</p><h1 id="title-17">Từ lệnh tại máy đến pipeline</h1><pre><code>test [JDK 25]
-        ↓
-coverage-gate [branch &gt;= 90%]
-        ↓
-package [JAR + artifact]</code></pre><ul><li>CI kiểm thay đổi được tích hợp thường xuyên.</li><li>Bản hiện tại dừng ở kiểm thử/đóng gói; chưa tự deploy ứng dụng.</li></ul></section><section class="slide" id="slide-18" aria-labelledby="title-18" hidden><p class="stage">CI/CD</p><h1 id="title-18">CI-1/2/3: workflow và minh chứng</h1><ul><li>CI-1: checkout, setup JDK 25, chạy Maven. CI-2: cache dependency, upload báo cáo, step summary.</li><li>CI-3: ba job nối bằng needs; chạy khi có pull request, push vào master/seminar-core, hoặc chạy tay.</li><li>Đã chạy thật trên GitHub: PR #1 xanh; PR #2 đỏ vì coverage-gate (branch 0,00 &lt; 0,90) rồi xanh lại.</li><li>Required checks bật trên master: PR đỏ #6 có trạng thái BLOCKED, không merge được.</li></ul></section><section class="slide" id="slide-19" aria-labelledby="title-19" hidden><p class="stage">CI/CD</p><h1 id="title-19">GitHub Actions: cấu trúc workflow</h1><ul><li>Workflow viết bằng YAML trong .github/workflows, chạy trên runner do GitHub cấp.</li><li>Ba job nối nhau bằng needs: test → coverage-gate → package.</li><li>Job trước đỏ thì job sau không chạy.</li><li>Cache Maven và artifact giúp chạy nhanh và lưu báo cáo.</li></ul></section><section class="slide" id="slide-20" aria-labelledby="title-20" hidden><p class="stage">CI/CD</p><h1 id="title-20">Khi test xanh mà vẫn bị chặn</h1><ul><li>Xóa FineCalculatorTest: job test vẫn xanh (không test nào fail).</li><li>Job coverage-gate đỏ: FineCalculator phủ 0,00 nhánh, yêu cầu 0,90.</li><li>Job package bị bỏ qua vì needs: code thiếu test không được đóng gói.</li><li>Test pass chưa đủ; cần gate về coverage và PIT cho chất lượng assertion.</li></ul></section><section class="slide" id="slide-21" aria-labelledby="title-21" hidden><p class="stage">CI/CD</p><h1 id="title-21">CI gặp vấn đề: điểm yếu quan sát được</h1><ul><li>Đổi pom.xml (dù chỉ một dòng comment) làm khóa cache đổi: log ghi maven cache is not found.</li><li>coverage-gate chạy lại toàn bộ test; thời gian runner dao động (cùng bước: 29 s đến 70 s).</li><li>Required check làm PR kẹt nếu workflow trên master chưa có trigger (PR #4).</li><li>Gate chỉ kiểm cái được cấu hình; chưa đo được lộ secret hay flaky test.</li></ul></section><section class="slide" id="slide-22" aria-labelledby="title-22" hidden><p class="stage">CI/CD</p><h1 id="title-22">Video D: CI/CD với GitHub Actions (8–9 phút)</h1><ul><li>00:00 Setup: ci.yml, trigger, JDK 25.  01:00 Khái niệm: CI/CD, needs, jacoco:check.</li><li>02:15 Demo đơn giản: run xanh, log, artifact, cache.</li><li>04:00 Demo phức tạp: PR đỏ rồi xanh; PR vào master bị BLOCKED.</li><li>06:30 Điểm yếu: cache miss, test chạy hai lần, thời gian dao động, PR kẹt.</li></ul></section><section class="slide" id="slide-23" aria-labelledby="title-23" hidden><p class="stage">Thực nghiệm</p><h1 id="title-23">Thời gian đo tại máy</h1><ul><li>Kho Maven lạnh/ấm (Java 25): đủ 3 cặp; trung vị 48,412s / 12,539s.</li><li>Ba lượt verify không/có JaCoCo: trung vị 9,727s / 12,754s.</li><li>Cặp 3 chạy bổ sung: 479,523s / 11,940s; điều kiện mạng thay đổi giữa các cặp.</li><li>Không coi là thời gian cache trên GitHub Actions.</li></ul></section><section class="slide" id="slide-24" aria-labelledby="title-24" hidden><p class="stage">AI</p><h1 id="title-24">AI-1/2: Gemini sinh, review rồi mới áp dụng</h1><ul><li>Runner đọc class và source liên quan, không hard-code FineCalculator hay LoanService vào prompt.</li><li>Gemini 3.6 sinh 7 test LoanService; AI-2 bổ sung 3 test sau khi đọc coverage và bản nháp.</li><li>Sau review, apply kiểm full suite: 49 test pass; LoanService đạt line 17/17, branch 6/6.</li><li>Apply tạo hai file test thật rồi xóa session output tạm; lỗi assertion dừng để người review.</li></ul></section><section class="slide" id="slide-25" aria-labelledby="title-25" hidden><p class="stage">AI</p><h1 id="title-25">AI-3: review PR chạy song song với CI</h1><ul><li>Gemini chỉ đọc diff test của PR; JUnit, JaCoCo gate và package vẫn là required checks riêng.</li><li>PR #13: sáu job xanh, 49 test pass, project line 76/83 và branch 24/24.</li><li>Bot cập nhật một comment gồm trạng thái CI và nhận xét Gemini; lượt cuối không có finding.</li><li>AI review không tự sửa test, không tự commit và không thay quyền quyết định merge.</li></ul></section><section class="slide" id="slide-26" aria-labelledby="title-26" hidden><p class="stage">AI</p><h1 id="title-26">AI-4: bộ người viết và bộ AI bổ sung nhau</h1><ul><li>Gia An thiết kế trước 23 ca từ đặc tả: 16 hợp lệ, 7 lỗi; Java chạy 23/23 pass, branch 10/10.</li><li>Gemini tạo 13 ca hợp lệ; Java chạy 13/13 pass, branch 8/10.</li><li>11 đầu vào chung có cùng kỳ vọng; không có disagreement.</li><li>Bộ người viết có ca lỗi; bộ AI có Integer.MAX_VALUE. Phép so này không phải accuracy benchmark.</li></ul></section><section class="slide" id="slide-27" aria-labelledby="title-27" hidden><p class="stage">Paper</p><h1 id="title-27">CoverUp: coverage dẫn đường cho LLM</h1><ul><li>FSE 2025, CORE2023 A*. Nhóm chạy script tác giả trên 163 module: 89,0% so với MuTAP 76,8%.</li><li>Gia An chạy Gemini 3.6 trên f003: 3 test pass, line 8/8 và branch 4/4.</li><li>Trên scripts/coverage_gaps.py: 7 test pass; coverage kết hợp tăng 23,6% lên 96,4%.</li><li>Đổi model, baseline và môi trường; kết quả không đại diện toàn benchmark.</li></ul></section><section class="slide" id="slide-28" aria-labelledby="title-28" hidden><p class="stage">Paper</p><h1 id="title-28">Pynguin: sinh test bằng tìm kiếm tiến hóa</h1><ul><li>Empirical Software Engineering 2023, CORE2020 A; tool không gọi LLM.</li><li>Notebook tác giả: 134 module, 40.200 dòng dữ liệu; 8 cột thống kê của 10 cấu hình khớp output gốc.</li><li>Benchmark codetiming._timers: coverage nội bộ 81,48%, bằng median 30 lượt công bố; 10 pass, 5 xfail.</li><li>Trên source nhóm, test có seed chỉ gọi hàm mà thiếu assertion; coverage không hơn smoke baseline.</li></ul></section><section class="slide" id="slide-29" aria-labelledby="title-29" hidden><p class="stage">Video E</p><h1 id="title-29">AI và paper: nội dung đã sẵn sàng để quay</h1><ul><li>GA-01/02: setup Gemini, AI-1 sinh test và AI-2 review/repair/apply.</li><li>GA-03/04: AI-3 comment PR; demo oracle sai để giải thích giới hạn của test xanh.</li><li>GA-05: so bộ dữ liệu biên người viết với Gemini rồi chạy qua Java.</li><li>GA-06/07: CoverUp và Pynguin, gồm cả kết quả tốt và trường hợp tool tạo test yếu. URL/timestamp điền sau khi quay.</li></ul></section><section class="slide" id="slide-30" aria-labelledby="title-30" hidden><p class="stage">Thực hành</p><h1 id="title-30">Bài tập cho người nghe</h1><ul><li>Thêm hạng STUDENT: viết quy tắc, dữ liệu biên và test.</li><li>Bỏ một assertion tiền: so JaCoCo và PIT trước/sau.</li><li>Đưa Maven vào workflow, tạo PR thiếu nhánh và kiểm gate.</li><li>Gợi ý: giữ nguyên gate; sửa test/logic theo đặc tả.</li></ul></section><section class="slide" id="slide-31" aria-labelledby="title-31" hidden><p class="stage">Tuần 6</p><h1 id="title-31">Gói tuần 6: các đầu ra cần chốt</h1><ul><li>Gói nộp: slide, báo cáo, link video, source, seminar contribution, git commit log và AI usage declaration.</li><li>Video là bắt buộc: setup, khái niệm cơ bản, đơn giản, phức tạp, trường hợp không xử lý được, data driven.</li><li>Đối chiếu tác giả commit và minh chứng trước khi kết luận đóng góp thành viên.</li></ul></section><section class="slide" id="slide-32" aria-labelledby="title-32" hidden><p class="stage">Tài liệu</p><h1 id="title-32">Nguồn và cách tái hiện</h1><ul><li>README.md: điểm vào cho gói thực hành.</li><li>docs/thuc-hanh/HuongDan_Demo.md: lệnh cho từng demo.</li><li>evidence/tuan-05/ và tuan-06/: log, XML/HTML, CI, AI và paper.</li><li>Tài liệu chính thức: JUnit, Mockito, JaCoCo, PIT, Spring Boot, GitHub Actions, Gemini API (link trong báo cáo).</li></ul></section></main>
-<nav aria-label="Điều khiển slide"><button id="prev" type="button">← Trước</button><button id="next" type="button">Tiếp →</button><span class="hint">Phím ← → · Ctrl+P để in</span><output id="counter" aria-live="polite"></output></nav>
-<script>
-const slides = Array.from(document.querySelectorAll('.slide'));
-const prev = document.getElementById('prev');
-const next = document.getElementById('next');
-let index = 0;
-function show(value) {
-  index = Math.min(slides.length - 1, Math.max(0, value));
-  slides.forEach((slide, i) => { slide.hidden = i !== index; });
-  document.getElementById('counter').textContent = `${index + 1} / ${slides.length}`;
-  prev.disabled = index === 0; next.disabled = index === slides.length - 1;
-  history.replaceState(null, '', `#${index + 1}`);
-  window.scrollTo(0, 0);
-}
-prev.addEventListener('click', () => show(index - 1));
-next.addEventListener('click', () => show(index + 1));
-document.addEventListener('keydown', event => {
-  if (event.altKey || event.ctrlKey || event.metaKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
-  if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); show(index + (event.key === 'ArrowRight' ? 1 : -1)); }
-  if (event.key === 'Home') { event.preventDefault(); show(0); }
-  if (event.key === 'End') { event.preventDefault(); show(slides.length - 1); }
-});
-const hashIndex = /^#[0-9]+$/.test(location.hash) ? Number(location.hash.slice(1)) - 1 : 0;
-show(Number.isFinite(hashIndex) ? hashIndex : 0);
-</script></body></html>
+26,NORMAL,50000</code></pre></div>
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Giá trị: 1 hàm test tự động sinh 15 ca kiểm thử bao quát toàn bộ ranh giới, lưu vết log từng vòng TDD.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/tdd-cycle.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Parameterized test giúp một hàm test kiểm tra được hàng chục bộ dữ liệu biên. Bốn vòng TDD đều được lưu vết mã nguồn và log từng bước.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">UNIT TEST</div>
+        <h2>UT-3: Sáu tình huống mượn sách &amp; Mockito</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>5 Ca ngoại lệ:</strong> Sách ảo, sách đang mượn, thành viên ảo, mượn quá 3 cuốn, còn nợ phí phạt.</li><li><strong>1 Ca thành công:</strong> Đủ điều kiện và lưu phiếu mượn hợp lệ xuống cơ sở dữ liệu.</li><li><strong>Kỹ thuật Mockito chuyên sâu:</strong></li><li>• <code>verify(loanRepo, never()).save(...)</code>: Chặn rò rỉ dữ liệu khi gặp lỗi.</li><li>• <code>ArgumentCaptor</code>: Bắt và kiểm tra chi tiết trạng thái phiếu mượn được lưu.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Tác dụng: Cô lập hoàn toàn LoanService khỏi I/O và DB, thời gian chạy toàn bộ 6 ca dưới 0.15s.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/loan-verification.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: LoanService có 6 nhánh logic. Điểm then chốt là kiểm tra verify(never()).save() để chứng minh hệ thống không bao giờ ghi dữ liệu sai xuống DB.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">UNIT TEST</div>
+        <h2>Mock kiểm được đến đâu? Kim tự tháp test</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Unit Test (Đáy tháp):</strong> Mock cô lập, phản hồi milli-giây, tập trung kiểm quyết định nghiệp vụ.</li><li><strong>Web Slice Test:</strong> Dùng <code>@WebMvcTest</code> kiểm tra HTTP status và validation với service giả lập.</li><li><strong>Integration &amp; Smoke Test (Đỉnh tháp):</strong> Nối DB H2 thật; chạy JAR hoàn chỉnh với 5 kịch bản curl.</li><li><strong>Bài học:</strong> Unit test chạy nhanh và rẻ; Integration test chứng minh các mảnh ghép chạy thật.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Chiến lược: Kết hợp hài hòa các tầng kiểm thử để vừa có tốc độ phản hồi nhanh, vừa có độ tin cậy thực tế.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/test-pyramid.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Mock rất nhanh nhưng không thể thay thế integration test. Kim tự tháp kiểm thử giúp cân bằng chi phí và độ tin cậy thực tế.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">VIDEO DEMO A</div>
+        <h2>Video A: Unit Test với JUnit 5 &amp; Mockito (5–7 phút)</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Người thực hiện:</strong> Nguyễn Bảo An (23120207) · <strong>Thời lượng:</strong> 5 – 7 phút.</li><li><strong>00:00 - Setup:</strong> Cấu trúc project Java 25, Maven Wrapper, thư viện JUnit 5 và Mockito 5.</li><li><strong>01:00 - AAA &amp; Surefire:</strong> Quy tắc AAA, chạy FineCalculatorTest, đọc báo cáo XML.</li><li><strong>02:15 - Data-driven:</strong> Tách file CSV, chạy 15 ca biên tự động với @ParameterizedTest.</li><li><strong>03:45 - Mockito:</strong> Cô lập repo, verify(never) ca lỗi và ArgumentCaptor ca thành công.</li><li><strong>05:15 - Anti-patterns:</strong> Mổ xẻ Train Wreck Mocking và Self-fulfilling Prophecy.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Trạng thái: Đã quay xong video · Link YouTube: [Sẽ bổ sung URL sau] · Mã lệnh: ./mvnw test</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/video-a-timeline.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Video A trình diễn toàn bộ thao tác viết Unit Test chuẩn, chạy Surefire, kiểm thử tham số hóa và chỉ ra các bẫy anti-pattern.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CODE COVERAGE</div>
+        <h2>Line Coverage vs. Branch Coverage</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Line Coverage:</strong> Đếm số dòng đã chạy; dễ ngộ nhận khi dòng chứa toán tử điều kiện (<code>? :</code>, <code>&amp;&amp;</code>).</li><li><strong>Branch Coverage:</strong> Đếm trọn vẹn cả 2 hướng True và False của mọi ngã rẽ logic.</li><li><strong>Nghịch lý:</strong> Đạt 100% Line Coverage vẫn có thể bỏ sót 50% nhánh điều kiện biên!</li><li><strong>Định dạng JaCoCo:</strong> HTML trực quan cho lập trình viên; XML cho CI Gate phân tích tự động.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Kết luận: Line Coverage chỉ là điều kiện cần; Branch Coverage mới phản ánh độ bao quát thực tế.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/line-vs-branch.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Nhật Đạt: Slide này làm rõ lý do tại sao nhóm chọn Branch Coverage làm Gate. Một dòng chứa toán tử ba ngôi chỉ cần chạy 1 ca là đạt 100% dòng nhưng thực chất bỏ sót 50% nhánh.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CODE COVERAGE</div>
+        <h2>CC-1/2: Quy trình Đo trước → Bổ sung → Đo lại</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Baseline ban đầu:</strong> FineCalculator chỉ đạt <strong>50% branch</strong> (thiếu ca ngày âm, ca chạm trần).</li><li><strong>Bổ sung &amp; Đo lại:</strong> Viết thêm các ca kiểm thử biên → vươn lên <strong>100% branch</strong>.</li><li><strong>Lệnh thực thi:</strong></li><li>• Đo baseline: <code>./mvnw -f case-study/pom.xml -Pbaseline clean verify</code></li><li>• Đo đầy đủ: <code>./mvnw -f case-study/pom.xml clean verify</code></li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Minh chứng: Ảnh chụp báo cáo JaCoCo HTML thật trích xuất từ thư mục evidence chứng minh độ phủ 100%.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/evidence/jacoco-summary-2026-10-23.png" alt="evidence" class="screenshot-img" /></div></div>
+        </div>
+        <aside class="notes">Nhật Đạt: Nhóm đo lường bằng profile baseline riêng. Hình ảnh bên phải là ảnh chụp thật từ thư mục evidence chứng minh độ phủ nhánh đạt 100%.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CODE COVERAGE</div>
+        <h2>CC-3: Cấu hình Gate chặn bản thiếu test</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Quy tắc Gate:</strong> Cấu hình <code>BRANCH COVEREDRATIO &gt;= 0.90</code> cho FineCalculator.</li><li><strong>Cơ chế Fail-Fast:</strong> Nếu tỷ lệ &lt; 90%, JaCoCo ngắt lệnh và trả về <strong>Exit Code 1</strong>.</li><li><strong>Thực nghiệm Gate:</strong></li><li><code>./mvnw -f case-study/pom.xml -Pbaseline -Dcoverage.gate.skip=false clean verify</code></li><li>• Kết quả: Văng lỗi <code>BUILD FAILURE</code> ngay lập tức vì 50% &lt; 90%.</li></ul>
+            <div class="code-wrapper"><pre><code class="language-java">&lt;limit&gt;
+  &lt;counter&gt;BRANCH&lt;/counter&gt;
+  &lt;value&gt;COVEREDRATIO&lt;/value&gt;
+  &lt;minimum&gt;0.90&lt;/minimum&gt;
+&lt;/limit&gt;</code></pre></div>
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Ý nghĩa: Gate ngăn chặn triệt để tình trạng lập trình viên đẩy mã nguồn thiếu test lên kho chung.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/gate-failure.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Nhật Đạt: Gate phải có răng - tức là phải có khả năng làm sập build. Khi chạy với profile baseline thiếu test, Maven dừng ngay ở Exit code 1.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CODE COVERAGE</div>
+        <h2>100% Branch vẫn lọt lỗi: Mutation Testing</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Thử nghiệm bẫy:</strong> Bộ test đi đủ nhánh nhưng cố tình bỏ assert tiền phạt → JaCoCo vẫn báo <strong>100% Branch</strong>!</li><li><strong>Giải pháp PIT Mutation:</strong> Tự động cấy lỗi đột biến (đổi toán tử, return 0).</li><li><strong>Kết quả thực nghiệm:</strong></li><li>• Bộ test yếu (bẫy): Chỉ diệt được <strong>3/11 mutant</strong> (chỉ bắt được ca văng ngoại lệ).</li><li>• Bộ test chuẩn của nhóm: Diệt được <strong>10/11 mutant</strong> (mutant còn sống là tương đương).</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Bài học: Coverage chỉ đo mã được chạy; PIT Mutation Testing mới đo lường chất lượng câu lệnh assert.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/mutation-flow.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Nhật Đạt: Đây là điểm nhấn quan trọng nhất của phần Coverage. PIT Mutation Testing chứng minh con số 100% độ phủ chưa nói lên chất lượng nếu câu lệnh assert bị yếu.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">VIDEO DEMO B</div>
+        <h2>Video B: Code Coverage &amp; PIT Mutation Testing (8–9 phút)</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Người thực hiện:</strong> Trương Nhật Đạt (23120231) · <strong>Thời lượng:</strong> 8 – 9 phút.</li><li><strong>00:00 - Setup:</strong> Cấu hình plugin JaCoCo agent và PIT trong <code>pom.xml</code>.</li><li><strong>01:00 - 6 Loại coverage:</strong> Minh họa trên <code>LoanPeriodPolicy</code> (Statement, Decision, MC/DC).</li><li><strong>03:00 - Trước / Sau:</strong> So sánh baseline 50% vs Bộ đầy đủ 100% Branch Coverage.</li><li><strong>04:00 - Gate &amp; PIT:</strong> Demo Gate văng Exit 1, test bẫy 100% branch nhưng PIT chỉ diệt 3/11 mutant.</li><li><strong>06:00 - Hạn chế:</strong> Quyết định ẩn trong <code>Math.min()</code>, mutant tương đương và chi phí thời gian.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Trạng thái: Đã quay xong video · Link YouTube: [Sẽ bổ sung URL sau] · Lệnh: clean verify, pitest:mutationCoverage</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/video-b-timeline.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Nhật Đạt: Video B quay đủ 5 phân đoạn chuẩn: setup, 6 loại coverage, trước/sau, gate fail, bẫy PIT và các điểm yếu thực tế.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CI/CD</div>
+        <h2>CI, Continuous Delivery, Continuous Deployment</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Continuous Integration (CI):</strong> Mỗi lần push/PR, tự động build JDK 25 và chạy test. Phát hiện lỗi ngay.</li><li><strong>Continuous Delivery:</strong> Sau CI, tự động đóng gói Artifact (JAR) sẵn sàng phát hành; triển khai do người duyệt.</li><li><strong>Continuous Deployment:</strong> Tự động đẩy thẳng lên server chạy thật không cần người duyệt.</li><li><strong>Nguyên lý:</strong> Càng lên mức tự động hóa cao, càng đòi hỏi bộ test và gate tin cậy tuyệt đối.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Phân cấp: CI bảo vệ mã nguồn → Delivery bảo vệ bản dựng → Deployment bảo vệ môi trường vận hành.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/ci-cd-levels.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: 3 khái niệm này đại diện cho 3 cấp độ tự động hóa tăng dần, đòi hỏi bộ test và gate ngày càng khắt khe.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CI/CD</div>
+        <h2>Phạm vi CI/CD nhóm triển khai thực tế</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>CI · HOÀN THÀNH 100%:</strong> Tự chạy test JDK 25 và kiểm tra Branch Gate ≥ 90% trên mọi Pull Request.</li><li><strong>Continuous Delivery · ĐẠT MỨC ARTIFACT:</strong> Tự đóng gói JAR, đính kèm báo cáo Surefire &amp; JaCoCo.</li><li><strong>Continuous Deployment · KHÔNG THỰC HIỆN:</strong> Đề tài tập trung kiểm thử phần mềm, không triển khai server.</li><li><strong>Mở rộng:</strong> Nếu cần deploy, bổ sung job deploy sau package với điều kiện nhánh master + approval.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Cam kết: Ghi nhận trung thực phạm vi thực hiện, không phóng đại những nội dung không thuộc đề tài.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/team-scope.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: Nhóm xác định rõ ranh giới: hoàn thành xuất sắc CI và Delivery ở mức tạo artifact JAR, không làm deployment vì không thuộc phạm vi môn học.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CI/CD</div>
+        <h2>Từ lệnh tại máy đến GitHub Actions Pipeline</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>3 Job độc lập:</strong> <code>test</code> → <code>coverage-gate</code> → <code>package</code>.</li><li><strong>Ràng buộc <code>needs</code>:</strong> Job trước bị FAIL thì job sau tuyệt đối không được thực thi.</li><li><strong>Bảo vệ chất lượng:</strong> Mã thiếu test hoặc hỏng logic không bao giờ được đóng gói thành file JAR.</li><li><strong>Môi trường:</strong> Runner <code>ubuntu-latest</code> cấp phát bởi GitHub, cài đặt Temurin OpenJDK 25.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Triết lý: Fail-Fast (thất bại sớm) giúp tiết kiệm tài nguyên máy chủ và phản hồi lỗi tức thì cho lập trình viên.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/ci-pipeline.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: Pipeline được module hóa thành 3 job nối nhau bằng needs. Fail ở đâu thì dừng ngay ở đó (fail-fast).</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CI/CD</div>
+        <h2>CI-1/2/3: Minh chứng thực nghiệm trên GitHub</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>PR #1 (Xanh):</strong> Khởi tạo CI, cả 3 job chạy thành công trọn vẹn.</li><li><strong>PR #2 (Đỏ):</strong> Cố tình xóa test → Job test xanh nhưng coverage-gate đỏ → package bị hủy.</li><li><strong>PR #2 (Khôi phục):</strong> Bổ sung test đầy đủ → Toàn bộ pipeline xanh trở lại.</li><li><strong>PR #6 vào master:</strong> Trạng thái <strong>BLOCKED</strong> hoàn toàn do required checks bảo vệ!</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Chứng cứ: Minh chứng thật tại repo, lệnh gh pr merge bị từ chối thẳng thừng khi gate không đạt yêu cầu.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/pr-checks-blocked.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: Hình ảnh bên phải mô phỏng chính xác giao diện PR #6 trên GitHub khi bị required checks chặn đứng vì vi phạm gate.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CI/CD</div>
+        <h2>Cấu trúc .github/workflows/ci.yml</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Trigger:</strong> Kích hoạt khi có <code>pull_request</code> hoặc <code>push</code> vào master / seminar-core.</li><li><strong>Maven Cache:</strong> Dùng <code>actions/cache@v4</code> cache <code>~/.m2</code> theo hash của <code>pom.xml</code>.</li><li><strong>Step Summary:</strong> Xuất kết quả kiểm thử trực tiếp lên giao diện GitHub Action Markdown.</li><li><strong>Cơ chế needs:</strong> Khai báo tường minh <code>needs: [test]</code> và <code>needs: [coverage-gate]</code>.</li></ul>
+            <div class="code-wrapper"><pre><code class="language-java">name: Seminar CI
+on: [pull_request, push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps: [checkout, setup-java, test]
+  coverage-gate:
+    needs: test
+    runs-on: ubuntu-latest
+    steps: [clean verify gate]
+  package:
+    needs: coverage-gate
+    runs-on: ubuntu-latest
+    steps: [package JAR]</code></pre></div>
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Tối ưu: Cache dependency giúp rút ngắn thời gian chạy từ 48 giây xuống chỉ còn 12 giây trên máy chủ.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/github-workflow-structure.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: Cấu trúc workflow YAML ngắn gọn, tận dụng cache để tăng tốc build và hiển thị kết quả trực quan trên Step Summary.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CI/CD</div>
+        <h2>Khi test xanh mà PR vẫn bị chặn</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Thực nghiệm:</strong> Xóa <code>FineCalculatorTest</code> → 21 test LoanService vẫn pass 100%!</li><li><strong>Job 1 (test):</strong> Báo xanh hoàn toàn vì không có ca kiểm thử nào bị lỗi assertion.</li><li><strong>Job 2 (gate):</strong> Báo đỏ lập tức vì branch rơi về 0.00 &lt; 0.90 → Chặn đứng PR!</li><li><strong>Kết luận:</strong> Chỉ dựa vào test xanh là không đủ; bắt buộc phải có Coverage Gate trên CI.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Bài học: Test xanh chỉ chứng minh ca có sẵn không lỗi; Gate chứng minh mã mới không bị bỏ quên kiểm thử.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/green-test-red-gate.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: Đây là bài học thực tế đắt giá nhất: test pass là chưa đủ, phải có gate để phát hiện các đoạn mã mới bị bỏ quên kiểm thử.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">CI/CD</div>
+        <h2>Những điểm yếu thực tế khi vận hành CI</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Cache Miss nhạy cảm:</strong> Sửa 1 dòng comment pom.xml làm đổi hash key → Tải lại từ đầu (48s vs 12s).</li><li><strong>Trùng lặp test suite:</strong> Job gate phải thực thi lại toàn bộ test suite lần 2 gây lãng phí tài nguyên.</li><li><strong>Dao động thời gian runner:</strong> Cùng 1 bước, thời gian runner dao động từ 29s đến 70s.</li><li><strong>Required check làm kẹt PR:</strong> PR vào master bị kẹt nếu workflow chưa khai báo trigger (PR #4).</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Kinh nghiệm: Hiểu rõ hạn chế giúp nhóm tối ưu thời gian chạy pipeline và xử lý sự cố kẹt PR kịp thời.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/ci-weaknesses.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: Nhóm thẳng thắn chỉ ra các điểm yếu thực tế: cache miss rất nhạy cảm và thời gian chạy trên cloud runner luôn có độ trễ dao động.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">VIDEO DEMO D</div>
+        <h2>Video D: CI/CD với GitHub Actions (8–9 phút)</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Người thực hiện:</strong> Phạm Quang Vinh (23120202) · <strong>Thời lượng:</strong> 8 – 9 phút.</li><li><strong>00:00 - Setup:</strong> Phân tích file ci.yml, trigger, runner ubuntu-latest và Temurin JDK 25.</li><li><strong>01:00 - Khái niệm:</strong> Minh họa luồng CI/CD, cơ chế needs và plugin jacoco:check.</li><li><strong>02:15 - Demo đơn giản:</strong> Kích hoạt run xanh, đọc log Surefire, tải artifact JAR và cache.</li><li><strong>04:00 - Demo phức tạp:</strong> Mở PR đỏ bị gate chặn, PR vào master bị BLOCKED không cho merge.</li><li><strong>06:30 - Mổ xẻ sự cố:</strong> Cache miss khi đổi pom.xml, runner jitter và cách cứu PR kẹt.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Trạng thái: Đã quay xong video · Link YouTube: [Sẽ bổ sung URL sau] · File: .github/workflows/ci.yml</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/video-d-timeline.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: Video demo D được chia mốc thời gian rõ ràng từ lý thuyết cơ bản đến các tình huống thực nghiệm lỗi nâng cao.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">THỰC NGHIỆM</div>
+        <h2>Thời gian đo tại máy: Cold Cache vs. Warm Cache</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Kho Maven Lạnh (Cold):</strong> Xóa sạch ~/.m2 → Trung vị thời gian build: <strong>48.412 giây</strong>.</li><li><strong>Kho Maven Ấm (Warm):</strong> Giữ nguyên dependency → Trung vị thời gian build: <strong>12.539 giây</strong>.</li><li><strong>Hiệu quả:</strong> Cache giúp <strong>tiết kiệm 74% thời gian</strong> chạy pipeline của lập trình viên!</li><li><strong>Chi phí JaCoCo:</strong> Overhead kiểm tra độ phủ tăng khoảng 31% (9.7s lên 12.7s).</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Số liệu: Đo đạc 3 cặp chuẩn xác trên Java 25 tại máy cục bộ bằng script scripts/benchmark_maven.py.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/benchmark-chart.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Quang Vinh: Số liệu đo 3 cặp tại máy chứng minh cache dependency giúp tiết kiệm tới gần 3/4 thời gian chờ đợi trên mỗi lần lập trình viên push mã.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">AI TRONG KIỂM THỬ</div>
+        <h2>AI-1/2: Gemini sinh test, Review rồi mới Apply</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Context động:</strong> Runner tự đọc mã nguồn và gap; tuyệt đối không hard-code prompt.</li><li><strong>AI-1 &amp; AI-2:</strong> Gemini 3.6 sinh 7 test ban đầu + 3 test bổ sung lấp lỗ hổng độ phủ.</li><li><strong>Review &amp; Apply:</strong> Con người duyệt cú pháp và chạy thử nghiệm trên JVM thật.</li><li><strong>Kết quả:</strong> <strong>49/49 test pass</strong>; LoanService đạt tuyệt đối <strong>100% Branch Coverage</strong>.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Nguyên tắc: Không tin tưởng mù quáng vào AI; mọi ca test sinh ra đều phải được kiểm chứng qua oracle.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/ai-workflow.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Gia An: Quy trình kết hợp AI có kiểm soát: AI sinh test nháp, con người review chặn ảo giác, chạy thử trên JVM thật rồi mới apply vào repo.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">AI TRONG KIỂM THỬ</div>
+        <h2>AI-3: Review PR tự động song song với CI</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Bot tự động:</strong> Phân tích riêng git diff của các file test khi mở Pull Request.</li><li><strong>Đánh giá độc lập:</strong> Nhận xét về chất lượng assertion, độ bao quát dữ liệu biên và nguy cơ flaky.</li><li><strong>Thực tế PR #13:</strong> Bot nhận xét tích cực, 0 finding tiêu cực, cả 6 job CI đều xanh.</li><li><strong>Nguyên tắc vàng:</strong> AI chỉ đóng vai trò tham vấn; không thay quyền quyết định của con người.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Cơ chế: AI Review chạy song song chứ không thay thế Required Checks của CI pipeline.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/pr-bot-comment.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Gia An: AI Review chạy song song chứ không thay thế CI. Cho dù AI khen đẹp nhưng nếu Coverage Gate đỏ thì PR vẫn bị chặn.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">AI TRONG KIỂM THỬ</div>
+        <h2>AI-4: Bộ test Người viết &amp; AI bổ sung nhau</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Bộ Người viết (Gia An):</strong> 23 ca từ đặc tả (16 ca hợp lệ, 7 ca lỗi) → <strong>Branch 10/10</strong>.</li><li><strong>Bộ AI sinh (Gemini):</strong> 13 ca độc lập → Tập trung ca hợp lệ &amp; <code>Integer.MAX_VALUE</code>.</li><li><strong>11 Đầu vào chung:</strong> Kết quả hoàn toàn trùng khớp (<strong>0 disagreement</strong>).</li><li><strong>Kết luận:</strong> Người nắm sâu logic nghiệp vụ; AI hỗ trợ phát hiện các giá trị biên cực đại.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Ý nghĩa: Người và AI cộng tác bổ trợ cho nhau thay vì loại trừ hay thay thế nhau.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/human-vs-ai.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Gia An: Đây là thực nghiệm rất thú vị. Hai bộ test có 11 ca trùng nhau và cho kết quả giống hệt. Người giỏi ca nghiệp vụ, AI giỏi nghĩ ra số siêu to.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">NGHIÊN CỨU PAPER</div>
+        <h2>Paper 1 · CoverUp: Coverage dẫn đường cho LLM</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Bài báo:</strong> FSE 2025 (Hội nghị Công nghệ Phần mềm Quốc tế Hạng A*).</li><li><strong>Ý tưởng cốt lõi:</strong> Dùng báo cáo lỗ hổng độ phủ (Coverage Gaps) để làm prompt dẫn đường cho LLM.</li><li><strong>Tái hiện dữ liệu gốc:</strong> Phân tích 163 module đạt overall <strong>89.0%</strong> (vượt MuTAP 76.8%).</li><li><strong>Thực nghiệm nhóm:</strong> Trên benchmark f003 đạt 100% branch; trên source nhóm tăng từ <strong>23.6% lên 96.4%</strong>.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Đóng góp: Chứng minh hiệu quả vượt trội khi kết hợp tri thức LLM với phản hồi đo lường độ phủ động.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/coverup-flow.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Gia An: CoverUp chứng minh hướng đi đúng đắn: dùng coverage report chỉ điểm cho LLM biết chỗ nào đang hở để sinh test nhắm trúng đích.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">NGHIÊN CỨU PAPER</div>
+        <h2>Paper 2 · Pynguin: Sinh test bằng tìm kiếm tiến hóa</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Bài báo:</strong> EMSE 2023 (Tạp chí quốc tế Hạng A) · Thuật toán tiến hóa DynaMOSA (không dùng LLM).</li><li><strong>Tái hiện dữ liệu công bố:</strong> 134 module, 40.200 dòng dữ liệu khớp 100% số liệu tác giả.</li><li><strong>Chạy mới:</strong> Benchmark <code>codetiming._timers</code> đạt coverage 81.48%, 10 pass, 5 xfail.</li><li><strong>Hạn chế chí mạng:</strong> Trên source nhóm, Pynguin sinh test chỉ gọi hàm mà <strong>thiếu assertion</strong>!</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">So sánh: Pynguin chỉ tối ưu độ phủ toán học; CoverUp có LLM hiểu ngữ nghĩa để sinh assertion kiểm đúng/sai.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/papers-comparison.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Gia An: Pynguin đại diện cho trường phái tìm kiếm tiến hóa. Nhược điểm chí mạng là nó chỉ cố gọi hàm để tăng coverage chứ không hiểu ngữ nghĩa để viết assertion kiểm đúng sai.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">VIDEO DEMO E</div>
+        <h2>Video E: AI Gemini &amp; Tái hiện Paper (8–10 phút)</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Người thực hiện:</strong> Ngô Gia An (23120205) · <strong>Thời lượng:</strong> 8 – 10 phút.</li><li><strong>GA-01/02:</strong> Setup Gemini client, AI-1 sinh test LoanService và AI-2 bổ sung test lấp gap.</li><li><strong>GA-03/04:</strong> Bot AI comment tự động trên PR; demo ca oracle sai để chỉ ra giới hạn của test xanh.</li><li><strong>GA-05:</strong> So sánh trực tiếp bộ test 23 ca của người viết với bộ test do Gemini sinh.</li><li><strong>GA-06/07:</strong> Tái hiện thực nghiệm bài báo CoverUp (FSE'25) và Pynguin (EMSE'23).</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Trạng thái: Đã quay xong video · Link YouTube: [Sẽ bổ sung URL sau] · Script: scripts/run_ai_demo.py</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/video-e-timeline.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Gia An: Video demo E phân bổ 7 phần từ thao tác code, review PR, đối chứng đến tái hiện bài báo khoa học.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">TỔNG HỢP VIDEO</div>
+        <h2>Danh mục 5 Video Demo của nhóm (Yêu cầu GV)</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Video A (Unit Test):</strong> Bảo An · 5–7 phút · AAA, Parameterized CSV, Mockito, Anti-patterns.</li><li><strong>Video B (Coverage &amp; PIT):</strong> Nhật Đạt · 8–9 phút · 6 loại coverage, Gate fail, Bẫy PIT.</li><li><strong>Video C (REST &amp; Smoke):</strong> Thế Vinh · 3–5 phút · Chạy JAR, 7 kịch bản HTTP, mã lỗi 201/409/404.</li><li><strong>Video D (CI/CD Actions):</strong> Quang Vinh · 8–9 phút · 3 jobs needs, PR đỏ/xanh, PR BLOCKED.</li><li><strong>Video E (AI &amp; Paper):</strong> Gia An · 8–10 phút · Gemini test gen, đối chứng, CoverUp &amp; Pynguin.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Cam kết: Tất cả 5 video đã được các thành viên quay hoàn tất; URL YouTube sẽ được đính kèm vào link nộp bài.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/all-videos-table.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Đây là bảng tổng hợp cả 5 video demo độc lập của nhóm, đáp ứng đầy đủ yêu cầu bắt buộc của giảng viên.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">THỰC HÀNH</div>
+        <h2>3 Bài tập thực hành dành cho người tham gia</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Bài 1 (Dễ · Unit Test):</strong> Thêm hạng <code>STUDENT</code> (giảm 50% phạt, trần 30k) và viết Parameterized test.</li><li><strong>Bài 2 (Trung bình · Coverage &amp; PIT):</strong> Cố tình xóa 1 assertion tiền; so sánh JaCoCo (vẫn 100%) vs PIT Mutation (mutant sống).</li><li><strong>Bài 3 (Nâng cao · CI/CD):</strong> Tích hợp CI vào fork, mở PR thiếu nhánh kiểm thử để quan sát Gate chặn merge.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Tài liệu kèm theo: Mã nguồn khung tại case-study/ và hướng dẫn từng bước tại docs/thuc-hanh/HuongDan_Demo.md.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/exercises.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Thế Vinh: Nhóm chuẩn bị 3 bài tập từ dễ đến khó để các bạn sinh viên sau buổi seminar có thể tự thực hành trên máy.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">TỔNG KẾT</div>
+        <h2>7 Đầu ra hoàn chỉnh trong gói nộp Tuần 06</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>1. Slide &amp; Báo cáo:</strong> Slide Reveal.js monochrome + Báo cáo LaTeX tại <code>report/main.tex</code>.</li><li><strong>2. Video Demo:</strong> Đầy đủ 5 video (A, B, C, D, E) quay trên màn hình ứng dụng thật.</li><li><strong>3. Mã nguồn &amp; Minh chứng:</strong> Unit test, script AI runner, benchmark và minh chứng tại <code>evidence/</code>.</li><li><strong>4. Quản lý nhóm:</strong> Bảng phân công <code>PhanCong_NhiemVu.md</code>, Git commit log thật &amp; Khai báo AI.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Nghiệm thu: Gói nộp Tuần 06 đạt &amp;gt;90% khối lượng đề tài, đầy đủ minh chứng thực nghiệm có thể tái hiện.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/deliverables.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Toàn bộ 7 hạng mục đầu ra đều được nhóm đóng gói chỉn chu, minh bạch và sẵn sàng nộp cho giảng viên.</aside>
+      </section>
+
+      <section class="slide-split" data-transition="fade">
+        <div class="stage-pill">TÀI LIỆU</div>
+        <h2>Nguồn tham khảo &amp; Hỏi đáp (Q&amp;A)</h2>
+        <div class="split-container">
+          <div class="split-left">
+            <ul class="styled-list"><li><strong>Tài nguyên dự án:</strong> <code>README.md</code>, <code>docs/thuc-hanh/</code>, <code>evidence/tuan-06/</code>.</li><li><strong>Tài liệu kỹ thuật:</strong> JUnit 5, Mockito, JaCoCo, PIT, GitHub Actions, Gemini API.</li><li><strong>Nghiên cứu khoa học:</strong> Paper CoverUp (FSE 2025) &amp; Pynguin (EMSE 2023).</li><li><strong>Cảm ơn quý thầy cô và các bạn!</strong> Nhóm 09 sẵn sàng giải đáp mọi thắc mắc.</li></ul>
+            
+            <div class="takeaway-card"><div class="takeaway-title">ĐIỂM THEN CHỐT</div><div class="takeaway-content">Thông tin liên hệ: Nhóm 09 · Môn Kiểm thử phần mềm · FIT - Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM.</div></div>
+          </div>
+          <div class="split-right"><div class="visual-box"><img src="images/diagrams/qa-resources.svg" alt="diagram" class="diagram-img" /></div></div>
+        </div>
+        <aside class="notes">Bảo An: Nhóm 09 xin chân thành cảm ơn thầy và các bạn đã lắng nghe. Bây giờ là thời gian dành cho phần hỏi đáp (Q&amp;A).</aside>
+      </section>
+    </div>
+  </div>
+
+  <script src="dist/reveal.js"></script>
+  <script src="dist/plugin/notes.js"></script>
+  <script src="dist/plugin/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      width: 1366,
+      height: 768,
+      margin: 0.05,
+      minScale: 0.2,
+      maxScale: 1.5,
+      hash: true,
+      slideNumber: 'c/t',
+      progress: true,
+      controls: true,
+      keyboard: true,
+      center: false,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [ RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>

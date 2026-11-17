@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" width="100%" height="100%">
+  <rect width="600" height="280" rx="8" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <rect width="600" height="36" rx="8" fill="#f4f4f4" stroke="#111111" stroke-width="2"/>
+  <text x="20" y="23" font-family="system-ui, sans-serif" font-weight="700" font-size="13" fill="#111111">Video D: CI/CD với GitHub Actions (8–9 phút)</text>
+
+  <!-- Player visual -->
+  <g transform="translate(20, 50)">
+    <rect width="560" height="40" rx="4" fill="#111111"/>
+    <!-- Progress bar -->
+    <rect x="10" y="16" width="540" height="8" rx="3" fill="#444444"/>
+    <rect x="10" y="16" width="320" height="8" rx="3" fill="#ffffff"/>
+    <circle cx="330" cy="20" r="7" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+    <text x="510" y="32" font-family="monospace" font-size="10" fill="#ffffff">08:45</text>
+  </g>
+
+  <!-- Chapters timeline -->
+  <g transform="translate(20, 105)">
+    <g transform="translate(0, 0)">
+      <rect width="265" height="65" rx="4" fill="#f8f8f8" stroke="#111111" stroke-width="1"/>
+      <text x="10" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[00:00 - 01:00] SETUP CI</text>
+      <text x="10" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• ci.yml, trigger on: pull_request, push</text>
+      <text x="10" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Khởi tạo môi trường Temurin JDK 25</text>
+    </g>
+    <g transform="translate(295, 0)">
+      <rect width="265" height="65" rx="4" fill="#f8f8f8" stroke="#111111" stroke-width="1"/>
+      <text x="10" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[01:00 - 02:15] KHÁI NIỆM &amp; NEEDS</text>
+      <text x="10" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Cơ chế nối 3 job bằng needs</text>
+      <text x="10" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Vai trò của jacoco-maven-plugin check</text>
+    </g>
+    <g transform="translate(0, 75)">
+      <rect width="265" height="65" rx="4" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+      <text x="10" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[02:15 - 04:00] DEMO ĐƠN GIẢN</text>
+      <text x="10" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Run xanh chuẩn, đọc log Surefire</text>
+      <text x="10" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Tải artifact JAR &amp; quan sát Maven cache</text>
+    </g>
+    <g transform="translate(295, 75)">
+      <rect width="265" height="65" rx="4" fill="#fafafa" stroke="#111111" stroke-width="1.5"/>
+      <text x="10" y="20" font-family="monospace" font-weight="700" font-size="11" fill="#111111">[04:00 - 08:45] DEMO PHỨC TẠP</text>
+      <text x="10" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• PR đỏ bị đánh rớt; PR vào master BLOCKED</text>
+      <text x="10" y="52" font-family="system-ui, sans-serif" font-size="10" fill="#444444">• Mổ xẻ 4 điểm yếu quan sát được</text>
+    </g>
+  </g>
+</svg>
