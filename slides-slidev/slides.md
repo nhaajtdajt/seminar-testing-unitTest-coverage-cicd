@@ -47,6 +47,8 @@ Khi toàn bộ test đều xanh, ta vẫn chưa biết bộ test đã đi qua h�
 -->
 
 ---
+layout: two-cols
+---
 
 # Unit Test là gì?
 
@@ -54,6 +56,14 @@ Khi toàn bộ test đều xanh, ta vẫn chưa biết bộ test đã đi qua h�
 - Mỗi test kiểm tra **một hành vi**
 - Phát hiện lỗi sớm, sửa code an toàn hơn
 - **Không thay thế** integration test
+
+::right::
+
+<div class="pyramid">
+  <div class="p1">E2E</div>
+  <div class="p2">Integration test</div>
+  <div class="p3">Unit Test<small>nhiều · nhanh · rẻ</small></div>
+</div>
 
 <!--
 Unit Test so sánh kết quả thực tế với kết quả mong đợi cho một đơn vị nhỏ. Phạm vi nhỏ để khi thất bại thì tìm nguyên nhân nhanh. Test phải khởi động cả ứng dụng, gọi nhiều dịch vụ, dùng DB thật thì không còn là Unit Test thuần.
@@ -122,6 +132,13 @@ Khi nhiều test chỉ khác dữ liệu: data-driven testing — một test ch�
 - Mock sai → test xanh nhưng **app vẫn lỗi**
 - Luồng quan trọng: thêm integration test
 
+```java
+@Mock BookRepository books;   // không cần cơ sở dữ liệu thật
+
+when(books.findById(7)).thenReturn(Optional.of(new Book(7, false)));
+```
+<p class="caption">Trích <code>LoanServiceAiImprovedTest</code> trong case study</p>
+
 <!--
 Service thường cần repository hoặc dịch vụ khác — gọi là dependency. Mock thay dependency bằng đối tượng do test kiểm soát, nên test tạo được đúng tình huống mà không truy cập DB thật.
 Giới hạn: nếu đối tượng giả hoạt động khác hệ thống thật, Unit Test vẫn xanh trong khi ứng dụng lỗi. Vì vậy các luồng quan trọng cần integration test.
@@ -135,6 +152,15 @@ Giới hạn: nếu đối tượng giả hoạt động khác hệ thống th�
 - Assertion: thực tế so với mong đợi
 - Parameterized test, dữ liệu từ CSV
 - Tích hợp tốt Maven, Spring Boot
+
+```java
+@ParameterizedTest
+@CsvFileSource(resources = "/AI-4-boundaries.csv", numLinesToSkip = 1)
+void kiemDuLieuAiSinh(int days, MemberTier tier, BigDecimal expected) {
+    assertThat(new FineCalculator().calculate(days, tier)).isEqualByComparingTo(expected);
+}
+```
+<p class="caption">Một test, nhiều dòng dữ liệu từ CSV</p>
 
 <!--
 JUnit giúp test runner tìm test case, chạy từng test và ghi nhận pass/fail. Có assertion và parameterized test: một test chạy với nhiều dòng dữ liệu, ví dụ đọc từ CSV.
@@ -163,6 +189,9 @@ layout: two-cols-header
 
 ::bottom::
 
+<img class="shot src" src="/jacoco-source.png" alt="JaCoCo tô màu FineCalculator khi chạy bộ baseline" />
+<p class="legend"><span class="r"></span>chưa chạy <span class="y"></span>nhánh thiếu <span class="g"></span>đã chạy · <code>FineCalculator</code>, bộ baseline</p>
+
 <p class="note">Coverage = code <b>đã chạy</b>, không phải code <b>đã đúng</b></p>
 
 <!--
@@ -178,6 +207,11 @@ Line coverage: tỷ lệ dòng đã chạy. Branch coverage: các hướng của
 - Mọi giá trị biên đã kiểm tra
 - Các thành phần tích hợp đúng
 - Chương trình hết lỗi
+
+<div class="vs">
+  <div><span>Test A · coverage 100%</span><code>assertThat(fine).isNotNull()</code><p class="bad">✕ Không bắt được sai số tiền</p></div>
+  <div><span>Test B · coverage 100%</span><code>isEqualByComparingTo("6000")</code><p class="good">✓ Bắt được sai số tiền</p></div>
+</div>
 
 <p class="note" v-click>Gặp coverage gap → quay lại yêu cầu, không viết test chỉ để "xanh"</p>
 
@@ -215,6 +249,12 @@ JaCoCo cho phép đặt ngưỡng; dưới ngưỡng thì build thất bại —
 - Chỉ đặt cho lớp có nghiệp vụ rõ ràng
 - Gate **không** biết assertion đúng hay sai
 
+```xml
+<include>vn.edu.seminar.fine.FineCalculator</include>
+<counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.90</minimum>
+```
+<p class="caption">Luật gate trong <code>case-study/pom.xml</code></p>
+
 <!--
 Gate phát hiện khi thay đổi thêm nhánh mới mà không thêm test, hoặc khi test quan trọng bị xóa.
 Không có ngưỡng chung cho mọi dự án: dựa trên mức quan trọng và khả năng kiểm thử. Đặt 100% toàn dự án dễ khiến nhóm viết test để đạt con số.
@@ -234,8 +274,15 @@ flowchart LR
   R -->|lỗi| F[PR đỏ: sửa, push lại]
 ```
 
+<div class="grid grid-cols-2 gap-6 items-center">
+<div>
+
 - **CI**: mỗi push / PR đều build và test
 - Nhóm dừng ở **Continuous Delivery**: đóng gói, chưa tự deploy
+
+</div>
+<img class="shot gh" src="/gh-actions.png" alt="Các lần chạy Seminar CI trên GitHub Actions" />
+</div>
 
 <!--
 CI: tích hợp thay đổi thường xuyên và chạy kiểm tra tự động khi có push hoặc pull request.
@@ -248,12 +295,19 @@ Ba vai trò: JUnit viết và chạy test; JaCoCo đo code đã chạy; GitHub A
 
 # Case study: phí trả sách trễ
 
+<div class="case">
+<div>
+
 | Trường hợp | Quy tắc |
 |---|---|
-| Thành viên thường | **2.000đ** / ngày trễ |
-| Thành viên VIP | Miễn 2 ngày đầu, rồi **1.000đ** / ngày |
+| Thường | **2.000đ** / ngày trễ |
+| VIP | Miễn 2 ngày đầu, rồi **1.000đ** / ngày |
 | Mọi hạng | Tối đa **50.000đ** |
 | Ngày âm / hạng rỗng | **Bị từ chối** |
+
+</div>
+<img src="/library-books.jpg" alt="Kệ sách thư viện" />
+</div>
 
 <!--
 Ứng dụng quản lý thư viện; demo tập trung vào lớp FineCalculator tính phí trả sách trễ.
@@ -278,6 +332,11 @@ case-study/mvnw -B -ntp -f case-study/pom.xml -Pbaseline -Dcoverage.gate.skip=fa
 # Bộ đầy đủ: test và gate đều thành công
 case-study/mvnw -B -ntp -f case-study/pom.xml clean verify
 ```
+
+<div class="bars">
+  <div><span>Baseline</span><i><b class="miss" style="width:50%"></b><b class="hit" style="width:50%"></b></i><em class="bad">5/10 nhánh · 50%</em></div>
+  <div><span>Bộ đầy đủ</span><i><b class="hit" style="width:100%"></b></i><em class="good">10/10 nhánh · 100%</em></div>
+</div>
 
 <!--
 Khoảng 4 phút. Mở sẵn code và hai báo cáo trước/sau; nếu Maven chậm thì dùng video quay sẵn.
@@ -323,6 +382,12 @@ Nhóm thử trên source Python của dự án: line 11/39 lên 38/39, branch 2/
 - **10** test pass, **5** test `xfail`
 - Filesystem, XML: ít test hữu ích, assertion yếu
 
+<div class="vs">
+  <div><span>CoverUp</span>LLM + coverage làm phản hồi</div>
+  <div><span>Pynguin</span>Tìm kiếm + thông tin kiểu</div>
+</div>
+<p class="center-label">Cả hai đều khó xác định <b>kết quả đúng</b> cần kiểm tra</p>
+
 <!--
 Pynguin dùng thuật toán tìm kiếm, thông tin kiểu và kết quả thực thi để tạo input và test.
 Trên một module benchmark, nhóm ghi nhận coverage nội bộ 81,48%, 10 test pass và 5 test xfail. Trên source có filesystem và XML, công cụ tạo ít test hữu ích và thiếu assertion có ý nghĩa.
@@ -343,6 +408,13 @@ flowchart LR
 ```
 
 <p class="note">Không phải CoverUp cho Java — chỉ kế thừa ý tưởng <b>coverage gap làm phản hồi</b></p>
+
+<p class="kicker mt-8">Vì sao cần con người review</p>
+<div class="risks">
+  <div><carbon-warning-alt /> Sai expected result</div>
+  <div><carbon-warning-alt /> Assertion yếu</div>
+  <div><carbon-warning-alt /> Trùng test hiện có</div>
+</div>
 
 <!--
 Từ ý tưởng dùng coverage làm phản hồi, nhóm xây quy trình tương tự cho case study Java: AI-1 sinh test nháp, JUnit chạy, JaCoCo tìm gap, AI-2 đề xuất test bổ sung, con người review rồi mới áp dụng.
