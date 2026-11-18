@@ -47,6 +47,24 @@ Khi toàn bộ test đều xanh, ta vẫn chưa biết bộ test đã đi qua h�
 -->
 
 ---
+
+# 5 video demo đi kèm
+
+| | Nội dung | Thực hiện | Thời lượng |
+|---|---|---|---|
+| **A** | Unit Test với JUnit 5 & Mockito | Nguyễn Bảo An | 06:45 |
+| **B** | Code Coverage & PIT Mutation Testing | Trương Nhật Đạt | 08:35 |
+| **C** | Case study & 7 kịch bản HTTP | Nguyễn Lê Thế Vinh | 04:30 |
+| **D** | CI/CD pipeline với GitHub Actions | Phạm Quang Vinh | 08:45 |
+| **E** | AI & tái hiện thực nghiệm paper | Ngô Gia An | 09:15 |
+
+<p class="note">Mỗi video gồm: setup · khái niệm · demo đơn giản · demo phức tạp · trường hợp công cụ không xử lý được. Tóm tắt và link nằm ở cuối từng phần.</p>
+
+<!--
+Giới thiệu nhanh 5 video demo của nhóm, tổng khoảng 38 phút. Mỗi video có timestamp rõ ràng; slide tóm tắt từng video được đặt ngay sau phần lý thuyết tương ứng.
+-->
+
+---
 layout: two-cols
 ---
 
@@ -168,6 +186,27 @@ Nhóm chọn JUnit vì tích hợp tốt với Maven và Spring Boot. Trong bài
 -->
 
 ---
+class: video
+---
+
+# <span class="vtag">Video A</span> Unit Test với JUnit 5 & Mockito
+
+<div class="vbody">
+<a class="play" href="https://youtu.be/5CaBhsgvM-Q" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video A</b><span>06:45</span><small>Nguyễn Bảo An</small><u>youtu.be/5CaBhsgvM-Q</u></a>
+<div class="tl">
+  <div><time>00:00</time><em>Setup</em><span>Java 25, Maven Wrapper, <code>pom.xml</code></span></div>
+  <div><time>01:00</time><em>Khái niệm</em><span>AAA, chạy test, đọc báo cáo Surefire</span></div>
+  <div><time>02:15</time><em>Data-driven</em><span><code>@ParameterizedTest</code> + CSV, giá trị biên 0 / VIP 2 ngày / trần 50.000đ</span></div>
+  <div><time>03:45</time><em>Phức tạp</em><span>Mockito cô lập 3 repository, <code>verify(never())</code>, <code>ArgumentCaptor</code></span></div>
+  <div><time>05:15</time><em>Hạn chế</em><span>Anti-pattern: Train Wreck Mocking, Self-fulfilling Prophecy</span></div>
+</div>
+</div>
+
+<!--
+Video A minh họa phần Unit Test và JUnit: setup, quy tắc AAA, data-driven test với CSV, Mockito cô lập dependency và các anti-pattern khi mock.
+-->
+
+---
 layout: two-cols-header
 ---
 
@@ -262,6 +301,27 @@ Nhóm đặt branch coverage FineCalculator tối thiểu 90%, không áp cùng 
 -->
 
 ---
+class: video
+---
+
+# <span class="vtag">Video B</span> Code Coverage & PIT Mutation Testing
+
+<div class="vbody">
+<a class="play" href="https://youtu.be/DbqXRK-PThA" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video B</b><span>08:35</span><small>Trương Nhật Đạt</small><u>youtu.be/DbqXRK-PThA</u></a>
+<div class="tl">
+  <div><time>00:00</time><em>Setup</em><span>JaCoCo agent và PIT trong <code>pom.xml</code></span></div>
+  <div><time>01:00</time><em>Khái niệm</em><span>6 loại coverage trên <code>LoanPeriodPolicy</code> (Statement, Decision, MC/DC)</span></div>
+  <div><time>03:00</time><em>Đơn giản</em><span>Trước / sau: branch 50% → 100%</span></div>
+  <div><time>04:00</time><em>Phức tạp</em><span>Gate fail exit 1; test bẫy 100% branch nhưng PIT chỉ diệt 3/11 mutant</span></div>
+  <div><time>06:00</time><em>Hạn chế</em><span>Quyết định ẩn trong <code>Math.min()</code>, mutant tương đương, chi phí PIT</span></div>
+</div>
+</div>
+
+<!--
+Video B minh họa Code Coverage, JaCoCo và coverage gate. Điểm nhấn: test bẫy đạt 100% branch nhưng PIT chỉ diệt 3/11 mutant, đúng thông điệp coverage cao chưa chứng minh test tốt.
+-->
+
+---
 
 # CI/CD với GitHub Actions
 
@@ -289,6 +349,27 @@ CI: tích hợp thay đổi thường xuyên và chạy kiểm tra tự động 
 Continuous Delivery: tới bước tạo sản phẩm có thể phát hành. Continuous Deployment: tự triển khai lên môi trường thật. Nhóm dừng ở Delivery.
 Test lỗi hoặc coverage không đạt → PR đỏ; sửa và push lại thì workflow tự chạy lại.
 Ba vai trò: JUnit viết và chạy test; JaCoCo đo code đã chạy; GitHub Actions tự động hóa toàn bộ.
+-->
+
+---
+class: video
+---
+
+# <span class="vtag">Video D</span> CI/CD pipeline với GitHub Actions
+
+<div class="vbody">
+<a class="play" href="https://youtu.be/vakw7UD_SvU" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video D</b><span>08:45</span><small>Phạm Quang Vinh</small><u>youtu.be/vakw7UD_SvU</u></a>
+<div class="tl">
+  <div><time>00:00</time><em>Setup</em><span><code>ci.yml</code>, runner <code>ubuntu-latest</code>, Temurin JDK 25</span></div>
+  <div><time>01:00</time><em>Khái niệm</em><span>3 job nối bằng <code>needs</code>: test → coverage-gate → package</span></div>
+  <div><time>02:15</time><em>Đơn giản</em><span>Run xanh, đọc log, tải artifact JAR và Surefire report</span></div>
+  <div><time>04:00</time><em>Phức tạp</em><span>PR đỏ vì thiếu coverage, branch protection chặn nút merge</span></div>
+  <div><time>06:30</time><em>Hạn chế</em><span>Cache miss khi sửa <code>pom.xml</code>, runner jitter trên cloud</span></div>
+</div>
+</div>
+
+<!--
+Video D minh họa pipeline GitHub Actions: cấu hình workflow, 3 job, một run xanh, một PR đỏ bị chặn merge, và các sự cố thực tế như cache miss.
 -->
 
 ---
@@ -344,6 +425,25 @@ Khoảng 4 phút. Mở sẵn code và hai báo cáo trước/sau; nếu Maven ch
 2. Chạy baseline với gate 90%: test vẫn xanh nhưng build đỏ vì coverage không đạt.
 3. Mở báo cáo JaCoCo, chỉ các nhánh chưa chạy (VIP, trần, dữ liệu không hợp lệ).
 4. Chạy bộ đầy đủ: có VIP, giá trị biên, dữ liệu không hợp lệ — coverage đạt, build xanh.
+-->
+
+---
+class: video
+---
+
+# <span class="vtag">Video C</span> Case study & 7 kịch bản HTTP
+
+<div class="vbody">
+<a class="play" href="https://youtu.be/Wco_4852snM" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video C</b><span>04:30</span><small>Nguyễn Lê Thế Vinh</small><u>youtu.be/Wco_4852snM</u></a>
+<div class="tl">
+  <div><time>00:00</time><em>Setup</em><span>Chạy JAR trên OpenJDK 25, dữ liệu mẫu H2 in-memory</span></div>
+  <div><time>01:00</time><em>Demo</em><span>7 request curl: 201, 409 UNAVAILABLE, 404, 409 UNPAID_FINE</span></div>
+  <div><time>03:30</time><em>Đối chiếu</em><span><code>LoanFlowEdgeCaseTest</code> khớp 100% kết quả HTTP thực tế</span></div>
+</div>
+</div>
+
+<!--
+Video C chạy ứng dụng thư viện thật và gửi 7 request HTTP, sau đó đối chiếu với test tự động LoanFlowEdgeCaseTest.
 -->
 
 ---
@@ -438,6 +538,27 @@ Từ ý tưởng dùng coverage làm phản hồi, nhóm xây quy trình tương
 Demo quay sẵn để tránh phụ thuộc mạng và hạn mức API; output AI có thể thay đổi giữa các lần gọi.
 AI-1 nhận source và quy tắc, sinh ba test nháp — chạy thành công nhưng branch chỉ 70%. AI-2 nhận source, bộ test và báo cáo JaCoCo, đề xuất test cho ngày âm, hạng rỗng và nhánh VIP còn thiếu. Sau khi bổ sung: 100%.
 Nhận xét: AI tìm trường hợp thiếu nhanh hơn, nhưng test AI có thể sai expected, assertion yếu hoặc trùng test cũ. Kết quả của nhóm là tái hiện có giới hạn — số liệu chỉ đúng trong phạm vi từng thí nghiệm.
+-->
+
+---
+class: video
+---
+
+# <span class="vtag">Video E</span> AI & tái hiện thực nghiệm paper
+
+<div class="vbody">
+<a class="play" href="https://youtu.be/fLtNeE-MSw4" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video E</b><span>09:15</span><small>Ngô Gia An</small><u>youtu.be/fLtNeE-MSw4</u></a>
+<div class="tl">
+  <div><time>00:00</time><em>Setup</em><span>Gemini Client; phân biệt Codex và Gemini API</span></div>
+  <div><time>01:30</time><em>Đơn giản</em><span>AI-1 sinh test nháp, AI-2 bổ sung theo coverage gap</span></div>
+  <div><time>03:45</time><em>Hạn chế</em><span>Bot AI review PR; ca oracle sai cho thấy giới hạn LLM</span></div>
+  <div><time>05:30</time><em>Data-driven</em><span>AI-4: dữ liệu biên do người lập vs Gemini sinh</span></div>
+  <div><time>07:15</time><em>Paper</em><span>Tái hiện CoverUp (FSE 2025), so sánh Pynguin (EMSE 2023)</span></div>
+</div>
+</div>
+
+<!--
+Video E minh họa quy trình AI của nhóm và phần tái hiện hai paper. Ca oracle sai cho thấy vì sao con người vẫn phải review.
 -->
 
 ---

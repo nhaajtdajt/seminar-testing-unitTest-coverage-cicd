@@ -83,6 +83,22 @@
 .vs p { margin: .3rem 0 0; font-weight: 600; }
 .vs .bad { color: var(--fail); }
 .vs .good { color: var(--ok); }
+
+/* Video summary slides */
+.vtag { display: inline-block; background: #dc2626; color: #fff; font-size: .55em; padding: .15em .55em; border-radius: 6px; vertical-align: .25em; margin-right: .3em; }
+.vbody { display: grid; grid-template-columns: 240px 1fr; gap: 2rem; align-items: stretch; height: 390px; }
+.play { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .3rem; border-radius: 14px; background: #0f172a; color: #f8fafc !important; text-decoration: none !important; border: none !important; }
+.play .icon { font-size: 3.5rem; color: #ef4444; margin-bottom: .5rem; }
+.play b { color: #f8fafc; font-size: 1.6rem; }
+.play span { font-family: 'JetBrains Mono', monospace; color: #cbd5e1; font-size: 1.1rem; }
+.play small { color: #cbd5e1; font-size: .95rem; margin-top: .6rem; }
+.play u { color: #93c5fd; font-size: .8rem; text-decoration: none; }
+.tl { display: flex; flex-direction: column; justify-content: space-around; border-left: 3px solid var(--line); }
+.tl div { display: grid; grid-template-columns: 4.2rem 7rem 1fr; align-items: center; gap: .8rem; padding: .5rem 0 .5rem 1rem; font-size: 1.05rem; position: relative; }
+.tl div::before { content: ''; position: absolute; left: -7.5px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+.tl time { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--accent); }
+.tl em { font-style: normal; font-size: .8rem; font-weight: 600; text-align: center; padding: .15rem .4rem; border-radius: 999px; background: #eff6ff; color: var(--accent); }
+.tl code { font-size: .9em; }
 .slidev-layout .shot.gh { max-height: 190px; margin: 0; width: 100%; object-fit: contain; }
 .legend { text-align: center; font-size: .85rem; color: var(--muted); margin-top: .4rem; }
 .legend span { display: inline-block; width: .9rem; height: .9rem; border-radius: 3px; vertical-align: -2px; margin: 0 .2rem 0 .8rem; }
