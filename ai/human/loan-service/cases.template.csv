@@ -1,0 +1,1 @@
+bookId,memberId,bookExists,bookAvailable,memberExists,activeLoans,unpaidFine,expectedOutcome,expectedCode

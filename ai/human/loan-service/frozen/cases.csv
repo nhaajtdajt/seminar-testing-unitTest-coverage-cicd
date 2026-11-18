@@ -1,0 +1,11 @@
+bookId,memberId,bookExists,bookAvailable,memberExists,activeLoans,unpaidFine,expectedOutcome,expectedCode
+1001,1,false,true,true,0,0.0,ERROR,BOOK_NOT_FOUND
+1002,1,true,false,true,0,0.0,ERROR,BOOK_UNAVAILABLE
+1003,1,true,true,false,0,0.0,ERROR,MEMBER_NOT_FOUND
+1004,1,true,true,true,3,0.0,ERROR,LIMIT_REACHED
+1005,1,true,true,true,0,10.50,ERROR,UNPAID_FINE
+1006,1,true,true,true,0,0.0,SUCCESS,NONE
+1007,2,true,true,true,2,0.0,SUCCESS,NONE
+1008,3,true,true,true,0,0.01,ERROR,UNPAID_FINE
+1009,4,false,false,false,0,0.0,ERROR,BOOK_NOT_FOUND
+1010,5,true,true,true,3,5.00,ERROR,LIMIT_REACHED
