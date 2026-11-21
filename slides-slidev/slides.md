@@ -473,32 +473,66 @@ Video B minh họa Code Coverage, JaCoCo và coverage gate. Điểm nhấn: test
 
 ---
 
-# CI/CD với GitHub Actions
+# Case study: phí trả sách trễ
 
-```mermaid {scale: 0.85}
-flowchart LR
-  PR[Pull request] --> T[JUnit chạy test]
-  T --> C[JaCoCo + gate]
-  C --> R[Actions báo kết quả]
-  R -->|đạt| G[PR xanh]
-  R -->|lỗi| F[PR đỏ: sửa, push lại]
-```
-
-<div class="grid grid-cols-2 gap-6 items-center">
+<div class="case">
 <div>
 
-- **CI**: mỗi push / PR đều build và test
-- Nhóm dừng ở **Continuous Delivery**: đóng gói, chưa tự deploy
+| Trường hợp | Quy tắc |
+|---|---|
+| Thường | **2.000đ** / ngày trễ |
+| VIP | Miễn 2 ngày đầu, rồi **1.000đ** / ngày |
+| Mọi hạng | Tối đa **50.000đ** |
+| Ngày âm / hạng rỗng | **Bị từ chối** |
 
 </div>
-<img class="shot gh" src="/gh-actions.png" alt="Các lần chạy Seminar CI trên GitHub Actions" />
+<img src="/library-books.jpg" alt="Kệ sách thư viện" />
 </div>
 
 <!--
-CI: tích hợp thay đổi thường xuyên và chạy kiểm tra tự động khi có push hoặc pull request.
-Continuous Delivery: tới bước tạo sản phẩm có thể phát hành. Continuous Deployment: tự triển khai lên môi trường thật. Nhóm dừng ở Delivery.
-Test lỗi hoặc coverage không đạt → PR đỏ; sửa và push lại thì workflow tự chạy lại.
-Ba vai trò: JUnit viết và chạy test; JaCoCo đo code đã chạy; GitHub Actions tự động hóa toàn bộ.
+Ứng dụng quản lý thư viện; demo tập trung vào lớp FineCalculator tính phí trả sách trễ.
+Lớp này có nhiều nhánh và giá trị biên rõ ràng: hạng thành viên, thời gian miễn phí của VIP, mức trần 50.000đ, và hai loại dữ liệu không hợp lệ.
+-->
+
+---
+class: video
+---
+
+# <span class="vtag">Video C</span> Case study & 7 kịch bản HTTP
+
+<div class="vbody">
+<a class="play" href="https://youtu.be/Wco_4852snM" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video C</b><span>04:30</span><small>Nguyễn Lê Thế Vinh</small><u>youtu.be/Wco_4852snM</u></a>
+<div class="tl">
+  <div><time>00:00</time><em>Setup</em><span>Chạy JAR trên OpenJDK 25, dữ liệu mẫu H2 in-memory</span></div>
+  <div><time>01:00</time><em>Demo</em><span>7 request curl: 201, 409 UNAVAILABLE, 404, 409 UNPAID_FINE</span></div>
+  <div><time>03:30</time><em>Đối chiếu</em><span><code>LoanFlowEdgeCaseTest</code> khớp 100% kết quả HTTP thực tế</span></div>
+</div>
+</div>
+
+<!--
+Video C chạy ứng dụng thư viện thật và gửi 7 request HTTP, sau đó đối chiếu với test tự động LoanFlowEdgeCaseTest.
+-->
+
+---
+
+# CI/CD với GitHub Actions
+
+<img class="shot pipeline-shot" src="/github-actions-pipeline.png" alt="Pipeline Seminar CI trên GitHub Actions" />
+
+<div class="gate-config-evidence">
+  <img src="/coverage-gate-config.png" alt="Cấu hình JaCoCo coverage gate cho FineCalculator" />
+  <span><b>Gate đã cấu hình trong Maven</b><code>FineCalculator</code> phải đạt branch covered ratio ≥ <strong>90%</strong>; thấp hơn thì build thất bại.</span>
+</div>
+
+<div class="pipeline-notes">
+  <span><b>Luồng bắt buộc</b> test → coverage gate → package</span>
+  <span><b>Chạy song song</b> Gemini review diff và kiểm tra AI offline</span>
+  <span><b>Điểm dừng</b> đóng gói artifact, chưa tự deploy</span>
+</div>
+
+<!--
+Ảnh là một run thật của Seminar CI. Nhánh chính chạy JUnit, coverage gate và package theo thứ tự; Gemini review diff chạy song song rồi hội tụ vào job tổng hợp.
+Ảnh cấu hình cho thấy JaCoCo kiểm riêng FineCalculator với counter BRANCH, value COVEREDRATIO và minimum 0.90. Test lỗi hoặc coverage không đạt thì build thất bại và package không hoàn tất. Nhóm dừng ở Continuous Delivery: tạo artifact có thể phát hành, chưa tự triển khai lên môi trường thật.
 -->
 
 ---
@@ -523,94 +557,6 @@ Video D minh họa pipeline GitHub Actions: cấu hình workflow, 3 job, một r
 -->
 
 ---
-
-# Case study: phí trả sách trễ
-
-<div class="case">
-<div>
-
-| Trường hợp | Quy tắc |
-|---|---|
-| Thường | **2.000đ** / ngày trễ |
-| VIP | Miễn 2 ngày đầu, rồi **1.000đ** / ngày |
-| Mọi hạng | Tối đa **50.000đ** |
-| Ngày âm / hạng rỗng | **Bị từ chối** |
-
-</div>
-<img src="/library-books.jpg" alt="Kệ sách thư viện" />
-</div>
-
-<!--
-Ứng dụng quản lý thư viện; demo tập trung vào lớp FineCalculator tính phí trả sách trễ.
-Lớp này có nhiều nhánh và giá trị biên rõ ràng: hạng thành viên, thời gian miễn phí của VIP, mức trần 50.000đ, và hai loại dữ liệu không hợp lệ.
--->
-
----
-
-# Demo: test xanh, build đỏ
-
-<div class="steps">
-  <div><b>1</b> Baseline: 1 test, xanh</div>
-  <div><b>2</b> Bật gate 90% → build đỏ</div>
-  <div><b>3</b> JaCoCo: chỉ ra nhánh thiếu</div>
-  <div><b>4</b> Bộ đầy đủ → build xanh</div>
-</div>
-
-```bash
-# Baseline: test xanh nhưng gate thất bại
-case-study/mvnw -B -ntp -f case-study/pom.xml -Pbaseline -Dcoverage.gate.skip=false clean verify
-
-# Bộ đầy đủ: test và gate đều thành công
-case-study/mvnw -B -ntp -f case-study/pom.xml clean verify
-```
-
-<div class="bars">
-  <div><span>Baseline</span><i><b class="miss" style="width:50%"></b><b class="hit" style="width:50%"></b></i><em class="bad">5/10 nhánh · 50%</em></div>
-  <div><span>Bộ đầy đủ</span><i><b class="hit" style="width:100%"></b></i><em class="good">10/10 nhánh · 100%</em></div>
-</div>
-
-<!--
-Khoảng 4 phút. Mở sẵn code và hai báo cáo trước/sau; nếu Maven chậm thì dùng video quay sẵn.
-1. Bộ baseline chỉ kiểm tra thành viên thường trễ một ngày — xanh nhưng thiếu nhiều tình huống.
-2. Chạy baseline với gate 90%: test vẫn xanh nhưng build đỏ vì coverage không đạt.
-3. Mở báo cáo JaCoCo, chỉ các nhánh chưa chạy (VIP, trần, dữ liệu không hợp lệ).
-4. Chạy bộ đầy đủ: có VIP, giá trị biên, dữ liệu không hợp lệ — coverage đạt, build xanh.
--->
-
----
-class: video
----
-
-# <span class="vtag">Video C</span> Case study & 7 kịch bản HTTP
-
-<div class="vbody">
-<a class="play" href="https://youtu.be/Wco_4852snM" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video C</b><span>04:30</span><small>Nguyễn Lê Thế Vinh</small><u>youtu.be/Wco_4852snM</u></a>
-<div class="tl">
-  <div><time>00:00</time><em>Setup</em><span>Chạy JAR trên OpenJDK 25, dữ liệu mẫu H2 in-memory</span></div>
-  <div><time>01:00</time><em>Demo</em><span>7 request curl: 201, 409 UNAVAILABLE, 404, 409 UNPAID_FINE</span></div>
-  <div><time>03:30</time><em>Đối chiếu</em><span><code>LoanFlowEdgeCaseTest</code> khớp 100% kết quả HTTP thực tế</span></div>
-</div>
-</div>
-
-<!--
-Video C chạy ứng dụng thư viện thật và gửi 7 request HTTP, sau đó đối chiếu với test tự động LoanFlowEdgeCaseTest.
--->
-
----
-
-# Bài tập cho người nghe
-
-<div class="todo">
-  <carbon-edit class="i" />
-  <b>Đang chờ thành viên phụ trách bổ sung</b>
-  <span>Link repository · file đề bài · màn hình code minh họa</span>
-</div>
-
-<!--
-ĐỂ TRỐNG: thành viên phụ trách phần bài tập sẽ bổ sung link repository, đề bài và màn hình code minh họa vào slide này.
--->
-
----
 layout: section
 ---
 
@@ -632,94 +578,55 @@ Phần này trình bày hai công trình nghiên cứu đã công bố về sinh
 
 <p class="cite">Lukasczyk, Kroiß & Fraser, <i>An empirical study of automated unit test generation for Python</i> <span class="rank">EMSE 2023 · CORE A</span></p>
 
-- **Không dùng LLM**: thuật toán tìm kiếm + thông tin kiểu dữ liệu + kết quả thực thi
-- Chạy hoàn toàn trên máy, **không tốn token**
-- Assertion chỉ ghi lại output hiện tại, không biết kết quả đúng
+<div class="paper-process">
+  <div><b>1 · Phân tích module</b><span>Đọc API, type hints, hằng số và dependency để tạo input ban đầu.</span></div>
+  <div><b>2 · Tiến hóa test</b><span>DynaMOSA tạo, đột biến và kết hợp nhiều test candidate.</span></div>
+  <div><b>3 · Thực thi & đo</b><span>Chạy candidate trên code đã instrument; mỗi nhánh chưa phủ là một mục tiêu.</span></div>
+  <div><b>4 · Chọn & lặp</b><span>Ưu tiên test tiến gần nhánh mục tiêu; assertion ghi lại output quan sát được.</span></div>
+</div>
 
 <div class="stats">
-  <div><span>Nhóm chạy lại trên 1 module benchmark</span><b>81,48%</b><small>coverage nội bộ của Pynguin · 10 test pass, 5 xfail</small></div>
-  <div><span>Thử trên source có filesystem và XML</span><b>Ít test hữu ích</b><small>thiếu assertion có ý nghĩa</small></div>
+  <div><span>1 module Python benchmark: <code>codetiming._timers</code></span><b>81,48%</b><small>Thuộc thư viện CodeTiming · Pynguin sinh 10 test pass, 5 xfail</small></div>
+  <div><span>1 module Python của nhóm</span><b>23,6% → 23,6%</b><small>Baseline → sau Pynguin · filesystem và XML · không cải thiện</small></div>
 </div>
+
+<p class="paper-weakness"><b>Nhược điểm của Pynguin:</b> Phụ thuộc ngân sách tìm kiếm; input có cấu trúc và oracle nghiệp vụ khó sinh tự động.</p>
+<p class="paper-limit"><b>Vì sao chưa đạt 100%?</b> DynaMOSA chưa khám phá hết các đường đi trong ngân sách 600 giây; module nhóm còn yêu cầu tạo đúng cả đường dẫn và cấu trúc XML.</p>
 
 <!--
 Trình bày theo năm xuất bản để không nhầm "paper thứ nhất, thứ hai" với các bước AI của nhóm.
 Paper 2023 của Lukasczyk, Kroiß và Fraser đăng trên tạp chí Empirical Software Engineering. Venue hạng A theo bảng CORE2020 — đây là hạng lịch sử của venue, không phải hạng riêng của paper.
-Paper nghiên cứu Pynguin: dùng thuật toán tìm kiếm, thông tin kiểu dữ liệu và kết quả thực thi để tạo test Python, không dùng mô hình ngôn ngữ, chạy trên máy nên không tốn token.
-Nhóm chạy trên một module benchmark: coverage nội bộ 81,48%, 10 test pass và 5 test xfail. Thử trên source có filesystem và XML thì Pynguin tạo được ít test hữu ích và thiếu assertion có ý nghĩa.
+Pynguin không dùng LLM. DynaMOSA là thuật toán tìm kiếm tiến hóa nhiều mục tiêu động: mỗi nhánh chưa phủ là một mục tiêu; tool liên tục sinh, đột biến, kết hợp và thực thi candidate, sau đó ưu tiên test có branch distance tốt hơn. Khi đã có chuỗi lệnh, Pynguin quan sát output để thêm assertion, nên assertion vẫn có thể khóa hành vi hiện tại thay vì đặc tả đúng.
+Nhóm chạy mới đúng một module Python benchmark là codetiming._timers thuộc thư viện CodeTiming. Một seed 600 giây đạt coverage nội bộ 81,48%, 10 test pass và 5 xfail.
+Khi thử trên một module Python của nhóm chuyên đọc file JaCoCo XML, tool phải tạo đồng thời đường dẫn tồn tại và cấu trúc XML hợp lệ. Lượt có seed đạt 23,6% nhưng không tăng so với smoke baseline. Đây là giới hạn trên một module có structured input, không phải kết luận Pynguin luôn kém hiệu quả.
 -->
 
 ---
 
-# Paper 2025 · CoverUp: LLM theo coverage gap
+# Paper 2025 · CoverUp
 
 <p class="cite">Pizzorno & Berger, <i>CoverUp: Effective High Coverage Test Generation for Python</i> <span class="rank">FSE 2025 · CORE A* (CORE2023)</span></p>
 
-```mermaid {scale: 0.8}
-flowchart LR
-  A[Chạy test] --> B[Tìm coverage gap]
-  B --> C[Gửi đoạn code liên quan cho LLM]
-  C --> D[Sinh test, chạy lại]
-  D -->|còn gap / lỗi| B
-```
-
-<div class="stats">
-  <div><span>Kết quả paper · nhóm phân tích lại dữ liệu công bố</span><b>89,0%</b><small>line + branch gộp, 163 module · MuTAP chỉ 76,8%</small></div>
-  <div><span>Mô hình ngôn ngữ</span><b>GPT-4o → Gemini 3.6</b><small>paper gốc dùng GPT-4o · nhóm dùng Gemini 3.6 Flash, ≈ 0,03 USD / lượt</small></div>
+<div class="paper-process">
+  <div><b>1 · Đo baseline</b><span>Chạy pytest và SlipCover để tìm chính xác dòng, nhánh chưa phủ.</span></div>
+  <div><b>2 · Tạo prompt hẹp</b><span>Gửi source liên quan, test hiện có và coverage gap cho LLM.</span></div>
+  <div><b>3 · Sinh & kiểm</b><span>LLM viết pytest; CoverUp chạy test, lấy lỗi và coverage mới.</span></div>
+  <div><b>4 · Phản hồi vòng lặp</b><span>Giữ test tăng coverage; sửa hoặc sinh tiếp đến khi hết gap hay ngân sách.</span></div>
 </div>
+
+<div class="stats three">
+  <div><span>Dữ liệu công bố · toàn bộ 163 module</span><b>89,0%</b><small>CoverUp GPT-4o · coverage line+branch gộp; MuTAP 76,8%</small></div>
+  <div><span>1/163 module Python benchmark: <code>f003</code></span><b>100%</b><small>Một bài nhỏ trong bộ HumanEval/MT · Gemini sinh 3 test pass</small></div>
+  <div><span>1 module Python của nhóm</span><b>23,6% → 96,4%</b><small>Baseline → sau CoverUp + Gemini · 7 test pass</small></div>
+</div>
+
+<p class="paper-limit"><b>Vì sao kết quả tổng chỉ 89%?</b> Trên 163 module, một số prompt không tạo được test hợp lệ hoặc còn trạng thái/nhánh khó kích hoạt trong ngân sách. Module nhóm dừng ở 96,4% vì phần còn thiếu là entrypoint CLI, không chạy khi Unit Test import module.</p>
 
 <!--
 Paper 2025 của Pizzorno và Berger công bố tại FSE 2025 (PACMSE). FSE hạng A* theo CORE2023, cũng là hạng của venue.
-CoverUp chạy test, tìm phần source chưa phủ rồi gửi đúng đoạn code liên quan cho mô hình ngôn ngữ. Test mới được chạy và đo lại; nếu còn gap thì tiếp tục sinh hoặc sửa test theo phản hồi coverage.
-Nhóm phân tích lại dữ liệu tác giả công bố: 89,0% line+branch gộp trên 163 module, cao hơn MuTAP 76,8%.
-Mô hình: paper gốc dùng GPT-4o qua cloud; nhóm dùng Gemini 3.6 Flash, công cụ ước tính khoảng 0,03 USD một lượt. Kết quả phụ thuộc mô hình; nhóm chưa đo với mô hình local.
--->
-
----
-class: cmp
----
-
-# Cùng code, cùng thước đo: 2023 vs 2025
-
-<p class="caption mb-3">File Python <code>scripts/coverage_gaps.py</code> của nhóm · đo bằng SlipCover source line / branch · cùng xuất phát từ 1 smoke test</p>
-
-| | Baseline | Paper 2023 · Pynguin có seed | Paper 2025 · CoverUp + Gemini |
-|---|:---:|:---:|:---:|
-| Test sinh được | 1 smoke test | 2 pass, không assertion | 7 pass |
-| Line | 28,2% (11/39) | 28,2% (11/39) | **97,4% (38/39)** |
-| Branch | 12,5% (2/16) | 12,5% (2/16) | **93,8% (15/16)** |
-| Line + branch gộp | 23,6% | 23,6% | **96,4%** |
-
-<p class="note">Một lần thử trên một module, cấu hình và ngân sách khác nhau: <b>chưa đủ</b> kết luận CoverUp luôn tốt hơn. Hai tool chỉ hỗ trợ Python nên không chạy trực tiếp trên code Java; nhóm không gán kết quả Python thành kết quả Java.</p>
-
-<!--
-CoverUp và Pynguin đều là tool cho Python, nên artifact gốc không chạy trực tiếp trên code Java của case study. Để so sánh công bằng hơn, nhóm chạy cả hai trên cùng file scripts/coverage_gaps.py và đo bằng SlipCover line và branch, cùng xuất phát từ một smoke test.
-Pynguin có seed: 2 test pass nhưng không có assertion, coverage không tăng. CoverUp với Gemini: 7 test pass, line 97,4%, branch 93,8%, gộp 96,4%. Lý do có thể thấy: hàm cần đọc file XML; LLM đọc code nên viết được file mẫu hợp lệ, còn tìm kiếm ngẫu nhiên khó tạo XML đúng cấu trúc.
-Đây là một lần thử có giới hạn trên một module, không phải benchmark đủ để kết luận CoverUp luôn tốt hơn. Muốn so sánh trực tiếp trên Java phải chọn thêm công cụ sinh test Java hoặc thay paper.
--->
-
----
-
-# Vì sao dừng ở 38/39 dòng và 15/16 nhánh?
-
-<div class="vs">
-  <div><span>Giả thuyết 1 · công cụ chưa đủ mạnh</span>LLM chưa nghĩ ra test cho phần còn lại</div>
-  <div><span>Giả thuyết 2 · code không thể vào từ Unit Test</span>Không ai viết được Unit Test chạy tới đó</div>
-</div>
-
-```python
-if __name__ == "__main__":   # nhánh còn thiếu
-    main()                   # dòng còn thiếu
-```
-
-- Kết luận: **giả thuyết 2**. Test **import** module nên `__name__` không bao giờ là `"__main__"`
-- Phần thiếu là entrypoint CLI, không thuộc logic `extract()` mà Unit Test nhắm tới
-- Nhóm giữ nguyên 38/39 và 15/16, không thêm test chỉ để làm đẹp con số
-
-<!--
-Khi công cụ không đạt 100% có hai khả năng: công cụ chưa đủ mạnh, hoặc code có phần mà Unit Test không thể chạy tới.
-Trường hợp này là khả năng thứ hai. Phần thiếu là dòng main() trong khối if __name__ == "__main__". Test import module để kiểm các hàm, nên __name__ không bằng "__main__"; dòng main() và nhánh đi vào nó không chạy. Muốn phủ phải chạy file như chương trình dòng lệnh, ví dụ bằng subprocess — đó không còn là Unit Test.
-Khoảng trống thuộc entrypoint CLI, không nằm trong logic extract() mà Unit Test nhắm tới. Nhóm giữ nguyên kết quả thay vì thêm test chỉ để làm đẹp con số.
-Khả năng thứ nhất vẫn có thật ở chỗ khác: trên 163 module của paper, CoverUp chỉ đạt 89,0%.
+CoverUp dùng coverage để thu hẹp prompt thay vì yêu cầu LLM viết toàn bộ test một lần. Tool chạy pytest bằng SlipCover, xác định dòng và nhánh chưa phủ, gửi đoạn source liên quan cùng test hiện có cho LLM, rồi chạy test mới. Lỗi cú pháp, lỗi runtime và coverage mới trở thành phản hồi cho vòng sửa hoặc sinh tiếp. Chỉ test hợp lệ và giúp tăng coverage mới được giữ.
+Nhóm phân tích lại dữ liệu tác giả công bố của toàn bộ 163 module: CoverUp dùng GPT-4o đạt 89,0% line+branch gộp, MuTAP đạt 76,8%. Bước này không gọi Gemini và không sinh lại 163 bộ test. Không đạt 100% vì một số module không có test hợp lệ hoặc còn nhánh khó kích hoạt trong ngân sách.
+Nhóm chạy mới CoverUp với Gemini 3.6 Flash trên đúng một module Python benchmark f003, một bài nhỏ thuộc bộ HumanEval/MT. Ba test pass đạt 100% line và branch coverage. Trên một module Python của nhóm đọc file XML, 7 test pass và coverage gộp 96,4%; phần thiếu là khối CLI chỉ chạy khi gọi file trực tiếp, còn Unit Test import module.
 -->
 
 ---
@@ -728,95 +635,121 @@ layout: section
 
 <p class="kicker">Áp dụng của nhóm</p>
 
-# Áp dụng AI vào quy trình Java
+# Ứng dụng AI trong Unit Testing
 
-Dùng ý tưởng của <b>Paper 2025</b>: coverage làm phản hồi, trên <code>FineCalculator</code> với JUnit + JaCoCo. <br>
-Các giai đoạn gọi theo chức năng để không nhầm với tên paper. Không phải cài đặt lại CoverUp.
+Dùng ý tưởng coverage feedback của <b>Paper 2025</b> và triển khai với <b>LLM</b>. <br>
+Mỗi tính năng có đầu vào, bằng chứng chạy và điểm dừng để người thực hiện review.
 
 <!--
-Nhóm áp dụng ý tưởng dùng coverage làm phản hồi của Paper 2025 trên FineCalculator, bằng JUnit và JaCoCo. Để tránh nhầm với tên paper, các giai đoạn được gọi theo chức năng: sinh test nháp, rồi bổ sung test theo coverage gap.
+Nhóm kế thừa ý tưởng dùng coverage làm phản hồi của Paper 2025, không cài đặt lại CoverUp. Pipeline nhận module mục tiêu cùng source dependency liên quan, chạy test trong project tạm và chỉ chấp nhận sau khi người thực hiện review.
 -->
 
 ---
 
-# Sinh test nháp → bổ sung theo coverage gap
+# Các tính năng AI hỗ trợ kiểm thử
 
-```mermaid {scale: 0.78}
-flowchart LR
-  S[Source + yêu cầu] --> D[Sinh test nháp]
-  D --> J[JUnit chạy · JaCoCo đo]
-  J --> G[Bổ sung test theo coverage gap]
-  G --> H[Người review rồi mới áp dụng]
-```
-
-<p class="kicker mt-8">Vì sao vẫn cần con người review</p>
-<div class="risks">
-  <div><carbon-warning-alt /> Sai expected result</div>
-  <div><carbon-warning-alt /> Assertion yếu</div>
-  <div><carbon-warning-alt /> Trùng test hiện có</div>
+<div class="ai-features">
+  <div><b>Sinh test từ source</b><span>Đọc module mục tiêu, dependency và yêu cầu; LLM sinh Unit Test nháp rồi chạy kiểm chứng.</span></div>
+  <div><b>Bổ sung theo coverage</b><span>Đọc test nháp, kết quả JUnit và JaCoCo gaps; đề xuất test còn thiếu mà không xóa baseline.</span></div>
+  <div><b>Review pull request</b><span>Review diff test song song với CI và đăng nhận xét tư vấn; không tự sửa hay merge.</span></div>
+  <div><b>Sinh & đối chứng dữ liệu biên</b><span>Sinh bộ ca biên, chạy cùng JUnit harness và so với bộ người lập đã khóa trước.</span></div>
 </div>
 
+<p class="review-rule"><b>Quy tắc chung:</b> AI đề xuất; JUnit và coverage cung cấp bằng chứng; con người chịu trách nhiệm expected result và assertion.</p>
+
 <!--
-Quy trình: đưa source và yêu cầu cho Gemini để sinh test nháp; JUnit chạy, JaCoCo đo coverage; Gemini nhận thêm báo cáo để bổ sung test theo coverage gap; người thực hiện review rồi mới áp dụng.
-AI đề xuất test nhanh hơn, nhưng output vẫn có thể sai expected result, dùng assertion yếu hoặc trùng test hiện tại. Coverage giúp AI tìm gap; người review chịu trách nhiệm về nghiệp vụ.
+Tính năng sinh test đọc một class mục tiêu cùng dependency production liên quan. Bước bổ sung nhận chính test nháp, kết quả chạy và coverage gap. Review pull request chỉ nhận xét diff song song với CI. Phần dữ liệu biên sinh test case rồi đối chứng với bộ người lập bằng cùng test harness.
+Các bước chạy tự động không chứng minh expected result đúng. Người thực hiện vẫn review input, oracle và assertion trước khi áp dụng.
 -->
 
 ---
 
-# Demo AI trên `FineCalculator`
+# Triển khai trên `FineCalculator`
 
 <div class="fact">
   <span>70%</span><em>→</em><span class="hl">100%</span>
 </div>
-<p class="center-label">branch coverage của lượt demo (quay sẵn)</p>
+<p class="center-label">branch coverage của lượt triển khai</p>
 
 - Sinh test nháp: Gemini viết 3 test, chạy xanh nhưng branch chỉ 70%
 - Bổ sung theo coverage gap: thêm ngày âm, hạng rỗng, nhánh VIP còn thiếu
 - Người thực hiện kiểm tra input, expected, assertion trước khi nhận
 
 <!--
-Demo quay sẵn để không phụ thuộc mạng và hạn mức API.
-Gemini nhận source và quy tắc tính phí, sinh ba test nháp. Các test chạy xanh nhưng branch chỉ 70%. Gemini nhận thêm báo cáo JaCoCo, đề xuất test cho ngày âm, hạng thành viên rỗng và nhánh VIP còn thiếu. Sau khi bổ sung, branch của lượt demo đạt 100%. Người thực hiện kiểm tra input, expected result và assertion trước khi chấp nhận test.
+Lượt triển khai được quay sẵn để không phụ thuộc mạng và hạn mức API.
+Gemini nhận source và quy tắc tính phí, sinh ba test nháp. Các test chạy xanh nhưng branch chỉ 70%. Gemini nhận thêm báo cáo JaCoCo, đề xuất test cho ngày âm, hạng thành viên rỗng và nhánh VIP còn thiếu. Sau khi bổ sung, branch của lượt triển khai đạt 100%. Người thực hiện kiểm tra input, expected result và assertion trước khi chấp nhận test.
+-->
+
+---
+
+# Review pull request cùng CI
+
+<div class="ai-review-evidence">
+  <img class="shot" src="/ai-pr-review-comment.png" alt="GitHub Actions bot đăng kết quả Gemini review trên pull request" />
+  <div>
+    <b>Comment hợp nhất hai nguồn bằng chứng</b>
+    <span>JUnit và JaCoCo báo số đo thực tế; Gemini nhận xét phần diff được gửi.</span>
+    <b>Vai trò tư vấn</b>
+    <span>Nhận xét AI không thay required checks, không tự sinh, sửa hoặc merge test.</span>
+  </div>
+</div>
+
+<!--
+Ảnh là comment do GitHub Actions bot đăng trên pull request. Phần đầu lấy từ các job CI: 49 test pass, line 76/83 và branch 24/24. Phần sau là nhận xét Gemini về diff.
+Trong lượt này Gemini không nêu finding. Điều đó không chứng nhận code hoàn toàn đúng; AI chỉ review phần diff đã gửi và không thay thế JUnit, coverage gate hay review của con người.
 -->
 
 ---
 class: video
 ---
 
-# <span class="vtag">Video E</span> AI & tái hiện thực nghiệm paper
+# <span class="vtag">Video E</span> Demo 4 tính năng AI
 
 <div class="vbody">
 <a class="play" href="https://youtu.be/fLtNeE-MSw4" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video E</b><span>09:15</span><small>Ngô Gia An</small><u>youtu.be/fLtNeE-MSw4</u></a>
 <div class="tl">
-  <div><time>00:00</time><em>Setup</em><span>Gemini Client; phân biệt Codex và Gemini API</span></div>
-  <div><time>01:30</time><em>Đơn giản</em><span>Sinh test nháp, rồi bổ sung theo coverage gap</span></div>
-  <div><time>03:45</time><em>Hạn chế</em><span>Bot AI review PR; ca oracle sai cho thấy giới hạn LLM</span></div>
-  <div><time>05:30</time><em>Data-driven</em><span>Đối chứng dữ liệu biên: người lập vs Gemini sinh</span></div>
-  <div><time>07:15</time><em>Paper</em><span>Tái hiện CoverUp (FSE 2025), so sánh Pynguin (EMSE 2023)</span></div>
+  <div><time>00:00</time><em>Sinh test</em><span>Đọc module và sinh Unit Test nháp từ source</span></div>
+  <div><time>01:30</time><em>Coverage</em><span>Đọc coverage gap và bổ sung test còn thiếu</span></div>
+  <div><time>03:45</time><em>PR review</em><span>Review diff test và đăng nhận xét trên pull request</span></div>
+  <div><time>05:30</time><em>Dữ liệu biên</em><span>Sinh và đối chứng bộ test case với bộ người lập</span></div>
 </div>
 </div>
 
 <!--
-Video E minh họa quy trình AI của nhóm và phần tái hiện hai paper. Ca oracle sai cho thấy vì sao con người vẫn phải review.
+Video E chỉ minh họa bốn tính năng AI của nhóm: sinh test từ source, bổ sung theo coverage, review pull request, và sinh rồi đối chứng dữ liệu biên.
 -->
 
 ---
 
 # Kết luận
 
-- **Unit Test**: dữ liệu phù hợp, assertion cụ thể
-- **Coverage + gate**: tìm và chặn phần bị bỏ sót
-- **GitHub Actions**: chạy tự động mỗi thay đổi
-- **AI**: đề xuất test, người vẫn phải review
+<div class="conclusion-list">
+  <ul>
+    <li><b>Unit Test:</b> cần dữ liệu phù hợp và assertion cụ thể.</li>
+    <li><b>Coverage và quality gate:</b> giúp phát hiện và chặn phần mã bị bỏ sót.</li>
+    <li><b>GitHub Actions:</b> tự động kiểm tra mỗi thay đổi trong quy trình CI/CD.</li>
+    <li><b>AI:</b> hỗ trợ đề xuất test, nhưng con người vẫn cần review kết quả.</li>
+  </ul>
+</div>
 
-<div v-click class="answer">
-  Test xanh + coverage 100% <b>vẫn chưa đủ</b> để kết luận chương trình đúng.
-  <br>Chất lượng test nằm ở test case, assertion và yêu cầu nghiệp vụ.
+<div class="answer">Test xanh và coverage 100% <b>vẫn chưa đủ</b> để kết luận chương trình đúng.</div>
+
+<!--
+Kết luận: Unit Test cần test case và assertion tốt; coverage và gate tìm phần bị bỏ sót; GitHub Actions tự động hóa; AI chỉ đề xuất và không thay review của con người.
+-->
+
+---
+
+# Bài tập cho người nghe
+
+<div class="todo">
+  <carbon-edit class="i" />
+  <b>Đang chờ thành viên phụ trách bổ sung</b>
+  <span>Link repository · file đề bài · màn hình code minh họa</span>
 </div>
 
 <!--
-Tóm lại: Unit Test kiểm tra hành vi từng phần nhỏ; Coverage cho biết test đã chạy qua đâu; gate chặn build không đạt ngưỡng; GitHub Actions tự động hóa trên mỗi thay đổi; AI đọc gap và đề xuất test nhưng người thực hiện vẫn kiểm tra expected và assertion.
-Trả lời câu hỏi ban đầu (click): chưa đủ. Coverage giúp tìm phần code bị bỏ sót; chất lượng test phụ thuộc vào test case, assertion và yêu cầu nghiệp vụ.
+ĐỂ TRỐNG: thành viên phụ trách phần bài tập sẽ bổ sung link repository, đề bài và màn hình code minh họa vào slide này.
 -->
 
 ---
