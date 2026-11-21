@@ -740,16 +740,44 @@ Kết luận: Unit Test cần test case và assertion tốt; coverage và gate t
 
 ---
 
-# Bài tập cho người nghe
+# Lab: Coverage & Mutation Testing · 30 phút
 
-<div class="todo">
-  <carbon-edit class="i" />
-  <b>Đang chờ thành viên phụ trách bổ sung</b>
-  <span>Link repository · file đề bài · màn hình code minh họa</span>
+<div class="steps">
+  <div><b>1</b>Use this template, clone về, <code>./mvnw clean verify</code></div>
+  <div><b>2</b>Bài 1: điền giá trị biên vào <code>fine-cases.csv</code></div>
+  <div><b>3</b>Bài 2: viết test Mockito để qua gate 100% branch</div>
+  <div><b>4</b>Chạy PIT, tìm lỗi cài sẵn, nộp <code>REPORT.md</code></div>
 </div>
 
+| Bài | Học được |
+|---|---|
+| **1** | Phân tích giá trị biên, test data-driven bằng CSV |
+| **2** | Đọc báo cáo JaCoCo, mock, coverage gate, mutation testing |
+
+<p class="note">Repo: <b>github.com/tzin1401/seminar-lab-nhom09</b> · cần JDK 17+ · lab bắt đầu ở trạng thái <b>đỏ</b>, push lên thì CI chạy lại</p>
+
 <!--
-ĐỂ TRỐNG: thành viên phụ trách phần bài tập sẽ bổ sung link repository, đề bài và màn hình code minh họa vào slide này.
+Lab dùng lại FineCalculator và LoanService của case study, bỏ Spring Boot để chỉ cần JDK 17 trở lên là chạy được.
+Bài 1: thay 8 dấu ? trong CSV bằng số tiền tính tay theo đặc tả (24/25/26 ngày NORMAL; 2/3/51/52/53 ngày VIP).
+Bài 2: gate ban đầu báo 0.66 (4/6 nhánh); viết 2 test LIMIT_REACHED và UNPAID_FINE cho đủ 100%.
+Nộp: link repo tạo từ template, REPORT.md đã điền, tab Actions có dấu xanh.
+-->
+
+---
+
+# Lab · Gate xanh nhưng vẫn còn lỗi
+
+<div class="vs">
+  <div><span>Test <code>count = 4</code> · branch 100%, gate xanh</span><code>if (count > 3) → LIMIT_REACHED</code><p class="bad">✕ PIT 8/9: mutant <code>></code> → <code>>=</code> sống sót</p></div>
+  <div><span>Test đúng biên <code>count = 3</code></span><code>if (count >= 3) → LIMIT_REACHED</code><p class="good">✓ Test đỏ, lộ lỗi; sửa xong thì PIT 9/9</p></div>
+</div>
+
+<div class="answer">Đặc tả: <b>đang mượn 3 cuốn thì không được mượn thêm</b>. Code cài sẵn lỗi <b>&gt; 3</b>; test ở giá trị 2 và 4 vẫn phủ đủ nhánh nhưng không chạm biên 3. Coverage cho biết code <b>đã chạy</b>, PIT cho biết test <b>có kiểm đúng không</b>.</div>
+
+<!--
+Đây là điểm nhấn của lab. Phần lớn học viên sẽ viết test với count = 4: build xanh, coverage 100%. Khi chữa bài, hỏi cả lớp "vậy là hết lỗi chưa?", sau đó chạy PIT.
+PIT đổi > thành >=; với count 2 và 4 hai phiên bản cho cùng kết quả nên mutant sống sót. Thêm test count = 3 thì test đỏ; đối chiếu đặc tả thấy lỗi ở code, sửa thành >= 3, PIT diệt 9/9 mutant.
+Đáp án nằm trên nhánh dap-an trong repo lab ở máy Vinh, không đưa lên GitHub.
 -->
 
 ---
