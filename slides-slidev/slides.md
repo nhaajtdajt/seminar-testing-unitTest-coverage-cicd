@@ -75,19 +75,6 @@ class: unit-visual
 </style>
 
 ---
-layout: statement
----
-
-<p class="kicker">Câu hỏi chính</p>
-
-# Test xanh và coverage 100% <br> có chắc chương trình đã đúng không?
-
-<!--
-Khi toàn bộ test đều xanh, ta vẫn chưa biết bộ test đã đi qua hết các nhánh hay chưa — Code Coverage trả lời phần đó. Từ coverage, nhóm tạo coverage gate để build thất bại nếu độ phủ dưới ngưỡng.
-Đặt câu hỏi này cho khán giả, giữ lại câu trả lời đến cuối bài.
--->
-
----
 layout: cover
 class: text-left
 ---
