@@ -6,8 +6,6 @@ Thời lượng dự kiến: 30 phút, gồm phần trình bày, demo ngắn và
 
 ## 1. Giới thiệu
 
-> Một cửa hàng online miễn phí giao hàng từ 200.000 đồng. Sau khi sửa code, mình thử đơn 250.000 đồng và thấy phí bằng 0. Nếu khách mua đúng 200.000 đồng thì sao? Một lần thử thành công cho mình biết được bao nhiêu về các trường hợp còn lại?
-
 Trong quá trình phát triển phần mềm, một thay đổi nhỏ cũng có thể làm hỏng chức năng đang hoạt động. Kiểm tra thủ công sau mỗi lần sửa vừa tốn thời gian, vừa khó lặp lại. Unit Test giúp biến những kiểm tra đó thành các test case có thể chạy tự động.
 
 Nhưng khi toàn bộ test đều xanh, chúng ta vẫn chưa biết bộ test đã đi qua hết các nhánh xử lý hay chưa. Code Coverage giúp trả lời câu hỏi này. Từ số liệu coverage, nhóm có thể tạo coverage gate để build thất bại nếu độ phủ thấp hơn ngưỡng yêu cầu.
@@ -20,82 +18,132 @@ Câu hỏi chính của bài là:
 
 ## 2. Unit Test
 
-### 2.1. Unit Test là gì?
+### 2.1. Unit testing và các test level
 
-Unit Test kiểm tra một phần nhỏ của chương trình, thường là một hàm, phương thức hoặc lớp có trách nhiệm rõ ràng. Mỗi test tập trung vào một hành vi và so sánh kết quả thực tế với kết quả mong đợi.
+Theo ISTQB, **unit testing**, còn gọi là **component testing**, là một test level tập trung vào từng thành phần trong điều kiện cô lập. Đơn vị đó có thể là một hàm, một lớp hoặc một mô-đun có thể kiểm tra riêng. Lập trình viên thường thực hiện kiểm thử này trong môi trường phát triển. [ISTQB CTFL v4.0.1, mục 2.2.1, trang 29](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=29)
 
-Phạm vi test cần đủ nhỏ để khi thất bại, người phát triển có thể tìm nguyên nhân nhanh. Một test phải khởi động toàn bộ ứng dụng, gọi nhiều dịch vụ và dùng cơ sở dữ liệu thật thường không còn là Unit Test thuần túy.
+Phần được kiểm tra gọi là **system under test (SUT)**. Cùng lấy một cửa hàng miễn phí giao hàng từ 200.000 đồng để xem phạm vi của từng test level.
 
-Unit Test kiểm tra tốt logic cục bộ nhưng không thay thế integration test. Integration test vẫn cần thiết để xác nhận các thành phần thật kết nối đúng với nhau.
+| Test level | Câu hỏi kiểm thử trong cửa hàng |
+|---|---|
+| Unit testing | Gọi riêng hàm tính phí với tổng tiền 200.000 đồng, hàm có trả về 0 đồng không? |
+| Component integration testing | Thành phần thanh toán có truyền đúng tổng tiền cho thành phần tính phí và dùng đúng phí trả về không? |
+| System testing | Khi khách hoàn tất đặt hàng trên ứng dụng, tổng tiền trong xác nhận đơn có đúng với số tiền hiển thị lúc thanh toán không? |
 
-Trong ví dụ cửa hàng, khi gọi riêng hàm tính phí giao hàng, hàm đó là SUT (System Under Test), tức phần được kiểm thử. Nếu muốn kiểm tra trang thanh toán có nhận đúng phí và lưu đúng tổng tiền, có thể dùng integration test để chạy các thành phần đó cùng nhau.
+Ở dòng đầu, SUT là hàm tính phí. Đây là mã Java minh họa cho quy định của cửa hàng. Các số tiền đều tính bằng đồng.
 
-### 2.2. Unit Test mang lại lợi ích gì?
+```java
+int shippingFee(int total) {
+    if (total < 0) {
+        throw new IllegalArgumentException("Tổng tiền phải không âm");
+    }
+    return total >= 200_000 ? 0 : 20_000;
+}
+```
 
-Unit Test giúp phát hiện lỗi sớm. Khi một thay đổi làm sai hành vi đã được kiểm tra, test báo lỗi ngay trong quá trình phát triển.
+### 2.2. Mục tiêu và đặc điểm của một unit test tốt
 
-Bộ test cũng giúp việc sửa code an toàn hơn. Lập trình viên có thể thay đổi cách cài đặt bên trong rồi chạy lại test để kiểm tra các hành vi cũ.
+- **Phát hiện và khoanh vùng lỗi sớm.** Khi gọi riêng `shippingFee(200_000)` mà nhận 20.000 đồng, nhóm có thể bắt đầu tìm lỗi ngay trong hàm tính phí.
+- **Regression testing.** Sau khi viết lại công thức, nhóm chạy lại test cho đơn 200.000 đồng. Nếu lần sửa làm mất ưu đãi đúng ngưỡng, test này sẽ báo lỗi.
+- **Chạy nhanh, độc lập và lặp lại được.** Test tính phí chỉ cần một số nguyên làm input. Chạy riêng hay chạy sau các test khác đều phải cho cùng kết quả.
+- **Mỗi test case mô tả một hành vi.** Tên `mienPhiKhiDonDungNguong` nói rõ tình huống và kết quả. Một hành vi có thể cần nhiều assertion. Khi hủy đơn đã giao, test có thể kiểm tra cả thông báo từ chối và trạng thái đơn sau khi xử lý.
 
-Tên test, dữ liệu và assertion còn mô tả chương trình phải xử lý một tình huống như thế nào. Khi một test nhỏ thất bại, phạm vi tìm lỗi thường hẹp hơn so với kiểm thử toàn hệ thống.
+### 2.3. Test oracle, assertion và Arrange–Act–Assert
 
-### 2.3. Arrange, Act, Assert
+**Test oracle** là căn cứ xác định **expected result** trước khi chạy test. Với đơn 200.000 đồng, cụm “miễn phí **từ** 200.000 đồng” trong chính sách của cửa hàng cho ta biết phí phải bằng 0 đồng.
 
-Một Unit Test thường có ba bước:
+**Arrange–Act–Assert** là cách tổ chức một test case thành ba bước. Arrange chuẩn bị điều kiện và dữ liệu. Act gọi hành vi cần kiểm tra. Assert so sánh kết quả thực tế (**actual result**) với expected result. Trong test JUnit dưới đây, mỗi bước ứng với một dòng:
 
-1. Arrange: chuẩn bị đối tượng, dữ liệu và các thành phần mà đối tượng cần sử dụng (dependency).
-2. Act: thực hiện hành vi cần kiểm tra.
-3. Assert: so sánh kết quả thực tế với kết quả mong đợi.
+```java
+@Test
+void mienPhiKhiDonDungNguong() {
+    int total = 200_000;           // Arrange
+    int fee = shippingFee(total);  // Act
+    assertEquals(0, fee);          // Assert
+}
+```
 
-Assertion quyết định test có phát hiện được sai lệch hay không. Ví dụ, kiểm tra kết quả "không rỗng" chưa đủ nếu yêu cầu là phải trả về chính xác 6.000 đồng. Assertion cần bám vào kết quả nghiệp vụ cụ thể.
+**Assertion** quyết định sai lệch nào sẽ làm test thất bại. Nếu hàm thu nhầm 20.000 đồng, `assertEquals(0, fee)` phát hiện lỗi. Một phép kiểm tra yếu hơn như `assertTrue(fee >= 0)` vẫn đạt.
 
-Với đơn đúng 200.000 đồng, Arrange là chuẩn bị tổng tiền 200.000 đồng, Act là gọi hàm tính phí giao hàng, Assert là kiểm tra phí trả về bằng 0. Nếu hàm trả nhầm 20.000 đồng, phép so sánh với 0 sẽ làm test thất bại.
+### 2.4. Chọn test case
 
-### 2.4. Một Unit Test tốt cần gì?
+ISTQB phân các kỹ thuật thiết kế test case thành ba nhóm dựa trên thông tin dùng để chọn test case. [ISTQB CTFL v4.0.1, mục 4.1–4.4, trang 39–44](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=39)
 
-Một Unit Test tốt nên:
+#### Black-box test techniques
 
-- Kiểm tra một hành vi rõ ràng.
-- Chạy nhanh và có thể chạy lại nhiều lần.
-- Không phụ thuộc vào thứ tự của test khác.
-- Cho cùng kết quả với cùng code và dữ liệu.
-- Có tên mô tả tình huống và kết quả mong đợi.
-- Thất bại khi quy tắc nghiệp vụ bị làm sai.
+Ta chọn test case từ yêu cầu về hành vi của phần mềm.
 
-Test có thể chứa nhiều assertion nếu chúng cùng kiểm tra một kết quả. Chẳng hạn, sau khi tạo phiếu mượn, test có thể kiểm tra mã sách, mã thành viên và thời điểm mượn.
+**Equivalence partitioning** chia đầu vào thành các vùng mà chương trình dự kiến xử lý theo cùng một quy tắc. Chọn một đại diện cho mỗi vùng cần kiểm tra. Với hàm tính phí ở trên, có ba vùng:
 
-### 2.5. Chọn test case
+| Equivalence partition | Input đại diện | Expected result |
+|---|---:|---|
+| Tổng tiền âm | −1 đồng | Báo lỗi dữ liệu |
+| Từ 0 đến dưới 200.000 đồng | 150.000 đồng | Phí 20.000 đồng |
+| Từ 200.000 đồng trở lên | 250.000 đồng | Miễn phí |
 
-Test case nên xuất phát từ yêu cầu, điều kiện và giới hạn của chức năng. Các nhóm chính gồm:
+**Boundary value analysis** chọn giá trị tại và sát ranh giới của các vùng có thứ tự. Trong ví dụ này, cả hai đơn 150.000 và 250.000 đồng vẫn cho phí đúng nếu lập trình viên viết nhầm `>` thay cho `>=`. Trong ba ca dưới đây, chính ca ở dòng giữa phát hiện lỗi đó.
 
-- Trường hợp hoạt động bình thường.
-- Giá trị biên.
-- Dữ liệu không hợp lệ.
-- Trường hợp rỗng hoặc không tồn tại.
-- Trường hợp đạt hoặc vượt giới hạn.
+```java
+assertEquals(20_000, shippingFee(199_999));
+assertEquals(0, shippingFee(200_000));
+assertEquals(0, shippingFee(200_001));
+```
 
-Nếu một quy tắc thay đổi tại giá trị 25, nên kiểm tra 24, 25 và 26. Ba giá trị này đại diện cho ngay trước, tại và sau ranh giới. Chúng dễ phát hiện lỗi dùng sai toán tử so sánh.
+**Decision table testing** dùng khi kết quả phụ thuộc vào nhiều điều kiện. Mỗi cột là một tổ hợp khả thi và kết quả tương ứng. Giả sử cửa hàng chỉ giảm 20% khi khách vừa là thành viên vừa có mã. Bốn ca sau cũng sẽ được dùng ở phần Code Coverage.
 
-> Đơn dưới 200.000 đồng trả phí cố định 20.000 đồng. Nếu muốn kiểm tra đúng chỗ bắt đầu miễn phí, mình sẽ chọn những đơn nào?
+| Điều kiện hoặc kết quả | T1 | T2 | T3 | T4 |
+|---|---:|---:|---:|---:|
+| Là thành viên | Có | Không | Có | Không |
+| Có mã giảm giá | Có | Có | Không | Không |
+| Mức giảm mong đợi | 20% | 0% | 0% | 0% |
 
-| Tình huống | Tổng tiền | Phí mong đợi |
-|---|---:|---:|
-| Ngay dưới ngưỡng | 199.999 đồng | 20.000 đồng |
-| Đúng ngưỡng | 200.000 đồng | 0 đồng |
-| Ngay trên ngưỡng | 200.001 đồng | 0 đồng |
+**State transition testing** chọn ca dựa trên trạng thái ban đầu, sự kiện xảy ra và trạng thái mong đợi. Ví dụ, cửa hàng chỉ cho hủy đơn đang chờ xác nhận. Cùng gửi yêu cầu hủy, ta cần kiểm tra hai kết quả khác nhau.
 
-Ca đúng ngưỡng phân biệt được điều kiện “từ 200.000 đồng” với “trên 200.000 đồng”.
+| Initial state | Event | Expected result |
+|---|---|---|
+| Chờ xác nhận | Khách yêu cầu hủy | Chấp nhận và chuyển sang “đã hủy” |
+| Đã giao | Khách yêu cầu hủy | Từ chối và giữ trạng thái “đã giao” |
 
-Khi nhiều test có cùng cách thực hiện và chỉ khác dữ liệu, có thể dùng data-driven testing. Một test được chạy nhiều lần với các bộ đầu vào và kết quả mong đợi khác nhau. Cách này giảm code lặp và giúp các giá trị biên dễ quan sát hơn.
+#### White-box test techniques
 
-### 2.6. Mock
+Ta đọc cấu trúc mã để chọn input đi qua phần cần kiểm tra.
 
-Một service thường cần repository hoặc dịch vụ khác để hoạt động. Các thành phần đó được gọi là dependency. Mock thay dependency thật bằng một đối tượng do test kiểm soát. Nhờ vậy, test có thể tạo đúng tình huống cần kiểm tra mà không truy cập cơ sở dữ liệu thật.
+**Statement testing** chọn đầu vào để chạy một câu lệnh cần kiểm tra. Trong hàm giảm giá ở mục 4, câu lệnh `discount = 20` chỉ chạy khi cả hai điều kiện đều đúng. T1 trong decision table đi đến câu lệnh đó:
 
-> Muốn kiểm tra chức năng đặt hàng khi sản phẩm hết hàng, mình có phải sửa tồn kho thật về 0 mỗi lần chạy test không?
+```java
+assertEquals(20, calculateDiscount(true, true));  // T1
+```
 
-Trong Java, có thể dùng Mockito để tạo đối tượng quản lý kho giả và cho nó trả về số lượng 0. Sau đó gọi chức năng đặt hàng với yêu cầu mua một sản phẩm. Test cần kiểm tra chức năng báo hết hàng và chưa gọi thao tác lưu đơn. Dữ liệu tồn kho do test chủ động chuẩn bị.
+**Branch testing** chọn đầu vào để đi qua các hướng của luồng điều khiển. Với điều kiện `isMember && hasCoupon`, hai ca dưới đây cùng được giảm 0% nhưng đi qua hai hướng khác nhau:
 
-Mock có giới hạn. Nếu đối tượng giả hoạt động khác hệ thống thật, Unit Test vẫn có thể xanh trong khi ứng dụng lỗi. Các luồng quan trọng cần thêm integration test để kiểm tra sự phối hợp giữa các thành phần.
+```java
+assertEquals(0, calculateDiscount(false, true));  // T2: dừng khi xét tư cách thành viên
+assertEquals(0, calculateDiscount(true, false));  // T3: xét tiếp mã và thấy thiếu mã
+```
+
+#### Experience-based test techniques
+
+Người viết test dựa vào kinh nghiệm sử dụng sản phẩm và những lỗi từng gặp để tìm thêm test case.
+
+- **Error guessing** dùng kinh nghiệm để dự đoán lỗi rồi chọn ca có thể làm lộ lỗi. Người từng gặp lỗi nhầm dấu `>` với `>=` sẽ có lý do để thử ngay đơn đúng 200.000 đồng.
+- **Exploratory testing** kết hợp thiết kế, chạy và đánh giá ca khi đang tìm hiểu chức năng. Nếu thấy đơn đúng ngưỡng bị thu phí, người kiểm thử tăng tổng tiền thêm một đồng. Kết quả giúp họ xác định lỗi có xuất hiện cả phía trên ngưỡng hay không.
+- **Checklist-based testing** dùng các mục đã đúc kết từ kinh nghiệm để rà lại hành vi. Với mục “trạng thái sau khi thao tác bị từ chối”, người viết test biết cần đọc lại đơn sau khi hủy thất bại và kiểm tra trạng thái vẫn là “đã giao”.
+
+### 2.5. Cô lập thành phần bằng stub và mock
+
+**Stub** cung cấp câu trả lời định sẵn thay cho một **dependency**, tức thành phần mà SUT cần gọi. Trong ứng dụng thư viện của nhóm, muốn thử mượn sách khi thành viên đã đạt hạn mức, test cho kho phiếu mượn trả lời “đang mượn 3 cuốn”.
+
+```java
+when(loans.countActiveByMemberId(1)).thenReturn(3L);
+```
+
+**Mock** cho phép xác minh tương tác giữa SUT và dependency. Trong cùng test case trên, sau khi gọi chức năng mượn và kiểm tra lỗi đạt hạn mức, test xác minh rằng hệ thống chưa ghi thêm phiếu nào. Cùng một đối tượng Mockito đảm nhiệm cả hai vai trò trong ca này. [Mã test của nhóm](case-study/src/test/java/vn/edu/seminar/loan/LoanServiceTest.java)
+
+```java
+verify(loans, never()).save(any());
+```
+
+Ca này kiểm tra quyết định từ chối cho mượn. Để biết một phiếu hợp lệ có thực sự được ghi và đọc lại từ cơ sở dữ liệu hay không, nhóm cần dùng integration testing.
 
 ## 3. Công cụ JUnit
 
@@ -202,7 +250,7 @@ Build đỏ vì gate đo độ phủ. JUnit báo xanh vì các ca hiện có đ�
 
 Không có một ngưỡng phù hợp cho mọi dự án. Ngưỡng cần dựa trên mức độ quan trọng và khả năng kiểm thử của code. Đặt 100% cho toàn dự án có thể khiến nhóm viết test để đạt con số thay vì kiểm tra hành vi cần thiết.
 
-Trong case study, nhóm đặt branch coverage của `FineCalculator` tối thiểu 90%. Gate chỉ áp dụng cho lớp có quy tắc nghiệp vụ rõ ràng, không áp cùng một tỷ lệ cho mọi lớp.
+Trong ứng dụng thư viện của nhóm, lớp `FineCalculator` tính tiền phạt khi trả sách trễ. Nhóm đặt ngưỡng branch coverage 90% cho lớp này vì các quy tắc tính phí và giá trị biên đã được xác định rõ.
 
 Gate cũng không biết assertion có đúng hay không. Nó phải được kết hợp với review code, review test case và hiểu biết về nghiệp vụ.
 
@@ -364,7 +412,7 @@ AI có thể đọc coverage gap và đề xuất test bổ sung, nhưng ngườ
 
 Câu trả lời cho câu hỏi ban đầu là: test xanh và coverage 100% vẫn chưa đủ để kết luận chương trình đúng. Coverage giúp tìm phần code bị bỏ sót; chất lượng test vẫn phụ thuộc vào test case, assertion và yêu cầu nghiệp vụ.
 
-Quay lại đơn hàng ở đầu bài. Nếu code viết `total > 200_000` thay cho `total >= 200_000`, đơn 150.000 đồng và đơn 250.000 đồng vẫn cho cùng kết quả với cả hai cách viết. Hai hướng đều đã được chạy, nhưng ca đúng 200.000 đồng mới bắt được lỗi. *Có thể dừng sau khi nêu hai đơn hàng để lớp tự đề xuất ca còn thiếu trước khi giải thích.*
+Quay lại ví dụ đơn hàng ở phần Unit Test. Nếu code viết `total > 200_000` thay cho `total >= 200_000`, đơn 150.000 đồng và đơn 250.000 đồng vẫn cho cùng kết quả với cả hai cách viết. Hai hướng đều đã được chạy, nhưng ca đúng 200.000 đồng mới bắt được lỗi. *Có thể dừng sau khi nêu hai đơn hàng để lớp tự đề xuất ca còn thiếu trước khi giải thích.*
 
 ## 11. Câu hỏi dự kiến
 
@@ -386,6 +434,7 @@ Chưa thể. Công cụ có thể tạo input và tăng coverage, nhưng con ng�
 
 ## 12. Tài liệu tham khảo
 
+- [ISTQB Certified Tester Foundation Level Syllabus v4.0.1](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf), mục 2.2 về cấp độ kiểm thử và kiểm thử hồi quy, mục 4.1–4.4 về các kỹ thuật thiết kế ca kiểm thử.
 - JUnit User Guide: <https://docs.junit.org/6.0.3/user-guide/>
 - JaCoCo Documentation: <https://www.jacoco.org/jacoco/trunk/doc/>
 - GitHub Actions for Java with Maven: <https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven>

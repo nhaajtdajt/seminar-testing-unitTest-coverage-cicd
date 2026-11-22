@@ -34,6 +34,47 @@ Unit Test biến các kiểm tra đó thành test chạy tự động. Bài tậ
 -->
 
 ---
+class: unit-visual
+---
+
+# Agenda
+
+<ol class="agenda-list">
+  <li><b>Unit Testing</b><span>Thiết kế test case và kiểm tra hành vi bằng JUnit, Mockito.</span></li>
+  <li><b>Code Coverage</b><span>Đọc báo cáo JaCoCo và đặt coverage gate.</span></li>
+  <li><b>CI/CD</b><span>Chạy test, kiểm tra gate và đóng gói với GitHub Actions.</span></li>
+  <li><b>AI trong Unit Testing</b><span>Pynguin, CoverUp và quy trình sinh test của nhóm.</span></li>
+  <li><b>Case study thư viện, Lab &amp; Q&amp;A</b><span>Tính phí trả sách trễ, thực hành mutation testing và hỏi đáp.</span></li>
+</ol>
+
+<style scoped>
+.agenda-list { margin: 0; padding: 0; counter-reset: topic; }
+.agenda-list li {
+  counter-increment: topic;
+  display: grid;
+  grid-template-columns: 2.25rem 14rem 1fr;
+  align-items: center;
+  gap: 1rem;
+  min-height: 3.45rem;
+  margin: 0;
+  border-bottom: 1px solid var(--line);
+}
+.agenda-list li::before {
+  content: counter(topic);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: var(--accent);
+  font-weight: 700;
+}
+.agenda-list b { font-size: 1.18rem; color: var(--ink); }
+.agenda-list span { font-size: 1.05rem; line-height: 1.35; color: var(--muted); }
+</style>
+
+---
 layout: statement
 ---
 
@@ -47,143 +88,438 @@ Khi toàn bộ test đều xanh, ta vẫn chưa biết bộ test đã đi qua h�
 -->
 
 ---
-
-# 5 video demo đi kèm
-
-| | Nội dung | Thực hiện | Thời lượng |
-|---|---|---|---|
-| **A** | Unit Test với JUnit 5 & Mockito | Nguyễn Bảo An | 06:45 |
-| **B** | Code Coverage & PIT Mutation Testing | Trương Nhật Đạt | 08:35 |
-| **C** | Case study & 7 kịch bản HTTP | Nguyễn Lê Thế Vinh | 04:30 |
-| **D** | CI/CD pipeline với GitHub Actions | Phạm Quang Vinh | 08:45 |
-| **E** | AI & tái hiện thực nghiệm paper | Ngô Gia An | 09:15 |
-
-<p class="note">Mỗi video gồm: setup · khái niệm · demo đơn giản · demo phức tạp · trường hợp công cụ không xử lý được. Tóm tắt và link nằm ở cuối từng phần.</p>
-
-<!--
-Giới thiệu nhanh 5 video demo của nhóm, tổng khoảng 38 phút. Mỗi video có timestamp rõ ràng; slide tóm tắt từng video được đặt ngay sau phần lý thuyết tương ứng.
--->
-
----
-layout: two-cols
+layout: cover
+class: text-left
 ---
 
-# Unit Test là gì?
+<div class="flex items-center gap-3 mb-6 text-blue-700">
+  <carbon-code class="text-4xl" aria-hidden="true" />
+  <span class="kicker">Phần 1 / 5</span>
+</div>
 
-- Kiểm tra **một phần nhỏ**: hàm, phương thức, lớp
-- Mỗi test kiểm tra **một hành vi**
-- Phát hiện lỗi sớm, sửa code an toàn hơn
-- **Không thay thế** integration test
+# Unit Testing
 
-::right::
+Thiết kế test case và kiểm tra hành vi bằng JUnit, Mockito.
 
-<div class="pyramid">
-  <div class="p1">E2E</div>
-  <div class="p2">Integration test</div>
-  <div class="p3">Unit Test<small>nhiều · nhanh · rẻ</small></div>
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Test level</p>
+
+# Unit testing và test level
+
+<div class="uv-split"><div>
+
+<p class="uv-lead"><b>Unit testing</b> (component testing) kiểm tra hành vi của một thành phần trong điều kiện cô lập.</p>
+
+<p class="note"><b>System under test (SUT)</b> là phần đang được kiểm tra.</p>
+
+</div><div>
+
+<div class="pyramid uv-pyramid">
+  <div class="p1">System testing<small>Hành vi toàn hệ thống</small>
+  </div>
+  <div class="p2">Component integration testing<small>Tương tác giữa các thành phần</small>
+  </div>
+  <div class="p3">Unit testing<small>Hành vi của một thành phần</small>
+  </div>
+</div>
+
+</div></div>
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Test level</p>
+
+# Phí giao hàng ở ba test level
+
+<p class="uv-lead">Đơn từ <b>200.000 đồng</b> được miễn phí giao hàng. Phạm vi kiểm tra thay đổi ở từng test level.</p>
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-node pick"><carbon-code class="uv-icon" aria-hidden="true" /><b>Unit testing</b><small>Hàm shippingFee trả 0 đồng?</small>
+    </div>
+    <div class="uv-node"><carbon-connect class="uv-icon" aria-hidden="true" /><b>Component integration</b><small>Thanh toán nhận đúng phí?</small>
+    </div>
+    <div class="uv-node"><carbon-shopping-cart class="uv-icon" aria-hidden="true" /><b>System testing</b><small>Khách thấy đúng tổng tiền trên xác nhận đơn?</small>
+    </div>
+  </div>
 </div>
 
 <!--
-Unit Test so sánh kết quả thực tế với kết quả mong đợi cho một đơn vị nhỏ. Phạm vi nhỏ để khi thất bại thì tìm nguyên nhân nhanh. Test phải khởi động cả ứng dụng, gọi nhiều dịch vụ, dùng DB thật thì không còn là Unit Test thuần.
-Lợi ích: báo lỗi ngay khi thay đổi làm sai hành vi; refactor rồi chạy lại để kiểm tra hành vi cũ; tên test và assertion mô tả chương trình phải xử lý thế nào.
-Integration test vẫn cần để xác nhận các thành phần thật kết nối đúng.
+Nguồn định nghĩa: ISTQB CTFL v4.0.1, mục 2.2.1, trang 29.
 -->
 
 ---
-class: code-lg
+class: unit-visual
 ---
 
-# Arrange · Act · Assert
+<p class="kicker">Unit Testing / Mục tiêu và đặc điểm</p>
+
+# Đặc điểm của một unit test tốt
+
+<div class="uv-checks mt-8">
+  <div>
+    <carbon-checkbox-checked class="uv-icon" aria-hidden="true" />
+    <b class="w-52 shrink-0">Một hành vi</b>
+    <span>Tên test nêu tình huống và kết quả mong đợi.</span>
+  </div>
+  <div>
+    <carbon-checkbox-checked class="uv-icon" aria-hidden="true" />
+    <b class="w-52 shrink-0">Độc lập, lặp lại được</b>
+    <span>Test chạy nhanh, cho cùng kết quả ở mọi thứ tự chạy.</span>
+  </div>
+  <div>
+    <carbon-checkbox-checked class="uv-icon" aria-hidden="true" />
+    <b class="w-52 shrink-0">Regression testing</b>
+    <span>Chạy lại sau khi sửa code để phát hiện hành vi thay đổi.</span>
+  </div>
+</div>
+
+---
+class: unit-visual code-lg
+---
+
+<p class="kicker">Unit Testing / Mục tiêu và đặc điểm</p>
+
+# Khi sửa hàm tính phí
 
 ```java
-@Test void thuongTre3Ngay_tra6000() {
-    var calculator = new FineCalculator();                  // Arrange
-    var fine = calculator.calculate(3, MemberTier.NORMAL);  // Act
-    assertThat(fine).isEqualByComparingTo("6000");          // Assert
+int shippingFee(int total) {
+    if (total < 0) {
+        throw new IllegalArgumentException("Tổng tiền phải không âm");
+    }
+    return total >= 200_000 ? 0 : 20_000;
 }
 ```
 
-<div class="mt-8 grid grid-cols-3 gap-4 text-center">
-  <div class="card">Một hành vi rõ ràng</div>
-  <div class="card">Nhanh, độc lập, lặp lại được</div>
-  <div class="card">Assertion bám nghiệp vụ</div>
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-verdict pass"><b>≥ 200.000</b><span>Đúng ngưỡng → miễn phí</span>
+    </div>
+    <div class="uv-verdict fail"><b>&gt; 200.000</b><span>Đúng ngưỡng → thu nhầm 20.000 đồng</span>
+    </div>
+  </div>
 </div>
 
 <!--
-Arrange: chuẩn bị đối tượng, dữ liệu, dependency. Act: thực hiện hành vi. Assert: so sánh với kết quả mong đợi.
-Assertion quyết định test có bắt được sai lệch không: kiểm tra "không rỗng" là chưa đủ nếu yêu cầu là đúng 6.000 đồng.
-Test tốt: một hành vi rõ ràng, chạy nhanh, không phụ thuộc thứ tự, cùng code + dữ liệu cho cùng kết quả, tên mô tả tình huống và kết quả, và phải thất bại khi quy tắc nghiệp vụ bị làm sai. Nhiều assertion vẫn ổn nếu cùng kiểm tra một kết quả.
+Hàm chỉ cần tổng tiền làm input. Có thể chạy ca này riêng hoặc sau bất kỳ ca nào khác và thu được cùng kết quả.
 -->
 
 ---
-layout: two-cols
+class: unit-visual
 ---
 
-# Chọn test case
+<p class="kicker">Unit Testing / Cấu trúc test case / Test oracle</p>
 
-<p class="def"><b>Test case</b> = đầu vào + điều kiện + kết quả mong đợi<br><span>Ví dụ: hạng VIP, trễ 3 ngày → phí 1.000đ</span></p>
+# Test oracle và assertion
 
-- Trường hợp bình thường
-- Giá trị biên
-- Dữ liệu không hợp lệ
-- Rỗng, hoặc vượt giới hạn
+<p class="uv-lead"><b>Test oracle</b> xác định kết quả đúng. <b>Assertion</b> so sánh hai kết quả.</p>
 
-::right::
-
-<div class="boundary">
-  <p class="kicker">Ranh giới tại 25</p>
-  <div class="nums"><span>24</span><span class="hl">25</span><span>26</span></div>
-  <p>trước · tại · sau ranh giới</p>
+<div class="uv-diagram">
+  <div class="uv-lane"><b>Test oracle</b><span>── xác định →</span><strong class="pick">Expected result</strong>
+  </div>
+  <div class="uv-lane"><b>SUT</b><span>── trả về →</span><strong class="neutral">Actual result</strong>
+  </div>
+  <div class="uv-compare">
+    <span>Expected result</span>
+    <i aria-hidden="true">→</i>
+    <b>Assertion</b>
+    <i aria-hidden="true">←</i>
+    <span>Actual result</span>
+  </div>
 </div>
 
-<!--
-Test case là một tình huống kiểm thử cụ thể: dữ liệu đầu vào, điều kiện thực hiện và kết quả mong đợi. Ví dụ với quy tắc VIP được miễn hai ngày đầu: hạng VIP, trễ ba ngày, phí mong đợi 1.000 đồng.
-Test case xuất phát từ yêu cầu, điều kiện và giới hạn của chức năng: bình thường, giá trị biên, dữ liệu không hợp lệ, rỗng hoặc không tồn tại, đạt hoặc vượt giới hạn.
-Nếu quy tắc đổi tại giá trị 25, kiểm tra 24, 25 và 26 — ngay trước, tại và sau ranh giới. Ba giá trị này bắt được lỗi dùng sai toán tử so sánh.
-Khi nhiều test chỉ khác dữ liệu: data-driven testing — một test chạy với nhiều bộ đầu vào và kết quả mong đợi, giảm code lặp, giá trị biên dễ quan sát.
--->
+---
+class: unit-visual code-lg
+---
+
+<p class="kicker">Unit Testing / Cấu trúc test case / Test oracle</p>
+
+# Phí bằng 0 hay chỉ cần không âm?
+
+<p class="uv-lead">Đơn đúng ngưỡng phải có phí <b>0 đồng</b>. Giả sử actual result là <b>20.000 đồng</b>.</p>
+
+```java
+int fee = shippingFee(200_000);
+assertTrue(fee >= 0);    // Xanh: 20.000 vẫn là số không âm
+assertEquals(0, fee);    // Đỏ: bắt được khoản phí thu nhầm
+```
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-verdict pass"><b>✓ Pass</b><span>Phí không âm, sai lệch bị bỏ sót</span>
+    </div>
+    <div class="uv-verdict fail"><b>✕ Fail</b><span>Phí khác 0, bắt được lỗi</span>
+    </div>
+  </div>
+</div>
 
 ---
-layout: two-cols
+class: unit-visual
 ---
+
+<p class="kicker">Unit Testing / Cấu trúc test case / Arrange–Act–Assert</p>
+
+# Arrange · Act · Assert
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-node"><carbon-settings class="uv-icon" aria-hidden="true" /><b>Arrange</b><small>Chuẩn bị SUT, điều kiện và input.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node pick"><carbon-play class="uv-icon" aria-hidden="true" /><b>Act</b><small>Gọi hành vi, lấy actual result.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node"><carbon-checkmark-outline class="uv-icon" aria-hidden="true" /><b>Assert</b><small>So sánh với expected result.</small>
+    </div>
+  </div>
+</div>
+
+---
+class: unit-visual code-lg
+---
+
+<p class="kicker">Unit Testing / Cấu trúc test case / Arrange–Act–Assert</p>
+
+# Một đơn đúng ngưỡng trong JUnit
+
+```java
+@Test
+void mienPhiKhiDonDungNguong() {
+    int total = 200_000;           // Arrange
+    int fee = shippingFee(total);  // Act
+    assertEquals(0, fee);          // Assert
+}
+```
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-node"><b>200.000 đ</b><small>Arrange</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node pick"><b>shippingFee(total)</b><small>Act</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node"><b>0 đ</b><small>Assert</small>
+    </div>
+  </div>
+</div>
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Chọn test case / Black-box</p>
+
+# Black-box test techniques
+
+- Equivalence partitioning
+- Boundary value analysis
+- Decision table testing
+- State transition testing
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Chọn test case / White-box</p>
+
+# Statement testing
+
+<p class="uv-lead">Chọn input để thực thi <b>câu lệnh mục tiêu</b>, rồi kiểm tra kết quả nó tạo ra.</p>
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-node"><carbon-login class="uv-icon" aria-hidden="true" /><b>Input</b><small>Đi vào luồng cần kiểm tra.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node pick"><carbon-code class="uv-icon" aria-hidden="true" /><b>Target statement</b><small>Câu lệnh được thực thi.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node"><carbon-checkmark-outline class="uv-icon" aria-hidden="true" /><b>Assertion</b><small>Đối chiếu kết quả.</small>
+    </div>
+  </div>
+</div>
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Chọn test case / White-box</p>
+
+# Branch testing
+
+<p class="uv-lead">Thiết kế input để đi qua các hướng của <b>luồng điều khiển</b>.</p>
+
+<div class="uv-diagram">
+  <div class="uv-lane"><b>Điều kiện</b><span>── true →</span><strong class="pick">Chạy thân if</strong>
+  </div>
+  <div class="uv-lane"><b>Điều kiện</b><span>── false →</span><strong class="neutral">Bỏ qua thân if</strong>
+  </div>
+</div>
+
+<p class="caption">Với điều kiện ghép, cần tính đến cả thứ tự đánh giá.</p>
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Chọn test case / Experience-based</p>
+
+# Error guessing
+
+<p class="uv-lead">Dùng kinh nghiệm để dự đoán một sai sót có thể xảy ra.</p>
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-node"><carbon-recently-viewed class="uv-icon" aria-hidden="true" /><b>Lỗi từng gặp</b><small>Nhớ lại dấu hiệu đã thấy.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node pick"><carbon-idea class="uv-icon" aria-hidden="true" /><b>Giả thuyết</b><small>Dự đoán chỗ có thể sai.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node"><carbon-search class="uv-icon" aria-hidden="true" /><b>Test case</b><small>Chọn input làm lộ lỗi.</small>
+    </div>
+  </div>
+</div>
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Chọn test case / Experience-based</p>
+
+# Exploratory testing
+
+<p class="uv-lead">Người kiểm thử vừa thiết kế, chạy và đánh giá test khi tìm hiểu chức năng.</p>
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-node"><carbon-help class="uv-icon" aria-hidden="true" /><b>Đặt câu hỏi</b><small>Chọn điều cần tìm hiểu.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node pick"><carbon-play class="uv-icon" aria-hidden="true" /><b>Chạy thử</b><small>Quan sát hành vi thực tế.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node"><carbon-renew class="uv-icon" aria-hidden="true" /><b>Điều chỉnh</b><small>Dùng kết quả để chọn lần thử tiếp.</small>
+    </div>
+  </div>
+</div>
+
+<p class="uv-loop">↶ Quay lại với câu hỏi mới</p>
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Chọn test case / Experience-based</p>
+
+# Checklist-based testing
+
+<p class="uv-lead">Checklist ghi lại những điều cần rà soát từ kinh nghiệm kiểm thử.</p>
+
+<div class="uv-diagram">
+  <div class="uv-checks">
+    <div><carbon-checkbox-checked class="uv-icon" aria-hidden="true" /><span>Chọn mục phù hợp với chức năng.</span>
+    </div>
+    <div><carbon-checkbox-checked class="uv-icon" aria-hidden="true" /><span>Xác định hành vi cần quan sát.</span>
+    </div>
+    <div><carbon-checkbox-checked class="uv-icon" aria-hidden="true" /><span>Đối chiếu với kết quả mong đợi.</span>
+    </div>
+  </div>
+</div>
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Test doubles / Stub</p>
+
+# Stub
+
+<p class="uv-lead"><b>Stub</b> là test double cung cấp câu trả lời định sẵn cho dependency.</p>
+
+<div class="uv-diagram">
+  <div class="uv-lane"><b>SUT</b><span>── gọi dependency →</span><strong class="neutral">Stub</strong>
+  </div>
+  <div class="uv-lane"><b>Stub</b><span>── trả dữ liệu định sẵn →</span><strong class="pick">SUT</strong>
+  </div>
+</div>
+
+---
+class: unit-visual code-lg
+---
+
+<p class="kicker">Unit Testing / Test doubles / Stub</p>
+
+# Thành viên đã mượn ba cuốn sách
+
+<p class="uv-lead">Sách còn sẵn, thành viên không nợ phí. Test cần tình huống <b>đã mượn 3 cuốn</b>.</p>
+
+<div class="uv-diagram">
+  <div class="uv-lane"><b>LoanService</b><span>── hỏi số sách đang mượn →</span><strong class="neutral">LoanRepository</strong>
+  </div>
+  <div class="uv-lane"><b>Repository stub</b><span>── trả số lượng →</span><strong class="pick">3 cuốn</strong>
+  </div>
+</div>
+
+```java
+when(loans.countActiveByMemberId(1)).thenReturn(3L);
+```
+
+---
+class: unit-visual
+---
+
+<p class="kicker">Unit Testing / Test doubles / Mock</p>
 
 # Mock
 
-<div class="ctx">
-  <div class="svc">Test → <code>LoanService.borrow(7, 9)</code></div>
-  <div class="deps">
-    <div>BookRepository<small>mock</small></div>
-    <div>MemberRepository<small>mock</small></div>
-    <div>LoanRepository<small>mock</small></div>
+<p class="uv-lead"><b>Mock</b> là test double dùng để xác minh tương tác giữa SUT và dependency.</p>
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-node"><carbon-play class="uv-icon" aria-hidden="true" /><b>SUT</b><small>Thực hiện hành vi.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node pick"><carbon-list class="uv-icon" aria-hidden="true" /><b>Mock</b><small>Ghi nhận lời gọi, tham số và số lần.</small>
+    </div>
+    <i class="uv-arrow" aria-hidden="true">→</i>
+    <div class="uv-node"><carbon-checkmark-outline class="uv-icon" aria-hidden="true" /><b>Verify</b><small>Đối chiếu với tương tác mong đợi.</small>
+    </div>
   </div>
-  <div class="db"><s>Cơ sở dữ liệu thật</s> không cần</div>
 </div>
 
-- Tình huống: sách #7 **đang có người mượn**
-- Mong đợi: từ chối, **không** tạo phiếu mượn
+---
+class: unit-visual code-lg
+---
 
-::right::
+<p class="kicker">Unit Testing / Test doubles / Mock</p>
+
+# Từ chối mượn và không lưu phiếu
+
+<div class="uv-diagram">
+  <div class="uv-row">
+    <div class="uv-node"><carbon-warning-alt class="uv-icon" aria-hidden="true" /><b>LIMIT_REACHED</b><small>Đã đạt hạn mức 3 cuốn.</small>
+    </div>
+    <div class="uv-node pick"><carbon-document-blank class="uv-icon" aria-hidden="true" /><b>0 lần gọi save</b><small>Repository không lưu thêm phiếu.</small>
+    </div>
+  </div>
+</div>
 
 ```java
-// Arrange: repo giả trả về sách đã được mượn
-when(books.findById(7))
-    .thenReturn(Optional.of(new Book(7, false)));
-
-// Act + Assert: bị từ chối BOOK_UNAVAILABLE
-assertThatThrownBy(() -> service.borrow(7, 9))
-    .isInstanceOf(LoanException.class);
-
-// không tạo phiếu mượn
+assertCode(LIMIT_REACHED);         // Gọi service.borrow và kiểm tra mã lỗi
 verify(loans, never()).save(any());
 ```
-<p class="caption">Rút gọn từ <code>LoanServiceAiImprovedTest</code></p>
 
-<p class="note">Mock khác hệ thống thật → test xanh nhưng app vẫn lỗi → luồng quan trọng cần thêm integration test</p>
+<p class="caption">LoanServiceTest.daDatHanMucBaSach · Cùng đối tượng loans cung cấp số sách và ghi nhận lời gọi lưu phiếu.</p>
 
 <!--
-Bối cảnh: LoanService.borrow cần ba repository. Nếu dùng DB thật thì muốn có tình huống "sách đang được mượn" phải chuẩn bị dữ liệu, test chậm và phụ thuộc môi trường.
-Mock thay ba repository bằng đối tượng do test điều khiển: chỉ cần nói "findById(7) trả về sách không còn sẵn". Test kiểm tra hai điều: service ném lỗi BOOK_UNAVAILABLE và không gọi loans.save, tức là không tạo phiếu mượn.
-Giới hạn: nếu đối tượng giả hoạt động khác repository thật, test vẫn xanh trong khi ứng dụng lỗi. Vì vậy luồng mượn sách còn có integration test chạy với Spring và H2 (Video C).
+Helper assertCode gọi service.borrow(1, 1) rồi kiểm tra mã lỗi. Việc ghi và đọc dữ liệu thật cần integration testing.
 -->
 
 ---
@@ -208,26 +544,57 @@ Hai paper ở phần sau làm việc với Python nên sinh test dạng pytest.
 -->
 
 ---
+class: unit-visual
+---
 
-# JUnit <img class="h-logo" src="/junit5.svg" alt="" />
+<p class="kicker">Unit Testing / JUnit</p>
 
-- Framework viết và chạy test Java
-- Assertion: thực tế so với mong đợi
-- Parameterized test, dữ liệu từ CSV
-- Tích hợp tốt Maven, Spring Boot
+# JUnit cung cấp những gì? <img class="h-logo" src="/junit5.svg" alt="" />
 
-```java
-@ParameterizedTest
-@CsvFileSource(resources = "/AI-4-boundaries.csv", numLinesToSkip = 1)
-void kiemDuLieuAiSinh(int days, MemberTier tier, BigDecimal expected) {
-    assertThat(new FineCalculator().calculate(days, tier)).isEqualByComparingTo(expected);
-}
-```
-<p class="caption">Một test, nhiều dòng dữ liệu từ CSV</p>
+<div class="grid grid-cols-2 gap-4">
+  <div class="uv-node"><b>Test discovery &amp; execution</b><small>JUnit nhận diện phương thức có <code>@Test</code>, chạy từng test và báo pass hoặc fail.</small></div>
+  <div class="uv-node"><b>Assertions</b><small><code>assertEquals</code> đối chiếu expected với actual. <code>assertThrows</code> kiểm tra ngoại lệ mong đợi.</small></div>
+  <div class="uv-node"><b>Test lifecycle</b><small><code>@BeforeEach</code> chuẩn bị dữ liệu trước mỗi test. <code>@AfterEach</code> dọn dẹp sau mỗi test.</small></div>
+  <div class="uv-node"><b>Parameterized tests</b><small>Chạy cùng một phép kiểm tra với nhiều bộ input và expected result, chẳng hạn từ file CSV.</small></div>
+</div>
 
 <!--
-JUnit giúp test runner tìm test case, chạy từng test và ghi nhận pass/fail. Có assertion và parameterized test: một test chạy với nhiều dòng dữ liệu, ví dụ đọc từ CSV.
-Nhóm chọn JUnit vì case study viết bằng Java và JUnit tích hợp tốt với Maven, Spring Boot. Trong bài, JUnit đại diện cho bước viết và chạy Unit Test — không đi sâu vào toàn bộ annotation/API.
+Trong case study Spring Boot, Maven Surefire chạy bộ test JUnit ở bước test của Maven. Nếu assertion thất bại, báo cáo cho biết test nào lỗi để lập trình viên kiểm tra.
+-->
+
+---
+class: unit-visual code-lg
+---
+
+<p class="kicker">Unit Testing / JUnit</p>
+
+# Viết một unit test bằng JUnit
+
+Thành viên thường trả sách trễ <b>1 ngày</b> phải trả phí <b>2.000 đồng</b>.
+
+```java
+package vn.edu.seminar.fine;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class FineCalculatorTest {
+    @Test
+    void treMotNgayTinhPhiHaiNghinDong() {
+        var calculator = new FineCalculator();                   // Arrange
+        var fee = calculator.calculate(1, MemberTier.NORMAL);    // Act
+        assertEquals(2000, fee.intValueExact());                 // Assert
+    }
+}
+```
+
+<style scoped>
+.slidev-layout.code-lg .slidev-code { font-size: .98rem !important; line-height: 1.35 !important; }
+</style>
+
+<!--
+Chính sách thư viện cho ta expected result là 2.000 đồng. @Test đánh dấu phương thức để JUnit chạy. Trong assertEquals, đối số đầu là expected, đối số sau là actual. Phí là BigDecimal tính bằng đồng nên intValueExact lấy số đồng nguyên. Nếu hàm trả 0, JUnit báo test thất bại với expected 2000 và actual 0.
+Ví dụ dùng cùng tình huống nghiệp vụ với FineCalculatorBaselineTest và viết assertion bằng API của JUnit Jupiter.
 -->
 
 ---
@@ -250,6 +617,20 @@ class: video
 <!--
 Video A minh họa phần Unit Test và JUnit: setup, quy tắc AAA, data-driven test với CSV, Mockito cô lập dependency và các anti-pattern khi mock.
 -->
+
+---
+layout: cover
+class: text-left
+---
+
+<div class="flex items-center gap-3 mb-6 text-blue-700">
+  <carbon-chart-bar class="text-4xl" aria-hidden="true" />
+  <span class="kicker">Phần 2 / 5</span>
+</div>
+
+# Code Coverage
+
+Đọc báo cáo JaCoCo và đặt coverage gate.
 
 ---
 
@@ -472,46 +853,18 @@ Video B minh họa Code Coverage, JaCoCo và coverage gate. Điểm nhấn: test
 -->
 
 ---
-
-# Case study: phí trả sách trễ
-
-<div class="case">
-<div>
-
-| Trường hợp | Quy tắc |
-|---|---|
-| Thường | **2.000đ** / ngày trễ |
-| VIP | Miễn 2 ngày đầu, rồi **1.000đ** / ngày |
-| Mọi hạng | Tối đa **50.000đ** |
-| Ngày âm / hạng rỗng | **Bị từ chối** |
-
-</div>
-<img src="/library-books.jpg" alt="Kệ sách thư viện" />
-</div>
-
-<!--
-Ứng dụng quản lý thư viện; demo tập trung vào lớp FineCalculator tính phí trả sách trễ.
-Lớp này có nhiều nhánh và giá trị biên rõ ràng: hạng thành viên, thời gian miễn phí của VIP, mức trần 50.000đ, và hai loại dữ liệu không hợp lệ.
--->
-
----
-class: video
+layout: cover
+class: text-left
 ---
 
-# <span class="vtag">Video C</span> Case study & 7 kịch bản HTTP
-
-<div class="vbody">
-<a class="play" href="https://youtu.be/Wco_4852snM" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video C</b><span>04:30</span><small>Nguyễn Lê Thế Vinh</small><u>youtu.be/Wco_4852snM</u></a>
-<div class="tl">
-  <div><time>00:00</time><em>Setup</em><span>Chạy JAR trên OpenJDK 25, dữ liệu mẫu H2 in-memory</span></div>
-  <div><time>01:00</time><em>Demo</em><span>7 request curl: 201, 409 UNAVAILABLE, 404, 409 UNPAID_FINE</span></div>
-  <div><time>03:30</time><em>Đối chiếu</em><span><code>LoanFlowEdgeCaseTest</code> khớp 100% kết quả HTTP thực tế</span></div>
-</div>
+<div class="flex items-center gap-3 mb-6 text-blue-700">
+  <carbon-flow class="text-4xl" aria-hidden="true" />
+  <span class="kicker">Phần 3 / 5</span>
 </div>
 
-<!--
-Video C chạy ứng dụng thư viện thật và gửi 7 request HTTP, sau đó đối chiếu với test tự động LoanFlowEdgeCaseTest.
--->
+# CI/CD
+
+Chạy test, kiểm tra gate và đóng gói với GitHub Actions.
 
 ---
 
@@ -555,6 +908,20 @@ class: video
 <!--
 Video D minh họa pipeline GitHub Actions: cấu hình workflow, 3 job, một run xanh, một PR đỏ bị chặn merge, và các sự cố thực tế như cache miss.
 -->
+
+---
+layout: cover
+class: text-left
+---
+
+<div class="flex items-center gap-3 mb-6 text-blue-700">
+  <carbon-idea class="text-4xl" aria-hidden="true" />
+  <span class="kicker">Phần 4 / 5</span>
+</div>
+
+# AI trong Unit Testing
+
+Pynguin, CoverUp và quy trình sinh test của nhóm.
 
 ---
 layout: section
@@ -736,6 +1103,62 @@ Video E chỉ minh họa bốn tính năng AI của nhóm: sinh test từ source
 
 <!--
 Kết luận: Unit Test cần test case và assertion tốt; coverage và gate tìm phần bị bỏ sót; GitHub Actions tự động hóa; AI chỉ đề xuất và không thay review của con người.
+-->
+
+---
+layout: cover
+class: text-left
+---
+
+<div class="flex items-center gap-3 mb-6 text-blue-700">
+  <carbon-book class="text-4xl" aria-hidden="true" />
+  <span class="kicker">Phần 5 / 5</span>
+</div>
+
+# Case study thư viện, Lab &amp; Q&amp;A
+
+Tính phí trả sách trễ, thực hành mutation testing và hỏi đáp.
+
+---
+
+# Case study: phí trả sách trễ
+
+<div class="case">
+<div>
+
+| Trường hợp | Quy tắc |
+|---|---|
+| Thường | **2.000đ** / ngày trễ |
+| VIP | Miễn 2 ngày đầu, rồi **1.000đ** / ngày |
+| Mọi hạng | Tối đa **50.000đ** |
+| Ngày âm / hạng rỗng | **Bị từ chối** |
+
+</div>
+<img src="/library-books.jpg" alt="Kệ sách thư viện" />
+</div>
+
+<!--
+Ứng dụng quản lý thư viện; demo tập trung vào lớp FineCalculator tính phí trả sách trễ.
+Lớp này có nhiều nhánh và giá trị biên rõ ràng: hạng thành viên, thời gian miễn phí của VIP, mức trần 50.000đ, và hai loại dữ liệu không hợp lệ.
+-->
+
+---
+class: video
+---
+
+# <span class="vtag">Video C</span> Case study & 7 kịch bản HTTP
+
+<div class="vbody">
+<a class="play" href="https://youtu.be/Wco_4852snM" target="_blank"><carbon-play-filled-alt class="icon" /><b>Video C</b><span>04:30</span><small>Nguyễn Lê Thế Vinh</small><u>youtu.be/Wco_4852snM</u></a>
+<div class="tl">
+  <div><time>00:00</time><em>Setup</em><span>Chạy JAR trên OpenJDK 25, dữ liệu mẫu H2 in-memory</span></div>
+  <div><time>01:00</time><em>Demo</em><span>7 request curl: 201, 409 UNAVAILABLE, 404, 409 UNPAID_FINE</span></div>
+  <div><time>03:30</time><em>Đối chiếu</em><span><code>LoanFlowEdgeCaseTest</code> khớp 100% kết quả HTTP thực tế</span></div>
+</div>
+</div>
+
+<!--
+Video C chạy ứng dụng thư viện thật và gửi 7 request HTTP, sau đó đối chiếu với test tự động LoanFlowEdgeCaseTest.
 -->
 
 ---
