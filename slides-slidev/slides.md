@@ -1026,18 +1026,18 @@ Gemini nhận source và quy tắc tính phí, sinh ba test nháp. Các test ch�
 <div class="ai-review-evidence">
   <img class="shot" src="/ai-pr-review-comment.png" alt="GitHub Actions bot đăng kết quả Gemini review trên pull request" />
   <div>
-    <b>Comment hợp nhất hai nguồn bằng chứng</b>
-    <span>JUnit và JaCoCo báo số đo thực tế; Gemini nhận xét phần diff được gửi.</span>
+    <b>Phát hiện test thiếu assertion</b>
+    <span>JUnit vẫn xanh, nhưng Gemini chỉ ra test không kiểm tra kết quả trả về hoặc side effect.</span>
     <b>Vai trò tư vấn</b>
-    <span>Nhận xét AI không thay required checks, không tự sinh, sửa hoặc merge test.</span>
+    <span>AI đề xuất bổ sung assertion và verify; con người quyết định cách sửa.</span>
   </div>
 </div>
 
 <div class="slide-source">Nguồn · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/.github/workflows/ai-review.yml">Nhóm 09 · AI review workflow</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/.github/workflows/ci.yml">Nhóm 09 · CI workflow</a></div>
 
 <!--
-Ảnh là comment do GitHub Actions bot đăng trên pull request. Phần đầu lấy từ các job CI: 49 test pass, line 76/83 và branch 24/24. Phần sau là nhận xét Gemini về diff.
-Trong lượt này Gemini không nêu finding. Điều đó không chứng nhận code hoàn toàn đúng; AI chỉ review phần diff đã gửi và không thay thế JUnit, coverage gate hay review của con người.
+Ảnh là comment minh họa do GitHub Actions bot đăng trên pull request. Phần đầu lấy từ các job CI: 49 test pass, line 76/83 và branch 24/24. Phần sau minh họa finding NO_ASSERTION trên diff.
+Test vẫn chạy xanh vì lời gọi không phát sinh exception, nhưng không kiểm tra Loan trả về hoặc side effect. AI đề xuất thêm assertion và verify; nhận xét này không thay thế required checks hay review của con người.
 -->
 
 ---
