@@ -96,24 +96,23 @@ class: unit-visual
 
 # Unit testing và test level
 
-<div class="uv-split"><div>
+<p class="uv-lead">Cách chia bốn mức dựa trên đối tượng và mục tiêu kiểm thử.</p>
 
-<p class="uv-lead"><b>Unit testing</b> (component testing) kiểm tra hành vi của một thành phần trong điều kiện cô lập.</p>
-
-<p class="note"><b>System under test (SUT)</b> là phần đang được kiểm tra.</p>
-
-</div><div>
-
-<div class="pyramid uv-pyramid">
-  <div class="p1">System testing<small>Hành vi toàn hệ thống</small>
-  </div>
-  <div class="p2">Component integration testing<small>Tương tác giữa các thành phần</small>
-  </div>
-  <div class="p3">Unit testing<small>Hành vi của một thành phần</small>
-  </div>
+<div class="level-list">
+  <div><b>Unit</b><span>Kiểm tra hành vi của một thành phần trong điều kiện cô lập.</span></div>
+  <div><b>Integration</b><span>Kiểm tra giao diện và tương tác giữa các thành phần hoặc hệ thống.</span></div>
+  <div><b>System</b><span>Kiểm tra hành vi của toàn hệ thống so với yêu cầu đã đặc tả.</span></div>
+  <div><b>Acceptance</b><span>Đánh giá hệ thống theo nhu cầu nghiệp vụ và tiêu chí chấp nhận.</span></div>
 </div>
 
-</div></div>
+<p class="caption">Unit còn gọi là component testing. SUT (system under test) là đối tượng đang được kiểm tra.</p>
+<p class="caption">CTFL v4.0.1 tách Integration thành hai mức: component integration và system integration.</p>
+
+<div class="slide-source">Nguồn · <a href="https://www.gasq.org/files/content/gasq/downloads/certification/ISTQB/Foundation%20Level/ISTQB-CTFL_Syllabus_2018_v3.1.1.pdf#page=30">ISTQB CTFL v3.1.1, §2.2 (tr. 30)</a> · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=29">ISTQB CTFL v4.0.1, §2.2.1</a></div>
+
+<!--
+CTFL v3.1.1 trình bày bốn mức. Trong CTFL v4.0.1, component integration và system integration là hai mức riêng. Các mức có thể diễn ra chồng lấp.
+-->
 
 ---
 class: unit-visual
@@ -121,23 +120,21 @@ class: unit-visual
 
 <p class="kicker">Unit Testing / Test level</p>
 
-# Phí giao hàng ở ba test level
+# Phí giao hàng ở bốn test level
 
-<p class="uv-lead">Đơn từ <b>200.000 đồng</b> được miễn phí giao hàng. Phạm vi kiểm tra thay đổi ở từng test level.</p>
+<p class="uv-lead">Quy định của cửa hàng: đơn <b>từ 200.000 đồng</b> được miễn phí giao hàng.</p>
 
-<div class="uv-diagram">
-  <div class="uv-row">
-    <div class="uv-node pick"><carbon-code class="uv-icon" aria-hidden="true" /><b>Unit testing</b><small>Hàm shippingFee trả 0 đồng?</small>
-    </div>
-    <div class="uv-node"><carbon-connect class="uv-icon" aria-hidden="true" /><b>Component integration</b><small>Thanh toán nhận đúng phí?</small>
-    </div>
-    <div class="uv-node"><carbon-shopping-cart class="uv-icon" aria-hidden="true" /><b>System testing</b><small>Khách thấy đúng tổng tiền trên xác nhận đơn?</small>
-    </div>
-  </div>
-</div>
+<div class="uv-diagram"><div class="uv-row">
+  <div class="uv-node pick"><carbon-code class="uv-icon" /><b>Unit</b><small>Gọi hàm với 200.000 đồng, phí trả về có bằng 0?</small></div>
+  <div class="uv-node"><carbon-connect class="uv-icon" /><b>Integration</b><small>Checkout có gửi đúng tổng tiền và dùng đúng phí trả về?</small></div>
+  <div class="uv-node"><carbon-shopping-cart class="uv-icon" /><b>System</b><small>Đặt đơn qua ứng dụng, tổng trên xác nhận có khớp số tiền lúc thanh toán?</small></div>
+  <div class="uv-node"><carbon-checkmark-outline class="uv-icon" /><b>Acceptance</b><small>Chủ cửa hàng nghiệm thu: đơn 199.999 đồng còn thu phí, đơn 200.000 đồng được miễn?</small></div>
+</div></div>
+
+<div class="slide-source">Nguồn · <a href="https://www.gasq.org/files/content/gasq/downloads/certification/ISTQB/Foundation%20Level/ISTQB-CTFL_Syllabus_2018_v3.1.1.pdf#page=30">ISTQB CTFL v3.1.1, §2.2 (tr. 30)</a></div>
 
 <!--
-Nguồn định nghĩa: ISTQB CTFL v4.0.1, mục 2.2.1, trang 29.
+Ví dụ minh họa của nhóm. Tiêu chí nghiệm thu là dưới ngưỡng thu phí, từ ngưỡng trở lên miễn phí.
 -->
 
 ---
@@ -166,35 +163,7 @@ class: unit-visual
   </div>
 </div>
 
----
-class: unit-visual code-lg
----
-
-<p class="kicker">Unit Testing / Mục tiêu và đặc điểm</p>
-
-# Khi sửa hàm tính phí
-
-```java
-int shippingFee(int total) {
-    if (total < 0) {
-        throw new IllegalArgumentException("Tổng tiền phải không âm");
-    }
-    return total >= 200_000 ? 0 : 20_000;
-}
-```
-
-<div class="uv-diagram">
-  <div class="uv-row">
-    <div class="uv-verdict pass"><b>≥ 200.000</b><span>Đúng ngưỡng → miễn phí</span>
-    </div>
-    <div class="uv-verdict fail"><b>&gt; 200.000</b><span>Đúng ngưỡng → thu nhầm 20.000 đồng</span>
-    </div>
-  </div>
-</div>
-
-<!--
-Hàm chỉ cần tổng tiền làm input. Có thể chạy ca này riêng hoặc sau bất kỳ ca nào khác và thu được cùng kết quả.
--->
+<div class="slide-source">Nguồn · <a href="https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices">Microsoft Learn · Unit testing best practices</a> · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=30">ISTQB CTFL v4.0.1, §2.2.3</a></div>
 
 ---
 class: unit-visual
@@ -219,6 +188,8 @@ class: unit-visual
     <span>Actual result</span>
   </div>
 </div>
+
+<div class="slide-source">Nguồn · <a href="https://doi.org/10.1109/TSE.2014.2372785">Barr et al. · The Oracle Problem in Software Testing</a> · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a></div>
 
 ---
 class: unit-visual code-lg
@@ -245,6 +216,8 @@ assertEquals(0, fee);    // Đỏ: bắt được khoản phí thu nhầm
   </div>
 </div>
 
+<div class="slide-source">Nguồn · <a href="https://doi.org/10.1109/TSE.2014.2372785">Barr et al. · The Oracle Problem in Software Testing</a> · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a></div>
+
 ---
 class: unit-visual
 ---
@@ -265,6 +238,8 @@ class: unit-visual
     </div>
   </div>
 </div>
+
+<div class="slide-source">Nguồn · <a href="https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices">Microsoft Learn · Unit testing best practices</a></div>
 
 ---
 class: unit-visual code-lg
@@ -296,6 +271,8 @@ void mienPhiKhiDonDungNguong() {
   </div>
 </div>
 
+<div class="slide-source">Nguồn · <a href="https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices">Microsoft Learn · Unit testing best practices</a> · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a></div>
+
 ---
 class: unit-visual
 ---
@@ -308,6 +285,8 @@ class: unit-visual
 - Boundary value analysis
 - Decision table testing
 - State transition testing
+
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=39">ISTQB CTFL v4.0.1, §4.2</a></div>
 
 ---
 class: unit-visual
@@ -332,6 +311,8 @@ class: unit-visual
   </div>
 </div>
 
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=42">ISTQB CTFL v4.0.1, §4.3.1</a></div>
+
 ---
 class: unit-visual
 ---
@@ -350,6 +331,8 @@ class: unit-visual
 </div>
 
 <p class="caption">Với điều kiện ghép, cần tính đến cả thứ tự đánh giá.</p>
+
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=43">ISTQB CTFL v4.0.1, §4.3.2</a></div>
 
 ---
 class: unit-visual
@@ -374,30 +357,7 @@ class: unit-visual
   </div>
 </div>
 
----
-class: unit-visual
----
-
-<p class="kicker">Unit Testing / Chọn test case / Experience-based</p>
-
-# Exploratory testing
-
-<p class="uv-lead">Người kiểm thử vừa thiết kế, chạy và đánh giá test khi tìm hiểu chức năng.</p>
-
-<div class="uv-diagram">
-  <div class="uv-row">
-    <div class="uv-node"><carbon-help class="uv-icon" aria-hidden="true" /><b>Đặt câu hỏi</b><small>Chọn điều cần tìm hiểu.</small>
-    </div>
-    <i class="uv-arrow" aria-hidden="true">→</i>
-    <div class="uv-node pick"><carbon-play class="uv-icon" aria-hidden="true" /><b>Chạy thử</b><small>Quan sát hành vi thực tế.</small>
-    </div>
-    <i class="uv-arrow" aria-hidden="true">→</i>
-    <div class="uv-node"><carbon-renew class="uv-icon" aria-hidden="true" /><b>Điều chỉnh</b><small>Dùng kết quả để chọn lần thử tiếp.</small>
-    </div>
-  </div>
-</div>
-
-<p class="uv-loop">↶ Quay lại với câu hỏi mới</p>
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=43">ISTQB CTFL v4.0.1, §4.4.1</a></div>
 
 ---
 class: unit-visual
@@ -420,6 +380,8 @@ class: unit-visual
   </div>
 </div>
 
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=44">ISTQB CTFL v4.0.1, §4.4.3</a></div>
+
 ---
 class: unit-visual
 ---
@@ -436,6 +398,8 @@ class: unit-visual
   <div class="uv-lane"><b>Stub</b><span>── trả dữ liệu định sẵn →</span><strong class="pick">SUT</strong>
   </div>
 </div>
+
+<div class="slide-source">Nguồn · <a href="https://martinfowler.com/articles/mocksArentStubs.html">M. Fowler · Mocks Aren’t Stubs</a></div>
 
 ---
 class: unit-visual code-lg
@@ -457,6 +421,8 @@ class: unit-visual code-lg
 ```java
 when(loans.countActiveByMemberId(1)).thenReturn(3L);
 ```
+
+<div class="slide-source">Nguồn · <a href="https://site.mockito.org/javadoc/current/org/mockito/Mockito.html">Mockito · Stubbing &amp; verification</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/case-study/src/test/java/vn/edu/seminar/loan/LoanServiceTest.java">Nhóm 09 · LoanServiceTest.java</a></div>
 
 ---
 class: unit-visual
@@ -480,6 +446,8 @@ class: unit-visual
     </div>
   </div>
 </div>
+
+<div class="slide-source">Nguồn · <a href="https://martinfowler.com/articles/mocksArentStubs.html">M. Fowler · Mocks Aren’t Stubs</a> · <a href="https://site.mockito.org/javadoc/current/org/mockito/Mockito.html">Mockito · Stubbing &amp; verification</a></div>
 
 ---
 class: unit-visual code-lg
@@ -505,6 +473,8 @@ verify(loans, never()).save(any());
 
 <p class="caption">LoanServiceTest.daDatHanMucBaSach · Cùng đối tượng loans cung cấp số sách và ghi nhận lời gọi lưu phiếu.</p>
 
+<div class="slide-source">Nguồn · <a href="https://site.mockito.org/javadoc/current/org/mockito/Mockito.html">Mockito · Stubbing &amp; verification</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/case-study/src/test/java/vn/edu/seminar/loan/LoanServiceTest.java">Nhóm 09 · LoanServiceTest.java</a></div>
+
 <!--
 Helper assertCode gọi service.borrow(1, 1) rồi kiểm tra mã lỗi. Việc ghi và đọc dữ liệu thật cần integration testing.
 -->
@@ -522,11 +492,13 @@ Helper assertCode gọi service.borrow(1, 1) rồi kiểm tra mã lỗi. Việc 
   <div><ph-file-code class="li" /><b>Go</b>package <code>testing</code> có sẵn</div>
 </div>
 
-<p class="note">Case study viết bằng <b>Java</b> (Spring Boot + Maven) → nhóm chọn <b>JUnit 5</b>: phổ biến nhất cho Java, chạy sẵn qua Maven Surefire, JaCoCo đo được ngay</p>
+<p class="note">Case study viết bằng <b>Java</b> (Spring Boot + Maven) → nhóm chọn <b>JUnit Jupiter</b> để viết test, Maven Surefire để chạy test và JaCoCo để đo coverage</p>
+
+<div class="slide-source">Nguồn · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a> · <a href="https://docs.pytest.org/en/stable/">pytest</a> · <a href="https://jestjs.io/docs/getting-started">Jest</a> · <a href="https://xunit.net/">xUnit.net</a> · <a href="https://google.github.io/googletest/">GoogleTest</a> · <a href="https://pkg.go.dev/testing">Go testing</a></div>
 
 <!--
 Mỗi ngôn ngữ có framework Unit Test riêng, nhưng ý tưởng giống nhau: tìm test, chạy test, so sánh kết quả bằng assertion, báo pass/fail.
-Nhóm chọn JUnit 5 vì case study viết bằng Java: Spring Boot dùng JUnit 5 mặc định, Maven Surefire chạy được ngay, JaCoCo gắn agent vào cùng lần chạy để đo coverage. TestNG cũng dùng được nhưng ít phổ biến hơn với Spring Boot.
+Case study Java sử dụng API JUnit Jupiter. Maven Surefire chạy test và JaCoCo ghi nhận coverage trong cùng lần chạy.
 Hai paper ở phần sau làm việc với Python nên sinh test dạng pytest.
 -->
 
@@ -544,6 +516,8 @@ class: unit-visual
   <div class="uv-node"><b>Test lifecycle</b><small><code>@BeforeEach</code> chuẩn bị dữ liệu trước mỗi test. <code>@AfterEach</code> dọn dẹp sau mỗi test.</small></div>
   <div class="uv-node"><b>Parameterized tests</b><small>Chạy cùng một phép kiểm tra với nhiều bộ input và expected result, chẳng hạn từ file CSV.</small></div>
 </div>
+
+<div class="slide-source">Nguồn · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a></div>
 
 <!--
 Trong case study Spring Boot, Maven Surefire chạy bộ test JUnit ở bước test của Maven. Nếu assertion thất bại, báo cáo cho biết test nào lỗi để lập trình viên kiểm tra.
@@ -574,6 +548,8 @@ class FineCalculatorTest {
     }
 }
 ```
+
+<div class="slide-source">Nguồn · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java">Nhóm 09 · FineCalculator.java</a></div>
 
 <style scoped>
 .slidev-layout.code-lg .slidev-code { font-size: .98rem !important; line-height: 1.35 !important; }
@@ -631,6 +607,8 @@ class: text-left
 
 <p class="note">Coverage = code <b>đã chạy</b>, không phải code <b>đã đúng</b>: test không có assertion vẫn được tính là đã phủ</p>
 
+<div class="slide-source">Nguồn · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a> · <a href="https://testing.googleblog.com/2020/08/code-coverage-best-practices.html">Google Testing Blog · Code Coverage Best Practices</a></div>
+
 <!--
 Code Coverage, hay độ phủ mã nguồn, cho biết bộ test đã thực thi phần nào của chương trình. Công thức chung: số thành phần đã thực thi chia tổng số thành phần đo được. Thành phần có thể là dòng, câu lệnh, nhánh hay phương thức, nên khi nói 80% phải nói rõ là 80% line hay 80% branch.
 Ví dụ một hàm có 10 dòng, test chạy qua 8 dòng thì line coverage 80%. Nhưng trong 8 dòng đó có thể có một câu if mới chạy hướng đúng, chưa chạy hướng sai — line khá cao mà branch vẫn thiếu.
@@ -655,6 +633,8 @@ class: cmp
 
 <p class="caption">JaCoCo không đếm câu lệnh mà đếm instruction bytecode (≈). Các slide sau dùng <b>một đoạn code chung</b> để thấy từng loại khác nhau.</p>
 
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=42">ISTQB CTFL v4.0.1, §4.3.1</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a> · <a href="https://ntrs.nasa.gov/citations/20010057789">NASA · A Practical Tutorial on MC/DC</a></div>
+
 <!--
 Có bảy loại coverage thường gặp. Statement: mỗi câu lệnh đã chạy chưa. Line: mỗi dòng source đã chạy chưa. Branch hay decision: mỗi quyết định đã đi cả hướng đúng và sai chưa. Condition: mỗi điều kiện con trong biểu thức ghép đã nhận cả đúng và sai chưa. MC/DC: từng điều kiện con có được chứng minh là tự làm đổi kết quả không, hay dùng trong hệ thống an toàn cao. Path: các tổ hợp đường đi qua hàm. Method: mỗi phương thức đã được gọi chưa, đây là chỉ số thô nhất.
 Không loại nào mô tả đủ chất lượng bộ test. Line tìm dòng bị bỏ sót, branch và condition kiểm tra logic rẽ nhánh, path cho biết các nhánh kết hợp ra sao.
@@ -677,6 +657,8 @@ int getDiscount(boolean isVip) {
 | thêm `isVip = true` → 10 | 100% | **100%** |
 
 <p class="caption">Ví dụ cố ý đặt nhiều câu lệnh trên một dòng. Code thường viết mỗi câu lệnh một dòng nên hai chỉ số hay gần nhau.</p>
+
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=42">ISTQB CTFL v4.0.1, §4.3.1</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a></div>
 
 <!--
 Ví dụ cố ý đặt hai câu lệnh trên cùng một dòng. Test với isVip = false: dòng thứ hai vẫn chạy vì phải gán discount = 0 và kiểm tra điều kiện, dòng return cũng chạy, nên line coverage 100%.
@@ -701,7 +683,7 @@ int calculateDiscount(boolean isMember,
     return discount;
 }
 ```
-<p class="caption">1 quyết định · 2 điều kiện con · 2 đường đi. Thành viên <b>và</b> có phiếu → giảm 20%.</p>
+<p class="caption">1 quyết định · 2 điều kiện con · 3 đường thực thi do short-circuit. Thành viên <b>và</b> có phiếu → giảm 20%.</p>
 
 </div>
 <div>
@@ -716,9 +698,11 @@ int calculateDiscount(boolean isMember,
 </div>
 </div>
 
+<div class="slide-source">Nguồn · <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.23">Java Language Specification, §15.23 (&amp;&amp;)</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a></div>
+
 <!--
 Để so các loại coverage trên cùng một code, nhóm dùng hàm calculateDiscount: thành viên và có phiếu giảm giá thì giảm 20%, còn lại không giảm.
-Hàm có một quyết định isMember && hasCoupon, hai điều kiện con, hai đường đi là vào hoặc bỏ qua thân if.
+Hàm có một quyết định isMember && hasCoupon, hai điều kiện con, ba đường thực thi: sai ngay ở điều kiện đầu, sai ở điều kiện thứ hai, hoặc cả hai đều đúng.
 T1 cả hai đúng. T2 isMember sai. T3 hasCoupon sai. T4 cả hai sai. Slide sau thêm lần lượt từng test.
 -->
 
@@ -730,18 +714,20 @@ class: cmp
 
 | Bộ test | Statement | Line | Decision | Condition | MC/DC | Path | JaCoCo branch |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| T1 | **100%** | **100%** | 50% | 2/4 | 0/2 | 1/2 | 50% |
-| T1 + T2 | <span class="eq">=</span> | <span class="eq">=</span> | **100%** <span class="up">▲</span> | 3/4 <span class="up">▲</span> | 1/2 <span class="up">▲</span> | **2/2** <span class="up">▲</span> | 75% <span class="up">▲</span> |
-| T1 + T2 + T3 | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | **4/4** <span class="up">▲</span> | **2/2** <span class="up">▲</span> | <span class="eq">=</span> | **100%** <span class="up">▲</span> |
+| T1 | **100%** | **100%** | 50% | 2/4 | 0/2 | 1/3 | 50% |
+| T1 + T2 | <span class="eq">=</span> | <span class="eq">=</span> | **100%** <span class="up">▲</span> | 3/4 <span class="up">▲</span> | 1/2 <span class="up">▲</span> | 2/3 <span class="up">▲</span> | 75% <span class="up">▲</span> |
+| T1 + T2 + T3 | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | **4/4** <span class="up">▲</span> | **2/2** <span class="up">▲</span> | **3/3** <span class="up">▲</span> | **100%** <span class="up">▲</span> |
 | + T4 | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> |
 
 <p class="note">Chỉ T1 đã đủ <b>line 100%</b> nhưng branch mới 50%. T4 dùng đầu vào mới nhưng đi lại đường sai của T2 nên <b>không chỉ số nào tăng</b>.</p>
 <p class="caption">JaCoCo branch chạy thật: 2/4 → 3/4 → 4/4 → 4/4. JaCoCo đếm 4 nhánh vì <code>&&</code> dịch thành 2 lệnh rẽ trong bytecode.</p>
 
+<div class="slide-source">Nguồn · <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.23">Java Language Specification, §15.23 (&amp;&amp;)</a> · <a href="https://ntrs.nasa.gov/citations/20010057789">NASA · A Practical Tutorial on MC/DC</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a></div>
+
 <!--
 T1 làm cả hai điều kiện đúng nên mọi dòng và câu lệnh đều chạy: statement và line 100%. Nhưng quyết định mới nhận kết quả đúng nên decision và JaCoCo branch mới 50%.
-T2 làm isMember sai, bỏ qua thân if: decision và path lên 100%. Vì Java dừng ngay khi isMember sai (short-circuit) nên hasCoupon chưa được kiểm với giá trị sai, JaCoCo branch mới 75%.
-T3 giữ isMember đúng, đổi hasCoupon sai: Java phải đánh giá điều kiện thứ hai. Condition, MC/DC và JaCoCo branch đạt 100%.
+T2 làm isMember sai, bỏ qua thân if: decision lên 100%, path đạt 2/3. Vì Java dừng ngay khi isMember sai (short-circuit) nên hasCoupon chưa được kiểm với giá trị sai, JaCoCo branch mới 75%.
+T3 giữ isMember đúng, đổi hasCoupon sai: Java phải đánh giá điều kiện thứ hai. Condition, MC/DC, path và JaCoCo branch đạt 100%.
 T4 cả hai sai: test hợp lệ nhưng đi lại đường T2 đã phủ, các chỉ số không tăng. Số test tăng từ ba lên bốn mà coverage giữ nguyên — dữ liệu khác nhau chưa chắc tạo ra dòng, nhánh hay đường đi mới.
 Số JaCoCo nhóm đã chạy thật: 2/4, 3/4, 4/4, 4/4.
 -->
@@ -769,6 +755,8 @@ Số JaCoCo nhóm đã chạy thật: 2/4, 3/4, 4/4, 4/4.
   <div><b>5</b>Chạy lại, đọc báo cáo</div>
 </div>
 
+<div class="slide-source">Nguồn · <a href="https://testing.googleblog.com/2020/08/code-coverage-best-practices.html">Google Testing Blog · Code Coverage Best Practices</a> · <a href="https://doi.org/10.1109/TSE.2014.2372785">Barr et al. · The Oracle Problem in Software Testing</a></div>
+
 <!--
 Hai bộ test có thể cùng coverage nhưng khả năng phát hiện lỗi khác nhau: bộ thứ nhất kiểm tra kết quả chính xác, bộ thứ hai chỉ kiểm tra không rỗng. Cả hai chạy qua cùng dòng và nhánh, nhưng bộ thứ nhất bắt lỗi tốt hơn.
 Coverage gap là phần code chưa được thực thi: dòng đỏ, nhánh chưa chạy, hoặc điều kiện con chưa nhận đủ đúng và sai. Khi gặp gap: xác định phần thiếu, đọc điều kiện để biết dữ liệu nào đi vào đó, đối chiếu yêu cầu để biết kết quả mong đợi, viết test với assertion cụ thể, rồi chạy lại và đọc báo cáo mới.
@@ -785,6 +773,8 @@ Ví dụ nhánh hasCoupon = false chưa phủ thì thêm test khách không có 
 - Đặt **ngưỡng** trong build → coverage gate
 
 <img class="shot sm" src="/jacoco-summary.png" alt="Báo cáo JaCoCo của library-case-study" />
+
+<div class="slide-source">Nguồn · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/check-mojo.html">JaCoCo Maven Plugin · check</a></div>
 
 <!--
 JaCoCo đo Code Coverage cho Java. JUnit chạy test và kiểm tra assertion, còn JaCoCo theo dõi phần code được thực thi trong lúc đó. Quy trình: Maven khởi động JUnit, JaCoCo ghi nhận bytecode đã chạy, tổng hợp theo package, lớp, phương thức, dòng, rồi tạo báo cáo HTML.
@@ -803,7 +793,7 @@ JaCoCo còn kiểm tra ngưỡng trong lúc build: thấp hơn ngưỡng thì Ma
 </div>
 
 - Case study: `FineCalculator` **branch ≥ 90%**, chỉ đặt cho lớp nghiệp vụ quan trọng
-- Bắt được: thêm nhánh mới mà không thêm test, hoặc lỡ xóa test
+- Build thất bại khi thay đổi code hoặc test làm coverage giảm dưới ngưỡng
 - Gate **không** tự viết test, không biết expected và assertion đúng hay sai
 
 ```xml
@@ -812,9 +802,11 @@ JaCoCo còn kiểm tra ngưỡng trong lúc build: thấp hơn ngưỡng thì Ma
 ```
 <p class="caption">Luật gate trong <code>case-study/pom.xml</code></p>
 
+<div class="slide-source">Nguồn · <a href="https://www.jacoco.org/jacoco/trunk/doc/check-mojo.html">JaCoCo Maven Plugin · check</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/case-study/pom.xml">Nhóm 09 · pom.xml</a></div>
+
 <!--
 Coverage gate là điều kiện trong build: đạt ngưỡng thì build tiếp tục, không đạt thì build thất bại. Ví dụ gate 90%: 92% được chấp nhận, 85% làm build đỏ — dù Unit Test vẫn xanh, vì test xanh chỉ nói các tình huống đã viết cho đúng kết quả, còn gate hỏi bộ test đã đi qua đủ nhánh chưa.
-Gate phát hiện thay đổi thêm nhánh mà không thêm test, hoặc test quan trọng bị xóa. Build đỏ thì mở báo cáo, tìm nhánh thiếu, đối chiếu yêu cầu.
+Gate phát hiện khi tỷ lệ đo được xuống dưới ngưỡng. Build đỏ thì mở báo cáo, tìm nhánh thiếu, đối chiếu yêu cầu.
 Không có ngưỡng chung cho mọi dự án. Nhóm đặt branch FineCalculator tối thiểu 90%, nơi sai sót ảnh hưởng trực tiếp đến tiền phí. Gate không thay review code và review test case.
 -->
 
@@ -870,6 +862,8 @@ Chạy test, kiểm tra gate và đóng gói với GitHub Actions.
   <span><b>Điểm dừng</b> đóng gói artifact, chưa tự deploy</span>
 </div>
 
+<div class="slide-source">Nguồn · <a href="https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven">GitHub Docs · Building and testing Java with Maven</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/.github/workflows/ci.yml">Nhóm 09 · CI workflow</a></div>
+
 <!--
 Ảnh là một run thật của Seminar CI. Nhánh chính chạy JUnit, coverage gate và package theo thứ tự; Gemini review diff chạy song song rồi hội tụ vào job tổng hợp.
 Ảnh cấu hình cho thấy JaCoCo kiểm riêng FineCalculator với counter BRANCH, value COVEREDRATIO và minimum 0.90. Test lỗi hoặc coverage không đạt thì build thất bại và package không hoàn tất. Nhóm dừng ở Continuous Delivery: tạo artifact có thể phát hành, chưa tự triển khai lên môi trường thật.
@@ -921,6 +915,8 @@ layout: section
 Hai công trình đã công bố, chạy lại bằng source code của tác giả. <br>
 Thử nghiệm AI riêng của nhóm nằm ở phần sau, tách biệt với hai paper này.
 
+<div class="slide-source">Nguồn · <a href="https://doi.org/10.1007/s10664-022-10248-w">Lukasczyk et al. · Pynguin (EMSE 2023)</a> · <a href="https://doi.org/10.1145/3729398">Pizzorno &amp; Berger · CoverUp (FSE 2025)</a></div>
+
 <!--
 Phần này trình bày hai công trình nghiên cứu đã công bố về sinh Unit Test tự động. Nhóm không tự cài đặt lại paper mà dùng source của tác giả: chạy lại kết quả công bố, rồi thử trên code thực tế của nhóm.
 Đây không phải tính năng AI của nhóm; quy trình AI riêng của nhóm cho Java được trình bày sau, như một thử nghiệm độc lập.
@@ -946,6 +942,8 @@ Phần này trình bày hai công trình nghiên cứu đã công bố về sinh
 
 <p class="paper-weakness"><b>Nhược điểm của Pynguin:</b> Phụ thuộc ngân sách tìm kiếm; input có cấu trúc và oracle nghiệp vụ khó sinh tự động.</p>
 <p class="paper-limit"><b>Vì sao chưa đạt 100%?</b> DynaMOSA chưa khám phá hết các đường đi trong ngân sách 600 giây; module nhóm còn yêu cầu tạo đúng cả đường dẫn và cấu trúc XML.</p>
+
+<div class="slide-source">Nguồn · <a href="https://doi.org/10.1007/s10664-022-10248-w">Lukasczyk et al. · Pynguin (EMSE 2023)</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/evidence/tuan-06/papers/README.md">Nhóm 09 · Kết quả thực nghiệm</a></div>
 
 <!--
 Trình bày theo năm xuất bản để không nhầm "paper thứ nhất, thứ hai" với các bước AI của nhóm.
@@ -976,6 +974,8 @@ Khi thử trên một module Python của nhóm chuyên đọc file JaCoCo XML, 
 
 <p class="paper-limit"><b>Vì sao kết quả tổng chỉ 89%?</b> Trên 163 module, một số prompt không tạo được test hợp lệ hoặc còn trạng thái/nhánh khó kích hoạt trong ngân sách. Module nhóm dừng ở 96,4% vì phần còn thiếu là entrypoint CLI, không chạy khi Unit Test import module.</p>
 
+<div class="slide-source">Nguồn · <a href="https://doi.org/10.1145/3729398">Pizzorno &amp; Berger · CoverUp (FSE 2025)</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/evidence/tuan-06/papers/README.md">Nhóm 09 · Kết quả thực nghiệm</a></div>
+
 <!--
 Paper 2025 của Pizzorno và Berger công bố tại FSE 2025 (PACMSE). FSE hạng A* theo CORE2023, cũng là hạng của venue.
 CoverUp dùng coverage để thu hẹp prompt thay vì yêu cầu LLM viết toàn bộ test một lần. Tool chạy pytest bằng SlipCover, xác định dòng và nhánh chưa phủ, gửi đoạn source liên quan cùng test hiện có cho LLM, rồi chạy test mới. Lỗi cú pháp, lỗi runtime và coverage mới trở thành phản hồi cho vòng sửa hoặc sinh tiếp. Chỉ test hợp lệ và giúp tăng coverage mới được giữ.
@@ -994,6 +994,8 @@ layout: section
 Dùng ý tưởng coverage feedback của <b>Paper 2025</b> và triển khai với <b>LLM</b>. <br>
 Mỗi tính năng có đầu vào, bằng chứng chạy và điểm dừng để người thực hiện review.
 
+<div class="slide-source">Nguồn · <a href="https://doi.org/10.1145/3729398">Pizzorno &amp; Berger · CoverUp (FSE 2025)</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/ai/README.md">Nhóm 09 · Quy trình AI</a></div>
+
 <!--
 Nhóm kế thừa ý tưởng dùng coverage làm phản hồi của Paper 2025, không cài đặt lại CoverUp. Pipeline nhận module mục tiêu cùng source dependency liên quan, chạy test trong project tạm và chỉ chấp nhận sau khi người thực hiện review.
 -->
@@ -1010,6 +1012,8 @@ Nhóm kế thừa ý tưởng dùng coverage làm phản hồi của Paper 2025,
 </div>
 
 <p class="review-rule"><b>Quy tắc chung:</b> AI đề xuất; JUnit và coverage cung cấp bằng chứng; con người chịu trách nhiệm expected result và assertion.</p>
+
+<div class="slide-source">Nguồn · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/ai/README.md">Nhóm 09 · Quy trình AI</a></div>
 
 <!--
 Tính năng sinh test đọc một class mục tiêu cùng dependency production liên quan. Bước bổ sung nhận chính test nháp, kết quả chạy và coverage gap. Review pull request chỉ nhận xét diff song song với CI. Phần dữ liệu biên sinh test case rồi đối chứng với bộ người lập bằng cùng test harness.
@@ -1029,6 +1033,8 @@ Các bước chạy tự động không chứng minh expected result đúng. Ng�
 - Bổ sung theo coverage gap: thêm ngày âm, hạng rỗng, nhánh VIP còn thiếu
 - Người thực hiện kiểm tra input, expected, assertion trước khi nhận
 
+<div class="slide-source">Nguồn · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/docs/thuc-hanh/HuongDan_Demo.md">Nhóm 09 · Kết quả demo AI-2</a></div>
+
 <!--
 Lượt triển khai được quay sẵn để không phụ thuộc mạng và hạn mức API.
 Gemini nhận source và quy tắc tính phí, sinh ba test nháp. Các test chạy xanh nhưng branch chỉ 70%. Gemini nhận thêm báo cáo JaCoCo, đề xuất test cho ngày âm, hạng thành viên rỗng và nhánh VIP còn thiếu. Sau khi bổ sung, branch của lượt triển khai đạt 100%. Người thực hiện kiểm tra input, expected result và assertion trước khi chấp nhận test.
@@ -1047,6 +1053,8 @@ Gemini nhận source và quy tắc tính phí, sinh ba test nháp. Các test ch�
     <span>Nhận xét AI không thay required checks, không tự sinh, sửa hoặc merge test.</span>
   </div>
 </div>
+
+<div class="slide-source">Nguồn · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/.github/workflows/ai-review.yml">Nhóm 09 · AI review workflow</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/.github/workflows/ci.yml">Nhóm 09 · CI workflow</a></div>
 
 <!--
 Ảnh là comment do GitHub Actions bot đăng trên pull request. Phần đầu lấy từ các job CI: 49 test pass, line 76/83 và branch 24/24. Phần sau là nhận xét Gemini về diff.
@@ -1088,6 +1096,8 @@ Video E chỉ minh họa bốn tính năng AI của nhóm: sinh test từ source
 
 <div class="answer">Test xanh và coverage 100% <b>vẫn chưa đủ</b> để kết luận chương trình đúng.</div>
 
+<div class="slide-source">Nguồn · <a href="https://testing.googleblog.com/2020/08/code-coverage-best-practices.html">Google Testing Blog · Code Coverage Best Practices</a> · <a href="https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-maven">GitHub Docs · Building and testing Java with Maven</a> · <a href="https://doi.org/10.1145/3729398">Pizzorno &amp; Berger · CoverUp (FSE 2025)</a></div>
+
 <!--
 Kết luận: Unit Test cần test case và assertion tốt; coverage và gate tìm phần bị bỏ sót; GitHub Actions tự động hóa; AI chỉ đề xuất và không thay review của con người.
 -->
@@ -1123,6 +1133,8 @@ Tính phí trả sách trễ, thực hành mutation testing và hỏi đáp.
 </div>
 <img src="/library-books.jpg" alt="Kệ sách thư viện" />
 </div>
+
+<div class="slide-source">Nguồn · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/case-study/src/main/java/vn/edu/seminar/fine/FineCalculator.java">Nhóm 09 · FineCalculator.java</a></div>
 
 <!--
 Ứng dụng quản lý thư viện; demo tập trung vào lớp FineCalculator tính phí trả sách trễ.
@@ -1166,6 +1178,8 @@ Video C chạy ứng dụng thư viện thật và gửi 7 request HTTP, sau đ�
 
 <p class="note">Repo: <b>github.com/tzin1401/seminar-lab-nhom09</b> · cần JDK 17+ · lab bắt đầu ở trạng thái <b>đỏ</b>, push lên thì CI chạy lại</p>
 
+<div class="slide-source">Nguồn · <a href="https://github.com/tzin1401/seminar-lab-nhom09">Nhóm 09 · Repo bài lab</a> · <a href="https://pitest.org/quickstart/basic_concepts/">PIT · Basic concepts</a></div>
+
 <!--
 Lab dùng lại FineCalculator và LoanService của case study, bỏ Spring Boot để chỉ cần JDK 17 trở lên là chạy được.
 Bài 1: thay 8 dấu ? trong CSV bằng số tiền tính tay theo đặc tả (24/25/26 ngày NORMAL; 2/3/51/52/53 ngày VIP).
@@ -1183,6 +1197,8 @@ Nộp: link repo tạo từ template, REPORT.md đã điền, tab Actions có d�
 </div>
 
 <div class="answer">Đặc tả: <b>đang mượn 3 cuốn thì không được mượn thêm</b>. Code cài sẵn lỗi <b>&gt; 3</b>; test ở giá trị 2 và 4 vẫn phủ đủ nhánh nhưng không chạm biên 3. Coverage cho biết code <b>đã chạy</b>, PIT cho biết test <b>có kiểm đúng không</b>.</div>
+
+<div class="slide-source">Nguồn · <a href="https://github.com/tzin1401/seminar-lab-nhom09">Nhóm 09 · Repo bài lab</a> · <a href="https://pitest.org/quickstart/basic_concepts/">PIT · Basic concepts</a></div>
 
 <!--
 Đây là điểm nhấn của lab. Phần lớn học viên sẽ viết test với count = 4: build xanh, coverage 100%. Khi chữa bài, hỏi cả lớp "vậy là hết lỗi chưa?", sau đó chạy PIT.
@@ -1212,6 +1228,8 @@ class: refs
 ---
 
 # Tài liệu tham khảo
+
+- Test level: [ISTQB CTFL v3.1.1, §2.2 (tr. 30)](https://www.gasq.org/files/content/gasq/downloads/certification/ISTQB/Foundation%20Level/ISTQB-CTFL_Syllabus_2018_v3.1.1.pdf#page=30) · [ISTQB CTFL v4.0.1, §2.2.1](https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=29)
 
 - Pizzorno & Berger, *CoverUp: Effective High Coverage Test Generation for Python*, FSE 2025 — doi.org/10.1145/3729398
 - Lukasczyk, Kroiß & Fraser, *An empirical study of automated unit test generation for Python*, EMSE 2023 — doi.org/10.1007/s10664-022-10248-w

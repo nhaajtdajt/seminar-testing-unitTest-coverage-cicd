@@ -294,3 +294,9 @@
 .uv-checks { display: grid; gap: .6rem; }
 .uv-checks > div { display: flex; align-items: center; padding: .7rem 1rem; gap: .9rem; background: #f8fafc; border-left: 3px solid #14b8a6; }
 .uv-checks .uv-icon { font-size: 1.5rem; color: #0f766e; margin: 0; }
+
+.level-list { display: grid; gap: .5rem; margin: 1rem 0; }
+.level-list > div { display: grid; grid-template-columns: 9rem 1fr; align-items: center; gap: 1rem; padding: .65rem 1rem; border-left: 3px solid #93c5fd; background: #f1f5f9; border-radius: .3rem; }
+.level-list > div:first-child { border-color: var(--accent); background: #eff6ff; }
+.slidev-layout .slide-source { position: absolute; bottom: .65rem; left: 3.5rem; right: 4rem; color: #475569; text-align: left; font-size: .8rem; line-height: 1.4; font-weight: 400; }
+.slidev-layout .slide-source a { color: #334e78; border-bottom: 1px solid #a8b7cd; }
