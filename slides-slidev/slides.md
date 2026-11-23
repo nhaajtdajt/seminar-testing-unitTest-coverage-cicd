@@ -192,33 +192,6 @@ class: unit-visual
 <div class="slide-source">Nguồn · <a href="https://doi.org/10.1109/TSE.2014.2372785">Barr et al. · The Oracle Problem in Software Testing</a> · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a></div>
 
 ---
-class: unit-visual code-lg
----
-
-<p class="kicker">Unit Testing / Cấu trúc test case / Test oracle</p>
-
-# Phí bằng 0 hay chỉ cần không âm?
-
-<p class="uv-lead">Đơn đúng ngưỡng phải có phí <b>0 đồng</b>. Giả sử actual result là <b>20.000 đồng</b>.</p>
-
-```java
-int fee = shippingFee(200_000);
-assertTrue(fee >= 0);    // Xanh: 20.000 vẫn là số không âm
-assertEquals(0, fee);    // Đỏ: bắt được khoản phí thu nhầm
-```
-
-<div class="uv-diagram">
-  <div class="uv-row">
-    <div class="uv-verdict pass"><b>✓ Pass</b><span>Phí không âm, sai lệch bị bỏ sót</span>
-    </div>
-    <div class="uv-verdict fail"><b>✕ Fail</b><span>Phí khác 0, bắt được lỗi</span>
-    </div>
-  </div>
-</div>
-
-<div class="slide-source">Nguồn · <a href="https://doi.org/10.1109/TSE.2014.2372785">Barr et al. · The Oracle Problem in Software Testing</a> · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a></div>
-
----
 class: unit-visual
 ---
 
