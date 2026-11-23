@@ -215,38 +215,6 @@ class: unit-visual
 <div class="slide-source">Nguồn · <a href="https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices">Microsoft Learn · Unit testing best practices</a></div>
 
 ---
-class: unit-visual code-lg
----
-
-<p class="kicker">Unit Testing / Cấu trúc test case / Arrange–Act–Assert</p>
-
-# Một đơn đúng ngưỡng trong JUnit
-
-```java
-@Test
-void mienPhiKhiDonDungNguong() {
-    int total = 200_000;           // Arrange
-    int fee = shippingFee(total);  // Act
-    assertEquals(0, fee);          // Assert
-}
-```
-
-<div class="uv-diagram">
-  <div class="uv-row">
-    <div class="uv-node"><b>200.000 đ</b><small>Arrange</small>
-    </div>
-    <i class="uv-arrow" aria-hidden="true">→</i>
-    <div class="uv-node pick"><b>shippingFee(total)</b><small>Act</small>
-    </div>
-    <i class="uv-arrow" aria-hidden="true">→</i>
-    <div class="uv-node"><b>0 đ</b><small>Assert</small>
-    </div>
-  </div>
-</div>
-
-<div class="slide-source">Nguồn · <a href="https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices">Microsoft Learn · Unit testing best practices</a> · <a href="https://docs.junit.org/6.0.3/user-guide/">JUnit · User Guide</a></div>
-
----
 class: unit-visual
 ---
 
