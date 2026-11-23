@@ -41,7 +41,7 @@ class: unit-visual
 
 <ol class="agenda-list">
   <li><b>Unit Testing</b><span>Thiết kế test case và kiểm tra hành vi bằng JUnit, Mockito.</span></li>
-  <li><b>Code Coverage</b><span>Đọc báo cáo JaCoCo và đặt coverage gate.</span></li>
+  <li><b>Code Coverage</b><span>Đọc báo cáo JaCoCo.</span></li>
   <li><b>CI/CD</b><span>Chạy test, kiểm tra gate và đóng gói với GitHub Actions.</span></li>
   <li><b>AI trong Unit Testing</b><span>Pynguin, CoverUp và quy trình sinh test của nhóm.</span></li>
   <li><b>Case study thư viện, Lab &amp; Q&amp;A</b><span>Tính phí trả sách trễ, thực hành mutation testing và hỏi đáp.</span></li>
@@ -566,26 +566,55 @@ class: text-left
 
 # Code Coverage
 
-Đọc báo cáo JaCoCo và đặt coverage gate.
+Đọc báo cáo JaCoCo.
+
+---
+layout: center
+---
+
+<img class="pr-shot" src="/pr-coverage-gate-blocked.png" alt="Pull request bị chặn vì coverage gate không đạt" />
+
+<!--
+Các bạn chắc ít nhiều gì cũng sẽ gặp một tình huống như thế này. Mình mở pull request, bước Build & Test thành công, test xanh hết. Nhưng nút Merge vẫn bị khóa, vì bước kiểm tra coverage báo đỏ: coverage mới đạt 54,2%, trong khi yêu cầu là 80%.
+Lúc đó mình sẽ thắc mắc: test xanh rồi, sao vẫn không cho merge? Câu trả lời nằm ở Code Coverage, phần mình sắp nói. JaCoCo trong ảnh là công cụ đo coverage, lát nữa mình sẽ giới thiệu.
+-->
 
 ---
 
 # Code Coverage là gì?
 
-<div class="formula">Coverage = <span>số thành phần đã được thực thi</span> ÷ <span>tổng số thành phần đo được</span> × 100%</div>
+<div class="formula">Coverage = <span>số đơn vị đã chạy</span> ÷ <span>tổng số đơn vị trong phạm vi đo</span> × 100%</div>
 
-- "Thành phần" có thể là dòng, câu lệnh, nhánh hoặc phương thức
-- Nói "80%" phải nói rõ: **80% line** hay **80% branch**?
-- Chạy 8/10 dòng → line 80%, nhưng `if` mới đi hướng đúng → branch vẫn thiếu
+1. Chọn **phạm vi** đo: một hàm, một lớp hoặc cả dự án
+2. Chọn **đơn vị** để đếm: dòng hoặc hướng rẽ
+3. **Chia** số đã chạy cho tổng, rồi nhân 100
 
-<p class="note">Coverage = code <b>đã chạy</b>, không phải code <b>đã đúng</b>: test không có assertion vẫn được tính là đã phủ</p>
+<p class="note">Test xanh chỉ cho biết phần <b>đã chạy</b> thì đúng. Phần <b>chưa chạy lần nào</b> thì báo cáo test không cho biết.</p>
 
-<div class="slide-source">Nguồn · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a> · <a href="https://testing.googleblog.com/2020/08/code-coverage-best-practices.html">Google Testing Blog · Code Coverage Best Practices</a></div>
+<div class="slide-source">Nguồn · <a href="https://testing.googleblog.com/2020/08/code-coverage-best-practices.html">Google Testing Blog · Code Coverage Best Practices</a> · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=42">ISTQB CTFL v4.0.1, §4.3</a></div>
 
 <!--
-Code Coverage, hay độ phủ mã nguồn, cho biết bộ test đã thực thi phần nào của chương trình. Công thức chung: số thành phần đã thực thi chia tổng số thành phần đo được. Thành phần có thể là dòng, câu lệnh, nhánh hay phương thức, nên khi nói 80% phải nói rõ là 80% line hay 80% branch.
-Ví dụ một hàm có 10 dòng, test chạy qua 8 dòng thì line coverage 80%. Nhưng trong 8 dòng đó có thể có một câu if mới chạy hướng đúng, chưa chạy hướng sai — line khá cao mà branch vẫn thiếu.
-Coverage trả lời ba câu hỏi: test đã đi qua đâu, dòng hoặc nhánh nào chưa kiểm tra, và thêm test thì phạm vi có tăng không. Coverage không tự đánh giá test đúng hay sai: test không có assertion vẫn được tính là đã phủ.
+Vậy vì sao test xanh mà vẫn bị chặn? Vì test xanh chỉ cho biết những gì test đã chạy đều cho kết quả đúng, không cho biết còn phần nào chưa được chạy lần nào. Giả sử một đoạn code có điều kiện rẽ hai hướng mà mọi test đều chỉ đi vào hướng thứ nhất: test vẫn xanh nhưng hướng thứ hai chưa được kiểm tra.
+Code Coverage, hay độ phủ mã nguồn, cho biết bộ test đã chạy qua bao nhiêu phần của code. Ba bước: chọn phạm vi đo, chọn đơn vị để đếm, rồi lấy số đã chạy chia tổng và nhân 100. ISTQB gọi những đơn vị này là coverage items.
+-->
+
+---
+
+# Thêm test: coverage tăng thế nào?
+
+| Bộ test | Số đơn vị đã chạy | Coverage |
+|---|:---:|:---:|
+| Test 1 chạy qua 2 đơn vị | 2 | 2/4 = **50%** |
+| + Test 2: 1 đơn vị mới, 1 đơn vị test 1 đã chạy | 3 | 3/4 = **75%** |
+| + Test 3: 1 đơn vị mới | 4 | 4/4 = **100%** |
+
+- Một đơn vị chạy nhiều lần vẫn **chỉ tính một lần**
+- Coverage chỉ cho biết code **đã chạy**, không cho biết kết quả **đúng**
+- Luôn nói rõ **loại coverage** và **phạm vi** đo: "50% số nhánh của một hàm" mới rõ phần thiếu nằm ở đâu
+
+<!--
+Ví dụ chung chung: phạm vi đo có 4 đơn vị. Test 1 chạy qua 2 đơn vị nên 50%. Test 2 chạy 1 đơn vị mới và 1 đơn vị test 1 đã chạy, nên chỉ thêm 1: 75%. Test 3 thêm 1 đơn vị mới: 100%. Một đơn vị chạy nhiều lần vẫn chỉ tính một lần, nên test thêm vào chỉ làm coverage tăng khi nó chạy qua đơn vị mà các test trước chưa chạy.
+Hai điều cần nhớ: coverage chỉ cho biết code đã chạy, không cho biết kết quả có đúng. Một test chạy qua đoạn code mà không có assertion vẫn làm coverage tăng. Và khi báo cáo phải nói rõ loại coverage và phạm vi; nói "coverage 50%" thì không biết phần thiếu nằm ở đâu.
 -->
 
 ---
@@ -594,197 +623,206 @@ class: cmp
 
 # Các loại code coverage
 
-| Loại | Câu hỏi cần trả lời | JaCoCo |
-|---|---|:---:|
-| Statement | Các câu lệnh đã được thực thi chưa? | <span class="eq">≈</span> |
-| Line | Các dòng source đã được chạy chưa? | <span class="good">✓</span> |
-| Branch / Decision | Mỗi quyết định đã đi cả hướng đúng và sai chưa? | <span class="good">✓</span> |
-| Condition | Mỗi điều kiện con đã nhận cả đúng và sai chưa? | <span class="bad">✕</span> |
-| MC/DC | Từng điều kiện con có tự làm đổi kết quả không? | <span class="bad">✕</span> |
-| Path | Các đường đi khác nhau qua hàm đã chạy chưa? | <span class="bad">✕</span> |
-| Method | Mỗi phương thức đã được gọi ít nhất 1 lần chưa? | <span class="good">✓</span> |
+| Loại | Đo gì? |
+|---|---|
+| **Line** | Dòng mã đã chạy |
+| **Branch** | Hướng rẽ đã đi qua |
+| Statement | Câu lệnh đã chạy |
+| Decision | Kết quả của cả quyết định |
+| MC/DC | Mỗi điều kiện có tự làm đổi kết quả không |
+| Path | Cả đường chạy từ đầu đến cuối |
 
-<p class="caption">JaCoCo không đếm câu lệnh mà đếm instruction bytecode (≈). Các slide sau dùng <b>một đoạn code chung</b> để thấy từng loại khác nhau.</p>
+<p class="caption">ISTQB nhận xét Branch và Decision thường dùng thay thế cho nhau. Line không phải kỹ thuật ISTQB mà là chỉ số do công cụ đo coverage báo cáo.</p>
 
-<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=42">ISTQB CTFL v4.0.1, §4.3.1</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a> · <a href="https://ntrs.nasa.gov/citations/20010057789">NASA · A Practical Tutorial on MC/DC</a></div>
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=42">ISTQB CTFL v4.0.1, §4.3</a> · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB-CTAL-TTA_Syllabus_v4.0.pdf#page=14">ISTQB CTAL-TTA v4.0, §2.2–2.5</a> · <a href="https://ntrs.nasa.gov/citations/20010057789">NASA · A Practical Tutorial on MC/DC</a></div>
 
 <!--
-Có bảy loại coverage thường gặp. Statement: mỗi câu lệnh đã chạy chưa. Line: mỗi dòng source đã chạy chưa. Branch hay decision: mỗi quyết định đã đi cả hướng đúng và sai chưa. Condition: mỗi điều kiện con trong biểu thức ghép đã nhận cả đúng và sai chưa. MC/DC: từng điều kiện con có được chứng minh là tự làm đổi kết quả không, hay dùng trong hệ thống an toàn cao. Path: các tổ hợp đường đi qua hàm. Method: mỗi phương thức đã được gọi chưa, đây là chỉ số thô nhất.
-Không loại nào mô tả đủ chất lượng bộ test. Line tìm dòng bị bỏ sót, branch và condition kiểm tra logic rẽ nhánh, path cho biết các nhánh kết hợp ra sao.
+Có nhiều cách chọn đơn vị để đếm nên có nhiều loại coverage. Bài này đi sâu vào hai loại: Line đếm dòng, Branch đếm hướng rẽ. Bốn loại còn lại chỉ nhắc ngắn, mỗi loại một ví dụ.
+Statement đếm câu lệnh đã chạy. Ví dụ câu lệnh "đổi mức giảm thành 20" chỉ chạy khi khách có mã. Nếu chỉ thử khách không có mã thì câu lệnh đó chưa chạy, thử thêm khách có mã thì mới chạy. Statement gần giống Line, khác ở chỗ một dòng có thể chứa nhiều câu lệnh.
+Decision đo kết quả của cả một quyết định. Ví dụ quy tắc "là thành viên và có mã thì được giảm": cả vế đó là một quyết định. Chỉ cần thử một khách được giảm và một khách không được giảm là đủ Decision.
+MC/DC kiểm tra từng điều kiện nhỏ có tự làm đổi kết quả không. Giữ khách là thành viên, chỉ đổi từ có mã sang không mã: mức giảm đổi từ 20 xuống 0, chứng minh mã có ảnh hưởng. Giữ nguyên việc có mã, chỉ đổi tư cách thành viên: chứng minh thành viên cũng có ảnh hưởng. Nếu đổi cả hai cùng lúc thì không biết điều kiện nào gây ra thay đổi.
+Path đo cả đường chạy từ đầu đến cuối. Ví dụ đơn hàng có hai lựa chọn độc lập là giao nhanh và gói quà, tạo ra bốn đường: cả hai, không gì cả, chỉ giao nhanh, chỉ gói quà. Nếu chỉ thử "cả hai" và "không gì cả" thì mỗi lựa chọn đã từng bật và tắt, nhưng hai đường "chỉ giao nhanh" và "chỉ gói quà" chưa ai thử. Số đường tăng rất nhanh: ba lựa chọn đã là tám đường.
+ISTQB nhận xét Branch và Decision thường dùng thay thế cho nhau vì cùng một bộ test thường đạt cả hai. Line không phải kỹ thuật trong syllabus ISTQB mà là chỉ số do công cụ đo coverage báo cáo.
 -->
 
 ---
 
-# Line coverage khác Statement coverage
+# Hai loại coverage chính
 
-```java
-int getDiscount(boolean isVip) {
-    int discount = 0; if (isVip) discount = 10;   // 1 dòng, nhiều câu lệnh
-    return discount;
-}
-```
+<div class="defs">
+  <div>
+    <b class="n">Line</b>
+    <div><p class="f">Coverage = <span class="frac"><span>số dòng đã chạy</span><span>tổng số dòng có mã thực thi</span></span> × 100%</p><small>Đếm theo <b>dòng mã nguồn</b>. Dòng trống, chú thích không tính. Một dòng đã chạy khi ít nhất một lệnh trên dòng đó chạy</small></div>
+  </div>
+  <div>
+    <b class="n">Branch</b>
+    <div><p class="f">Coverage = <span class="frac"><span>số nhánh đã đi qua</span><span>tổng số nhánh</span></span> × 100%</p><small>Đếm theo <b>hướng rẽ</b> tại mỗi điểm rẽ (<code>if</code>, <code>switch</code>). Mỗi <code>if</code> có hai nhánh: đúng và sai</small></div>
+  </div>
+</div>
 
-| Test | Line | Statement |
-|---|:---:|:---:|
-| `isVip = false` → 0 | **100%** | chưa đủ: `discount = 10` chưa chạy |
-| thêm `isVip = true` → 10 | 100% | **100%** |
+<p class="caption">Branch: ISTQB CTFL v4.0.1 mục 4.3.2</p>
 
-<p class="caption">Ví dụ cố ý đặt nhiều câu lệnh trên một dòng. Code thường viết mỗi câu lệnh một dòng nên hai chỉ số hay gần nhau.</p>
-
-<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=42">ISTQB CTFL v4.0.1, §4.3.1</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a></div>
+<div class="slide-source">Nguồn · <a href="https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf#page=43">ISTQB CTFL v4.0.1, §4.3.2</a></div>
 
 <!--
-Ví dụ cố ý đặt hai câu lệnh trên cùng một dòng. Test với isVip = false: dòng thứ hai vẫn chạy vì phải gán discount = 0 và kiểm tra điều kiện, dòng return cũng chạy, nên line coverage 100%.
-Nhưng câu lệnh discount = 10 chưa chạy vì isVip đang sai, nên statement coverage chưa đạt 100%. Thêm test isVip = true, mong đợi 10, thì statement mới đủ.
-Line quan tâm dòng code, statement quan tâm từng câu lệnh trong dòng đó.
+Hai loại coverage chính của bài. Line đếm theo dòng mã nguồn có mã thực thi. Dòng trống, chú thích không tính. Một dòng được coi là đã chạy khi ít nhất một lệnh trên dòng đó đã chạy.
+Branch đếm theo hướng rẽ tại mỗi điểm rẽ, ví dụ if hoặc switch. Mỗi if có hai nhánh: điều kiện đúng và điều kiện sai. Slide sau dùng một đoạn code chung để thấy hai chỉ số thay đổi thế nào khi thêm từng test.
 -->
 
 ---
 
-# Một code chung cho mọi loại coverage
+# Một đoạn code cho hai loại
 
 <div class="ex">
 <div>
 
 ```java
-int calculateDiscount(boolean isMember,
-                      boolean hasCoupon) {
-    int discount = 0;
-    if (isMember && hasCoupon) {
-        discount = 20;
+int calculateDiscount(boolean hasCoupon) {
+    int discount = 0;                // 1
+    if (hasCoupon) {                 // 2
+        discount = 20;               // 3
     }
-    return discount;
+    return discount;                 // 4
 }
 ```
-<p class="caption">1 quyết định · 2 điều kiện con · 3 đường thực thi do short-circuit. Thành viên <b>và</b> có phiếu → giảm 20%.</p>
 
 </div>
 <div>
 
-| Test | `isMember` | `hasCoupon` | Kết quả |
-|---|:---:|:---:|:---:|
-| T1 | true | true | 20 |
-| T2 | false | true | 0 |
-| T3 | true | false | 0 |
-| T4 | false | false | 0 |
+Giảm **20%** khi khách có mã giảm giá. Không có mã thì giảm 0%.
+
+- Dòng 1: mức giảm ban đầu là 0
+- Dòng 2: có mã giảm giá?
+- Dòng 3: có mã → giảm 20
+- Dòng 4: trả mức giảm
 
 </div>
 </div>
 
-<div class="slide-source">Nguồn · <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.23">Java Language Specification, §15.23 (&amp;&amp;)</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a></div>
+<div class="cnt">
+  <div><b>Line: 4</b><small>dòng 1, 2, 3, 4</small></div>
+  <div><b>Branch: 2</b><small>B1 có mã · B2 không có mã</small></div>
+</div>
 
 <!--
-Để so các loại coverage trên cùng một code, nhóm dùng hàm calculateDiscount: thành viên và có phiếu giảm giá thì giảm 20%, còn lại không giảm.
-Hàm có một quyết định isMember && hasCoupon, hai điều kiện con, ba đường thực thi: sai ngay ở điều kiện đầu, sai ở điều kiện thứ hai, hoặc cả hai đều đúng.
-T1 cả hai đúng. T2 isMember sai. T3 hasCoupon sai. T4 cả hai sai. Slide sau thêm lần lượt từng test.
--->
-
----
-class: cmp
----
-
-# Thêm từng test case: loại coverage nào tăng?
-
-| Bộ test | Statement | Line | Decision | Condition | MC/DC | Path | JaCoCo branch |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| T1 | **100%** | **100%** | 50% | 2/4 | 0/2 | 1/3 | 50% |
-| T1 + T2 | <span class="eq">=</span> | <span class="eq">=</span> | **100%** <span class="up">▲</span> | 3/4 <span class="up">▲</span> | 1/2 <span class="up">▲</span> | 2/3 <span class="up">▲</span> | 75% <span class="up">▲</span> |
-| T1 + T2 + T3 | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | **4/4** <span class="up">▲</span> | **2/2** <span class="up">▲</span> | **3/3** <span class="up">▲</span> | **100%** <span class="up">▲</span> |
-| + T4 | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> | <span class="eq">=</span> |
-
-<p class="note">Chỉ T1 đã đủ <b>line 100%</b> nhưng branch mới 50%. T4 dùng đầu vào mới nhưng đi lại đường sai của T2 nên <b>không chỉ số nào tăng</b>.</p>
-<p class="caption">JaCoCo branch chạy thật: 2/4 → 3/4 → 4/4 → 4/4. JaCoCo đếm 4 nhánh vì <code>&&</code> dịch thành 2 lệnh rẽ trong bytecode.</p>
-
-<div class="slide-source">Nguồn · <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.23">Java Language Specification, §15.23 (&amp;&amp;)</a> · <a href="https://ntrs.nasa.gov/citations/20010057789">NASA · A Practical Tutorial on MC/DC</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a></div>
-
-<!--
-T1 làm cả hai điều kiện đúng nên mọi dòng và câu lệnh đều chạy: statement và line 100%. Nhưng quyết định mới nhận kết quả đúng nên decision và JaCoCo branch mới 50%.
-T2 làm isMember sai, bỏ qua thân if: decision lên 100%, path đạt 2/3. Vì Java dừng ngay khi isMember sai (short-circuit) nên hasCoupon chưa được kiểm với giá trị sai, JaCoCo branch mới 75%.
-T3 giữ isMember đúng, đổi hasCoupon sai: Java phải đánh giá điều kiện thứ hai. Condition, MC/DC, path và JaCoCo branch đạt 100%.
-T4 cả hai sai: test hợp lệ nhưng đi lại đường T2 đã phủ, các chỉ số không tăng. Số test tăng từ ba lên bốn mà coverage giữ nguyên — dữ liệu khác nhau chưa chắc tạo ra dòng, nhánh hay đường đi mới.
-Số JaCoCo nhóm đã chạy thật: 2/4, 3/4, 4/4, 4/4.
+Đoạn code dùng chung cho hai loại, chỉ kiểm tra một biến là khách có mã giảm giá hay không. Có mã thì giảm 20%, không có mã thì giảm 0%. Dòng 1 đặt mức giảm ban đầu là 0. Dòng 2 kiểm tra có mã giảm giá. Dòng 3 chỉ chạy khi có mã, đổi mức giảm thành 20. Dòng 4 trả mức giảm.
+Số lượng từng loại. Line: 4 dòng có mã, dòng 1 đến 4; dòng chỉ có dấu đóng ngoặc không tính. Branch: 2 nhánh, vì câu if có một điểm rẽ với hai hướng: B1 là có mã, B2 là không có mã.
+Tổng số không đổi khi thêm test, chỉ tử số thay đổi.
 -->
 
 ---
 
-# Coverage cao **không** chứng minh
+# Bước 1 · Thêm T1: không có mã giảm giá
 
-- Assertion đã đúng
-- Mọi giá trị biên đã kiểm tra
-- Các thành phần tích hợp đúng
-- Chương trình hết lỗi
+<div class="ex">
+<div>
 
-<div class="vs">
-  <div><span>Test A · coverage 100%</span><code>assertThat(fine).isNotNull()</code><p class="bad">✕ Không bắt được sai số tiền</p></div>
-  <div><span>Test B · coverage 100%</span><code>isEqualByComparingTo("6000")</code><p class="good">✓ Bắt được sai số tiền</p></div>
+```java {2,3,6}
+int calculateDiscount(boolean hasCoupon) {
+    int discount = 0;                // 1
+    if (hasCoupon) {                 // 2
+        discount = 20;               // 3
+    }
+    return discount;                 // 4
+}
+```
+<p class="caption">Gọi <code>calculateDiscount(false)</code> → mong đợi <b>0</b></p>
+
+</div>
+<div class="covres">
+  <div class="chg"><span>Line</span><div><b>3/4 = 75%</b><em>dòng 1, 2, 4 (chưa chạy dòng 3)</em></div></div>
+  <div class="chg"><span>Branch</span><div><b>1/2 = 50%</b><em>đã đi B2 (không có mã)</em></div></div>
+</div>
 </div>
 
-<p class="kicker mt-5">Gặp coverage gap thì làm gì?</p>
-<div class="gapsteps">
-  <div><b>1</b>Tìm dòng / nhánh thiếu</div>
-  <div><b>2</b>Tìm dữ liệu đi vào đó</div>
-  <div><b>3</b>Đối chiếu yêu cầu</div>
-  <div><b>4</b>Viết assertion cụ thể</div>
-  <div><b>5</b>Chạy lại, đọc báo cáo</div>
-</div>
-
-<div class="slide-source">Nguồn · <a href="https://testing.googleblog.com/2020/08/code-coverage-best-practices.html">Google Testing Blog · Code Coverage Best Practices</a> · <a href="https://doi.org/10.1109/TSE.2014.2372785">Barr et al. · The Oracle Problem in Software Testing</a></div>
+<p class="note">Dòng 3 (<code>discount = 20</code>) và nhánh B1 (có mã) vẫn <b>chưa ai chạy</b>.</p>
 
 <!--
-Hai bộ test có thể cùng coverage nhưng khả năng phát hiện lỗi khác nhau: bộ thứ nhất kiểm tra kết quả chính xác, bộ thứ hai chỉ kiểm tra không rỗng. Cả hai chạy qua cùng dòng và nhánh, nhưng bộ thứ nhất bắt lỗi tốt hơn.
-Coverage gap là phần code chưa được thực thi: dòng đỏ, nhánh chưa chạy, hoặc điều kiện con chưa nhận đủ đúng và sai. Khi gặp gap: xác định phần thiếu, đọc điều kiện để biết dữ liệu nào đi vào đó, đối chiếu yêu cầu để biết kết quả mong đợi, viết test với assertion cụ thể, rồi chạy lại và đọc báo cáo mới.
-Ví dụ nhánh hasCoupon = false chưa phủ thì thêm test khách không có phiếu, kiểm tra kết quả bằng 0. Chạy qua nhánh làm coverage tăng; assertion mới xác nhận kết quả đúng.
+Bước 1: thêm T1, khách không có mã giảm giá. Test gọi calculateDiscount(false) và mong đợi mức giảm 0%.
+T1 chạy dòng 1, 2 và 4. Dòng 3 không chạy vì không có mã. T1 đi qua nhánh B2, là không có mã.
+Tính coverage: Line 3 dòng đã chạy chia 4 là 75%. Branch 1 nhánh B2 chia 2 là 50%.
+Dòng discount = 20 và nhánh có mã chưa ai chạy.
+-->
+
+---
+
+# Bước 2 · Thêm T2: có mã giảm giá
+
+<div class="ex">
+<div>
+
+```java {2-4,6}
+int calculateDiscount(boolean hasCoupon) {
+    int discount = 0;                // 1
+    if (hasCoupon) {                 // 2
+        discount = 20;               // 3
+    }
+    return discount;                 // 4
+}
+```
+<p class="caption">Gọi <code>calculateDiscount(true)</code> → mong đợi <b>20</b></p>
+
+</div>
+<div class="covres">
+  <div class="chg"><span>Line</span><div><b>4/4 = 100%</b><em>thêm dòng 3 ▲</em></div></div>
+  <div class="chg"><span>Branch</span><div><b>2/2 = 100%</b><em>thêm B1 (có mã) ▲</em></div></div>
+</div>
+</div>
+
+<p class="note">T2 chạy đúng phần còn thiếu nên cả Line và Branch cùng đạt <b>100%</b>.</p>
+
+<!--
+Bước 2: thêm T2, khách có mã giảm giá. Test gọi calculateDiscount(true), mong đợi mức giảm 20%.
+T2 chạy cả 4 dòng, vì có mã nên dòng 3 cũng chạy. T2 đi qua nhánh B1, là có mã.
+Tính coverage: Line thêm dòng 3 nên 4/4 là 100%. Branch có nhánh mới B1, nên đã đi B1 và B2: 2/2 là 100%.
+Hai test là đủ: T1 phủ nhánh không có mã, T2 phủ nhánh có mã.
+-->
+
+---
+
+# Coverage 100% vẫn có thể lọt lỗi
+
+- Coverage chỉ cho biết code **đã chạy**
+- Không cho biết kết quả có **đúng**
+- Test vẫn cần **dữ liệu tốt** và **assertion cụ thể**
+
+<div class="slide-source">Nguồn · <a href="https://testing.googleblog.com/2020/08/code-coverage-best-practices.html">Google Testing Blog · Code Coverage Best Practices</a></div>
+
+<!--
+Nói bằng một ví dụ đơn giản, không cần chiếu bảng.
+Cửa hàng quy định: đơn từ 200.000 đồng thì miễn phí giao hàng. Nhưng người viết code lại viết nhầm thành "trên 200.000 đồng". Mình viết hai test: một đơn 150.000 đồng, một đơn 250.000 đồng. Cả hai đều đúng. Hai test này đã đi qua cả hai hướng của câu điều kiện, nên coverage đạt 100%, báo cáo rất đẹp.
+Nhưng đơn đúng 200.000 đồng thì vẫn bị thu phí sai, và không ai biết, vì chưa có test nào thử đúng con số đó.
+Vậy coverage chỉ cho biết code đã được chạy qua. Muốn bắt được lỗi thì test còn cần dữ liệu tốt, như giá trị đúng ngưỡng, và assertion kiểm tra kết quả cụ thể.
 -->
 
 ---
 
 # JaCoCo
 
-- JUnit chạy test, JaCoCo ghi lại **bytecode** đã được thực thi
-- Báo cáo HTML: <span class="good">xanh</span> đã chạy · <span class="bad">đỏ</span> chưa chạy · <span class="warn">vàng</span> phủ một phần
-- Branch đếm theo bytecode: `a && b` thành **4 nhánh**
-- Đặt **ngưỡng** trong build → coverage gate
+<p class="ask">JaCoCo là công cụ đo coverage cho Java</p>
 
-<img class="shot sm" src="/jacoco-summary.png" alt="Báo cáo JaCoCo của library-case-study" />
+<div class="flow">
+  <div>JUnit<small>chạy test</small></div>
+  <i>→</i>
+  <div class="pick">JaCoCo<small>ghi lại code đã chạy</small></div>
+  <i>→</i>
+  <div>Báo cáo HTML<small>cho biết dòng nào đã chạy</small></div>
+</div>
+
+- Màu trong báo cáo: <span class="good">xanh</span> đã chạy · <span class="warn">vàng</span> chạy một phần · <span class="bad">đỏ</span> chưa chạy
+- Có thể đặt **ngưỡng tối thiểu**: thấp hơn thì build thất bại
+
+<img class="shot sm jc" src="/jacoco-summary.png" alt="Báo cáo JaCoCo của library-case-study" />
 
 <div class="slide-source">Nguồn · <a href="https://www.jacoco.org/jacoco/trunk/doc/counters.html">JaCoCo · Coverage Counters</a> · <a href="https://www.jacoco.org/jacoco/trunk/doc/check-mojo.html">JaCoCo Maven Plugin · check</a></div>
 
 <!--
-JaCoCo đo Code Coverage cho Java. JUnit chạy test và kiểm tra assertion, còn JaCoCo theo dõi phần code được thực thi trong lúc đó. Quy trình: Maven khởi động JUnit, JaCoCo ghi nhận bytecode đã chạy, tổng hợp theo package, lớp, phương thức, dòng, rồi tạo báo cáo HTML.
-Màu xanh là đã chạy, đỏ là chưa, vàng là dòng có điều kiện mới phủ một phần; ở câu if báo cáo còn ghi số nhánh đã phủ.
-Nhóm quan tâm line và branch. Vì JaCoCo đếm branch từ bytecode, biểu thức C1 && C2 cho 4 nhánh chứ không phải 2 như cách đếm decision ở source — đúng như ví dụ T1–T4.
-JaCoCo còn kiểm tra ngưỡng trong lúc build: thấp hơn ngưỡng thì Maven báo thất bại. Đó là coverage gate.
+JaCoCo là công cụ đo coverage cho Java. Khi JUnit chạy test, JaCoCo ghi lại những dòng code nào đã được chạy, rồi tạo ra báo cáo HTML.
+Trong báo cáo, dòng màu xanh là đã chạy, màu đỏ là chưa chạy, màu vàng là chạy một phần. Nhìn vào màu đỏ và vàng là biết còn thiếu test ở đâu.
+Ảnh trên slide là báo cáo thật của dự án thư viện nhóm. Đây là trang tổng hợp, mỗi hàng là một package. Cột Missed Instructions có thanh màu: phần xanh là đã chạy, phần đỏ là chưa chạy, và cột Cov. bên cạnh là phần trăm đã chạy. Cột Missed Branches và Cov. bên phải là số liệu của nhánh. Hàng cuối cùng là Total: 94% ở cột instruction, và nhánh là 0 trên 18, tức là không bỏ sót nhánh nào, đạt 100%. Muốn biết chi tiết thì bấm vào từng package, rồi vào từng lớp để xem dòng nào đỏ.
+JaCoCo còn cho đặt một ngưỡng tối thiểu. Nếu coverage thấp hơn ngưỡng thì build thất bại. Phần CI/CD sẽ dùng đúng cơ chế này.
 -->
 
----
-
-# Coverage gate
-
-<div class="gate">
-  <div class="ok">Branch 92% ≥ 90% → build tiếp tục</div>
-  <div class="fail">Branch 85% &lt; 90% → build đỏ, dù test vẫn xanh</div>
-</div>
-
-- Case study: `FineCalculator` **branch ≥ 90%**, chỉ đặt cho lớp nghiệp vụ quan trọng
-- Build thất bại khi thay đổi code hoặc test làm coverage giảm dưới ngưỡng
-- Gate **không** tự viết test, không biết expected và assertion đúng hay sai
-
-```xml
-<include>vn.edu.seminar.fine.FineCalculator</include>
-<counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.90</minimum>
-```
-<p class="caption">Luật gate trong <code>case-study/pom.xml</code></p>
-
-<div class="slide-source">Nguồn · <a href="https://www.jacoco.org/jacoco/trunk/doc/check-mojo.html">JaCoCo Maven Plugin · check</a> · <a href="https://github.com/nhaajtdajt/seminar-testing-unitTest-coverage-cicd/blob/seminar-core/case-study/pom.xml">Nhóm 09 · pom.xml</a></div>
-
-<!--
-Coverage gate là điều kiện trong build: đạt ngưỡng thì build tiếp tục, không đạt thì build thất bại. Ví dụ gate 90%: 92% được chấp nhận, 85% làm build đỏ — dù Unit Test vẫn xanh, vì test xanh chỉ nói các tình huống đã viết cho đúng kết quả, còn gate hỏi bộ test đã đi qua đủ nhánh chưa.
-Gate phát hiện khi tỷ lệ đo được xuống dưới ngưỡng. Build đỏ thì mở báo cáo, tìm nhánh thiếu, đối chiếu yêu cầu.
-Không có ngưỡng chung cho mọi dự án. Nhóm đặt branch FineCalculator tối thiểu 90%, nơi sai sót ảnh hưởng trực tiếp đến tiền phí. Gate không thay review code và review test case.
--->
-
----
-class: video
 ---
 
 # <span class="vtag">Video B</span> Code Coverage & PIT Mutation Testing

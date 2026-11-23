@@ -120,8 +120,8 @@
 
 .def { border-left: 4px solid var(--accent); padding: .3rem .8rem; margin-bottom: .8rem; font-size: 1.05rem; }
 .def span { color: var(--muted); font-size: .95rem; }
-.formula { text-align: center; font-size: 1.25rem; font-weight: 600; padding: .9rem; border-radius: 10px; background: #0f172a; color: #f8fafc; margin-bottom: 1rem; }
-.formula span { color: #93c5fd; }
+.formula { text-align: center; font-size: 1.25rem; font-weight: 600; padding: .9rem; border-radius: 10px; background: #eff6ff; border: 2px solid #bfdbfe; color: var(--ink); margin-bottom: 1rem; }
+.formula span { color: var(--accent); }
 .warn { color: #b45309; font-weight: 700; }
 .slidev-layout .shot.sm { max-height: 200px; }
 .gapsteps { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; margin-top: .4rem; }
@@ -295,8 +295,48 @@
 .uv-checks > div { display: flex; align-items: center; padding: .7rem 1rem; gap: .9rem; background: #f8fafc; border-left: 3px solid #14b8a6; }
 .uv-checks .uv-icon { font-size: 1.5rem; color: #0f766e; margin: 0; }
 
+/* Coverage demo: ba chỉ số */
+.cov3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: .6rem; }
+.cov3 > div { border: 2px solid var(--line); border-radius: 10px; padding: .6rem .9rem; text-align: center; }
+.cov3 > div > span { display: block; font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+.cov3 > div > b { display: block; font-size: 2.6rem; line-height: 1.1; color: var(--ink); }
+.cov3 small { display: block; color: var(--muted); font-size: .95rem; line-height: 1.5; text-align: left; }
+.cov3 small b { color: var(--ink); }
+.covres { display: flex; flex-direction: column; gap: .6rem; }
+.covres > div { display: grid; grid-template-columns: 6.6rem 1fr; align-items: center; gap: .6rem; border: 2px solid var(--line); border-radius: 10px; padding: .5rem .8rem; }
+.covres > div > span { font-weight: 600; color: var(--muted); font-size: 1.05rem; }
+.covres b { display: block; font-size: 1.5rem; color: var(--ink); }
+.covres em { display: block; font-style: normal; font-size: .85rem; color: var(--muted); }
+.covres .chg { border-color: var(--ok); background: #f0fdf4; }
+.covres .chg b { color: var(--ok); }
+.slidev-layout .ask { opacity: 1; font-size: 1.35rem; line-height: 1.5; font-weight: 600; color: var(--ink); border-left: 4px solid var(--accent); padding: .3rem 0 .3rem 1rem; margin: 0 0 1rem; }
+.defs { display: flex; flex-direction: column; gap: .85rem; margin-top: -.5rem; }
+.defs > div { display: block; padding: 0; border: 0; background: none; }
+.defs .n { display: block; font-size: 1.45rem; line-height: 1.1; color: var(--accent); margin-bottom: 0; }
+.slidev-layout .defs .f { opacity: 1; display: inline-block; margin: .25rem 0 .2rem; padding: .3rem 1rem; font-size: 1rem; font-weight: 400; color: var(--ink); background: #eff6ff; border: 2px solid #bfdbfe; border-radius: 10px; }
+.defs .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 .5rem; line-height: 1.3; }
+.defs .frac > span { padding: 0 .6rem; }
+.defs .frac > span:first-child { border-bottom: 1.5px solid var(--ink); padding-bottom: .1rem; }
+.defs .frac > span:last-child { padding-top: .1rem; }
+.defs small { display: block; margin-top: 0; font-size: 1.05rem; line-height: 1.4; color: var(--muted); }
+.defs small b { color: var(--ink); }
+.cnt { display: grid; grid-template-columns: .6fr 1fr; gap: .6rem; margin-top: .8rem; }
+.cnt > div { border: 2px solid var(--line); border-radius: 10px; padding: .45rem .7rem; }
+.cnt b { display: block; color: var(--accent); font-size: 1.15rem; }
+.cnt small { display: block; color: var(--muted); font-size: .8rem; line-height: 1.4; white-space: nowrap; }
+.cnt code { font-size: .85em; }
+.flow { display: flex; align-items: stretch; gap: .7rem; margin: .3rem 0 1rem; }
+.flow > div { flex: 1; border: 2px solid var(--line); border-radius: 10px; padding: .6rem .8rem; text-align: center; font-weight: 700; font-size: 1.25rem; color: var(--ink); }
+.flow small { display: block; font-weight: 400; font-size: .95rem; color: var(--muted); }
+.flow .pick { border-color: var(--accent); background: #eff6ff; color: var(--accent); }
+.flow > i { align-self: center; color: var(--accent); font-style: normal; font-size: 1.6rem; }
+.slidev-layout .pr-shot { display: block; margin: 0 auto; max-height: 470px; max-width: 100%; width: auto; border: 1px solid var(--line); border-radius: 8px; }
+.ex .slidev-code .slidev-code-dishonored { opacity: .7 !important; }
+.ex .slidev-code code { font-weight: 600; }
+
 .level-list { display: grid; gap: .5rem; margin: 1rem 0; }
 .level-list > div { display: grid; grid-template-columns: 9rem 1fr; align-items: center; gap: 1rem; padding: .65rem 1rem; border-left: 3px solid #93c5fd; background: #f1f5f9; border-radius: .3rem; }
 .level-list > div:first-child { border-color: var(--accent); background: #eff6ff; }
 .slidev-layout .slide-source { position: absolute; bottom: .65rem; left: 3.5rem; right: 4rem; color: #475569; text-align: left; font-size: .8rem; line-height: 1.4; font-weight: 400; }
 .slidev-layout .slide-source a { color: #334e78; border-bottom: 1px solid #a8b7cd; }
+.slidev-layout .shot.sm.jc { max-height: 150px; }
