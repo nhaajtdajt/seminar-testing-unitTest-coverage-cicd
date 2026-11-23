@@ -3,6 +3,9 @@
 Ngô Gia An (23120205). Hướng dẫn cho người tự chạy demo; không cần lưu/nộp evidence.
 Source, prompt và script được giữ trong Git. Output sinh ra chỉ dùng local, được Git bỏ qua.
 
+Chuẩn bị quay trọn luồng với LoanService: [checklist, lời dẫn và lệnh từng bước](../docs/thuc-hanh/Preparation_QuayVideo_AI1_AI4_Loan.md).
+Mẫu human Loan để người tự điền: [CSV và hướng dẫn](human/loan-service/README.md).
+
 ## Luồng hoạt động
 
 ```text
